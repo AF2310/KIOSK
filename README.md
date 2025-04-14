@@ -34,3 +34,4 @@ We are also keeping logs to know who accessed the database and when to provide a
 Then we also created a UML class diagramm to have a bit of a plan of that classes we need, how they are connected and also which methods should be
 in them. Because its such a big project the class diagramm will ofcourse change overtime especially the methods. But its good to have some kind of
 a plan going into programming.
+![alt text](references/classdiagram.png)
