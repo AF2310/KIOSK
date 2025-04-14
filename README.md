@@ -21,7 +21,7 @@ We are also using a Discord Server to always stay in touch.
 
 For the design we used a Burger place as an example. The design was done with keynote.
 We focused on the core mechanics and also a button with the ability to change the language.
-[text](<references/Self Check Kiosk (Clarke).pdf>)
+[design draft](<references/Clarke Design v0.9.pdf>)
 
 For the database we are using MySQL. In addition to storing the products we are also storing the list of ingredients
 and a list of the ingredients which have been modified by the customer. With that feature we can allow customization of the ingredients.
