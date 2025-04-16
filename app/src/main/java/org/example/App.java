@@ -8,6 +8,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -65,6 +67,12 @@ public class App extends Application {
         + "-fx-background-radius: 10;"
     );
 
+    // Setup images
+    Image burger1 = new Image(getClass().getResourceAsStream("/burger1.png"));
+    ImageView burgerView = new ImageView(burger1);
+    burgerView.setFitWidth(400);
+    burgerView.setPreserveRatio(true);
+
     // SQL Connection starts here
     Label mysql;
 
@@ -91,7 +99,7 @@ public class App extends Application {
 
     // Put the elements of the welcome screen together
     rowOfButtons.getChildren().addAll(eatHereBtn, takeAwayBtn);
-    mainWindow.getChildren().addAll(welcome, companyTitle, rowOfButtons, mysql);
+    mainWindow.getChildren().addAll(welcome, companyTitle, burgerView, rowOfButtons, mysql);
 
     // Render the welcome screen
     primaryStage.setScene(new Scene(mainWindow, 1920, 1080));
