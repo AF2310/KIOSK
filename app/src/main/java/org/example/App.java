@@ -6,7 +6,9 @@ import java.sql.SQLException;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -16,9 +18,54 @@ import javafx.stage.Stage;
 public class App extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
-    VBox root = new VBox();
-    root.setPadding(new Insets(5));
-    Label title = new Label("JavaFX");
+    
+    // Initialize the welcome screen elements
+    var mainWindow = new VBox();
+    mainWindow.setPadding(new Insets(5));
+
+    var rowOfButtons = new HBox();
+    rowOfButtons.setPadding(new Insets(30));
+    var eatHereBtn = new Button("Eat Here");
+    var takeAwayBtn = new Button("Takeaway");
+
+    // Setup the buttons
+    eatHereBtn.setStyle(
+        "-fx-background-color:rgb(0, 0, 0);"
+        + "-fx-text-fill: white;"
+        + "-fx-background-radius: 6;"
+        + "-fx-padding: 10 20;"
+    );
+
+    takeAwayBtn.setStyle(
+        "-fx-background-color:rgb(255, 255, 255);"
+        + "-fx-text-fill: black;"
+        + "-fx-background-radius: 6;"
+        + "-fx-padding: 10 20;"
+    );
+
+    // Setup labels
+    var welcome = new Label("Welcome to");
+    var companyTitle = new Label("Bun & Patty");
+    
+    welcome.setStyle(
+        "-fx-background-color: transparent;"
+        + "-fx-text-fill: black;"
+        + "-fx-font-weight: semibold;"
+        + "-fx-font-size: 35;"
+        + "-fx-padding: 5 10;"
+        + "-fx-background-radius: 10;"
+    );
+
+    companyTitle.setStyle(
+        "-fx-background-color: transparent;"
+        + "-fx-text-fill: black;"
+        + "-fx-font-weight: bold;"
+        + "-fx-font-size: 60;"
+        + "-fx-padding: 5 10;"
+        + "-fx-background-radius: 10;"
+    );
+
+    // SQL Connection starts here
     Label mysql;
 
     try {
@@ -31,12 +78,24 @@ public class App extends Application {
 
     } catch (SQLException e) {
       mysql = new Label("An error has occurred: " + e.getMessage());
+
+      mysql.setStyle(
+          "-fx-background-color: transparent;"
+          + "-fx-text-fill: black;"
+          + "-fx-font-size: 10;"
+          + "-fx-padding: 5 10;"
+          + "-fx-background-radius: 10;"
+      );
     }
+    // End of SQL Section
 
-    root.getChildren().addAll(title, mysql);
+    // Put the elements of the welcome screen together
+    rowOfButtons.getChildren().addAll(eatHereBtn, takeAwayBtn);
+    mainWindow.getChildren().addAll(welcome, companyTitle, rowOfButtons, mysql);
 
-    primaryStage.setScene(new Scene(root, 400, 200));
-    primaryStage.setTitle("JavaFX");
+    // Render the welcome screen
+    primaryStage.setScene(new Scene(mainWindow, 1920, 1080));
+    primaryStage.setTitle("Self Check Kiosk by Clarke");
     primaryStage.show();
   }
 
