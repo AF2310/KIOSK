@@ -53,16 +53,19 @@ public class App extends Application {
     // HStack for Burger images
     var rowOfBurgers = new HBox(220);
     rowOfBurgers.setAlignment(Pos.CENTER);
-    // rowOfBurgers.setPadding(new Insets(100));
 
     // Setup side images
     Image burger1 = new Image(getClass().getResourceAsStream("/burger1.png"));
     Image burger3 = new Image(getClass().getResourceAsStream("/burger3.png"));
 
     ImageView burgerView1 = new ImageView(burger1);
+    var burgerContainer1 = new HBox(burgerView1);
+    burgerContainer1.setAlignment(Pos.BASELINE_LEFT);
     ImageView burgerView3 = new ImageView(burger3);
+    var burgerContainer3 = new HBox(burgerView3);
+    burgerContainer3.setAlignment(Pos.BASELINE_RIGHT);
 
-    // Make size 40% smaller on all axis of Burger1+3
+    // Make size 50% smaller on all axis of Burger1+3
     burgerView1.setScaleX(0.5);
     burgerView1.setScaleY(0.5);
     burgerView3.setScaleX(0.5);
@@ -73,8 +76,12 @@ public class App extends Application {
 
     try {
       Connection conn = DriverManager.getConnection(
-          "jdbc:mysql://localhost/LordOfTheRings?user=python&password="
-              + "$tarWar$&useSSL=false&allowPublicKeyRetrieval=true");
+          "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
+          + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
+          + "?user=u5urh19mtnnlgmog"
+          + "&password=zPgqf8o6na6pv8j8AX8r"
+          + "&useSSL=true"
+          + "&allowPublicKeyRetrieval=true");
       mysql = new Label("Driver found and connected");
 
       conn.setAutoCommit(false);

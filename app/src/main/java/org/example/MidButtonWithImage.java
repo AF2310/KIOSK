@@ -17,27 +17,27 @@ public class MidButtonWithImage extends Button {
   /**
   * Class' constructor.
   */
-  public MidButtonWithImage(String buttonText, String imagePath, String backgroundColor) {
+  public MidButtonWithImage(String buttonText, String imageName, String buttonColor) {
     // Set button size
     this.setPrefSize(460, 140);
 
     // Image setup
-    Image image = new Image(imagePath);
-    ImageView imageView = new ImageView(image);
-    imageView.setFitWidth(100);
-    imageView.setFitHeight(100);
+    Image image = new Image(imageName);
+    ImageView buttonImage = new ImageView(image);
+    buttonImage.setFitWidth(100);
+    buttonImage.setFitHeight(100);
 
     // Label setup
-    Label label = new Label(buttonText);
-    label.setStyle("-fx-background-color: transparent;"
+    Label buttonLabel = new Label(buttonText);
+    buttonLabel.setStyle("-fx-background-color: transparent;"
         + "-fx-font-weight: normal;"
         + "-fx-font-size: 50;"
         + "-fx-padding: 5 10;"
         + "-fx-background-radius: 10;");
 
     // Set the white button
-    if (backgroundColor.equals("rgb(255, 255, 255)")) {
-      label.setStyle(label.getStyle() + "-fx-text-fill: black;");
+    if (buttonColor.equals("rgb(255, 255, 255)")) {
+      buttonLabel.setStyle(buttonLabel.getStyle() + "-fx-text-fill: black;");
       this.setStyle(
           "-fx-background-color: rgb(255, 255, 255);"
               + "-fx-border-color: black;"
@@ -47,20 +47,20 @@ public class MidButtonWithImage extends Button {
               + "-fx-padding: 10 20;");
       // Set the non-white button
     } else {
-      label.setStyle(label.getStyle() + "-fx-text-fill: white;");
+      buttonLabel.setStyle(buttonLabel.getStyle() + "-fx-text-fill: white;");
       this.setStyle(
-          "-fx-background-color: " + backgroundColor + ";"
+          "-fx-background-color: " + buttonColor + ";"
               + "-fx-border-radius: 30;"
               + "-fx-background-radius: 30;"
               + "-fx-padding: 10 20;");
     }
 
     // Spacer to push image to the right
-    Region hSpacer = new Region();
-    HBox.setHgrow(hSpacer, Priority.ALWAYS);
+    Region hspacer = new Region();
+    HBox.setHgrow(hspacer, Priority.ALWAYS);
 
     // Create the label & image row
-    HBox contentRow = new HBox(10, label, hSpacer, imageView);
+    HBox contentRow = new HBox(10, buttonLabel, hspacer, buttonImage);
     contentRow.setPadding(new Insets(10));
     contentRow.setPrefHeight(140);
     contentRow.setStyle("-fx-alignment: center;");
