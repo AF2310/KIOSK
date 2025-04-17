@@ -109,12 +109,6 @@ public class App extends Application {
     rowOfButtons.getChildren().addAll(eatHereBtn, takeAwayBtn);
     rowOfBurgers.getChildren().addAll(burgerView1, burgerView2, burgerView3);
 
-    // Layout editor to force specific layouts for top and bottom of burgers
-    // Region topSpace = new Region();
-    // Region bottomSpace = new Region();
-    // VBox.setVgrow(topSpace, Priority.ALWAYS);
-    // VBox.setVgrow(bottomSpace, Priority.ALWAYS);
-
     mainWindow.getChildren().addAll(
         welcome, companyTitle, rowOfBurgers, rowOfButtons, mysql);
 
