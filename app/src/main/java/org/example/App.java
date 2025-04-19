@@ -25,6 +25,11 @@ public class App extends Application {
     primaryStage.show();
   }
 
+  /**
+   * To run the app.
+   *
+   * @param args Input
+   */
   public static void main(String[] args) {
     launch(args);
   }

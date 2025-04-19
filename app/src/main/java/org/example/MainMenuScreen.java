@@ -50,11 +50,17 @@ public class MainMenuScreen {
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(20));
 
+    // Top area layout
     VBox top = new VBox(10);
     top.setAlignment(Pos.CENTER);
 
+    // Category bar
+
+    // Alignment with horizontal box
     HBox categoryBar = new HBox(15);
     categoryBar.setAlignment(Pos.CENTER);
+
+    // 
     for (int i = 0; i < categories.length; i++) {
       String cat = categories[i];
       Button btn = new Button(cat);
@@ -68,19 +74,32 @@ public class MainMenuScreen {
     }
     top.getChildren().add(categoryBar);
 
+    //
     layout.setTop(top);
     setupMenuData();
     updateGrid();
-    layout.setCenter(itemGrid);
+    //layout.setCenter(itemGrid);
 
-    
-    HBox arrows = new HBox(20);
+    // Center/Middle of the Menu items
+    // Spacing between arrow buttons and menu items will be 40
+    HBox centerMenuContent = new HBox(40);
+    centerMenuContent.setAlignment(Pos. CENTER);
+    centerMenuContent.setPadding(new Insets(10));
+
+    // Arrow buttons to navigate
+
+    // Alignment with horizontal box
+    HBox arrows = new HBox(500);
+    // arrows.setPadding(new Insets(30));
     arrows.setAlignment(Pos.CENTER);
 
+    // Arrow left
     Image leftArrow = new Image(getClass().getResourceAsStream("/nav_bl.png"));
     ImageView leftArrowView = new ImageView(leftArrow);
     leftArrowView.setFitHeight(40);
     leftArrowView.setPreserveRatio(true);
+
+    // User can click left button as long as it's still inside the set bounds (>0)
     leftArrowView.setOnMouseClicked(e -> {
       if (currentCategoryIndex > 0) {
         currentCategoryIndex--;
@@ -88,10 +107,14 @@ public class MainMenuScreen {
       }
     });
 
+    // Arrow right
+    // Uses same image as left button just mirrowed
     ImageView rightArrowView = new ImageView(leftArrow);
     rightArrowView.setFitHeight(40);
     rightArrowView.setPreserveRatio(true);
     rightArrowView.setScaleX(-1);
+
+    // User can click the right button as long as its not in the last category (Special offers)
     rightArrowView.setOnMouseClicked(e -> {
       if (currentCategoryIndex < categories.length - 1
           && !categories[currentCategoryIndex].equals("Special Offers")) {
@@ -100,14 +123,21 @@ public class MainMenuScreen {
       }
     });
 
-    arrows.getChildren().addAll(leftArrowView, rightArrowView);
-    layout.setBottom(arrows);
-    BorderPane.setAlignment(arrows, Pos.CENTER);
+    // Add Arrow buttons together
+    //arrows.getChildren().addAll(leftArrowView, rightArrowView);
+    //layout.setBottom(arrows);
+    //BorderPane.setAlignment(arrows, Pos.CENTER);
+
+    // Add all Menu items and left right buttons in center of menu in the right order
+    centerMenuContent.getChildren().addAll(leftArrowView, itemGrid, rightArrowView);
+    // Setting center menu content to center of actual menu
+    layout.setCenter(centerMenuContent);
 
     // Bottom buttons
     HBox bottomButtons = new HBox();
     bottomButtons.setPadding(new Insets(10));
     
+    // Swedish Flag - Language button
     ImageView sweFlag = new ImageView(new Image(getClass().getResourceAsStream("/swe.png")));
     sweFlag.setFitWidth(30);
     sweFlag.setFitHeight(30);
@@ -141,7 +171,8 @@ public class MainMenuScreen {
 
     // Added all components for the bottom part
     bottomButtons.getChildren().addAll(langButton, spacer, cancelButton, cartButton);
-    layout.setBottom(new VBox(arrows, bottomButtons));
+    //layout.setBottom(new VBox(arrows, bottomButtons));
+    layout.setBottom(new VBox(bottomButtons));
   
 
     StackPane mainPane = new StackPane(layout);
@@ -149,8 +180,11 @@ public class MainMenuScreen {
 
     return new Scene(mainPane, windowWidth, windowHeight);
   }
-  // Added the items for the menu one by one for now, not through the database
 
+  /**
+   * Adds all menu items.
+   * Added the items for the menu one by one for now, not through the database.
+   */
   private void setupMenuData() {
     categoryItems.put("Burgers", List.of(
         new SimpleItem("Standard Burger", "/food/standard_burger.png"),
