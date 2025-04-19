@@ -1,6 +1,7 @@
 package org.example;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ public class MainMenuScreen {
   private final Map<String, List<SimpleItem>> categoryItems = new HashMap<>();
   private int currentCategoryIndex = 0;
   private final GridPane itemGrid = new GridPane();
+  private final List<Button> categoryButtons = new ArrayList<>();
 
   /**
    * Creates the main menu scene.
@@ -64,12 +66,14 @@ public class MainMenuScreen {
     for (int i = 0; i < categories.length; i++) {
       String cat = categories[i];
       Button btn = new Button(cat);
-      btn.setStyle("-fx-background-color: transparent; -fx-font-size: 18px; -fx-text-fill: black;");
+      styleCategoryButton(btn, i == currentCategoryIndex);
       final int index = i;
       btn.setOnAction(e -> {
         currentCategoryIndex = index;
         updateGrid();
+        updateCategoryButtonStyles();
       });
+      categoryButtons.add(btn);
       categoryBar.getChildren().add(btn);
     }
     top.getChildren().add(categoryBar);
@@ -104,6 +108,9 @@ public class MainMenuScreen {
       if (currentCategoryIndex > 0) {
         currentCategoryIndex--;
         updateGrid();
+      } else {
+        currentCategoryIndex = categoryButtons.size() - 1;
+        updateGrid();
       }
     });
 
@@ -119,6 +126,9 @@ public class MainMenuScreen {
       if (currentCategoryIndex < categories.length - 1
           && !categories[currentCategoryIndex].equals("Special Offers")) {
         currentCategoryIndex++;
+        updateGrid();
+      } else {
+        currentCategoryIndex = 0;
         updateGrid();
       }
     });
@@ -162,7 +172,7 @@ public class MainMenuScreen {
     cancelButton.setOnAction(e -> primaryStage.setScene(welcomeScrScene));
 
     Button cartButton = new Button();
-    ImageView cartIcon = new ImageView(new Image(getClass().getResourceAsStream("/cart_wh.png")));
+    ImageView cartIcon = new ImageView(new Image(getClass().getResourceAsStream("/cart_bl.png")));
     cartIcon.setFitWidth(30);
     cartIcon.setFitHeight(30);
     cartButton.setGraphic(cartIcon);
@@ -244,5 +254,51 @@ public class MainMenuScreen {
       box.getChildren().addAll(imageView, name);
       itemGrid.add(box, i % 3, i / 3);
     }
+
+    updateCategoryButtonStyles();
+
   }
+
+  /**
+   * helper method for dynamic category button highlighting
+   * @param button any given (category) button
+   * @param current to check if currently selected
+   */
+  private void styleCategoryButton(Button button, boolean current) {
+
+    if (current) {
+
+      button.setStyle(
+        "-fx-background-color: #AFAFAF;"
+        + "-fx-font-size: 18px;"
+        + "-fx-text-fill: black;"
+        + "-fx-font-weight: bold;"
+      );
+
+    } else {
+
+      button.setStyle(
+        "-fx-background-color: #E5E5E5;"
+        + "-fx-font-size: 16px;"
+        + "-fx-text-fill: black;"
+      );
+
+    }
+
+  } 
+
+  /**
+   * Helper method to update highlighting of category buttons
+   * iterates through category button list to update them all at once
+   */
+  private void updateCategoryButtonStyles() {
+
+    for (int i = 0; i < categoryButtons.size(); i++) {
+
+      styleCategoryButton(categoryButtons.get(i), i == currentCategoryIndex);
+
+    }
+
+  }
+
 }
