@@ -99,8 +99,17 @@ public class MainMenuScreen {
     leftArrowView.setFitHeight(40);
     leftArrowView.setPreserveRatio(true);
 
+    // Wrap arrow ImageView in a StackPane to make borders of button visible
+    StackPane leftArrowWrapper = new StackPane(leftArrowView);
+    leftArrowWrapper.setStyle(
+        "-fx-border-color: black;"
+        + "-fx-border-width: 5px;"
+        + "-fx-border-radius: 5px;" // For round borders
+        + "-fx-padding: 10px;"      // For wider clickable area
+    );
+
     // User can click left button as long as it's still inside the set bounds (>0)
-    leftArrowView.setOnMouseClicked(e -> {
+    leftArrowWrapper.setOnMouseClicked(e -> {
       if (currentCategoryIndex > 0) {
         currentCategoryIndex--;
         updateGrid();
@@ -114,8 +123,17 @@ public class MainMenuScreen {
     rightArrowView.setPreserveRatio(true);
     rightArrowView.setScaleX(-1);
 
+    // Wrap arrow ImageView in a StackPane to make borders of button visible
+    StackPane rightArrowWrapper = new StackPane(rightArrowView);
+    rightArrowWrapper.setStyle(
+          "-fx-border-color: black;"
+          + "-fx-border-width: 5px;"
+          + "-fx-border-radius: 5px;" // For round borders
+          + "-fx-padding: 10px;"      // For wider clickable area
+    );
+
     // User can click the right button as long as its not in the last category (Special offers)
-    rightArrowView.setOnMouseClicked(e -> {
+    rightArrowWrapper.setOnMouseClicked(e -> {
       if (currentCategoryIndex < categories.length - 1
           && !categories[currentCategoryIndex].equals("Special Offers")) {
         currentCategoryIndex++;
@@ -129,7 +147,7 @@ public class MainMenuScreen {
     //BorderPane.setAlignment(arrows, Pos.CENTER);
 
     // Add all Menu items and left right buttons in center of menu in the right order
-    centerMenuContent.getChildren().addAll(leftArrowView, itemGrid, rightArrowView);
+    centerMenuContent.getChildren().addAll(leftArrowWrapper, itemGrid, rightArrowWrapper);
     // Setting center menu content to center of actual menu
     layout.setCenter(centerMenuContent);
 
