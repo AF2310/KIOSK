@@ -1,7 +1,6 @@
 package org.example;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,8 +93,8 @@ public class MainMenuScreen {
     rightArrowView.setPreserveRatio(true);
     rightArrowView.setScaleX(-1);
     rightArrowView.setOnMouseClicked(e -> {
-      if (currentCategoryIndex < categories.length - 1 &&
-          !categories[currentCategoryIndex].equals("Special Offers")) {
+      if (currentCategoryIndex < categories.length - 1
+          && !categories[currentCategoryIndex].equals("Special Offers")) {
         currentCategoryIndex++;
         updateGrid();
       }
@@ -109,12 +108,11 @@ public class MainMenuScreen {
     HBox bottomButtons = new HBox();
     bottomButtons.setPadding(new Insets(10));
     
-    
-    Button langButton = new Button();
     ImageView sweFlag = new ImageView(new Image(getClass().getResourceAsStream("/swe.png")));
     sweFlag.setFitWidth(30);
     sweFlag.setFitHeight(30);
     sweFlag.setPreserveRatio(true);
+    Button langButton = new Button();
     langButton.setGraphic(sweFlag);
     langButton.setStyle("-fx-background-color: transparent;");
     langButton.setMinSize(40, 40);
@@ -143,7 +141,7 @@ public class MainMenuScreen {
 
     // Added all components for the bottom part
     bottomButtons.getChildren().addAll(langButton, spacer, cancelButton, cartButton);
-    layout.setBottom(new VBox(arrows,bottomButtons));
+    layout.setBottom(new VBox(arrows, bottomButtons));
   
 
     StackPane mainPane = new StackPane(layout);
@@ -152,6 +150,7 @@ public class MainMenuScreen {
     return new Scene(mainPane, windowWidth, windowHeight);
   }
   // Added the items for the menu one by one for now, not through the database
+
   private void setupMenuData() {
     categoryItems.put("Burgers", List.of(
         new SimpleItem("Standard Burger", "/food/standard_burger.png"),
@@ -193,23 +192,23 @@ public class MainMenuScreen {
     List<SimpleItem> items = categoryItems.get(category);
 
     for (int i = 0; i < items.size(); i++) {
-        SimpleItem item = items.get(i);
-        VBox box = new VBox(10);
-        box.setAlignment(Pos.CENTER);
+      SimpleItem item = items.get(i);
+      VBox box = new VBox(10);
+      box.setAlignment(Pos.CENTER);
 
-        String imagePath = item.imagePath();
-        InputStream inputStream = getClass().getResourceAsStream(imagePath);
-        if (inputStream == null) {
-            System.err.println("ERROR: Image not found - " + imagePath);
-        }
+      String imagePath = item.imagePath();
+      InputStream inputStream = getClass().getResourceAsStream(imagePath);
+      if (inputStream == null) {
+        System.err.println("ERROR: Image not found - " + imagePath);
+      }
 
-        ImageView imageView = new ImageView(new Image(inputStream));
-        imageView.setFitHeight(150);
-        imageView.setPreserveRatio(true);
-        Label name = new Label(item.name());
+      ImageView imageView = new ImageView(new Image(inputStream));
+      imageView.setFitHeight(150);
+      imageView.setPreserveRatio(true);
+      Label name = new Label(item.name());
 
-        box.getChildren().addAll(imageView, name);
-        itemGrid.add(box, i % 3, i / 3);
+      box.getChildren().addAll(imageView, name);
+      itemGrid.add(box, i % 3, i / 3);
     }
-}
+  }
 }
