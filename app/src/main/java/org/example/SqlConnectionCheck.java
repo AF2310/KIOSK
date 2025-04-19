@@ -59,5 +59,19 @@ public class SqlConnectionCheck {
 
   public Connection getConnection() {
     return connection;
+    
+  }
+
+  /**
+  * Closes the database connection.
+  */
+  public void closeConnection() {
+    try {
+      if (connection != null && !connection.isClosed()) {
+        connection.close();
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 }
