@@ -1,8 +1,22 @@
 package org.example;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -12,50 +26,190 @@ import javafx.stage.Stage;
  */
 public class MainMenuScreen {
 
+  private record SimpleItem(String name, String imagePath) {}
+
+  private final String[] categories = {"Burgers", "Sides", "Drinks", "Desserts", "Special Offers"};
+  private final Map<String, List<SimpleItem>> categoryItems = new HashMap<>();
+  private int currentCategoryIndex = 0;
+  private final GridPane itemGrid = new GridPane();
+
   /**
-   * The main menu scene.
+   * Creates the main menu scene.
+   *
+   * @param primaryStage the stage
+   * @param windowWidth the width of the window
+   * @param windowHeight the height of the window
+   * @param welcomeScrScene the scene to return to on cancel
+   * @return the created scene
    */
   public Scene createMainMenuScreen(
       Stage primaryStage,
       double windowWidth,
       double windowHeight,
       Scene welcomeScrScene) {
-    // Initialize the main menu layout (VBox)
-    VBox mainMenuLayout = new VBox(20);
-    mainMenuLayout.setAlignment(Pos.CENTER);
 
-    // Create the menu label
-    Label mainMenuLabel = new Label("This is the Main Menu");
+    BorderPane layout = new BorderPane();
+    layout.setPadding(new Insets(20));
 
-    // Style the label
-    mainMenuLabel.setStyle(
-        "-fx-background-color: transparent;"
-        + "-fx-text-fill: black;"
-        + "-fx-font-weight: bolder;"
-        + "-fx-font-size: 60;"
-        + "-fx-background-radius: 10;");
+    VBox top = new VBox(10);
+    top.setAlignment(Pos.CENTER);
 
-    // Create the back button
-    var backButton = new MidButtonWithImage(
-        "Back",
-        "/back.png",
-        "rgb(255, 255, 255)");
+    HBox categoryBar = new HBox(15);
+    categoryBar.setAlignment(Pos.CENTER);
+    for (int i = 0; i < categories.length; i++) {
+      String cat = categories[i];
+      Button btn = new Button(cat);
+      btn.setStyle("-fx-background-color: transparent; -fx-font-size: 18px; -fx-text-fill: black;");
+      final int index = i;
+      btn.setOnAction(e -> {
+        currentCategoryIndex = index;
+        updateGrid();
+      });
+      categoryBar.getChildren().add(btn);
+    }
+    top.getChildren().add(categoryBar);
 
-    // Set action for back button (to go back to the welcome screen)
-    backButton.setOnAction(e -> {
-      primaryStage.setScene(welcomeScrScene);
+    layout.setTop(top);
+    setupMenuData();
+    updateGrid();
+    layout.setCenter(itemGrid);
+
+    
+    HBox arrows = new HBox(20);
+    arrows.setAlignment(Pos.CENTER);
+
+    Image leftArrow = new Image(getClass().getResourceAsStream("/nav_bl.png"));
+    ImageView leftArrowView = new ImageView(leftArrow);
+    leftArrowView.setFitHeight(40);
+    leftArrowView.setPreserveRatio(true);
+    leftArrowView.setOnMouseClicked(e -> {
+      if (currentCategoryIndex > 0) {
+        currentCategoryIndex--;
+        updateGrid();
+      }
     });
 
-    // Add the label and the back button to the layout
-    mainMenuLayout.getChildren().addAll(mainMenuLabel, backButton);
+    ImageView rightArrowView = new ImageView(leftArrow);
+    rightArrowView.setFitHeight(40);
+    rightArrowView.setPreserveRatio(true);
+    rightArrowView.setScaleX(-1);
+    rightArrowView.setOnMouseClicked(e -> {
+      if (currentCategoryIndex < categories.length - 1 &&
+          !categories[currentCategoryIndex].equals("Special Offers")) {
+        currentCategoryIndex++;
+        updateGrid();
+      }
+    });
 
-    // Wrap in a stackpane
-    StackPane mainPane = new StackPane(mainMenuLayout);
+    arrows.getChildren().addAll(leftArrowView, rightArrowView);
+    layout.setBottom(arrows);
+    BorderPane.setAlignment(arrows, Pos.CENTER);
+
+    // Bottom buttons
+    HBox bottomButtons = new HBox();
+    bottomButtons.setPadding(new Insets(10));
+    
+    
+    Button langButton = new Button();
+    ImageView sweFlag = new ImageView(new Image(getClass().getResourceAsStream("/swe.png")));
+    sweFlag.setFitWidth(30);
+    sweFlag.setFitHeight(30);
+    sweFlag.setPreserveRatio(true);
+    langButton.setGraphic(sweFlag);
+    langButton.setStyle("-fx-background-color: transparent;");
+    langButton.setMinSize(40, 40);
+
+    // Spacer to push right buttons
+    Region spacer = new Region();
+    HBox.setHgrow(spacer, Priority.ALWAYS);
+
+    
+    Button cancelButton = new Button();
+    ImageView cancelIcon = new ImageView(new Image(getClass().getResourceAsStream("/cancel.png")));
+    cancelIcon.setFitWidth(30);
+    cancelIcon.setFitHeight(30);
+    cancelButton.setGraphic(cancelIcon);
+    cancelButton.setStyle("-fx-background-color: transparent;");
+    cancelButton.setMinSize(40, 40);
+    cancelButton.setOnAction(e -> primaryStage.setScene(welcomeScrScene));
+
+    Button cartButton = new Button();
+    ImageView cartIcon = new ImageView(new Image(getClass().getResourceAsStream("/cart_wh.png")));
+    cartIcon.setFitWidth(30);
+    cartIcon.setFitHeight(30);
+    cartButton.setGraphic(cartIcon);
+    cartButton.setStyle("-fx-background-color: transparent;");
+    cartButton.setMinSize(40, 40);
+
+    // Added all components for the bottom part
+    bottomButtons.getChildren().addAll(langButton, spacer, cancelButton, cartButton);
+    layout.setBottom(new VBox(arrows,bottomButtons));
+  
+
+    StackPane mainPane = new StackPane(layout);
     mainPane.setPrefSize(windowWidth, windowHeight);
 
-    // Create the main menu scene and go there
-    Scene mainMenuScene = new Scene(mainPane, windowWidth, windowHeight);
-
-    return mainMenuScene;
+    return new Scene(mainPane, windowWidth, windowHeight);
   }
+  // Added the items for the menu one by one for now, not through the database
+  private void setupMenuData() {
+    categoryItems.put("Burgers", List.of(
+        new SimpleItem("Standard Burger", "/food/standard_burger.png"),
+        new SimpleItem("Juicy Chicken Burger", "/food/chicken_burger.png"),
+        new SimpleItem("All American Burger", "/food/all_american_burger.png"),
+        new SimpleItem("Double Cheese & Bacon Burger", "/food/double_burger.png"),
+        new SimpleItem("Extra Veggies Burger", "/food/extra_vegies_burger.png"),
+        new SimpleItem("King Burger", "/food/king_burger.png")));
+
+    categoryItems.put("Sides", List.of(
+        new SimpleItem("French Fries", "/food/french_fries.png"),
+        new SimpleItem("Greek Salad", "/food/salad.png"),
+        new SimpleItem("Country-Style Potatoes", "/food/cs_potatoes.png"),
+        new SimpleItem("Fried Onion Rings", "/food/rings.png")));
+
+    categoryItems.put("Drinks", List.of(
+        new SimpleItem("Cola Zero", "/food/cola.png"),
+        new SimpleItem("Fanta", "/food/fanta.png"),
+        new SimpleItem("Americano", "/food/coffee.png")));
+
+    categoryItems.put("Desserts", List.of(
+        new SimpleItem("Milkshake", "/food/Milkshake.png"),
+        new SimpleItem("Tiramisu", "/food/tiramisu.png"),
+        new SimpleItem("Strawberry Cupcake", "/food/cupcake.png")));
+
+    categoryItems.put("Special Offers", List.of(
+        new SimpleItem("Extra Veggies Burger", "/food/extra_vegies_burger.png"),
+        new SimpleItem("Strawberry Cupcake", "/food/cupcake.png")));
+  }
+
+  private void updateGrid() {
+    itemGrid.getChildren().clear();
+    itemGrid.setHgap(20);
+    itemGrid.setVgap(20);
+    itemGrid.setPadding(new Insets(10));
+    itemGrid.setAlignment(Pos.CENTER);
+
+    String category = categories[currentCategoryIndex];
+    List<SimpleItem> items = categoryItems.get(category);
+
+    for (int i = 0; i < items.size(); i++) {
+        SimpleItem item = items.get(i);
+        VBox box = new VBox(10);
+        box.setAlignment(Pos.CENTER);
+
+        String imagePath = item.imagePath();
+        InputStream inputStream = getClass().getResourceAsStream(imagePath);
+        if (inputStream == null) {
+            System.err.println("ERROR: Image not found - " + imagePath);
+        }
+
+        ImageView imageView = new ImageView(new Image(inputStream));
+        imageView.setFitHeight(150);
+        imageView.setPreserveRatio(true);
+        Label name = new Label(item.name());
+
+        box.getChildren().addAll(imageView, name);
+        itemGrid.add(box, i % 3, i / 3);
+    }
+}
 }
