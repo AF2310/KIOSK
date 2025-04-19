@@ -16,6 +16,7 @@ public class Meal {
   private int id;
   private String name;
   private List<Single> contents;
+  private String type;
 
   /**
    * Constructs a meal with a given name.
@@ -25,6 +26,14 @@ public class Meal {
   public Meal(String name) {
     this.name = name;
     this.contents = new ArrayList<>();
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
   }
 
   public int getId() {
@@ -68,19 +77,45 @@ public class Meal {
 
 
   public void chooseMain(Single main) {
-    contents.add(main);
+    if (main != null && main.getType().name().equalsIgnoreCase("main")) {
+      contents.add(main);
+    } else {
+      System.out.println("Invalid main dish item.");
+    }
+    
   }
 
   public void chooseSide(Single side) {
-    contents.add(side);
+    if (side != null && side.getType().name().equalsIgnoreCase("side")) {
+      contents.add(side);
+    } else {
+      System.out.println("Invalid side item.");
+    }
+    
 }
 
   public void chooseDrink(Single drink) {
-    contents.add(drink);
+    if (drink != null && drink.getType().name().equalsIgnoreCase("drink")) {
+      contents.add(drink);
+    } else {
+      System.out.println("Invalid drink item.");
+    }
+  }
+
+  public void chooseDessert(Single Dessert) {
+    if (Dessert != null && Dessert.getType().name().equalsIgnoreCase("Dessert")) {
+      contents.add(Dessert);
+    } else {
+      System.out.println("Invalid drink item.");
+    }
   }
 
   public void addExtra(Single extra) {
-    contents.add(extra);
+    if (extra != null && extra.getType().name().equalsIgnoreCase("extra")) {
+      contents.add(extra);
+    } else {
+      System.out.println("Invalid side item.");
+    }
   }
 
 
@@ -129,6 +164,52 @@ public class Meal {
     return list;
     
   }
+
+  
+  public void addItemFromOptions(String type, Single selected) {
+    contents.add(selected);
+  }
+  public List<Meal> getMealsUnder(Connection conn, float priceLimit) throws SQLException {
+    List<Meal> list = new ArrayList<>();
+    String sql = "SELECT id, name, total_price FROM meals WHERE total_price < ?";
+    PreparedStatement ps = conn.prepareStatement(sql);
+    ps.setFloat(1, priceLimit);
+    ResultSet rs = ps.executeQuery();
+    while (rs.next()) {
+      Meal m = new Meal(rs.getString("name"));
+      m.id = rs.getInt("id");
+      list.add(m);
+    }
+    ps.close();
+    rs.close();
+    return list;
+  }
+
+  public List<Meal> getMealsbyType(Connection conn,String type) throws SQLException {
+    List<Meal> list = new ArrayList<>();
+    String sql = "SELECT id, name, total_price FROM meals WHERE type = ?";
+    PreparedStatement ps = conn.prepareStatement(sql);
+    ps.setString(1, type);
+    ResultSet rs = ps.executeQuery();
+    while (rs.next()) {
+      Meal m = new Meal(rs.getString("name"));
+      m.id = rs.getInt("id");
+      list.add(m);
+    }
+    ps.close();
+    rs.close();
+    return list;
+  }
+
+  public void printSummary(){
+    System.out.println("Meal: " + name);
+        for (Single s : contents) {
+          System.out.printf(" - %s (%s): $%.2f\n", s.getName(), s.getType(), s.getPrice());
+        }
+        System.out.printf("Total: $%.2f\n", getTotalPrice());
+
+  }
+
 
 
 }
