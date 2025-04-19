@@ -60,38 +60,41 @@ public class MainMenuScreen {
     HBox categoryBar = new HBox(15);
     categoryBar.setAlignment(Pos.CENTER);
 
-    // 
+    // Setting category bar; making each category clickable
     for (int i = 0; i < categories.length; i++) {
+      // Getting current category
       String cat = categories[i];
+      // Making it a button
       Button btn = new Button(cat);
-      btn.setStyle("-fx-background-color: transparent; -fx-font-size: 18px; -fx-text-fill: black;");
+
+      // Button asthetics
+      btn.setStyle(
+          "-fx-background-color: transparent;"
+          + "-fx-font-size: 18px;"
+          + "-fx-text-fill: black;"
+      );
+
+      // Action when button clicked
       final int index = i;
       btn.setOnAction(e -> {
         currentCategoryIndex = index;
         updateGrid();
       });
+
+      // Add final button to horizontal category bar
       categoryBar.getChildren().add(btn);
     }
+    
+    // Adding it all together
     top.getChildren().add(categoryBar);
 
-    //
+    // setting category bar on top of menu layout
     layout.setTop(top);
+
     setupMenuData();
     updateGrid();
-    //layout.setCenter(itemGrid);
 
-    // Center/Middle of the Menu items
-    // Spacing between arrow buttons and menu items will be 40
-    //HBox centerMenuContent = new HBox(40);
-    //centerMenuContent.setAlignment(Pos. CENTER);
-    //centerMenuContent.setPadding(new Insets(10));
-
-    // Arrow buttons to navigate
-
-    // Alignment with horizontal box
-    //HBox arrows = new HBox(500);
-    // arrows.setPadding(new Insets(30));
-    //arrows.setAlignment(Pos.CENTER);
+    // Arrow buttons to navigate menu
 
     // Arrow left
     Image leftArrow = new Image(getClass().getResourceAsStream("/nav_bl.png"));
@@ -115,7 +118,7 @@ public class MainMenuScreen {
     leftArrowWrapper.setMaxHeight(300);
     leftArrowWrapper.setPrefHeight(300);
 
-    // User can click left button as long as it's still inside the set bounds (>0)
+    // left button clickable as long as it's still inside set bounds (>0)
     leftArrowWrapper.setOnMouseClicked(e -> {
       if (currentCategoryIndex > 0) {
         currentCategoryIndex--;
@@ -146,7 +149,7 @@ public class MainMenuScreen {
     rightArrowWrapper.setMaxHeight(300);
     rightArrowWrapper.setPrefHeight(300);
 
-    // User can click the right button as long as its not in the last category (Special offers)
+    // right button clickable as long as its not in last category (Special offers)
     rightArrowWrapper.setOnMouseClicked(e -> {
       if (currentCategoryIndex < categories.length - 1
           && !categories[currentCategoryIndex].equals("Special Offers")) {
@@ -161,30 +164,31 @@ public class MainMenuScreen {
     VBox rightArrowVcentered = new VBox(rightArrowWrapper);
     rightArrowVcentered.setAlignment(Pos.CENTER);
 
-    // Add Arrow buttons together
-    //arrows.getChildren().addAll(leftArrowView, rightArrowView);
-    //layout.setBottom(arrows);
-    //BorderPane.setAlignment(arrows, Pos.CENTER);
+    // Add all Menu items and left right buttons in center of menu in the right order
     // Locking arrows left and right and locking menu items in middle
     BorderPane centerMenuLayout = new BorderPane();
     centerMenuLayout.setLeft(leftArrowVcentered);
     centerMenuLayout.setCenter(itemGrid);
     centerMenuLayout.setRight(rightArrowVcentered);
 
-    // Add all Menu items and left right buttons in center of menu in the right order
-    //centerMenuContent.getChildren().addAll(leftArrowWrapper, itemGrid, rightArrowWrapper);
     // Setting center menu content to center of actual menu
     layout.setCenter(centerMenuLayout);
 
     // Bottom buttons
+
     HBox bottomButtons = new HBox();
     bottomButtons.setPadding(new Insets(10));
     
     // Swedish Flag - Language button
+    // Get image
     ImageView sweFlag = new ImageView(new Image(getClass().getResourceAsStream("/swe.png")));
+
+    // Set sizes
     sweFlag.setFitWidth(30);
     sweFlag.setFitHeight(30);
     sweFlag.setPreserveRatio(true);
+
+    // Create actual language button - putting it all together
     Button langButton = new Button();
     langButton.setGraphic(sweFlag);
     langButton.setStyle("-fx-background-color: transparent;");
@@ -194,9 +198,11 @@ public class MainMenuScreen {
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
-    
+    // Create cancel button
     Button cancelButton = new Button();
     ImageView cancelIcon = new ImageView(new Image(getClass().getResourceAsStream("/cancel.png")));
+
+    // Adjust asthetics of button
     cancelIcon.setFitWidth(30);
     cancelIcon.setFitHeight(30);
     cancelButton.setGraphic(cancelIcon);
@@ -204,8 +210,11 @@ public class MainMenuScreen {
     cancelButton.setMinSize(40, 40);
     cancelButton.setOnAction(e -> primaryStage.setScene(welcomeScrScene));
 
+    // Create Cart button
     Button cartButton = new Button();
     ImageView cartIcon = new ImageView(new Image(getClass().getResourceAsStream("/cart_wh.png")));
+
+    // Adjust asthetics of button
     cartIcon.setFitWidth(30);
     cartIcon.setFitHeight(30);
     cartButton.setGraphic(cartIcon);
@@ -214,18 +223,19 @@ public class MainMenuScreen {
 
     // Added all components for the bottom part
     bottomButtons.getChildren().addAll(langButton, spacer, cancelButton, cartButton);
-    //layout.setBottom(new VBox(arrows, bottomButtons));
     layout.setBottom(new VBox(bottomButtons));
   
-
+    // Add layout to Stack Pane for dynamic sizing
     StackPane mainPane = new StackPane(layout);
     mainPane.setPrefSize(windowWidth, windowHeight);
 
+
+    // Create final scene result
     return new Scene(mainPane, windowWidth, windowHeight);
   }
 
   /**
-   * Adds all menu items.
+   * Adds all menu items. Filling each item category with items.
    * Added the items for the menu one by one for now, not through the database.
    */
   private void setupMenuData() {
@@ -258,32 +268,43 @@ public class MainMenuScreen {
         new SimpleItem("Strawberry Cupcake", "/food/cupcake.png")));
   }
 
+  /**
+   * Loading all items into the menu's item grid.
+   */
   private void updateGrid() {
+    // Empty grid and create new layout
     itemGrid.getChildren().clear();
     itemGrid.setHgap(20);
     itemGrid.setVgap(20);
     itemGrid.setPadding(new Insets(10));
     itemGrid.setAlignment(Pos.CENTER);
 
+    // Fetch data
     String category = categories[currentCategoryIndex];
     List<SimpleItem> items = categoryItems.get(category);
 
+    // Populate the grid with item and corresponding image one by one
     for (int i = 0; i < items.size(); i++) {
+      // Get item and set proper layout
       SimpleItem item = items.get(i);
       VBox box = new VBox(10);
       box.setAlignment(Pos.CENTER);
 
+      // Get image path
       String imagePath = item.imagePath();
       InputStream inputStream = getClass().getResourceAsStream(imagePath);
+      // Errorhandling when no image found
       if (inputStream == null) {
         System.err.println("ERROR: Image not found - " + imagePath);
       }
 
+      // Add image to View
       ImageView imageView = new ImageView(new Image(inputStream));
       imageView.setFitHeight(150);
       imageView.setPreserveRatio(true);
       Label name = new Label(item.name());
 
+      // Connect it all and add to item grid
       box.getChildren().addAll(imageView, name);
       itemGrid.add(box, i % 3, i / 3);
     }
