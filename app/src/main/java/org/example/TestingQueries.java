@@ -13,11 +13,11 @@ public class TestingQueries {
   public TestingQueries(Connection connection) {
     this.connection = connection;
   }
-
   /**
    * Example method to insert something into order.
-   * @param orderType
-   * @param details
+   *
+   * @param username Admin username to insert.
+   * @param password Admin password to insert.
    * @return boolean
    */
 
@@ -31,6 +31,7 @@ public class TestingQueries {
       int affectedRows = pstmt.executeUpdate();
       connection.commit();
       return affectedRows > 0;
+      
     } catch (SQLException e) {
       try {
         connection.rollback(); // Cancels operation if an error occurs
