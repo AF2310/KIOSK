@@ -149,8 +149,8 @@ public class WelcomeScreen {
       primaryStage.setScene(mainMenuScene);
     });
 
-    AdminMenuScreen adminMenuScreen = new AdminMenuScreen();
-    Scene adminMenuScene = adminMenuScreen.createAdminScreen(primaryStage, windowWidth, windowHeight, scene);
+    AdminLoginScreen adminLoginScreen = new AdminLoginScreen();
+    Scene adminMenuScene = adminLoginScreen.createAdminLoginScreen(primaryStage, windowWidth, windowHeight, scene);
     //Temporary Button to get to the admin menu
     takeAwayBtn.setOnAction(e -> {
       primaryStage.setScene(adminMenuScene);
