@@ -20,8 +20,10 @@ public class AdminMenuScreen {
     VBox adminMenuLayout = new VBox(20);
     adminMenuLayout.setAlignment(Pos.CENTER);
 
+    //the field to enter the username
     TextField usernameField = new TextField();
     usernameField.setMaxSize(460, 140);
+    usernameField.setPromptText("Username");
     usernameField.setStyle(
       "-fx-background-color: grey;"
       + "-fx-text-fill: black;"
@@ -29,6 +31,23 @@ public class AdminMenuScreen {
       + "-fx-font-size: 50;"
       + "-fx-background-radius: 10;"
     );
+      
+    //the field to enter the password
+    TextField passwordField = new TextField();
+    passwordField.setMaxSize(460, 140);
+    passwordField.setPromptText("Password");
+    passwordField.setStyle(
+      "-fx-background-color: grey;"
+      + "-fx-text-fill: black;"
+      + "-fx-font-weight: lighter;"
+      + "-fx-font-size: 50;"
+      + "-fx-background-radius: 10;"
+    );
+
+    var loginButton = new MidButtonWithImage(
+      "Login",
+      "/back.png",
+      "rgb(255, 255, 255)");
 
     //back button
     var backButton = new MidButtonWithImage(
@@ -41,7 +60,7 @@ public class AdminMenuScreen {
       primaryStage.setScene(welcomeScrScene);
     });
     
-    adminMenuLayout.getChildren().addAll(usernameField, backButton);
+    adminMenuLayout.getChildren().addAll(usernameField, passwordField, loginButton, backButton);
 
     //put everything into a stackpane
     StackPane mainPane = new StackPane(adminMenuLayout);
