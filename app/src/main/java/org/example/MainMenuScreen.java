@@ -103,10 +103,16 @@ public class MainMenuScreen {
     StackPane leftArrowWrapper = new StackPane(leftArrowView);
     leftArrowWrapper.setStyle(
         "-fx-border-color: black;"
-        + "-fx-border-width: 5px;"
-        + "-fx-border-radius: 5px;" // For round borders
+        + "-fx-border-width: 3px;"
+        + "-fx-border-radius: 9px;" // For round borders
         + "-fx-padding: 10px;"      // For wider clickable area
     );
+    leftArrowWrapper.setMinWidth(60);
+    leftArrowWrapper.setMaxWidth(60);
+    leftArrowWrapper.setMinHeight(300);
+    leftArrowWrapper.setMaxHeight(300);
+    leftArrowWrapper.setPrefWidth(60);
+    leftArrowWrapper.setPrefHeight(300);
 
     // User can click left button as long as it's still inside the set bounds (>0)
     leftArrowWrapper.setOnMouseClicked(e -> {
@@ -127,10 +133,16 @@ public class MainMenuScreen {
     StackPane rightArrowWrapper = new StackPane(rightArrowView);
     rightArrowWrapper.setStyle(
           "-fx-border-color: black;"
-          + "-fx-border-width: 5px;"
-          + "-fx-border-radius: 5px;" // For round borders
+          + "-fx-border-width: 3px;"
+          + "-fx-border-radius: 9px;" // For round borders
           + "-fx-padding: 10px;"      // For wider clickable area
     );
+    rightArrowWrapper.setMinWidth(60);
+    rightArrowWrapper.setMaxWidth(60);
+    rightArrowWrapper.setMinHeight(300);
+    rightArrowWrapper.setMaxHeight(300);
+    rightArrowWrapper.setPrefWidth(60);
+    rightArrowWrapper.setPrefHeight(300);
 
     // User can click the right button as long as its not in the last category (Special offers)
     rightArrowWrapper.setOnMouseClicked(e -> {
