@@ -82,16 +82,16 @@ public class MainMenuScreen {
 
     // Center/Middle of the Menu items
     // Spacing between arrow buttons and menu items will be 40
-    HBox centerMenuContent = new HBox(40);
-    centerMenuContent.setAlignment(Pos. CENTER);
-    centerMenuContent.setPadding(new Insets(10));
+    //HBox centerMenuContent = new HBox(40);
+    //centerMenuContent.setAlignment(Pos. CENTER);
+    //centerMenuContent.setPadding(new Insets(10));
 
     // Arrow buttons to navigate
 
     // Alignment with horizontal box
-    HBox arrows = new HBox(500);
+    //HBox arrows = new HBox(500);
     // arrows.setPadding(new Insets(30));
-    arrows.setAlignment(Pos.CENTER);
+    //arrows.setAlignment(Pos.CENTER);
 
     // Arrow left
     Image leftArrow = new Image(getClass().getResourceAsStream("/nav_bl.png"));
@@ -107,11 +107,12 @@ public class MainMenuScreen {
         + "-fx-border-radius: 9px;" // For round borders
         + "-fx-padding: 10px;"      // For wider clickable area
     );
+    // Setting border size (yes this much is needed)
     leftArrowWrapper.setMinWidth(60);
     leftArrowWrapper.setMaxWidth(60);
+    leftArrowWrapper.setPrefWidth(60);
     leftArrowWrapper.setMinHeight(300);
     leftArrowWrapper.setMaxHeight(300);
-    leftArrowWrapper.setPrefWidth(60);
     leftArrowWrapper.setPrefHeight(300);
 
     // User can click left button as long as it's still inside the set bounds (>0)
@@ -137,11 +138,12 @@ public class MainMenuScreen {
           + "-fx-border-radius: 9px;" // For round borders
           + "-fx-padding: 10px;"      // For wider clickable area
     );
+    // Setting border size (yes this much is needed)
     rightArrowWrapper.setMinWidth(60);
     rightArrowWrapper.setMaxWidth(60);
+    rightArrowWrapper.setPrefWidth(60);
     rightArrowWrapper.setMinHeight(300);
     rightArrowWrapper.setMaxHeight(300);
-    rightArrowWrapper.setPrefWidth(60);
     rightArrowWrapper.setPrefHeight(300);
 
     // User can click the right button as long as its not in the last category (Special offers)
@@ -153,15 +155,26 @@ public class MainMenuScreen {
       }
     });
 
+    // Make arrow buttons left right centered vertically
+    VBox leftArrowVcentered = new VBox(leftArrowWrapper);
+    leftArrowVcentered.setAlignment(Pos.CENTER);
+    VBox rightArrowVcentered = new VBox(rightArrowWrapper);
+    rightArrowVcentered.setAlignment(Pos.CENTER);
+
     // Add Arrow buttons together
     //arrows.getChildren().addAll(leftArrowView, rightArrowView);
     //layout.setBottom(arrows);
     //BorderPane.setAlignment(arrows, Pos.CENTER);
+    // Locking arrows left and right and locking menu items in middle
+    BorderPane centerMenuLayout = new BorderPane();
+    centerMenuLayout.setLeft(leftArrowVcentered);
+    centerMenuLayout.setCenter(itemGrid);
+    centerMenuLayout.setRight(rightArrowVcentered);
 
     // Add all Menu items and left right buttons in center of menu in the right order
-    centerMenuContent.getChildren().addAll(leftArrowWrapper, itemGrid, rightArrowWrapper);
+    //centerMenuContent.getChildren().addAll(leftArrowWrapper, itemGrid, rightArrowWrapper);
     // Setting center menu content to center of actual menu
-    layout.setCenter(centerMenuContent);
+    layout.setCenter(centerMenuLayout);
 
     // Bottom buttons
     HBox bottomButtons = new HBox();
