@@ -1,5 +1,6 @@
 # OS FILES
 .DS_Store
+**/.DS_Store
 Thumbs.db
 __MACOSX/
 desktop.ini
