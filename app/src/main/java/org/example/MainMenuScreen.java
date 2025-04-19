@@ -269,8 +269,8 @@ public class MainMenuScreen {
     if (current) {
 
       button.setStyle(
-        "-fx-background-color: #AFAFAF;"
-        + "-fx-font-size: 18px;"
+        "-fx-background-color: transparent;"
+        + "-fx-font-size: 20px;"
         + "-fx-text-fill: black;"
         + "-fx-font-weight: bold;"
       );
@@ -278,9 +278,10 @@ public class MainMenuScreen {
     } else {
 
       button.setStyle(
-        "-fx-background-color: #E5E5E5;"
-        + "-fx-font-size: 16px;"
-        + "-fx-text-fill: black;"
+        "-fx-background-color: transparent;"
+        + "-fx-font-size: 18px;"
+        + "-fx-text-fill: rgba(0, 0, 0, 0.33);"
+        + "-fx-font-weight: bold;"
       );
 
     }
