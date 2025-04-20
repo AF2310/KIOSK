@@ -182,6 +182,26 @@ public class Single {
     return options;
   }
 
+  public List<Single> getSinglesUnder(float priceLimit, Connection conn) throws SQLException {
+    List<Single> list = new ArrayList<>();
+    String sql = "SELECT id, name, price, type FROM singles WHERE price < ?";
+    PreparedStatement ps = conn.prepareStatement(sql);
+    ps.setFloat(1, priceLimit);
+    ResultSet rs = ps.executeQuery();
+    while (rs.next()) {
+      list.add(new Single(
+            rs.getInt("id"),
+            rs.getString("name"),
+            rs.getFloat("price"),
+            SingleType.valueOf(rs.getString("type"))
+            ));
+    }
+    rs.close();
+    ps.close();
+    return list;
+
+  }
+
   public List<Single> getOptionsByType(Connection conn, String type) throws SQLException {
     return getOptionsByType(conn, SingleType.valueOf(type.toUpperCase()));
   }
