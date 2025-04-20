@@ -1,6 +1,7 @@
 package org.example;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,12 +26,15 @@ import javafx.stage.Stage;
  */
 public class MainMenuScreen {
 
+  private Stage primaryStage;
+
   private record SimpleItem(String name, String imagePath) {}
 
   private final String[] categories = {"Burgers", "Sides", "Drinks", "Desserts", "Special Offers"};
   private final Map<String, List<SimpleItem>> categoryItems = new HashMap<>();
   private int currentCategoryIndex = 0;
   private final GridPane itemGrid = new GridPane();
+  private final List<Button> categoryButtons = new ArrayList<>();
 
   /**
    * Creates the main menu scene.
@@ -46,6 +50,8 @@ public class MainMenuScreen {
       double windowWidth,
       double windowHeight,
       Scene welcomeScrScene) {
+
+    this.primaryStage = primaryStage;
 
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(20));
@@ -66,23 +72,26 @@ public class MainMenuScreen {
       String cat = categories[i];
       // Making it a button
       Button btn = new Button(cat);
+      styleCategoryButton(btn, i == currentCategoryIndex);
 
       // Button asthetics
-      btn.setStyle(
+      /*btn.setStyle(
           "-fx-background-color: transparent;"
           + "-fx-font-size: 18px;"
           + "-fx-text-fill: black;"
-      );
+      );*/
 
       // Action when button clicked
       final int index = i;
       btn.setOnAction(e -> {
         currentCategoryIndex = index;
         updateGrid();
+        updateCategoryButtonStyles();
       });
 
       // Add final button to horizontal category bar
-      categoryBar.getChildren().add(btn);
+      categoryButtons.add(btn);
+      //categoryBar.getChildren().add(btn);
     }
     
     // Adding it all together
@@ -123,6 +132,9 @@ public class MainMenuScreen {
       if (currentCategoryIndex > 0) {
         currentCategoryIndex--;
         updateGrid();
+      } else {
+        currentCategoryIndex = categoryButtons.size() - 1;
+        updateGrid();
       }
     });
 
@@ -154,6 +166,9 @@ public class MainMenuScreen {
       if (currentCategoryIndex < categories.length - 1
           && !categories[currentCategoryIndex].equals("Special Offers")) {
         currentCategoryIndex++;
+        updateGrid();
+      } else {
+        currentCategoryIndex = 0;
         updateGrid();
       }
     });
@@ -212,7 +227,7 @@ public class MainMenuScreen {
 
     // Create Cart button
     Button cartButton = new Button();
-    ImageView cartIcon = new ImageView(new Image(getClass().getResourceAsStream("/cart_wh.png")));
+    ImageView cartIcon = new ImageView(new Image(getClass().getResourceAsStream("/cart_bl.png")));
 
     // Adjust asthetics of button
     cartIcon.setFitWidth(30);
@@ -304,9 +319,62 @@ public class MainMenuScreen {
       imageView.setPreserveRatio(true);
       Label name = new Label(item.name());
 
+      ItemDetails detailScreen = new ItemDetails();
+      imageView.setOnMouseClicked(e -> {
+        Scene detailScene = detailScreen.create(this.primaryStage, this.primaryStage.getScene(), item.name(), item.imagePath());
+        this.primaryStage.setScene(detailScene);
+      });
+
       // Connect it all and add to item grid
       box.getChildren().addAll(imageView, name);
       itemGrid.add(box, i % 3, i / 3);
     }
+
+    updateCategoryButtonStyles();
+
   }
+
+  /**
+   * helper method for dynamic category button highlighting
+   * @param button any given (category) button
+   * @param current to check if currently selected
+   */
+  private void styleCategoryButton(Button button, boolean current) {
+
+    if (current) {
+
+      button.setStyle(
+        "-fx-background-color: transparent;"
+        + "-fx-font-size: 20px;"
+        + "-fx-text-fill: black;"
+        + "-fx-font-weight: bold;"
+      );
+
+    } else {
+
+      button.setStyle(
+        "-fx-background-color: transparent;"
+        + "-fx-font-size: 18px;"
+        + "-fx-text-fill: rgba(0, 0, 0, 0.33);"
+        + "-fx-font-weight: bold;"
+      );
+
+    }
+
+  } 
+
+  /**
+   * Helper method to update highlighting of category buttons
+   * iterates through category button list to update them all at once
+   */
+  private void updateCategoryButtonStyles() {
+
+    for (int i = 0; i < categoryButtons.size(); i++) {
+
+      styleCategoryButton(categoryButtons.get(i), i == currentCategoryIndex);
+
+    }
+
+  }
+
 }
