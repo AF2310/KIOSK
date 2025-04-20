@@ -9,13 +9,15 @@ import java.util.List;
  */
 
 public interface Imenu {
-  List<MainDish> getMainDishes();
+  List<Single> getMains();
 
-  List<Side> getSides();
+  List<Single> getSides();
 
-  List<Drink> getDrinks();
+  List<Single> getDrinks();
 
-  List<Dessert> getDesserts();
+  List<Single> getDesserts();
+
+  List<Single> getExtras();
   
   List<Object> searchProducts(String name);
 }
