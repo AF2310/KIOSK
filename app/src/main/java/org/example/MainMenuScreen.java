@@ -26,6 +26,8 @@ import javafx.stage.Stage;
  */
 public class MainMenuScreen {
 
+  private Stage primaryStage;
+
   private record SimpleItem(String name, String imagePath) {}
 
   private final String[] categories = {"Burgers", "Sides", "Drinks", "Desserts", "Special Offers"};
@@ -48,6 +50,8 @@ public class MainMenuScreen {
       double windowWidth,
       double windowHeight,
       Scene welcomeScrScene) {
+
+    this.primaryStage = primaryStage;
 
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(20));
@@ -250,6 +254,12 @@ public class MainMenuScreen {
       imageView.setFitHeight(150);
       imageView.setPreserveRatio(true);
       Label name = new Label(item.name());
+
+      ItemDetails detailScreen = new ItemDetails();
+      imageView.setOnMouseClicked(e -> {
+        Scene detailScene = detailScreen.create(this.primaryStage, this.primaryStage.getScene(), item.name(), item.imagePath());
+        this.primaryStage.setScene(detailScene);
+      });
 
       box.getChildren().addAll(imageView, name);
       itemGrid.add(box, i % 3, i / 3);
