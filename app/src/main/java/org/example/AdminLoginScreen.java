@@ -3,6 +3,7 @@ package org.example;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -54,7 +55,7 @@ public class AdminLoginScreen {
     );
       
     //the field to enter the password
-    TextField passwordField = new TextField();
+    PasswordField passwordField = new PasswordField();
     passwordField.setMaxSize(460, 140);
     passwordField.setPromptText("Password");
     passwordField.setStyle(
@@ -132,7 +133,7 @@ public class AdminLoginScreen {
 
     // Create the admin login scene and go there
     Scene adminLoginScene = new Scene(mainPane, windowWidth, windowHeight);
-    
+
     // Puts focus on the admin menu label so that the username field isn't by default focused
     adminMenuTitle.requestFocus(); 
 
