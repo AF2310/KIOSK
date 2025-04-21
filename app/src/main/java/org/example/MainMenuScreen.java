@@ -7,11 +7,9 @@ import java.util.List;
 import java.util.Map;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.OverrunStyle;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -77,73 +75,39 @@ public class MainMenuScreen {
       String cat = categories[i];
 
       // Making a button for each category
-      //Button btn = new Button(cat);
-      Button btn;
+      Button btn = new Button(cat);
       
       // Special offers needs special handling for asthetics of button
       if (cat.equalsIgnoreCase("Special Offers")) {
-        btn = new Button(cat);
-
-        //btn.setWrapText(true);
+        // 2-lined text needs centering
         btn.setTextAlignment(TextAlignment.CENTER);
-        btn.setAlignment(Pos.CENTER);
 
         // Button will now decide its' own size -> label decides
         btn.setMaxWidth(Double.MAX_VALUE);
-        //btn.setPrefHeight(Region.USE_COMPUTED_SIZE);
 
+        // Button asthetics
+        // Transparent to make circle behind button visible instead
         btn.setStyle(
             "-fx-background-color: transparent;"
             + "-fx-padding: 0px;"
         );
 
-        // Make circle
+        // Make circle with noticible color
         Circle specialsCircle = new Circle(100);
         specialsCircle.setFill(Color.GOLD);
-        // Circle asthetics
-        //specialsCircle.setManaged(true);
-        //specialsCircle.toBack();
-
-        // Label for Special Offers
-        //Label specialsLabel = new Label(cat);
-        //specialsLabel.setMouseTransparent(true);
-
-        // Label text line break and alignment
-        //specialsLabel.setWrapText(true);
-        //specialsLabel.setTextAlignment(TextAlignment.CENTER);
-        //specialsLabel.setAlignment(Pos.CENTER);
 
         // Creating Stackpane to stack label over circle
-
-        //StackPane specialsStack = new StackPane(specialsCircle, specialsLabel);
-        //StackPane specialsStack = new StackPane(specialsCircle, specialsLabel);
         StackPane specialsStack = new StackPane(specialsCircle, btn);
+
+        // 
         specialsStack.setAlignment(Pos.CENTER);
         specialsStack.setPrefSize(200, 200);
-        
-        // Move stack into button
-        //btn.setGraphic(specialsStack);
-        // Reset text
-        //btn.setText("");
-        /*btn.setStyle(
-            "-fx-background-color: transparent;"
-            + "-fx-padding: 0px;"
-        );*/
-
-        //StackPane specialsButton = new StackPane(specialsCircle, new Label(cat));
-        //specialsButton.setPrefSize(200, 200);
-        //specialsButton.setCursor(Cursor.HAND);
-        //btn.setPrefSize(200, 200);
-
-        //btn.setMaxWidth(Double.MAX_VALUE);
-        //btn.setTextOverrun(OverrunStyle.CLIP);;
-        //btn.setWrapText(true);
 
         categoryBar.getChildren().add(specialsStack);
 
       // Any other category that is not special offers
       } else {
-        btn = new Button(cat);
+
         categoryBar.getChildren().add(btn);
       }
       
