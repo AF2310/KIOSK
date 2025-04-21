@@ -33,7 +33,7 @@ public class MainMenuScreen {
 
   private Stage primaryStage;
 
-  private record SimpleItem(String name, String imagePath) {}
+  private record SimpleItem(String name, String imagePath, double price) {}
 
   private final String[] categories = {"Burgers", "Sides", "Drinks", "Desserts", "Special Offers"};
   private final Map<String, List<SimpleItem>> categoryItems = new HashMap<>();
@@ -325,32 +325,32 @@ public class MainMenuScreen {
    */
   private void setupMenuData() {
     categoryItems.put("Burgers", List.of(
-        new SimpleItem("Standard Burger", "/food/standard_burger.png"),
-        new SimpleItem("Juicy Chicken Burger", "/food/chicken_burger.png"),
-        new SimpleItem("All American Burger", "/food/all_american_burger.png"),
-        new SimpleItem("Double Cheese & Bacon Burger", "/food/double_burger.png"),
-        new SimpleItem("Extra Veggies Burger", "/food/extra_vegies_burger.png"),
-        new SimpleItem("King Burger", "/food/king_burger.png")));
+        new SimpleItem("Standard Burger", "/food/standard_burger.png", 25),
+        new SimpleItem("Juicy Chicken Burger", "/food/chicken_burger.png", 25),
+        new SimpleItem("All American Burger", "/food/all_american_burger.png", 25),
+        new SimpleItem("Double Cheese & Bacon Burger", "/food/double_burger.png", 25),
+        new SimpleItem("Extra Veggies Burger", "/food/extra_vegies_burger.png", 20),
+        new SimpleItem("King Burger", "/food/king_burger.png", 25)));
 
     categoryItems.put("Sides", List.of(
-        new SimpleItem("French Fries", "/food/french_fries.png"),
-        new SimpleItem("Greek Salad", "/food/salad.png"),
-        new SimpleItem("Country-Style Potatoes", "/food/cs_potatoes.png"),
-        new SimpleItem("Fried Onion Rings", "/food/rings.png")));
+        new SimpleItem("French Fries", "/food/french_fries.png", 15),
+        new SimpleItem("Greek Salad", "/food/salad.png", 25),
+        new SimpleItem("Country-Style Potatoes", "/food/cs_potatoes.png", 15),
+        new SimpleItem("Fried Onion Rings", "/food/rings.png", 12)));
 
     categoryItems.put("Drinks", List.of(
-        new SimpleItem("Cola Zero", "/food/cola.png"),
-        new SimpleItem("Fanta", "/food/fanta.png"),
-        new SimpleItem("Americano", "/food/coffee.png")));
+        new SimpleItem("Cola Zero", "/food/cola.png", 10),
+        new SimpleItem("Fanta", "/food/fanta.png", 10),
+        new SimpleItem("Americano", "/food/coffee.png", 15)));
 
     categoryItems.put("Desserts", List.of(
-        new SimpleItem("Milkshake", "/food/Milkshake.png"),
-        new SimpleItem("Tiramisu", "/food/tiramisu.png"),
-        new SimpleItem("Strawberry Cupcake", "/food/cupcake.png")));
+        new SimpleItem("Milkshake", "/food/Milkshake.png", 29),
+        new SimpleItem("Tiramisu", "/food/tiramisu.png", 18),
+        new SimpleItem("Strawberry Cupcake", "/food/cupcake.png", 12)));
 
     categoryItems.put("Special Offers", List.of(
-        new SimpleItem("Extra Veggies Burger", "/food/extra_vegies_burger.png"),
-        new SimpleItem("Strawberry Cupcake", "/food/cupcake.png")));
+        new SimpleItem("Extra Veggies Burger", "/food/extra_vegies_burger.png", 20),
+        new SimpleItem("Strawberry Cupcake", "/food/cupcake.png", 12)));
   }
 
   /**
@@ -412,7 +412,16 @@ public class MainMenuScreen {
 
         // Give item a name
         Label name = new Label(item.name());
-  
+        name.setStyle("-fx-font-size: 16px;");
+        
+        // Format the price (with :-)
+        // Put the price in an Hbox to align it to the right
+        Label price = new Label(String.format("%.0f :-", item.price()));
+        price.setStyle("-fx-font-weight: bold; -fx-font-size: 18px;");
+        HBox priceBox = new HBox(price);
+        priceBox.setAlignment(Pos.BASELINE_RIGHT);
+        
+
         // Item details
         ItemDetails detailScreen = new ItemDetails();
 
@@ -427,7 +436,7 @@ public class MainMenuScreen {
         });
   
         // Connect it all and add to item grid
-        box.getChildren().addAll(imageSlot, name);
+        box.getChildren().addAll(imageSlot, name, priceBox);
         
       // No more items exist -> Item list empty
       // Fill the rest up with empty slots until we reach 6 slots per page
