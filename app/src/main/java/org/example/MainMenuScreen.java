@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Map;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -19,6 +21,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 /**
@@ -70,11 +75,80 @@ public class MainMenuScreen {
     for (int i = 0; i < categories.length; i++) {
       // Getting current category
       String cat = categories[i];
-      // Making it a button
-      Button btn = new Button(cat);
+
+      // Making a button for each category
+      //Button btn = new Button(cat);
+      Button btn;
       
-      // Button asthetics
-      styleCategoryButton(btn, i == currentCategoryIndex);
+      // Special offers needs special handling for asthetics of button
+      if (cat.equalsIgnoreCase("Special Offers")) {
+        btn = new Button(cat);
+
+        //btn.setWrapText(true);
+        btn.setTextAlignment(TextAlignment.CENTER);
+        btn.setAlignment(Pos.CENTER);
+
+        // Button will now decide its' own size -> label decides
+        btn.setMaxWidth(Double.MAX_VALUE);
+        //btn.setPrefHeight(Region.USE_COMPUTED_SIZE);
+
+        btn.setStyle(
+            "-fx-background-color: transparent;"
+            + "-fx-padding: 0px;"
+        );
+
+        // Make circle
+        Circle specialsCircle = new Circle(100);
+        specialsCircle.setFill(Color.GOLD);
+        // Circle asthetics
+        //specialsCircle.setManaged(true);
+        //specialsCircle.toBack();
+
+        // Label for Special Offers
+        //Label specialsLabel = new Label(cat);
+        //specialsLabel.setMouseTransparent(true);
+
+        // Label text line break and alignment
+        //specialsLabel.setWrapText(true);
+        //specialsLabel.setTextAlignment(TextAlignment.CENTER);
+        //specialsLabel.setAlignment(Pos.CENTER);
+
+        // Creating Stackpane to stack label over circle
+
+        //StackPane specialsStack = new StackPane(specialsCircle, specialsLabel);
+        //StackPane specialsStack = new StackPane(specialsCircle, specialsLabel);
+        StackPane specialsStack = new StackPane(specialsCircle, btn);
+        specialsStack.setAlignment(Pos.CENTER);
+        specialsStack.setPrefSize(200, 200);
+        
+        // Move stack into button
+        //btn.setGraphic(specialsStack);
+        // Reset text
+        //btn.setText("");
+        /*btn.setStyle(
+            "-fx-background-color: transparent;"
+            + "-fx-padding: 0px;"
+        );*/
+
+        //StackPane specialsButton = new StackPane(specialsCircle, new Label(cat));
+        //specialsButton.setPrefSize(200, 200);
+        //specialsButton.setCursor(Cursor.HAND);
+        //btn.setPrefSize(200, 200);
+
+        //btn.setMaxWidth(Double.MAX_VALUE);
+        //btn.setTextOverrun(OverrunStyle.CLIP);;
+        //btn.setWrapText(true);
+
+        categoryBar.getChildren().add(specialsStack);
+
+      // Any other category that is not special offers
+      } else {
+        btn = new Button(cat);
+        categoryBar.getChildren().add(btn);
+      }
+      
+      // Button asthetics -> Label highlighting
+      styleCategoryButton(btn, i == currentCategoryIndex, i);
 
       // Action when button clicked
       final int index = i;
@@ -85,8 +159,8 @@ public class MainMenuScreen {
       });
 
       // Add final button to horizontal category bar
+      //categoryBar.getChildren().add(btn);
       categoryButtons.add(btn);
-      categoryBar.getChildren().add(btn);
     }
     
     // Adding it all together
@@ -319,10 +393,12 @@ public class MainMenuScreen {
         // Get image path
         String imagePath = item.imagePath();
         InputStream inputStream = getClass().getResourceAsStream(imagePath);
+
         // Errorhandling when no image found
         if (inputStream == null) {
           System.err.println("ERROR: Image not found - " + imagePath);
         }
+
         // Add image to View
         ImageView imageView = new ImageView(new Image(inputStream));
 
@@ -353,8 +429,8 @@ public class MainMenuScreen {
         // Connect it all and add to item grid
         box.getChildren().addAll(imageSlot, name);
         
-        // No more items exist -> Item list empty
-        // Fill the rest up with empty slots until we reach 6 slots per page
+      // No more items exist -> Item list empty
+      // Fill the rest up with empty slots until we reach 6 slots per page
       } else {
         box.getChildren().addAll(imageSlot, new Label(""));
       }
@@ -372,25 +448,53 @@ public class MainMenuScreen {
    * @param button any given (category) button
    * @param current to check if currently selected
    */
-  private void styleCategoryButton(Button button, boolean current) {
+  private void styleCategoryButton(Button button, boolean current, int currentIndex) {
 
     // Current category the user is in
     if (current) {
-      button.setStyle(
-          "-fx-background-color: transparent;"
-          + "-fx-font-size: 20px;"
-          + "-fx-text-fill: black;"
-          + "-fx-font-weight: bold;"
-      );
 
+      // Special offers category has different asthetics
+      if (categories[currentIndex].equalsIgnoreCase("Special Offers")) {
+        button.setText("Special\nOffers");
+        button.setStyle(
+            "-fx-background-color: transparent;"
+            + "-fx-font-size: 42px;"
+            + "-fx-text-fill: rgb(153, 36, 36);"
+            + "-fx-font-weight: bold;"
+        );
+
+      // Any other category except specials
+      } else {
+        button.setStyle(
+            "-fx-background-color: transparent;"
+            + "-fx-font-size: 50px;"
+            + "-fx-text-fill: black;"
+            + "-fx-font-weight: bold;"
+        );
+      }
+  
     // Other categories the user isn't currently in
     } else {
-      button.setStyle(
-          "-fx-background-color: transparent;"
-          + "-fx-font-size: 18px;"
-          + "-fx-text-fill: rgba(0, 0, 0, 0.33);"
-          + "-fx-font-weight: bold;"
-      );
+
+      // Special offers category has different asthetics
+      if (categories[currentIndex].equalsIgnoreCase("Special Offers")) {
+        button.setText("Special\nOffers");
+        button.setStyle(
+            "-fx-background-color: transparent;"
+            + "-fx-font-size: 34px;"
+            + "-fx-text-fill: rgb(153, 36, 36);"
+            + "-fx-font-weight: bold;"
+        );
+
+      // Any other category except specials
+      } else {
+        button.setStyle(
+            "-fx-background-color: transparent;"
+            + "-fx-font-size: 40px;"
+            + "-fx-text-fill: rgba(0, 0, 0, 0.33);"
+            + "-fx-font-weight: bold;"
+        );
+      }
     }
   } 
 
@@ -401,7 +505,7 @@ public class MainMenuScreen {
   private void updateCategoryButtonStyles() {
 
     for (int i = 0; i < categoryButtons.size(); i++) {
-      styleCategoryButton(categoryButtons.get(i), i == currentCategoryIndex);
+      styleCategoryButton(categoryButtons.get(i), i == currentCategoryIndex, i);
     }
   }
 }
