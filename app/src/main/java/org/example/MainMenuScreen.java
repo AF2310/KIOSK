@@ -294,25 +294,27 @@ public class MainMenuScreen {
     String category = categories[currentCategoryIndex];
     List<SimpleItem> items = categoryItems.get(category);
 
-    // items per row
+    // Max item slots in rows and pages
     int maxItemsPerRow = 3;
     int totalItemsPerPage = 6;
-    // int totalSlotsPerRow = items.size() + maxItemsPerRow;
 
     // Populate the grid with item and corresponding image one by one
-    //for (int i = 0; i < items.size(); i++) {
     for (int i = 0; i < totalItemsPerPage; i++) {
 
       // Create fresh item Slot
       VBox box = new VBox(10);
       box.setAlignment(Pos.CENTER);
 
+      // Make slot with fixed size
+      StackPane imageSlot = new StackPane();
+      imageSlot.setPrefSize(200, 200);
+      imageSlot.setMaxSize(200, 200);
+      imageSlot.setMinSize(200, 200);
+
       // Item exists
       if (i < items.size()) {
-        // Get item and set proper layout
+        // Get current item
         SimpleItem item = items.get(i);
-        // VBox box = new VBox(10);
-        // box.setAlignment(Pos.CENTER);
   
         // Get image path
         String imagePath = item.imagePath();
@@ -323,12 +325,23 @@ public class MainMenuScreen {
         }
         // Add image to View
         ImageView imageView = new ImageView(new Image(inputStream));
+
+        // Adjust image size but not make it blurry
         imageView.setFitHeight(150);
         imageView.setPreserveRatio(true);
+
+        // Move image into image slot and center image
+        imageSlot.getChildren().add(imageView);
+        imageSlot.setAlignment(Pos.CENTER);
+
+        // Give item a name
         Label name = new Label(item.name());
   
+        // Item details
         ItemDetails detailScreen = new ItemDetails();
-        imageView.setOnMouseClicked(e -> {
+
+        // Get item details when clicking on item
+        imageSlot.setOnMouseClicked(e -> {
           Scene detailScene = detailScreen.create(
               this.primaryStage,
               this.primaryStage.getScene(),
@@ -338,15 +351,12 @@ public class MainMenuScreen {
         });
   
         // Connect it all and add to item grid
-        box.getChildren().addAll(imageView, name);
-        // itemGrid.add(box, i % 3, i / 3);
-
-      // No more items exist -> Item list empty
-      // Fill the rest up with empty slots until we reach 6 slots per page
+        box.getChildren().addAll(imageSlot, name);
+        
+        // No more items exist -> Item list empty
+        // Fill the rest up with empty slots until we reach 6 slots per page
       } else {
-        Region emptySlot = new Region();
-        emptySlot.setPrefSize(150, 150);
-        box.getChildren().add(emptySlot);
+        box.getChildren().addAll(imageSlot, new Label(""));
       }
 
       // Add new slot to final item grid
@@ -354,7 +364,6 @@ public class MainMenuScreen {
     }
 
     updateCategoryButtonStyles();
-
   }
 
   /**
