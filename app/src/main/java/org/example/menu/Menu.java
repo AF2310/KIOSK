@@ -6,52 +6,62 @@ import java.sql.SQLException;
 import java.util.List;
 //import org.example.menu.Single;
 //import org.example.menu.Meal;
+
+/**
+ * Menu class that contains/returns all Singles when requested.
+ */
 public class Menu implements Imenu {
   private final List<Single> mains;
   private final List<Single> sides;
   private final List<Single> drinks;
   private final List<Single> extras;
-  private final List<Single> Desserts;
+  private final List<Single> desserts;
   Single singleHelper = new Single(0, "", 0.0f, SingleType.EXTRA);
   
 
+  /**
+   * Constructor of Meal class.
+   *
+   * @param conn server connection
+   * @throws SQLException sql connection issues
+   */
   public Menu(Connection conn) throws SQLException {
     
     this.mains = singleHelper.getOptionsByType(conn, SingleType.MAIN);
     this.sides = singleHelper.getOptionsByType(conn, SingleType.SIDE);
     this.drinks = singleHelper.getOptionsByType(conn, SingleType.DRINK);
     this.extras = singleHelper.getOptionsByType(conn, SingleType.EXTRA);
-    this.Desserts = singleHelper.getOptionsByType(conn, SingleType.DESSERT);
+    this.desserts = singleHelper.getOptionsByType(conn, SingleType.DESSERT);
   }
 
   @Override
   public List<Single> getMains() {
-      return mains;
+    return mains;
   }
 
   @Override
   public List<Single> getSides() {
-      return sides;
+    return sides;
   }
 
   @Override
   public List<Single> getDrinks() {
-      return drinks;
+    return drinks;
   }
 
   @Override
   public List<Single> getExtras() {
-      return extras;
+    return extras;
   }
 
   @Override
   public List<Single> getDesserts() {
-      return Desserts;
+    return desserts;
   }
 
   @Override
   public List<Object> searchProducts(String name) {
-      throw new UnsupportedOperationException("Not supported yet.");
+    throw new UnsupportedOperationException("Not supported yet.");
   }
 
 }

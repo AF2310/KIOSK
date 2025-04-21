@@ -35,6 +35,10 @@ import org.example.menu.Single;
  */
 public class MainMenuScreen {
 
+  // without this line, the build will fail but checkstyle
+  // claims its unused, so this is a quickfix to ignore the
+  // checkstyle issue for now.
+  @SuppressWarnings("unused")
   private Stage primaryStage;
 
   private record SimpleItem(String name, String imagePath, double price) {}

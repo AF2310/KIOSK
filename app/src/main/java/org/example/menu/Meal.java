@@ -75,7 +75,11 @@ public class Meal {
     return total;
   }
 
-
+  /**
+   * Adds a main dish to the meal if the item type is main.
+   *
+   * @param main the main dish to add
+   */
   public void chooseMain(Single main) {
     if (main != null && main.getType().name().equalsIgnoreCase("main")) {
       contents.add(main);
@@ -85,6 +89,11 @@ public class Meal {
     
   }
 
+  /**
+   * Adds a side dish to the meal if the item type is side.
+   *
+   * @param side the side dish to add
+   */
   public void chooseSide(Single side) {
     if (side != null && side.getType().name().equalsIgnoreCase("side")) {
       contents.add(side);
@@ -92,8 +101,13 @@ public class Meal {
       System.out.println("Invalid side item.");
     }
     
-}
+  }
 
+  /**
+   * Adds a drink to the meal if the item type is drink.
+   *
+   * @param drink the drink item to add
+   */
   public void chooseDrink(Single drink) {
     if (drink != null && drink.getType().name().equalsIgnoreCase("drink")) {
       contents.add(drink);
@@ -102,14 +116,24 @@ public class Meal {
     }
   }
 
-  public void chooseDessert(Single Dessert) {
-    if (Dessert != null && Dessert.getType().name().equalsIgnoreCase("Dessert")) {
-      contents.add(Dessert);
+  /**
+   * Adds a dessert to the meal if the item type is dessert.
+   *
+   * @param dessert the dessert item to add
+   */
+  public void chooseDessert(Single dessert) {
+    if (dessert != null && dessert.getType().name().equalsIgnoreCase("Dessert")) {
+      contents.add(dessert);
     } else {
       System.out.println("Invalid drink item.");
     }
   }
 
+  /**
+   * Adds an extra item to the meal if the item type is extra.
+   *
+   * @param extra the extra item to add
+   */
   public void addExtra(Single extra) {
     if (extra != null && extra.getType().name().equalsIgnoreCase("extra")) {
       contents.add(extra);
@@ -121,10 +145,7 @@ public class Meal {
 
   
   /**
-   *.
-   *.
    * The  method  is responsible for saving the meal data to a database.
-   *
    */
   public void saveToDb(Connection conn) throws SQLException {
     String sql = "INSERT INTO meals (name, total_price) VALUES (?, ?)";
@@ -143,10 +164,8 @@ public class Meal {
     
   /**
    * The method is responsible for retrieving all meals from a database.
-   *
-   *
    */
-  public List<Meal> getAllMeals(Connection conn) throws SQLException{
+  public List<Meal> getAllMeals(Connection conn) throws SQLException {
     List<Meal> list = new ArrayList<>();
     String sql = "SELECT id, name FROM meals";
     Statement stmt = conn.createStatement();
@@ -165,10 +184,25 @@ public class Meal {
     
   }
 
-  
+  /**
+   * Adds a selected item to the meal based on its' type.
+   *
+   * @param type type of the item
+   * @param selected selected item to add
+   */
   public void addItemFromOptions(String type, Single selected) {
     contents.add(selected);
   }
+
+  /**
+   * Retrieves a list of meals from the database that are
+   * under the input price limit.
+   *
+   * @param conn database connection
+   * @param priceLimit maximum price for filtering meals
+   * @return list of meals priced under the input limit
+   * @throws SQLException if a database access error occurs
+   */
   public List<Meal> getMealsUnder(Connection conn, float priceLimit) throws SQLException {
     List<Meal> list = new ArrayList<>();
     String sql = "SELECT id, name, total_price FROM meals WHERE total_price < ?";
@@ -185,28 +219,57 @@ public class Meal {
     return list;
   }
 
-  public List<Meal> getMealsbyType(Connection conn,String type) throws SQLException {
+  /**
+   * Retrieves a list of meals from the database.
+   * The meals are filerted by the input meal type.
+   *
+   * @param conn database connection
+   * @param type type of meal that is requested
+   * @return list of meals of the given type
+   * @throws SQLException if a database access error occurs
+   */
+  public List<Meal> getMealsbyType(Connection conn, String type) throws SQLException {
+
+    // list to store resulting Meals in
     List<Meal> list = new ArrayList<>();
+
+    // SQL query to select all specified Meals
     String sql = "SELECT id, name, total_price FROM meals WHERE type = ?";
+
+    // Prepare SQL statement with current connection
     PreparedStatement ps = conn.prepareStatement(sql);
+
+    // Bind type to SQL query
     ps.setString(1, type);
+
+    // Execute query to retrieve wanted Meals
     ResultSet rs = ps.executeQuery();
+
+    // Iterate over result set and construct Meal objects from each row
     while (rs.next()) {
       Meal m = new Meal(rs.getString("name"));
       m.id = rs.getInt("id");
       list.add(m);
     }
+
+    // Close result set and statement and return build list
     ps.close();
     rs.close();
     return list;
   }
 
-  public void printSummary(){
+  
+  /**
+   * Prints a summary of the meal including the item's name, type, price,
+   * and total price.
+   */
+  public void printSummary() {
     System.out.println("Meal: " + name);
-        for (Single s : contents) {
-          System.out.printf(" - %s (%s): $%.2f\n", s.getName(), s.getType(), s.getPrice());
-        }
-        System.out.printf("Total: $%.2f\n", getTotalPrice());
+
+    for (Single s : contents) {
+      System.out.printf(" - %s (%s): $%.2f\n", s.getName(), s.getType(), s.getPrice());
+    }
+    System.out.printf("Total: $%.2f\n", getTotalPrice());
 
   }
 

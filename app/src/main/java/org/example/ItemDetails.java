@@ -19,6 +19,15 @@ import javafx.stage.Stage;
  */
 public class ItemDetails {
 
+  /**
+   * Creating a scene for a specific item, displaying all item details.
+   *
+   * @param primaryStage what is the primary stage
+   * @param prevScene what was the previous stage
+   * @param name name os the item
+   * @param imagePath path to the item's image
+   * @return scene containing all item details
+   */
   public Scene create(Stage primaryStage, Scene prevScene, String name, String imagePath) {
 
     BorderPane layout = new BorderPane();
@@ -30,9 +39,7 @@ public class ItemDetails {
     InputStream inputStream = getClass().getResourceAsStream(imagePath);
 
     if (inputStream == null) {
-
       System.err.println("Image not found - " + imagePath);
-
     }
 
     ImageView imageView = new ImageView(new Image(inputStream));
@@ -41,8 +48,8 @@ public class ItemDetails {
 
     Label nameLabel = new Label(name);
     nameLabel.setStyle(
-      "-fx-font-size: 20px;"
-      + "-fx-font-weight: bold;"
+        "-fx-font-size: 20px;"
+        + "-fx-font-weight: bold;"
     );
 
     Button backButton = new Button("Return");
@@ -54,5 +61,4 @@ public class ItemDetails {
     return new Scene(layout, 1920, 1080);
 
   }
-    
 }
