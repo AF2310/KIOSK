@@ -5,7 +5,16 @@ package org.example.menu;
  */
 public class Dessert extends Single {
   // id added to avoid error
-  public Dessert(int id, String name, float price,SingleType type) {
-    super(id, name, price,type);
+
+  /**
+   * Dessert constructor.
+   *
+   * @param id id int dessert
+   * @param name name string dessert
+   * @param price price dessert
+   * @param type type of single
+   */
+  public Dessert(int id, String name, float price, SingleType type) {
+    super(id, name, price, type);
   }
 }

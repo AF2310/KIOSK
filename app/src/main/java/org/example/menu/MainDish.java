@@ -5,8 +5,17 @@ package org.example.menu;
  * represents a main dish item with a name and price.
  */
 public class MainDish extends Single {
-  public MainDish(int id, String name, float price,SingleType type) {
-    super(id, name, price,type);
+
+  /**
+   * The main dish constructor.
+   *
+   * @param id dish id
+   * @param name string name dish
+   * @param price price dish
+   * @param type dish single type; what kind of dish
+   */
+  public MainDish(int id, String name, float price, SingleType type) {
+    super(id, name, price, type);
   }
   
 }

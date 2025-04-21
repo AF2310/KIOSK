@@ -67,12 +67,13 @@ public class MainMenuScreen {
    * @param windowHeight the height of the window
    * @param welcomeScrScene the scene to return to on cancel
    * @return the created scene
+   * @throws SQLException error server quick fix
    */
   public Scene createMainMenuScreen(
       Stage primaryStage,
       double windowWidth,
       double windowHeight,
-      Scene welcomeScrScene) {
+      Scene welcomeScrScene) throws SQLException {
 
     this.primaryStage = primaryStage;
 
@@ -500,8 +501,8 @@ public class MainMenuScreen {
     for (int i = 0; i < categoryButtons.size(); i++) {
       styleCategoryButton(categoryButtons.get(i), i == currentCategoryIndex, i);
     }
-  }
-}
+//  }
+//}
 
     // Create final scene result
     return new Scene(mainPane, windowWidth, windowHeight);
