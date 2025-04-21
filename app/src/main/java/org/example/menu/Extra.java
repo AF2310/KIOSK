@@ -7,7 +7,7 @@ package org.example.menu;
  */
 public class Extra extends Single {
   // id added to avoid error
-  public Extra(int id, String name, float price) {
-    super(id, name, price);
+  public Extra(int id, String name, float price,SingleType type) {
+    super(id, name, price,type);
   }
 }

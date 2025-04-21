@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * The class represents an ingredient with properties like id and name,
- *  and provides methods to save ingredients to a database and 
+ *  and provides methods to save ingredients to a database and
  * retrieve all ingredients from the database.
  */
 public class Ingredient {

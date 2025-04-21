@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Abstract base class for all single items on the menu.
  */
@@ -18,6 +19,7 @@ public class Single {
   protected float price;
   protected List<Ingredient> ingredients;
   public int id;
+  private SingleType type;
 
   /**
    *.
@@ -26,11 +28,12 @@ public class Single {
    *
    *
    */
-  public Single(int id, String name, float price) {
+  public Single(int id, String name, float price ,SingleType type) {
     this.id = id;
     this.name = name;
     this.price = price;
     this.ingredients = new ArrayList<>();
+    this.type = type;
   }
 
   /**
@@ -78,6 +81,10 @@ public class Single {
     return id;
   }
 
+  public SingleType getType() {
+    return type;
+  }
+
   /**
    * The method adds the current item to a specified object.
    *
@@ -122,7 +129,8 @@ public class Single {
       list.add(new Single(
           rs.getInt("id"),
           rs.getString("name"),
-          rs.getFloat("price")
+          rs.getFloat("price"),
+          SingleType.valueOf(rs.getString("type"))
       ));
     }
     rs.close();
@@ -152,5 +160,105 @@ public class Single {
 
   }
 
+  public List<Single> getOptionsByType(Connection conn, SingleType type) throws SQLException {
+    List<Single> options = new ArrayList<>();
+    String sql = "SELECT id, name, price, type FROM singles WHERE type = ?";
+
+    PreparedStatement stmt = conn.prepareStatement(sql);
+    stmt.setString(1, type.name());
+    ResultSet rs = stmt.executeQuery();
+
+    while (rs.next()) {
+        options.add(new Single(
+            rs.getInt("id"),
+            rs.getString("name"),
+            rs.getFloat("price"),
+            SingleType.valueOf(rs.getString("type"))
+        ));
+    }
+
+    rs.close();
+    stmt.close();
+    return options;
+  }
+
+  public List<Single> getSinglesUnder(float priceLimit, Connection conn) throws SQLException {
+    List<Single> list = new ArrayList<>();
+    String sql = "SELECT id, name, price, type FROM singles WHERE price < ?";
+    PreparedStatement ps = conn.prepareStatement(sql);
+    ps.setFloat(1, priceLimit);
+    ResultSet rs = ps.executeQuery();
+    while (rs.next()) {
+      list.add(new Single(
+            rs.getInt("id"),
+            rs.getString("name"),
+            rs.getFloat("price"),
+            SingleType.valueOf(rs.getString("type"))
+            ));
+    }
+    rs.close();
+    ps.close();
+    return list;
+
+  }
+
+  public List<Single> getOptionsByType(Connection conn, String type) throws SQLException {
+    return getOptionsByType(conn, SingleType.valueOf(type.toUpperCase()));
+  }
+
+  public List<Single> getOptionsByCategoryId(Connection conn, int categoryId) throws SQLException {
+    List<Single> options = new ArrayList<>();
+    String sql = "SELECT i.id, i.name, i.price, c.name AS category_name " +
+    "FROM item i " +
+    "JOIN category c ON i.category_id = c.category_id " +
+    "WHERE i.category_id = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, categoryId);
+      ResultSet rs = stmt.executeQuery();
+      while (rs.next()) {
+        String categoryName = rs.getString("category_name").toUpperCase().trim();
+        SingleType type;
+        try {
+          type = SingleType.valueOf(categoryName);
+        } catch (IllegalArgumentException e) {
+          type = SingleType.EXTRA;
+        }
+        options.add(new Single(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getFloat("price"),
+                type
+            ));
+      }
+      rs.close();
+    }
+    return options;
+  }
+
+    /*public List<Single> getOptionsByCategoryName(Connection conn, String categoryName) throws SQLException {
+      List<Single> options = new ArrayList<>();
+      String sql = "SELECT i.id, i.name, i.price, c.name AS category_name " +
+      "FROM item i " +
+      "JOIN category c ON i.category_id = c.category_id " +
+      "WHERE c.name = ?";
+      try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, categoryName);
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+          options.add(new Single(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getFloat("price"),
+                rs.getString("category_name")
+            ));
+        }
+        rs.close();
+      }
+      return options;
+    }*/
+
+
+
+  }
+
   
-}

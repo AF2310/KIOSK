@@ -1,5 +1,18 @@
 package org.example;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.example.menu.Imenu;
+import org.example.menu.Menu;
+import org.example.menu.Single;
+
+import javafx.geometry.Insets;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +53,13 @@ public class MainMenuScreen {
   private final List<Button> categoryButtons = new ArrayList<>();
 
   /**
+   * Creates the main menu scene.
+   *
+   * @param primaryStage the stage
+   * @param windowWidth the width of the window
+   * @param windowHeight the height of the window
+   * @param welcomeScrScene the scene to return to on cancel
+   * @return the created scene
    * Creates the main menu scene.
    *
    * @param primaryStage the stage
@@ -287,7 +307,7 @@ public class MainMenuScreen {
    * Adds all menu items. Filling each item category with items.
    * Added the items for the menu one by one for now, not through the database.
    */
-  private void setupMenuData() {
+  /*private void setupMenuData() {
     categoryItems.put("Burgers", List.of(
         new SimpleItem("Standard Burger", "/food/standard_burger.png", 25),
         new SimpleItem("Juicy Chicken Burger", "/food/chicken_burger.png", 25),
@@ -315,12 +335,12 @@ public class MainMenuScreen {
     categoryItems.put("Special Offers", List.of(
         new SimpleItem("Extra Veggies Burger", "/food/extra_vegies_burger.png", 20),
         new SimpleItem("Strawberry Cupcake", "/food/cupcake.png", 12)));
-  }
+  }*/
 
   /**
    * Loading all items into the menu's item grid.
    */
-  private void updateGrid() {
+  /*private void updateGrid() {
     // Empty grid and create new layout
     itemGrid.getChildren().clear();
     itemGrid.setHgap(20);
@@ -413,7 +433,7 @@ public class MainMenuScreen {
     }
 
     updateCategoryButtonStyles();
-  }
+  }*/
 
   /**
    * helper method for dynamic category button highlighting.
@@ -482,3 +502,83 @@ public class MainMenuScreen {
     }
   }
 }
+
+    // Create final scene result
+    return new Scene(mainPane, windowWidth, windowHeight);
+  }
+
+  private List<SimpleItem> convert(List<Single> items){
+    List<SimpleItem> result = new ArrayList<>();
+    for (Single item : items) {
+      String name = item.getName();
+        String imagePath = getImagePathForItem(name);
+        result.add(new SimpleItem(name, imagePath));
+    }
+    return result;
+  }
+
+
+  private String getImagePathForItem(String itemName) {
+    String key = itemName.toLowerCase().replace(" ", "_").replace("&", "and");
+    return "/food/" + key + ".png";
+  }
+
+  /**
+   * Adds all menu items. Filling each item category with items.
+   * Added the items for the menu one by one for now, not through the database.
+   */
+  private void setupMenuData() throws SQLException {
+    Connection conn = DriverManager.getConnection("jdbc:sqlite:restaurant.db"); // change if MariaDB
+    Imenu menu = new Menu(conn);
+
+    categoryItems.put("Burgers", convert(menu.getMains()));
+    categoryItems.put("Sides", convert(menu.getSides()));
+    categoryItems.put("Drinks", convert(menu.getDrinks()));
+    categoryItems.put("Desserts", convert(menu.getDesserts()));
+    categoryItems.put("Special Offers", List.of());
+
+  }
+
+  /**
+   * Loading all items into the menu's item grid.
+   */
+  private void updateGrid() {
+    // Empty grid and create new layout
+    itemGrid.getChildren().clear();
+    itemGrid.setHgap(20);
+    itemGrid.setVgap(20);
+    itemGrid.setPadding(new Insets(10));
+    itemGrid.setAlignment(Pos.CENTER);
+
+    // Fetch data
+    String category = categories[currentCategoryIndex];
+    List<SimpleItem> items = categoryItems.get(category);
+
+    // Populate the grid with item and corresponding image one by one
+    for (int i = 0; i < items.size(); i++) {
+      // Get item and set proper layout
+      SimpleItem item = items.get(i);
+      VBox box = new VBox(10);
+      box.setAlignment(Pos.CENTER);
+
+      // Get image path
+      String imagePath = item.imagePath();
+      InputStream inputStream = getClass().getResourceAsStream(imagePath);
+      // Errorhandling when no image found
+      if (inputStream == null) {
+        System.err.println("ERROR: Image not found - " + imagePath);
+      }
+
+      // Add image to View
+      ImageView imageView = new ImageView(new Image(inputStream));
+      imageView.setFitHeight(150);
+      imageView.setPreserveRatio(true);
+      Label name = new Label(item.name());
+
+      // Connect it all and add to item grid
+      box.getChildren().addAll(imageView, name);
+      itemGrid.add(box, i % 3, i / 3);
+    }
+  }
+}
+
