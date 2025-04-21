@@ -17,5 +17,4 @@ public class MainDish extends Single {
   public MainDish(int id, String name, float price, SingleType type) {
     super(id, name, price, type);
   }
-  
 }

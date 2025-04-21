@@ -6,8 +6,17 @@ package org.example.menu;
  *  has a constructor that takes a name and price as parameters.
  */
 public class Extra extends Single {
-  // id added to avoid error
-  public Extra(int id, String name, float price,SingleType type) {
-    super(id, name, price,type);
+
+  /**
+   * Extra constructor.
+   * id added to avoid error
+   *
+   * @param id int id of extra dish
+   * @param name string name of extra
+   * @param price price of the item
+   * @param type what kind of single it is
+   */
+  public Extra(int id, String name, float price, SingleType type) {
+    super(id, name, price, type);
   }
 }

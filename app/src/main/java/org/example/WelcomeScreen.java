@@ -1,5 +1,6 @@
 package org.example;
 
+import java.sql.SQLException;
 import javafx.animation.ScaleTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -20,8 +21,14 @@ public class WelcomeScreen {
 
   /**
    * The welcome class scene.
+   *
+   * @throws SQLException if the server has issues
    */
-  public Scene createWelcomeScreen(Stage primaryStage, double windowWidth, double windowHeight) {
+  public Scene createWelcomeScreen(
+      Stage primaryStage,
+      double windowWidth,
+      double windowHeight
+  ) throws SQLException {
     
     // Initialize the welcome screen elements
     var mainWindow = new VBox();

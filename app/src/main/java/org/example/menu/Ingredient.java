@@ -45,7 +45,6 @@ public class Ingredient {
     return name;
   }
 
-    
 
   /**
    * The  function inserts an ingredient name
