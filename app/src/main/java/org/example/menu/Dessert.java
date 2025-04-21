@@ -5,7 +5,7 @@ package org.example.menu;
  */
 public class Dessert extends Single {
   // id added to avoid error
-  public Dessert(int id, String name, float price) {
-    super(id, name, price);
+  public Dessert(int id, String name, float price,SingleType type) {
+    super(id, name, price,type);
   }
 }
