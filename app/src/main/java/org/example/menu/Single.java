@@ -206,5 +206,59 @@ public class Single {
     return getOptionsByType(conn, SingleType.valueOf(type.toUpperCase()));
   }
 
+  public List<Single> getOptionsByCategoryId(Connection conn, int categoryId) throws SQLException {
+    List<Single> options = new ArrayList<>();
+    String sql = "SELECT i.id, i.name, i.price, c.name AS category_name " +
+    "FROM item i " +
+    "JOIN category c ON i.category_id = c.category_id " +
+    "WHERE i.category_id = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, categoryId);
+      ResultSet rs = stmt.executeQuery();
+      while (rs.next()) {
+        String categoryName = rs.getString("category_name").toUpperCase().trim();
+        SingleType type;
+        try {
+          type = SingleType.valueOf(categoryName);
+        } catch (IllegalArgumentException e) {
+          type = SingleType.EXTRA;
+        }
+        options.add(new Single(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getFloat("price"),
+                type
+            ));
+      }
+      rs.close();
+    }
+    return options;
+  }
+
+    /*public List<Single> getOptionsByCategoryName(Connection conn, String categoryName) throws SQLException {
+      List<Single> options = new ArrayList<>();
+      String sql = "SELECT i.id, i.name, i.price, c.name AS category_name " +
+      "FROM item i " +
+      "JOIN category c ON i.category_id = c.category_id " +
+      "WHERE c.name = ?";
+      try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, categoryName);
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+          options.add(new Single(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getFloat("price"),
+                rs.getString("category_name")
+            ));
+        }
+        rs.close();
+      }
+      return options;
+    }*/
+
+
+
+  }
+
   
-}
