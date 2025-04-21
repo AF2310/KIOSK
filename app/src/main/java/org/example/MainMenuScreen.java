@@ -95,6 +95,7 @@ public class MainMenuScreen {
     // setting category bar on top of menu layout
     layout.setTop(top);
 
+    // menu items - MIDDLE PART
     setupMenuData();
     updateGrid();
 
@@ -293,40 +294,63 @@ public class MainMenuScreen {
     String category = categories[currentCategoryIndex];
     List<SimpleItem> items = categoryItems.get(category);
 
+    // items per row
+    int maxItemsPerRow = 3;
+    int totalItemsPerPage = 6;
+    // int totalSlotsPerRow = items.size() + maxItemsPerRow;
+
     // Populate the grid with item and corresponding image one by one
-    for (int i = 0; i < items.size(); i++) {
-      // Get item and set proper layout
-      SimpleItem item = items.get(i);
+    //for (int i = 0; i < items.size(); i++) {
+    for (int i = 0; i < totalItemsPerPage; i++) {
+
+      // Create fresh item Slot
       VBox box = new VBox(10);
       box.setAlignment(Pos.CENTER);
 
-      // Get image path
-      String imagePath = item.imagePath();
-      InputStream inputStream = getClass().getResourceAsStream(imagePath);
-      // Errorhandling when no image found
-      if (inputStream == null) {
-        System.err.println("ERROR: Image not found - " + imagePath);
+      // Item exists
+      if (i < items.size()) {
+        // Get item and set proper layout
+        SimpleItem item = items.get(i);
+        // VBox box = new VBox(10);
+        // box.setAlignment(Pos.CENTER);
+  
+        // Get image path
+        String imagePath = item.imagePath();
+        InputStream inputStream = getClass().getResourceAsStream(imagePath);
+        // Errorhandling when no image found
+        if (inputStream == null) {
+          System.err.println("ERROR: Image not found - " + imagePath);
+        }
+        // Add image to View
+        ImageView imageView = new ImageView(new Image(inputStream));
+        imageView.setFitHeight(150);
+        imageView.setPreserveRatio(true);
+        Label name = new Label(item.name());
+  
+        ItemDetails detailScreen = new ItemDetails();
+        imageView.setOnMouseClicked(e -> {
+          Scene detailScene = detailScreen.create(
+              this.primaryStage,
+              this.primaryStage.getScene(),
+              item.name(), item.imagePath()
+          );
+          this.primaryStage.setScene(detailScene);
+        });
+  
+        // Connect it all and add to item grid
+        box.getChildren().addAll(imageView, name);
+        // itemGrid.add(box, i % 3, i / 3);
+
+      // No more items exist -> Item list empty
+      // Fill the rest up with empty slots until we reach 6 slots per page
+      } else {
+        Region emptySlot = new Region();
+        emptySlot.setPrefSize(150, 150);
+        box.getChildren().add(emptySlot);
       }
 
-      // Add image to View
-      ImageView imageView = new ImageView(new Image(inputStream));
-      imageView.setFitHeight(150);
-      imageView.setPreserveRatio(true);
-      Label name = new Label(item.name());
-
-      ItemDetails detailScreen = new ItemDetails();
-      imageView.setOnMouseClicked(e -> {
-        Scene detailScene = detailScreen.create(
-            this.primaryStage,
-            this.primaryStage.getScene(),
-            item.name(), item.imagePath()
-        );
-        this.primaryStage.setScene(detailScene);
-      });
-
-      // Connect it all and add to item grid
-      box.getChildren().addAll(imageView, name);
-      itemGrid.add(box, i % 3, i / 3);
+      // Add new slot to final item grid
+      itemGrid.add(box, i % maxItemsPerRow, i / maxItemsPerRow);
     }
 
     updateCategoryButtonStyles();
