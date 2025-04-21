@@ -32,6 +32,15 @@ public class AdminLoginScreen {
     VBox adminMenuLayout = new VBox(20);
     adminMenuLayout.setAlignment(Pos.CENTER);
 
+    var adminMenuTitle = new Label();
+    adminMenuTitle.setText("Admin Menu");
+    adminMenuTitle.setStyle(
+        "-fx-text-fill: black;"
+        + "-fx-font-weight: lighter;"
+        + "-fx-font-size: 50;"
+        + "-fx-background-radius: 10;"
+    );
+
     //the field to enter the username
     TextField usernameField = new TextField();
     usernameField.setMaxSize(460, 140);
@@ -112,15 +121,20 @@ public class AdminLoginScreen {
       primaryStage.setScene(welcomeScrScene);
     });
     
-    adminMenuLayout.getChildren().addAll(usernameField, passwordField, loginButton,
+    adminMenuLayout.getChildren().addAll(adminMenuTitle, usernameField, passwordField, loginButton,
              backButton, errorLabel);
+
 
     //put everything into a stackpane
     StackPane mainPane = new StackPane(adminMenuLayout);
     mainPane.setPrefSize(windowWidth, windowHeight);
+    
 
     // Create the admin login scene and go there
     Scene adminLoginScene = new Scene(mainPane, windowWidth, windowHeight);
+    
+    // Puts focus on the admin menu label so that the username field isn't by default focused
+    adminMenuTitle.requestFocus(); 
 
     return adminLoginScene;
   }
