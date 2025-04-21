@@ -72,14 +72,9 @@ public class MainMenuScreen {
       String cat = categories[i];
       // Making it a button
       Button btn = new Button(cat);
-      styleCategoryButton(btn, i == currentCategoryIndex);
-
+      
       // Button asthetics
-      /*btn.setStyle(
-          "-fx-background-color: transparent;"
-          + "-fx-font-size: 18px;"
-          + "-fx-text-fill: black;"
-      );*/
+      styleCategoryButton(btn, i == currentCategoryIndex);
 
       // Action when button clicked
       final int index = i;
@@ -91,7 +86,7 @@ public class MainMenuScreen {
 
       // Add final button to horizontal category bar
       categoryButtons.add(btn);
-      //categoryBar.getChildren().add(btn);
+      categoryBar.getChildren().add(btn);
     }
     
     // Adding it all together
@@ -321,7 +316,11 @@ public class MainMenuScreen {
 
       ItemDetails detailScreen = new ItemDetails();
       imageView.setOnMouseClicked(e -> {
-        Scene detailScene = detailScreen.create(this.primaryStage, this.primaryStage.getScene(), item.name(), item.imagePath());
+        Scene detailScene = detailScreen.create(
+            this.primaryStage,
+            this.primaryStage.getScene(),
+            item.name(), item.imagePath()
+        );
         this.primaryStage.setScene(detailScene);
       });
 
@@ -335,46 +334,41 @@ public class MainMenuScreen {
   }
 
   /**
-   * helper method for dynamic category button highlighting
+   * helper method for dynamic category button highlighting.
+   *
    * @param button any given (category) button
    * @param current to check if currently selected
    */
   private void styleCategoryButton(Button button, boolean current) {
 
+    // Current category the user is in
     if (current) {
-
       button.setStyle(
-        "-fx-background-color: transparent;"
-        + "-fx-font-size: 20px;"
-        + "-fx-text-fill: black;"
-        + "-fx-font-weight: bold;"
+          "-fx-background-color: transparent;"
+          + "-fx-font-size: 20px;"
+          + "-fx-text-fill: black;"
+          + "-fx-font-weight: bold;"
       );
 
+    // Other categories the user isn't currently in
     } else {
-
       button.setStyle(
-        "-fx-background-color: transparent;"
-        + "-fx-font-size: 18px;"
-        + "-fx-text-fill: rgba(0, 0, 0, 0.33);"
-        + "-fx-font-weight: bold;"
+          "-fx-background-color: transparent;"
+          + "-fx-font-size: 18px;"
+          + "-fx-text-fill: rgba(0, 0, 0, 0.33);"
+          + "-fx-font-weight: bold;"
       );
-
     }
-
   } 
 
   /**
-   * Helper method to update highlighting of category buttons
-   * iterates through category button list to update them all at once
+   * Helper method to update highlighting of category buttons.
+   * Iterates through category button list to update them all at once.
    */
   private void updateCategoryButtonStyles() {
 
     for (int i = 0; i < categoryButtons.size(); i++) {
-
       styleCategoryButton(categoryButtons.get(i), i == currentCategoryIndex);
-
     }
-
   }
-
 }
