@@ -35,3 +35,22 @@ Then we also created a UML class diagramm to have a bit of a plan of that classe
 in them. Because its such a big project the class diagramm will ofcourse change overtime especially the methods. But its good to have some kind of
 a plan going into programming.
 ![alt text](references/classdiagram.png)
+
+
+Sprint 1 (Week 17)
+
+This week we worked on the welcome screen, main menu and admin login functionality, namely customer stories 1, 5 and admin story 5.
+
+For the welcome screen Michelle and Arseny added the main elements and added button functionality to make them let the user travel to the other 2 screens.
+
+For the admin screen Ignas and Jacob implemented the login functionality and set the scene for the admin menu. Ignas also worked on the populating the database and helping others with database connectivity.
+
+The main menu screen was done by Vuk, Vince and Michelle.
+
+Achilleas mainly worked on the database connectivity.
+
+Michelle also worked on helping with database connectivity, merging and adjusting code according to checkstyle.
+
+We had 3 meetings, 1 in person on Thursday, 1 on Friday and 1 on Monday on Discord.
+
+We kept the sprint branch separately not to merge it without the scrum master.
