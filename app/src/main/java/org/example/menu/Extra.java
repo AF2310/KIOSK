@@ -15,8 +15,9 @@ public class Extra extends Single {
    * @param name string name of extra
    * @param price price of the item
    * @param type what kind of single it is
+   * @param imgPath path to items image
    */
-  public Extra(int id, String name, float price, SingleType type) {
-    super(id, name, price, type);
+  public Extra(int id, String name, float price, SingleType type, String imgPath) {
+    super(id, name, price, type, imgPath);
   }
 }

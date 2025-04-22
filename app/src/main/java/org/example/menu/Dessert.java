@@ -13,8 +13,9 @@ public class Dessert extends Single {
    * @param name name string dessert
    * @param price price dessert
    * @param type type of single
+   * @param imgPath path it items image
    */
-  public Dessert(int id, String name, float price, SingleType type) {
-    super(id, name, price, type);
+  public Dessert(int id, String name, float price, SingleType type, String imgPath) {
+    super(id, name, price, type, imgPath);
   }
 }

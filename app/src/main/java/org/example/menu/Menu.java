@@ -1,11 +1,8 @@
 package org.example.menu;
 
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-//import org.example.menu.Single;
-//import org.example.menu.Meal;
 
 /**
  * Menu class that contains/returns all Singles when requested.
@@ -16,7 +13,8 @@ public class Menu implements Imenu {
   private final List<Single> drinks;
   private final List<Single> extras;
   private final List<Single> desserts;
-  Single singleHelper = new Single(0, "", 0.0f, SingleType.EXTRA);
+  // TODO: needs fixing do add actual image path
+  Single singleHelper = new Single(0, "", 0.0f, SingleType.EXTRA, "dummy_path");
   
 
   /**
@@ -63,5 +61,4 @@ public class Menu implements Imenu {
   public List<Object> searchProducts(String name) {
     throw new UnsupportedOperationException("Not supported yet.");
   }
-
 }

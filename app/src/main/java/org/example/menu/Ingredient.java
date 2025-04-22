@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * The class represents an ingredient with properties like id and name,
- *  and provides methods to save ingredients to a database and
+ * and provides methods to save ingredients to a database and
  * retrieve all ingredients from the database.
  */
 public class Ingredient {
@@ -30,7 +30,6 @@ public class Ingredient {
     this.name = name;
   }
 
-    
   /**
    *  returns the value of the id.
    */
@@ -44,7 +43,6 @@ public class Ingredient {
   public String getName() {
     return name;
   }
-
 
   /**
    * The  function inserts an ingredient name

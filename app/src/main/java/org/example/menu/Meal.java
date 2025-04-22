@@ -143,7 +143,6 @@ public class Meal {
   }
 
 
-  
   /**
    * The  method  is responsible for saving the meal data to a database.
    */
@@ -166,7 +165,10 @@ public class Meal {
    * The method is responsible for retrieving all meals from a database.
    */
   public List<Meal> getAllMeals(Connection conn) throws SQLException {
+
     List<Meal> list = new ArrayList<>();
+
+    // TODO: how change meals to match database???
     String sql = "SELECT id, name FROM meals";
     Statement stmt = conn.createStatement();
     ResultSet rs = stmt.executeQuery(sql);

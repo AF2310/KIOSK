@@ -18,17 +18,19 @@ public class Single {
   protected List<Ingredient> ingredients;
   public int id;
   private SingleType type;
+  private String imagePath;
 
   /**
    * This constructor is used to create instances of the Single class with the specified name,
    * price, and an empty list of ingredients.
    */
-  public Single(int id, String name, float price, SingleType type) {
+  public Single(int id, String name, float price, SingleType type, String imgPath) {
     this.id = id;
     this.name = name;
     this.price = price;
     this.ingredients = new ArrayList<>();
     this.type = type;
+    this.imagePath = imgPath;
   }
 
   /**
@@ -94,12 +96,16 @@ public class Single {
     ingredients.removeIf(i -> i.getId() == ingredient.getId());
   }
 
+  public String getImagePath() {
+    return imagePath;
+  }
+
   /**
    * The function  retrieves all singles data from a database table and returns a list of objects.
    */
   public List<Single> getAllSingles(Connection conn) throws SQLException {
     List<Single> list = new ArrayList<>();
-    String sql = "SELECT id, name, price FROM singles";
+    String sql = "SELECT id, name, price, image_url FROM product";
 
     Statement stmt = conn.createStatement();
     ResultSet rs = stmt.executeQuery(sql);
@@ -109,7 +115,10 @@ public class Single {
           rs.getInt("id"),
           rs.getString("name"),
           rs.getFloat("price"),
-          SingleType.valueOf(rs.getString("type"))
+          // TODO: fix path -> fix query by connecting table category and
+          //        retrieving type from there
+          SingleType.valueOf(rs.getString("type")),
+          rs.getString("image_url")
       ));
     }
     rs.close();
@@ -121,7 +130,13 @@ public class Single {
    * The method inserts a single a database table and retrieves the generated key value.
    */
   public void saveToDb(Connection conn) throws SQLException {
-    String sql = "INSERT INTO singles (name, price, type) VALUES (?, ?, ?)";
+    // TODO: Type doesnt exist in products. also, i changed singles to products.
+    //       type can be replaced with name of the category table, just like i already
+    //       did in some other queries. you just need to add it into that other table
+    //       while also adding the other stuff in product table and keeping it linked.
+    // TODO: So, this whole method here needs fixing to match the database and needs completion.
+
+    String sql = "INSERT INTO products (name, price, type) VALUES (?, ?, ?)";
     PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
     stmt.setString(1, name);
     stmt.setFloat(2, price);
@@ -148,11 +163,10 @@ public class Single {
   public List<Single> getOptionsByType(Connection conn, SingleType type) throws SQLException {
     List<Single> options = new ArrayList<>();
     //String sql = "SELECT id, name, price, type FROM singles WHERE type = ?";
-    String sql = "SELECT p.product_id AS id, p.name, p.price, c.name AS type " 
+    String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type " 
         + "FROM product p "
         + "JOIN category c ON p.category_id = c.category_id "
         + "WHERE c.name = ?";
-
 
     // Trying with ressources colses statements and sets autmatically
     
@@ -166,7 +180,8 @@ public class Single {
               rs.getString("name"),
               rs.getFloat("price"),
               // Just to be sure, use uppercase since enum uses uppercase
-              SingleType.valueOf(rs.getString("type").toUpperCase())
+              SingleType.valueOf(rs.getString("type").toUpperCase()),
+              rs.getString("image_url")
           ));
         }
       }
@@ -205,30 +220,35 @@ public class Single {
     List<Single> list = new ArrayList<>();
 
     // SQL query to select all specified singles
-    String sql = "SELECT id, name, price, type FROM singles WHERE price < ?";
+    String sql = "SELECT p.id, p.name, p.price, p.image_url, c.name AS type"
+        + "FROM products"
+        + "JOIN category c ON p.category_id = c.category_id"
+        + "WHERE price < ?";
 
     // Prepare SQL statement with current connection
-    PreparedStatement ps = conn.prepareStatement(sql);
+    // Try with this statement ensures the statement is closed automatically
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
-    // Bind priceLimit to SQL query
-    ps.setFloat(1, priceLimit);
+      // Bind priceLimit to SQL query
+      ps.setFloat(1, priceLimit);
 
-    // Execute query to retrieve wanted singles
-    ResultSet rs = ps.executeQuery();
+      // Execute query to retrieve wanted singles
+      try (ResultSet rs = ps.executeQuery()) {
+        // Iterate over result set and construct Single objects from each row
+        while (rs.next()) {
+          list.add(new Single(
+              rs.getInt("id"),
+              rs.getString("name"),
+              rs.getFloat("price"),
+              // Just to be sure, use uppercase since enum uses uppercase
+              SingleType.valueOf(rs.getString("type").toLowerCase()),
+              rs.getString("image_url")
+              ));
 
-    // Iterate over result set and construct Single objects from each row
-    while (rs.next()) {
-      list.add(new Single(
-            rs.getInt("id"),
-            rs.getString("name"),
-            rs.getFloat("price"),
-            SingleType.valueOf(rs.getString("type"))
-            ));
-    }
+        }
+      }
+    }  
 
-    // Close result set and statement and return build list
-    rs.close();
-    ps.close();
     return list;
   }
 
@@ -245,7 +265,10 @@ public class Single {
     List<Single> options = new ArrayList<>();
 
     // SQL query to retrieve items + their category names
-    String sql = "SELECT i.id, i.name, i.price, c.name AS category_name " 
+
+    // TODO: fix wrong name "item". i assume you meant product
+
+    String sql = "SELECT i.id, i.name, i.price, i.image_url, c.name AS category_name " 
         + "FROM item i "
         + "JOIN category c ON i.category_id = c.category_id " 
         + "WHERE i.category_id = ?";
@@ -274,10 +297,14 @@ public class Single {
 
         // Create and add new Single to the list
         options.add(new Single(
-                rs.getInt("id"),
-                rs.getString("name"),
-                rs.getFloat("price"),
-                type
+            rs.getInt("id"),
+            rs.getString("name"),
+            rs.getFloat("price"),
+            // Just to be sure, use uppercase since enum uses uppercase
+            SingleType.valueOf(rs.getString("type").toLowerCase()),
+            rs.getString("image_url")
+            // TODO: fix this quickfix
+            //type;
             ));
       }
       // Close result set

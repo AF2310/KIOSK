@@ -3,7 +3,10 @@ package org.example;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +30,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.example.menu.Imenu;
+import org.example.menu.Ingredient;
 import org.example.menu.Menu;
 import org.example.menu.Single;
 
@@ -289,12 +293,12 @@ public class MainMenuScreen {
     return new Scene(mainPane, windowWidth, windowHeight);
   }
 
-
-  private List<SimpleItem> convert(List<Single> items) {
+  private List<SimpleItem> convert(Connection conn, List<Single> items) throws SQLException {
     List<SimpleItem> result = new ArrayList<>();
+
     for (Single item : items) {
       String name = item.getName();
-      String imagePath = getImagePathForItem(name);
+      String imagePath = getImagePathForItem(conn, name);
       double price = item.getPrice();
       result.add(new SimpleItem(name, imagePath, price));
     }
@@ -302,9 +306,24 @@ public class MainMenuScreen {
   }
 
 
-  private String getImagePathForItem(String itemName) {
-    String key = itemName.toLowerCase().replace(" ", "_").replace("&", "and");
-    return "/food/" + key + ".png";
+  private String getImagePathForItem(Connection conn, String itemName) throws SQLException {
+    //String key = itemName.toLowerCase().replace(" ", "_").replace("&", "and");
+    //return "/food/" + key + ".png";
+
+    String imagePath = "";
+    String sql = "SELECT image_url FROM product WHERE name = ?";
+
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setString(1, itemName);
+
+      try (ResultSet rs = stmt.executeQuery()) {
+        if (rs.next()) {
+          rs.getString("image_url");
+        }
+      }
+    }
+
+    return imagePath;
   }
 
   /**
@@ -321,10 +340,10 @@ public class MainMenuScreen {
           + "&allowPublicKeyRetrieval=true");
     Imenu menu = new Menu(conn);
 
-    categoryItems.put("Burgers", convert(menu.getMains()));
-    categoryItems.put("Sides", convert(menu.getSides()));
-    categoryItems.put("Drinks", convert(menu.getDrinks()));
-    categoryItems.put("Desserts", convert(menu.getDesserts()));
+    categoryItems.put("Burgers", convert(conn, menu.getMains()));
+    categoryItems.put("Sides", convert(conn, menu.getSides()));
+    categoryItems.put("Drinks", convert(conn, menu.getDrinks()));
+    categoryItems.put("Desserts", convert(conn, menu.getDesserts()));
     categoryItems.put("Special Offers", List.of());
 
   }

@@ -13,8 +13,9 @@ public class MainDish extends Single {
    * @param name string name dish
    * @param price price dish
    * @param type dish single type; what kind of dish
+   * @param imgPath path to the items image
    */
-  public MainDish(int id, String name, float price, SingleType type) {
-    super(id, name, price, type);
+  public MainDish(int id, String name, float price, SingleType type, String imgPath) {
+    super(id, name, price, type, imgPath);
   }
 }
