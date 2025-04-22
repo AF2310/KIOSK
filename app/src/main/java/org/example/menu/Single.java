@@ -147,7 +147,12 @@ public class Single {
    */
   public List<Single> getOptionsByType(Connection conn, SingleType type) throws SQLException {
     List<Single> options = new ArrayList<>();
-    String sql = "SELECT id, name, price, type FROM singles WHERE type = ?";
+    //String sql = "SELECT id, name, price, type FROM singles WHERE type = ?";
+    String sql = "SELECT p.product_id AS id, p.name, p.price, c.name AS type " 
+        + "FROM product p "
+        + "JOIN category c ON p.category_id = c.category_id "
+        + "WHERE c.name = ?";
+
 
     PreparedStatement stmt = conn.prepareStatement(sql);
     stmt.setString(1, type.name());
@@ -158,7 +163,8 @@ public class Single {
           rs.getInt("id"),
           rs.getString("name"),
           rs.getFloat("price"),
-          SingleType.valueOf(rs.getString("type"))
+          // Just to be sure, use uppercase since enum uses uppercase
+          SingleType.valueOf(rs.getString("type").toUpperCase())
       ));
     }
 
