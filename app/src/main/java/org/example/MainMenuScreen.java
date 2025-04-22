@@ -461,7 +461,7 @@ public class MainMenuScreen {
     updateCategoryButtonStyles();
   }
 
-
+  // The old way of adding the images (without database)
   ///**
   // * Adds all menu items. Filling each item category with items.
   // * Added the items for the menu one by one for now, not through the database.
@@ -494,104 +494,6 @@ public class MainMenuScreen {
     categoryItems.put("Special Offers", List.of(
         new SimpleItem("Extra Veggies Burger", "/food/extra_vegies_burger.png", 20),
         new SimpleItem("Strawberry Cupcake", "/food/cupcake.png", 12)));
-  }*/
-
-  ///**
-  // * Loading all items into the menu's item grid.
-  // */
-  /*private void updateGrid() {
-    // Empty grid and create new layout
-    itemGrid.getChildren().clear();
-    itemGrid.setHgap(20);
-    itemGrid.setVgap(20);
-    itemGrid.setPadding(new Insets(10));
-    itemGrid.setAlignment(Pos.CENTER);
-
-    // Fetch data
-    String category = categories[currentCategoryIndex];
-    List<SimpleItem> items = categoryItems.get(category);
-
-    // Max item slots in rows and pages
-    int maxItemsPerRow = 3;
-    int totalItemsPerPage = 6;
-
-    // Populate the grid with item and corresponding image one by one
-    for (int i = 0; i < totalItemsPerPage; i++) {
-
-      // Create fresh item Slot
-      VBox box = new VBox(10);
-      box.setAlignment(Pos.CENTER);
-
-      // Make slot with fixed size
-      StackPane imageSlot = new StackPane();
-      imageSlot.setPrefSize(200, 200);
-      imageSlot.setMaxSize(200, 200);
-      imageSlot.setMinSize(200, 200);
-
-      // Item exists
-      if (i < items.size()) {
-        // Get current item
-        SimpleItem item = items.get(i);
-  
-        // Get image path
-        String imagePath = item.imagePath();
-        InputStream inputStream = getClass().getResourceAsStream(imagePath);
-
-        // Errorhandling when no image found
-        if (inputStream == null) {
-          System.err.println("ERROR: Image not found - " + imagePath);
-        }
-
-        // Add image to View
-        ImageView imageView = new ImageView(new Image(inputStream));
-
-        // Adjust image size but not make it blurry
-        imageView.setFitHeight(150);
-        imageView.setPreserveRatio(true);
-
-        // Move image into image slot and center image
-        imageSlot.getChildren().add(imageView);
-        imageSlot.setAlignment(Pos.CENTER);
-
-        // Give item a name
-        Label name = new Label(item.name());
-        name.setStyle("-fx-font-size: 16px;");
-        
-        // Format the price (with :-)
-        // Put the price in an Hbox to align it to the right
-        Label price = new Label(String.format("%.0f :-", item.price()));
-        price.setStyle("-fx-font-weight: bold; -fx-font-size: 18px;");
-        HBox priceBox = new HBox(price);
-        priceBox.setAlignment(Pos.BASELINE_RIGHT);
-        
-
-        // Item details
-        ItemDetails detailScreen = new ItemDetails();
-
-        // Get item details when clicking on item
-        imageSlot.setOnMouseClicked(e -> {
-          Scene detailScene = detailScreen.create(
-              this.primaryStage,
-              this.primaryStage.getScene(),
-              item.name(), item.imagePath()
-          );
-          this.primaryStage.setScene(detailScene);
-        });
-  
-        // Connect it all and add to item grid
-        box.getChildren().addAll(imageSlot, name, priceBox);
-        
-      // No more items exist -> Item list empty
-      // Fill the rest up with empty slots until we reach 6 slots per page
-      } else {
-        box.getChildren().addAll(imageSlot, new Label(""));
-      }
-
-      // Add new slot to final item grid
-      itemGrid.add(box, i % maxItemsPerRow, i / maxItemsPerRow);
-    }
-
-    updateCategoryButtonStyles();
   }*/
 
   /**
