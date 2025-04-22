@@ -316,7 +316,13 @@ public class MainMenuScreen {
    * Added the items for the menu one by one for now, not through the database.
    */
   private void setupMenuData() throws SQLException {
-    Connection conn = DriverManager.getConnection("jdbc:sqlite:restaurant.db"); // change if MariaDB
+    Connection conn = DriverManager.getConnection(
+      "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
+          + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
+          + "?user=u5urh19mtnnlgmog"
+          + "&password=zPgqf8o6na6pv8j8AX8r"
+          + "&useSSL=true"
+          + "&allowPublicKeyRetrieval=true");
     Imenu menu = new Menu(conn);
 
     categoryItems.put("Burgers", convert(menu.getMains()));
