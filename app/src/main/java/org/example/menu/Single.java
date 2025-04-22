@@ -284,6 +284,8 @@ public class Single {
       while (rs.next()) {
         String categoryName = rs.getString("category_name").toUpperCase().trim();
 
+        // Quickfix; TODO: deal with later
+        @SuppressWarnings("unused")
         SingleType type;
 
         // Trying to convert category name to valid enum value
@@ -300,11 +302,13 @@ public class Single {
             rs.getInt("id"),
             rs.getString("name"),
             rs.getFloat("price"),
+
             // Just to be sure, use uppercase since enum uses uppercase
             SingleType.valueOf(rs.getString("type").toLowerCase()),
             rs.getString("image_url")
             // TODO: fix this quickfix
             //type;
+            
             ));
       }
       // Close result set

@@ -6,7 +6,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +29,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.example.menu.Imenu;
-import org.example.menu.Ingredient;
 import org.example.menu.Menu;
 import org.example.menu.Single;
 
@@ -561,14 +559,6 @@ public class MainMenuScreen {
     for (int i = 0; i < categoryButtons.size(); i++) {
       styleCategoryButton(categoryButtons.get(i), i == currentCategoryIndex, i);
     }
-    //  }
-    //}
-
-    // Create final scene result
-    //    return new Scene(mainPane, windowWidth, windowHeight);
   }
-
-
-
 }
 
