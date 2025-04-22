@@ -16,7 +16,7 @@ public class Order {
   public ArrayList<Meal> meals = new ArrayList<>();
   public ArrayList<Single> singles = new ArrayList<>();
 
-  /*
+  /**
    * Empty constructor because:
    * Cost will be calculated by method
    * The order is empty before Items are added to cart.

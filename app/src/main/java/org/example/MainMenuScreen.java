@@ -35,10 +35,6 @@ import org.example.menu.Single;
  */
 public class MainMenuScreen {
 
-  // without this line, the build will fail but checkstyle
-  // claims its unused, so this is a quickfix to ignore the
-  // checkstyle issue for now.
-  @SuppressWarnings("unused")
   private Stage primaryStage;
 
   private record SimpleItem(String name, String imagePath, double price) {}
@@ -317,7 +313,7 @@ public class MainMenuScreen {
    */
   private void setupMenuData() throws SQLException {
     Connection conn = DriverManager.getConnection(
-      "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
+        "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
           + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
           + "?user=u5urh19mtnnlgmog"
           + "&password=zPgqf8o6na6pv8j8AX8r"
@@ -374,14 +370,25 @@ public class MainMenuScreen {
         String imagePath = item.imagePath();
         InputStream inputStream = getClass().getResourceAsStream(imagePath);
 
+        // Initiating the image view
+        ImageView imageView;
+
         // Errorhandling when no image found
         if (inputStream == null) {
           System.err.println("ERROR: Image not found - " + imagePath);
-        }
 
-        // Add image to View
-        ImageView imageView = new ImageView(new Image(inputStream));
-        
+          Image emptyImage = new Image(
+              "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABC"
+              + "AQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/hd5JnkAAAAASUVORK5CYII="
+            );
+
+          imageView = new ImageView(emptyImage);
+
+        } else {
+          // Add image to View
+          imageView = new ImageView(new Image(inputStream));
+        }
+    
         // Adjust image size but not make it blurry
         imageView.setFitHeight(150);
         imageView.setPreserveRatio(true);

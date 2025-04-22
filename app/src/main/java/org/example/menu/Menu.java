@@ -27,11 +27,11 @@ public class Menu implements Imenu {
    */
   public Menu(Connection conn) throws SQLException {
     
-    this.mains = singleHelper.getOptionsByType(conn, SingleType.MAIN);
-    this.sides = singleHelper.getOptionsByType(conn, SingleType.SIDE);
-    this.drinks = singleHelper.getOptionsByType(conn, SingleType.DRINK);
+    this.mains = singleHelper.getOptionsByType(conn, SingleType.BURGERS);
+    this.sides = singleHelper.getOptionsByType(conn, SingleType.SIDES);
+    this.drinks = singleHelper.getOptionsByType(conn, SingleType.DRINKS);
     this.extras = singleHelper.getOptionsByType(conn, SingleType.EXTRA);
-    this.desserts = singleHelper.getOptionsByType(conn, SingleType.DESSERT);
+    this.desserts = singleHelper.getOptionsByType(conn, SingleType.DESSERTS);
   }
 
   @Override

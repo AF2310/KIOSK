@@ -154,22 +154,24 @@ public class Single {
         + "WHERE c.name = ?";
 
 
-    PreparedStatement stmt = conn.prepareStatement(sql);
-    stmt.setString(1, type.name());
-    ResultSet rs = stmt.executeQuery();
+    // Trying with ressources colses statements and sets autmatically
+    
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setString(1, type.name());
 
-    while (rs.next()) {
-      options.add(new Single(
-          rs.getInt("id"),
-          rs.getString("name"),
-          rs.getFloat("price"),
-          // Just to be sure, use uppercase since enum uses uppercase
-          SingleType.valueOf(rs.getString("type").toUpperCase())
-      ));
+      try (ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+          options.add(new Single(
+              rs.getInt("id"),
+              rs.getString("name"),
+              rs.getFloat("price"),
+              // Just to be sure, use uppercase since enum uses uppercase
+              SingleType.valueOf(rs.getString("type").toUpperCase())
+          ));
+        }
+      }
     }
 
-    rs.close();
-    stmt.close();
     return options;
   }
 
