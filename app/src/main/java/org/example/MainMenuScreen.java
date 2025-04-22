@@ -377,13 +377,19 @@ public class MainMenuScreen {
         if (inputStream == null) {
           System.err.println("ERROR: Image not found - " + imagePath);
 
+          // using Base64-encoded string to generate 1x1 transparent PNG
+          // This Base64 string is decoded into a transparent image when
+          // the Image constructor is called.
+          // This prevents fetching some empty image from the database.
           Image emptyImage = new Image(
               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABC"
               + "AQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/hd5JnkAAAAASUVORK5CYII="
             );
 
+          // Add empty generated image to View 
           imageView = new ImageView(emptyImage);
 
+        // Image found (input stream not empty)
         } else {
           // Add image to View
           imageView = new ImageView(new Image(inputStream));
