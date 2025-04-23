@@ -12,6 +12,11 @@ import java.sql.SQLException;
 public class AdminAuth {
   private Connection connection;
 
+  /**
+   * Admin Authentication class constructor.
+   *
+   * @param connection server connection
+   */
   public AdminAuth(Connection connection) {
     this.connection = connection;
   }

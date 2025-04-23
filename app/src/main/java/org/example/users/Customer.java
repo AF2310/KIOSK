@@ -16,7 +16,6 @@ public class Customer implements User {
 
   /**
    * Chooses between eat here and takeaway.
-   * 
    *
    * @param newOrder the order that is being placed.
    */

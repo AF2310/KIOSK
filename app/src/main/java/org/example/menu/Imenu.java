@@ -9,13 +9,45 @@ import java.util.List;
  */
 
 public interface Imenu {
-  List<MainDish> getMainDishes();
+  /**
+   * To get the main dishes.
+   *
+   * @return main dishes as single
+   */
+  List<Single> getMains();
 
-  List<Side> getSides();
+  /**
+   * To get all side dishes.
+   *
+   * @return side dishes as single
+   */
+  List<Single> getSides();
 
-  List<Drink> getDrinks();
+  /**
+   * To get all side drinks.
+   *
+   * @return drinks as single
+   */
+  List<Single> getDrinks();
 
-  List<Dessert> getDesserts();
+  /**
+   * To get all side desserts.
+   *
+   * @return desserts as single
+   */
+  List<Single> getDesserts();
+
+  /**
+   * To get all side extra dishes.
+   *
+   * @return extra dishes as single
+   */
+  List<Single> getExtras();
   
+  /**
+   * To get all currently searched for products.
+   *
+   * @return searched products as objects
+   */
   List<Object> searchProducts(String name);
 }

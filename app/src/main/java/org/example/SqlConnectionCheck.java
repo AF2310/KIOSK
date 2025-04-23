@@ -59,7 +59,6 @@ public class SqlConnectionCheck {
 
   public Connection getConnection() {
     return connection;
-    
   }
 
   /**

@@ -19,12 +19,22 @@ public class App extends Application {
     WelcomeScreen welcomeScreen = new WelcomeScreen();
     Scene welcomeScene = welcomeScreen.createWelcomeScreen(primaryStage, windowWidth, windowHeight);
 
+    // // Force fullscreen mode
+    primaryStage.setFullScreen(false);
+    // primaryStage.setFullScreenExitHint(""); // Optional: remove the default "press ESC to exit full screen" message
+    // primaryStage.setResizable(false); 
+
     // Set the scene and show the stage
     primaryStage.setScene(welcomeScene);
     primaryStage.setTitle("Self Check Kiosk by Clarke");
     primaryStage.show();
   }
 
+  /**
+   * To run the app.
+   *
+   * @param args Input
+   */
   public static void main(String[] args) {
     launch(args);
   }

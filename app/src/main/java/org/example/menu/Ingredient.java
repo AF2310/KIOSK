@@ -10,26 +10,28 @@ import java.util.List;
 
 /**
  * The class represents an ingredient with properties like id and name,
- *  and provides methods to save ingredients to a database and 
+ * and provides methods to save ingredients to a database and
  * retrieve all ingredients from the database.
  */
 public class Ingredient {
   private int id;
   private String name;
 
-    
 
-  // constructor  class is initializing an ingredient object with the provided id and name values.
+  /**
+   * constructor  class is initializing an ingredient 
+   * object with the provided id and name values.
+   *
+   * @param id ingredient id
+   * @param name ingredient name
+   */
   public Ingredient(int id, String name) {
     this.id = id;
     this.name = name;
   }
 
-    
   /**
    *  returns the value of the id.
-   *
-   *
    */
   public int getId() {
     return id;
@@ -37,20 +39,14 @@ public class Ingredient {
 
   /**
    *  the value of the name.
-   *
-   *
    */
   public String getName() {
     return name;
   }
 
-    
-
   /**
    * The  function inserts an ingredient name
    * into a database table and retrieves the generated ID from the database.
-   *
-   *
    */
   public void saveToDb(Connection conn) throws SQLException {
     String sql = "INSERT INTO ingredients (name) VALUES (?)";
@@ -67,8 +63,6 @@ public class Ingredient {
 
   /**
    * The  method is responsible for retrieving all ingredients from the database table in a list.
-   *
-   *
    */
   public List<Ingredient> getAllIngredients(Connection conn) throws SQLException {
     List<Ingredient> list = new ArrayList<>();

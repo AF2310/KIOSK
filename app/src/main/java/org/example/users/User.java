@@ -5,8 +5,16 @@ package org.example.users;
  */
 public interface User {
   
+  /**
+   * Lets user browse the menu.
+   */
   void browseMenu();
 
+  /**
+   * Lets user search for products by specific name.
+   *
+   * @param name String name of item.
+   */
   void searchProduct(String name);
 
 }

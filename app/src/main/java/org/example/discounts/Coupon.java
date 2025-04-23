@@ -7,6 +7,9 @@ public class Coupon implements IdiscountStrategy {
     
   public double percentage;
 
+  /**
+   * Applying discount(s) on some items.
+   */
   public void applyDiscount() {}
 
 }

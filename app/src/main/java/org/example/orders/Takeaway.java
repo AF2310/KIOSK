@@ -11,13 +11,13 @@ public class Takeaway extends Order {
 
   public int vat = 12;
 
-  /*
+  /**
    * Empty constructor, reason -> see Order.java.
    */
   public Takeaway() {}
 
   /**
-   * Overrides Order.java method as to include the vat in the calculation
+   * Overrides Order.java method as to include the vat in the calculation.
    */
   public double calculatePrize(int vat) {
 
