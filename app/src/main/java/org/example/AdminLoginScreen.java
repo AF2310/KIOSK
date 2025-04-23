@@ -7,6 +7,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -84,10 +85,9 @@ public class AdminLoginScreen {
     //Initially hidden
     errorLabel.setVisible(false);
 
-    var loginButton = new MidButtonWithImage(
+    var loginButton = new MidButton(
         "Login",
-        "/back.png",
-        "rgb(255, 255, 255)");    
+        "rgb(0, 0, 0)");    
     
     //login button functionality
     loginButton.setOnAction(e -> {
@@ -112,18 +112,23 @@ public class AdminLoginScreen {
     });
 
     //back button
-    var backButton = new MidButtonWithImage(
+    var backButton = new SquareButtonWithImg(
         "Back",
         "/back.png",
-        "rgb(255, 255, 255)");   
+        "rgb(255, 255, 255)");
+        
+    
+    // Put buttons in an HBox
+    HBox buttonContainer = new HBox(20);
+    buttonContainer.setAlignment(Pos.CENTER);
+    buttonContainer.getChildren().addAll(loginButton, backButton);
   
     // Set action for back button (to go back to the welcome screen)
     backButton.setOnAction(e -> {
       primaryStage.setScene(welcomeScrScene);
     });
     
-    adminMenuLayout.getChildren().addAll(adminMenuTitle, usernameField, passwordField, loginButton,
-             backButton, errorLabel);
+    adminMenuLayout.getChildren().addAll(adminMenuTitle, usernameField, passwordField, loginButton, backButton, errorLabel);
 
 
     //put everything into a stackpane

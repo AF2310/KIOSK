@@ -1,10 +1,10 @@
 package org.example;
 
 import java.sql.SQLException;
-import javafx.animation.ScaleTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,7 +12,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 /**
  * The welcome screen class.
@@ -35,8 +34,8 @@ public class WelcomeScreen {
     mainWindow.setAlignment(Pos.CENTER);
 
     // Set background color and size
-    mainWindow.setStyle("-fx-background-color: grey;");
-    mainWindow.setPrefSize(windowWidth, windowHeight);
+    // mainWindow.setStyle("-fx-background-color: grey;");
+    // mainWindow.setPrefSize(windowWidth, windowHeight);
 
     // Setup labels
     var welcome = new Label("Welcome to");
@@ -58,17 +57,35 @@ public class WelcomeScreen {
         + "-fx-background-radius: 10;");
 
     // HBox for Burger images
-    var rowOfBurgers = new HBox(220);
+    var rowOfBurgers = new HBox(300);
     rowOfBurgers.setAlignment(Pos.CENTER);
 
     // Setup side images
     Image burger1 = new Image(getClass().getResourceAsStream("/burger1.png"));
+    // Image burger3 = new Image(getClass().getResourceAsStream("/burger3.png"));
+
+    // Create a button with the burger image as its graphic
+    Button burgerButton = new Button();
     Image burger3 = new Image(getClass().getResourceAsStream("/burger3.png"));
+    ImageView burgerView3 = new ImageView(burger3);
+    burgerView3.setScaleX(0.5);
+    burgerView3.setScaleY(0.5);
+    burgerButton.setGraphic(burgerView3);
+    burgerButton.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
+
+    // Set the button action
+    burgerButton.setOnAction(e -> {
+        System.out.println("Right burger clicked!");
+        // You can handle the click action here, such as navigating to another scene
+    });
+
+    // Add the button to the HBox
+    // rowOfBurgers.getChildren().addAll(burgerView1, burgerView2, burgerButton);
 
     ImageView burgerView1 = new ImageView(burger1);
     var burgerContainer1 = new HBox(burgerView1);
     burgerContainer1.setAlignment(Pos.BASELINE_LEFT);
-    ImageView burgerView3 = new ImageView(burger3);
+    // ImageView burgerView3 = new ImageView(burger3);
     var burgerContainer3 = new HBox(burgerView3);
     burgerContainer3.setAlignment(Pos.BASELINE_RIGHT);
 
@@ -98,7 +115,7 @@ public class WelcomeScreen {
     // Add centre image
     Image burger2 = new Image(getClass().getResourceAsStream("/burger2.png"));
     ImageView burgerView2 = new ImageView(burger2);
-    rowOfBurgers.getChildren().addAll(burgerView1, burgerView2, burgerView3);
+    rowOfBurgers.getChildren().addAll(burgerView1, burgerView2, burgerButton);
 
     // Test sql connection
     SqlConnectionCheck connectionCheck = new SqlConnectionCheck();
@@ -113,34 +130,34 @@ public class WelcomeScreen {
 
     Scene scene = new Scene(mainPane, windowWidth, windowHeight);
 
-    // Fix aspect ratio
-    final double aspect_ratio = 1920.0 / 1080.0;
-    final boolean[] resizing = {false};
+    // // Fix aspect ratio
+    // final double aspect_ratio = 1920.0 / 1080.0;
+    // final boolean[] resizing = {true};
 
-    // Adjust width on the go
-    primaryStage.widthProperty().addListener((observer, givenValue, upddValue) -> {
-      if (!resizing[0]) {
-        resizing[0] = true;
-        double newWidth = upddValue.doubleValue();
-        double newHeight = newWidth / aspect_ratio;
-        primaryStage.setHeight(newHeight);
-        resizing[0] = false;
-      }
-    });
+    // // Adjust width on the go
+    // primaryStage.widthProperty().addListener((observer, givenValue, upddValue) -> {
+    //   if (!resizing[0]) {
+    //     resizing[0] = true;
+    //     double newWidth = upddValue.doubleValue();
+    //     double newHeight = newWidth / aspect_ratio;
+    //     primaryStage.setHeight(newHeight);
+    //     resizing[0] = false;
+    //   }
+    // });
 
-    // Adjust height on the go
-    scene.heightProperty().addListener((oberver, oldVal, updtValue) -> {
-      double newWidth = scene.getWidth() / windowWidth;
-      double newHeight = updtValue.doubleValue() / windowHeight;
-      double newScale = Math.min(newWidth, newHeight);
-      mainWindow.setScaleX(newScale);
-      mainWindow.setScaleY(newScale);
+    // // Adjust height on the go
+    // scene.heightProperty().addListener((oberver, oldVal, updtValue) -> {
+    //   double newWidth = scene.getWidth() / windowWidth;
+    //   double newHeight = updtValue.doubleValue() / windowHeight;
+    //   double newScale = Math.min(newWidth, newHeight);
+    //   mainWindow.setScaleX(newScale);
+    //   mainWindow.setScaleY(newScale);
 
-      ScaleTransition st = new ScaleTransition(Duration.millis(200), mainWindow);
-      st.setToX(newScale);
-      st.setToY(newScale);
-      st.play();
-    });
+    //   ScaleTransition st = new ScaleTransition(Duration.millis(200), mainWindow);
+    //   st.setToX(newScale);
+    //   st.setToY(newScale);
+    //   st.play();
+    // });
 
     // Set the main menu
     MainMenuScreen mainMenuScreen = new MainMenuScreen();
@@ -151,16 +168,23 @@ public class WelcomeScreen {
         scene
       );
 
+    
     // Set up action for eat here
     eatHereBtn.setOnAction(e -> {
+      primaryStage.setScene(mainMenuScene);
+    });
+
+    // Set up action for takeaway
+    takeAwayBtn.setOnAction(e -> {
       primaryStage.setScene(mainMenuScene);
     });
 
     AdminLoginScreen adminLoginScreen = new AdminLoginScreen();
     Scene adminMenuScene = adminLoginScreen.createAdminLoginScreen(primaryStage, 
           windowWidth, windowHeight, scene);
+
     //Temporary Button to get to the admin menu
-    takeAwayBtn.setOnAction(e -> {
+    burgerButton.setOnAction(e -> {
       primaryStage.setScene(adminMenuScene);
     });
 

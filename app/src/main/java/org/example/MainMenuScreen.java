@@ -3,8 +3,6 @@ package org.example;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -296,32 +294,11 @@ public class MainMenuScreen {
 
     for (Single item : items) {
       String name = item.getName();
-      String imagePath = getImagePathForItem(conn, name);
+      String imagePath = item.getImagePath();
       double price = item.getPrice();
       result.add(new SimpleItem(name, imagePath, price));
     }
     return result;
-  }
-
-
-  private String getImagePathForItem(Connection conn, String itemName) throws SQLException {
-    //String key = itemName.toLowerCase().replace(" ", "_").replace("&", "and");
-    //return "/food/" + key + ".png";
-
-    String imagePath = "";
-    String sql = "SELECT image_url FROM product WHERE name = ?";
-
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setString(1, itemName);
-
-      try (ResultSet rs = stmt.executeQuery()) {
-        if (rs.next()) {
-          rs.getString("image_url");
-        }
-      }
-    }
-
-    return imagePath;
   }
 
   /**
@@ -343,7 +320,6 @@ public class MainMenuScreen {
     categoryItems.put("Drinks", convert(conn, menu.getDrinks()));
     categoryItems.put("Desserts", convert(conn, menu.getDesserts()));
     categoryItems.put("Special Offers", List.of());
-
   }
 
   /**
