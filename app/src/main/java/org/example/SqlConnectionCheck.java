@@ -12,6 +12,7 @@ public class SqlConnectionCheck {
 
   // Declare the Label
   private Label mysql;
+  private Connection connection;
 
   /**
    * Construct the class.
@@ -22,7 +23,7 @@ public class SqlConnectionCheck {
 
     try {
       // Establish connection
-      Connection conn = DriverManager.getConnection(
+      connection = DriverManager.getConnection(
           "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
               + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
               + "?user=u5urh19mtnnlgmog"
@@ -32,7 +33,7 @@ public class SqlConnectionCheck {
       
       mysql.setText("Driver found and connected");
 
-      conn.setAutoCommit(false);
+      connection.setAutoCommit(false);
 
       // Error handling
     } catch (SQLException e) {
@@ -56,4 +57,21 @@ public class SqlConnectionCheck {
     return mysql;
   }
 
+  public Connection getConnection() {
+    return connection;
+    
+  }
+
+  /**
+  * Closes the database connection.
+  */
+  public void closeConnection() {
+    try {
+      if (connection != null && !connection.isClosed()) {
+        connection.close();
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
 }

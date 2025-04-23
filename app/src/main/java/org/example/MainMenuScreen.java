@@ -57,5 +57,6 @@ public class MainMenuScreen {
     Scene mainMenuScene = new Scene(mainPane, windowWidth, windowHeight);
 
     return mainMenuScene;
+    
   }
 }
