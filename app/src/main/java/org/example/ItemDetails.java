@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -32,6 +33,15 @@ public class ItemDetails {
 
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(20));
+
+    HBox symbols = new HBox();
+    symbols.setPadding(new Insets(20));
+    symbols.setSpacing(10);
+    CircleButtonWithSign plusbtn = new CircleButtonWithSign("+");
+    CircleButtonWithSign plusbtn2 = new CircleButtonWithSign("+");
+    CircleButtonWithSign minusbtn = new CircleButtonWithSign("-");
+    CircleButtonWithSign minusbtn2 = new CircleButtonWithSign("-");
+    symbols.getChildren().addAll(minusbtn, plusbtn, minusbtn2, plusbtn2);
 
     VBox content = new VBox(20);
     content.setAlignment(Pos.CENTER);
@@ -74,7 +84,7 @@ public class ItemDetails {
     Button backButton = new Button("Return");
     backButton.setOnAction(e -> primaryStage.setScene(prevScene));
 
-    content.getChildren().addAll(imageView, nameLabel, backButton);
+    content.getChildren().addAll(symbols, imageView, nameLabel, backButton);
     layout.setCenter(content);
 
     return new Scene(layout, 1920, 1080);
