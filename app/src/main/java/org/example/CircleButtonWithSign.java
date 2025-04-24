@@ -5,44 +5,41 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * This is the circlebutton mostly used for + and - symbols.
+ * This is the circle button mostly used for + and - symbols.
  */
 public class CircleButtonWithSign extends Button {
 
   /**
-   * Creates a small circular button with a sign (e.g. + or -).
+   * Construtor that creates either a + or a - button with its own settings.
    *
    * @param buttonSign  The symbol to display ("+" or "-")
    */
   public CircleButtonWithSign(String buttonSign) {
-    // Set the sign as button text
+    // Classic setting up of the size and playing with the style of the buttons
     this.setText(buttonSign);
-    this.setFont(Font.font(24)); // Slightly larger for clarity
-    // Set circular style
-    this.setPrefSize(50, 50); // Width and height equal = circle
-    this.setMinSize(50, 50);
+    this.setFont(Font.font(24));
+    this.setPrefSize(50, 50);
     this.setMaxSize(50, 50);
-    // Makes a black button with white + inside
+    // Both buttons have almost everything the same except the colors of the background, border,
+    //and the text fill.
+    this.setStyle(
+        "-fx-background-radius: 25;"
+        + "-fx-border-radius: 25;"
+        + "-fx-border-width: 2;"
+        + "-fx-font-weight: bold;"
+        + "-fx-content-display: center;"
+        + "-fx-padding: 0;"
+    );
     if (buttonSign.equals("+")) {
       this.setTextFill(Color.WHITE);
-      this.setStyle(
-          "-fx-background-color: black;"
-          + "-fx-background-radius: 25;"
-          + "-fx-border-radius: 25;"
-          + "-fx-border-color: black;"
-          + "-fx-border-width: 2;"
-          + "-fx-font-weight: bold;"
-      );
+      this.setStyle(this.getStyle()
+          + "-fx-background-color: black;"
+          + "-fx-border-color: black;");
     } else if (buttonSign.equals("-")) {
       this.setTextFill(Color.BLACK);
-      this.setStyle(
-          "-fx-background-color: white;"
-          + "-fx-background-radius: 25;"
-          + "-fx-border-radius: 25;"
-          + "-fx-border-color: black;"
-          + "-fx-border-width: 2;"
-          + "-fx-font-weight: bold;"
-      );
+      this.setStyle(this.getStyle()
+          + "-fx-background-color: white;"
+          + "-fx-border-color: black;");
     }
-  }
+}
 }
