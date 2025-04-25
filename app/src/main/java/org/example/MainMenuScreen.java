@@ -147,7 +147,7 @@ public class MainMenuScreen {
 
     // Arrow left
     // Make instance of arrow button that points left
-    ArrowButton leftArrowButton = new ArrowButton(true);
+    ArrowButton leftArrowButton = new ArrowButton(true, false);
 
     // left button clickable as long as it's still inside set bounds (>0)
     leftArrowButton.setOnMouseClicked(e -> {
@@ -162,7 +162,7 @@ public class MainMenuScreen {
 
     // Arrow right
     // Make instance of arrow button that points right
-    ArrowButton rightArrowButton = new ArrowButton(false);
+    ArrowButton rightArrowButton = new ArrowButton(false, false);
 
     // right button clickable as long as its not in last category (Special offers)
     rightArrowButton.setOnMouseClicked(e -> {

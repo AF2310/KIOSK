@@ -23,41 +23,42 @@ public class ArrowButton extends Button {
    *                     left arrow if set to true and
    *                     right arrow if set to false
    */
-  public ArrowButton(boolean pointingLeft) {
+  public ArrowButton(boolean pointingLeft, boolean setGrey) {
     // Default button sizes
     this.setPrefSize(60, 300);
 
-    // Set default style of button
+    // Border of button will be black if setGrey is false and 
+    // gey if set grey is true
+    String borderColor = setGrey ? "grey" : "black";
+    
+    // Set normal style of button
     this.setStyle(
         "-fx-background-color: rgb(255, 255, 255);"
-        + "-fx-border-color: black;"
+        + "-fx-border-color: " + borderColor + ";"
         + "-fx-border-width: 3px;"
         + "-fx-border-radius: 9px;" // For round borders
         + "-fx-padding: 10px;"      // For wider clickable area
     );
 
     // Using hard coded arrow image
-    Image arrowImage = new Image(getClass().getResourceAsStream("/nav_bl.png"));
-    ImageView buttonImage = new ImageView(arrowImage);
+    ImageView buttonImage = new ImageView(new Image("/nav_bl.png"));
 
+    
     // Set size and scalability of image
     buttonImage.setFitHeight(40);
     buttonImage.setPreserveRatio(true);
-
-    // Arrow will point left
-    if (pointingLeft) {
-      // image points left by default -> no need for setScaleX
-
-      // TODO: Functionality added in main code or here with more
-      //       constructor variables?
-      
+    
     // Arrow will point right
-    } else {
-      // Mirrowing image to make it point right
+    if (!pointingLeft) {
+      // Arrow image points left by default
+      // -> Mirrowing image to make it point right
       buttonImage.setScaleX(-1);
+    }
 
-      // TODO: Functionality added in main code or here with more
-      //       constructor variables?
+    // Make image inside button (arrow) grey and unclickable
+    if (setGrey) {
+      buttonImage.setOpacity(0.5);
+      this.setDisable(true);
     }
 
     // Put the button (arrow) image inside the button
