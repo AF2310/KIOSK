@@ -31,7 +31,7 @@ public class MidButtonWithImage extends Button {
     Label buttonLabel = new Label(buttonText);
     buttonLabel.setStyle("-fx-background-color: transparent;"
         + "-fx-font-weight: normal;"
-        + "-fx-font-size: 50;"
+        + "-fx-font-size: 38;"
         + "-fx-padding: 5 10;"
         + "-fx-background-radius: 10;");
 
