@@ -12,6 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -135,11 +137,18 @@ public class ItemDetails {
       imageView = new ImageView(new Image(inputStream));
     }
 
-    imageView.setFitHeight(200);
+    imageView.setFitHeight(500);
     imageView.setPreserveRatio(true);
 
-    HBox itemDetails = new HBox(50, leftSide, imageView);
+    Region spacer = new Region();
+    HBox.setHgrow(spacer, Priority.ALWAYS);
+
+
+    HBox itemDetails = new HBox(50, leftSide);
     itemDetails.setAlignment(Pos.CENTER);
+
+    HBox topRightImage = new HBox(imageView);
+    topRightImage.setAlignment(Pos.TOP_RIGHT);
 
     MidButtonWithImage addToCartButton = new MidButtonWithImage("Add To Cart", "cart_wh.png", 
           "rgb(81, 173, 86)");
@@ -150,24 +159,28 @@ public class ItemDetails {
 
     backButton.setOnAction(e -> primaryStage.setScene(prevScene));
 
-    HBox bottomRightButtons = new HBox(30);
-    bottomRightButtons.setAlignment(Pos.BOTTOM_RIGHT);
-    bottomRightButtons.getChildren().addAll(addToCartButton, backButton);
+    HBox bottomRightBox = new HBox(30);
+    bottomRightBox.setAlignment(Pos.BOTTOM_RIGHT);
+    bottomRightBox.getChildren().addAll(addToCartButton, backButton);
 
     HBox bottomContainer = new HBox();
     bottomContainer.setPadding(new Insets(10, 20, 10, 5)); // Top, Right, Bottom, Left padding
-    
+
+    HBox topContainer = new HBox();
+    topContainer.setPadding(new Insets(10, 20, 10, 5)); // Top, Right, Bottom, Left padding
 
     // Swedish flag on the left
     HBox bottomLeftBox = new HBox(langButton);
     bottomLeftBox.setAlignment(Pos.CENTER_LEFT);
 
-    bottomContainer.getChildren().addAll(bottomLeftBox, bottomRightButtons);
+    bottomContainer.getChildren().addAll(bottomLeftBox, spacer, bottomRightBox);
+    topContainer.getChildren().addAll(topRightImage);
 
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(20));
     layout.setCenter(itemDetails);
     layout.setBottom(bottomContainer);
+    layout.setTop(topContainer);
 
     return new Scene(layout, 1920, 1080);
 
