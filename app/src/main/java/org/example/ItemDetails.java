@@ -140,16 +140,6 @@ public class ItemDetails {
     imageView.setFitHeight(500);
     imageView.setPreserveRatio(true);
 
-    Region spacer = new Region();
-    HBox.setHgrow(spacer, Priority.ALWAYS);
-
-
-    HBox itemDetails = new HBox(50, leftSide);
-    itemDetails.setAlignment(Pos.CENTER);
-
-    HBox topRightImage = new HBox(imageView);
-    topRightImage.setAlignment(Pos.TOP_RIGHT);
-
     MidButtonWithImage addToCartButton = new MidButtonWithImage("Add To Cart", "cart_wh.png", 
           "rgb(81, 173, 86)");
 
@@ -159,9 +149,24 @@ public class ItemDetails {
 
     backButton.setOnAction(e -> primaryStage.setScene(prevScene));
 
+    Region spacer = new Region();
+    HBox.setHgrow(spacer, Priority.ALWAYS);
+
+    HBox itemDetails = new HBox(50, leftSide);
+    itemDetails.setAlignment(Pos.CENTER);
+
+    HBox topRightImage = new HBox(30);
+    topRightImage.setAlignment(Pos.TOP_RIGHT);
+    topRightImage.getChildren().addAll(imageView);
+  
+    // Box for add to cart and back
     HBox bottomRightBox = new HBox(30);
     bottomRightBox.setAlignment(Pos.BOTTOM_RIGHT);
     bottomRightBox.getChildren().addAll(addToCartButton, backButton);
+
+    // Swedish flag on the left
+    HBox bottomLeftBox = new HBox(langButton);
+    bottomLeftBox.setAlignment(Pos.CENTER_LEFT);
 
     HBox bottomContainer = new HBox();
     bottomContainer.setPadding(new Insets(10, 20, 10, 5)); // Top, Right, Bottom, Left padding
@@ -169,9 +174,6 @@ public class ItemDetails {
     HBox topContainer = new HBox();
     topContainer.setPadding(new Insets(10, 20, 10, 5)); // Top, Right, Bottom, Left padding
 
-    // Swedish flag on the left
-    HBox bottomLeftBox = new HBox(langButton);
-    bottomLeftBox.setAlignment(Pos.CENTER_LEFT);
 
     bottomContainer.getChildren().addAll(bottomLeftBox, spacer, bottomRightBox);
     topContainer.getChildren().addAll(topRightImage);
