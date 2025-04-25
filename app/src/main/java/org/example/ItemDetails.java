@@ -147,23 +147,29 @@ public class ItemDetails {
     imageView.setFitHeight(500);
     imageView.setPreserveRatio(true);
 
-    MidButtonWithImage addToCartButton = new MidButtonWithImage("Add To Cart", "cart_wh.png", 
-          "rgb(81, 173, 86)");
+    MidButtonWithImage addToCartButton = new MidButtonWithImage("Add To Cart",
+                     "cart_wh.png", 
+                     "rgb(81, 173, 86)");
 
     SquareButtonWithImg backButton = new SquareButtonWithImg("Back",
-                    "back.png",
-                    "rgb(255, 255, 255)");
+                     "back.png",
+                     "rgb(255, 255, 255)");
 
     backButton.setOnAction(e -> primaryStage.setScene(prevScene));
 
-    Region spacer = new Region();
-    HBox.setHgrow(spacer, Priority.ALWAYS);
+    Region spacerBottom = new Region();
+    HBox.setHgrow(spacerBottom, Priority.ALWAYS);
 
-    HBox itemDetails = new HBox(50, leftSide);
+    Region spacerTop = new Region();
+    HBox.setHgrow(spacerTop, Priority.ALWAYS);
+  
+    // Name + All the ingredients
+    HBox itemDetails = new HBox(50, nameLabel, leftSide);
     itemDetails.setAlignment(Pos.CENTER_LEFT);
 
+    // Product image
     HBox topRightImage = new HBox(30);
-    topRightImage.setAlignment(Pos.TOP_RIGHT);
+    topRightImage.setAlignment(Pos.CENTER_RIGHT);
     topRightImage.getChildren().addAll(imageView);
   
     // Box for add to cart and back
@@ -175,15 +181,21 @@ public class ItemDetails {
     HBox bottomLeftBox = new HBox(langButton);
     bottomLeftBox.setAlignment(Pos.CENTER_LEFT);
 
-    HBox bottomContainer = new HBox();
-    bottomContainer.setPadding(new Insets(10, 75, 30, 5)); // Top, Right, Bottom, Left padding
-    bottomContainer.getChildren().addAll(bottomLeftBox, spacer, bottomRightBox);
+    HBox topContainer = new HBox();
+    // Top, Right, Bottom, Left padding
+    topContainer.setPadding(new Insets(50, 50, 0, 0));
+    topContainer.getChildren().addAll(spacerTop, topRightImage);
 
+    HBox bottomContainer = new HBox();
+    bottomContainer.setPadding(new Insets(0, 0, 0, 0));
+    bottomContainer.getChildren().addAll(bottomLeftBox, spacerBottom, bottomRightBox);
+  
+    // Setting positioning of all the elements
     BorderPane layout = new BorderPane();
-    layout.setPadding(new Insets(20));
+    layout.setPadding(new Insets(50));
     layout.setCenter(itemDetails);
     layout.setBottom(bottomContainer);
-    layout.setTop(topRightImage);
+    layout.setTop(topContainer);
 
     return new Scene(layout, 1920, 1080);
 
