@@ -83,10 +83,16 @@ public class ItemDetails {
         + "-fx-font-weight: bold;"
     );
 
-    Button backButton = new Button("Return");
+    MidButtonWithImage addToCartButton = new MidButtonWithImage("Add To Cart", "cart_wh.png", 
+          "rgb(81, 173, 86)");
+
+    SquareButtonWithImg backButton = new SquareButtonWithImg("Back",
+                    "back.png",
+                    "rgb(255, 255, 255)");
+
     backButton.setOnAction(e -> primaryStage.setScene(prevScene));
 
-    content.getChildren().addAll(symbols, imageView, nameLabel, backButton);
+    content.getChildren().addAll(symbols, imageView, nameLabel, backButton, addToCartButton);
     layout.setCenter(content);
 
     return new Scene(layout, 1920, 1080);
