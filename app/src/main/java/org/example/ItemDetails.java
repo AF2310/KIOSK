@@ -31,6 +31,19 @@ public class ItemDetails {
    */
   public Scene create(Stage primaryStage, Scene prevScene, String name, String imagePath) {
 
+    ImageView sweFlag = new ImageView(new Image(getClass().getResourceAsStream("/swe.png")));
+
+    // Set sizes
+    sweFlag.setFitWidth(60);
+    sweFlag.setFitHeight(60);
+    sweFlag.setPreserveRatio(true);
+
+    // Create actual language button - putting it all together
+    Button langButton = new Button();
+    langButton.setGraphic(sweFlag);
+    langButton.setStyle("-fx-background-color: transparent;");
+    langButton.setMinSize(40, 40);
+
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(20));
 
@@ -92,8 +105,24 @@ public class ItemDetails {
 
     backButton.setOnAction(e -> primaryStage.setScene(prevScene));
 
-    content.getChildren().addAll(symbols, imageView, nameLabel, backButton, addToCartButton);
+    HBox bottomRightButtons = new HBox(30);
+    bottomRightButtons.setAlignment(Pos.BOTTOM_RIGHT);
+    bottomRightButtons.getChildren().addAll(addToCartButton, backButton);
+
+    HBox bottomContainer = new HBox();
+    bottomContainer.setPadding(new Insets(10, 20, 10, 5)); // Top, Right, Bottom, Left padding
+    bottomContainer.setSpacing(1130);
+
+    // Swedish flag on the left
+    HBox bottomLeftBox = new HBox(langButton);
+    bottomLeftBox.setAlignment(Pos.CENTER_LEFT);
+
+    bottomContainer.getChildren().addAll(bottomLeftBox, bottomRightButtons);
+
+    content.getChildren().addAll(symbols, imageView, nameLabel);
     layout.setCenter(content);
+    layout.setBottom(bottomContainer);
+    
 
     return new Scene(layout, 1920, 1080);
 

@@ -75,8 +75,8 @@ public class WelcomeScreen {
 
     // Set the button action
     burgerButton.setOnAction(e -> {
-        System.out.println("Right burger clicked!");
-        // You can handle the click action here, such as navigating to another scene
+      System.out.println("Right burger clicked!");
+      // You can handle the click action here, such as navigating to another scene
     });
 
     // Add the button to the HBox
