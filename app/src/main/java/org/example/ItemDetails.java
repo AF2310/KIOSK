@@ -45,11 +45,14 @@ public class ItemDetails {
     langButton.setStyle("-fx-background-color: transparent;");
     langButton.setMinSize(40, 40);
 
+    //Just a test list of ingredients
     List<String> ingredients = List.of("Sesame bun", "Cheese",
         "Onion", "Tomatoes", "Celery", "Cucumber");
 
     VBox ingredientListBox = new VBox(10);
 
+    // Making a line with the ingredient name, the minus and plus buttons and the quantity,
+    // for every ingredient in the test list.
     for (String ingredientName : ingredients) {
       Label nameLabel = new Label(ingredientName);
       nameLabel.setMinWidth(120);
@@ -59,6 +62,8 @@ public class ItemDetails {
       CircleButtonWithSign minusButton = new CircleButtonWithSign("-");
       CircleButtonWithSign plusButton = new CircleButtonWithSign("+");
 
+      // If the quantity is 1, this makes the minus button unclickable then,
+      // and the plus button is clickable.
       minusButton.setOnAction(e -> {
         int quantity = Integer.parseInt(quantityLabel.getText());
         if (quantity > 1) {
@@ -76,6 +81,7 @@ public class ItemDetails {
         }
       });
 
+      // If the quantity is 9, this makes the plus button unclickable.
       plusButton.setOnAction(e -> {
         int quantity = Integer.parseInt(quantityLabel.getText());
         if (quantity < 9) {
@@ -95,6 +101,7 @@ public class ItemDetails {
 
       minusButton.setInvalid(true);
 
+      // Putting the ingredient elements in an hbox for every element.
       HBox row = new HBox(10, nameLabel, minusButton, quantityLabel, plusButton);
       row.setAlignment(Pos.CENTER_LEFT);
       ingredientListBox.getChildren().add(row);
