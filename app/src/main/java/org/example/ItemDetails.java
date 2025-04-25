@@ -160,7 +160,7 @@ public class ItemDetails {
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
     HBox itemDetails = new HBox(50, leftSide);
-    itemDetails.setAlignment(Pos.CENTER);
+    itemDetails.setAlignment(Pos.CENTER_LEFT);
 
     HBox topRightImage = new HBox(30);
     topRightImage.setAlignment(Pos.TOP_RIGHT);
@@ -176,20 +176,14 @@ public class ItemDetails {
     bottomLeftBox.setAlignment(Pos.CENTER_LEFT);
 
     HBox bottomContainer = new HBox();
-    bottomContainer.setPadding(new Insets(10, 20, 10, 5)); // Top, Right, Bottom, Left padding
-
-    HBox topContainer = new HBox();
-    topContainer.setPadding(new Insets(10, 20, 10, 5)); // Top, Right, Bottom, Left padding
-
-
+    bottomContainer.setPadding(new Insets(10, 75, 30, 5)); // Top, Right, Bottom, Left padding
     bottomContainer.getChildren().addAll(bottomLeftBox, spacer, bottomRightBox);
-    topContainer.getChildren().addAll(topRightImage);
 
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(20));
     layout.setCenter(itemDetails);
     layout.setBottom(bottomContainer);
-    layout.setTop(topContainer);
+    layout.setTop(topRightImage);
 
     return new Scene(layout, 1920, 1080);
 
