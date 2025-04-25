@@ -41,5 +41,20 @@ public class CircleButtonWithSign extends Button {
           + "-fx-background-color: white;"
           + "-fx-border-color: black;");
     }
-}
+  }
+
+  /**
+   * This method disables the button and dims it if disabled.
+   *
+   * @param disabled true to make the button invalid, otherwise false
+   */
+  public void setInvalid(boolean disabled) {
+    this.setDisable(disabled);
+
+    if (disabled) {
+      this.setOpacity(0.5); 
+    } else {
+      this.setOpacity(1);
+    }
+  }
 }

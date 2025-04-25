@@ -41,7 +41,9 @@ public class ItemDetails {
     CircleButtonWithSign plusbtn2 = new CircleButtonWithSign("+");
     CircleButtonWithSign minusbtn = new CircleButtonWithSign("-");
     CircleButtonWithSign minusbtn2 = new CircleButtonWithSign("-");
-    symbols.getChildren().addAll(minusbtn, plusbtn, minusbtn2, plusbtn2);
+    minusbtn2.setInvalid(true);
+    plusbtn2.setInvalid(true);
+    symbols.getChildren().addAll(minusbtn, minusbtn2, plusbtn, plusbtn2);
 
     VBox content = new VBox(20);
     content.setAlignment(Pos.CENTER);
