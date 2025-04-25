@@ -6,10 +6,19 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
-
+/**
+ * A reusable red cancel button component with a red X icon.
+ */
 public class CancelButton extends VBox {
   private final Button cancelButton;
 
+
+  
+
+
+  /**
+   * Constructs a red cancel button with icon and styling.
+   */
   public CancelButton() {
     ImageView cancelIcon = new ImageView(new Image(getClass().getResourceAsStream("/cancel.png")));
     cancelIcon.setFitWidth(30);
@@ -20,11 +29,11 @@ public class CancelButton extends VBox {
     cancelButton.setGraphic(cancelIcon);
     cancelButton.setStyle(
       "-fx-background-color: transparent;" +
-        "-fx-border-color: red;" +
-        "-fx-border-width: 10;" +
-        "-fx-border-radius: 10;" +
-        "-fx-padding: 10;" +
-        "-fx-background-radius: 10;"
+      "-fx-border-color: red;" +
+      "-fx-border-width: 3;" +
+      "-fx-border-radius: 12;" +
+      "-fx-padding: 10;" +
+      "-fx-background-radius: 12;"
 
 
       );
@@ -41,6 +50,13 @@ public class CancelButton extends VBox {
 
   }
 
+
+  
+  /**
+   * getter for button instance.
+   *
+   * @return  cancel button instance
+   */
   public Button getButton() {
     return cancelButton;
   }
