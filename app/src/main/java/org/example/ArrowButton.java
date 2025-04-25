@@ -22,6 +22,8 @@ public class ArrowButton extends Button {
    * @param pointingLeft boolean that gives you 
    *                     left arrow if set to true and
    *                     right arrow if set to false
+   * @param setGrey boolean that makes button grey and
+   *                unclickable if set to true
    */
   public ArrowButton(boolean pointingLeft, boolean setGrey) {
     // Default button sizes

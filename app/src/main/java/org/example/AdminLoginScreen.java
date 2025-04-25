@@ -128,7 +128,14 @@ public class AdminLoginScreen {
       primaryStage.setScene(welcomeScrScene);
     });
     
-    adminMenuLayout.getChildren().addAll(adminMenuTitle, usernameField, passwordField, loginButton, backButton, errorLabel);
+    adminMenuLayout.getChildren().addAll(
+        adminMenuTitle,
+        usernameField,
+        passwordField,
+        loginButton,
+        backButton,
+        errorLabel
+    );
 
 
     //put everything into a stackpane
