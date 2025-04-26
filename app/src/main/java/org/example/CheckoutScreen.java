@@ -7,7 +7,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -23,6 +22,8 @@ import javafx.stage.Stage;
  */
 public class CheckoutScreen {
 
+  // TODO: fix later if needed otherwise remove and alter code accordingly
+  @SuppressWarnings("unused")
   private Stage primaryStage;
 
   /**
@@ -48,17 +49,18 @@ public class CheckoutScreen {
     this.primaryStage = primaryStage;
 
 
-    // Set layout limits
-    //BorderPane layout = new BorderPane();
-    //layout.setPadding(new Insets(20));
+    // Top of layout
 
 
     // Title of the checkout screen
     Label checkoutLabel = new Label("Checkout");
     checkoutLabel.setStyle(
-        "-fx-font-size: 20px;"
+        "-fx-font-size: 60px;"
         + "-fx-font-weight: bold;"
     );
+
+    checkoutLabel.setAlignment(Pos.TOP_LEFT);
+    checkoutLabel.setPadding(new Insets(50));
 
 
     // Arrow buttons to navigate through order pages
@@ -99,18 +101,81 @@ public class CheckoutScreen {
     VBox rightArrowVcentered = new VBox(rightArrowButton);
     rightArrowVcentered.setAlignment(Pos.CENTER);
 
+    // Make arrow buttons left and right most position
+    HBox leftMostArrow = new HBox(leftArrowButton);
+    leftMostArrow.setAlignment(Pos.CENTER_LEFT);
+    HBox rightMostArrow = new HBox(rightArrowButton);
+    rightMostArrow.setAlignment(Pos.CENTER_RIGHT);
 
+
+    // Make item grid - CURRENTLY DUMMY CODE
     // TODO: insert item layout here
 
+    // Making 2 rows of 4 item slots each
+    VBox itemGrid = new VBox();
+    for (int j = 0; j < 2; j++) {
+      
+      // Making row of 4 item slots
+      HBox itemRow = new HBox();
+      for (int i = 0; i < 5; i++) {
+        // Fixed sized slot for image
+        StackPane imageSlot = new StackPane();
+        imageSlot.setPrefSize(200, 200);
+        imageSlot.setMaxSize(200, 200);
+        imageSlot.setMinSize(200, 200);
+        
+        // Slot for Label and Price
+        HBox labelAndPrice = new HBox();
+        labelAndPrice.setAlignment(Pos.CENTER);
+        labelAndPrice.getChildren().addAll(
+          new Label("name"),
+          new Label("price")
+        );
+          
+        // Slot for Plus-/Minus Buttons and Quantity value
+        HBox quantityBox = new HBox();
+        quantityBox.setAlignment(Pos.CENTER);
+        quantityBox.getChildren().addAll(
+          new Label("-"),
+          new Label("quantity"),
+          new Label("+")
+        );
+          
+        // Adding it all together in one item slot
+        VBox itemSlot = new VBox();
+        itemSlot.setAlignment(Pos.CENTER);
+        itemSlot.getChildren().addAll(
+            imageSlot,
+            labelAndPrice,
+            quantityBox
+        );
+        itemRow.getChildren().add(itemSlot);
+      }
 
+      itemGrid.getChildren().add(itemRow);
+    }
+
+    
     // Middle section
 
-    // Adding all Objects/Boxes into middle part of layout
-    // TODO: add items in between arrow buttons
+
+    // Create spacers
+    Region leftSpacer = new Region();
+    Region rightSpacer = new Region();
+
+    // Make spacers grow to fill space as much as needed
+    // to make arrow buttons most left and most right positioned
+    HBox.setHgrow(leftSpacer, Priority.ALWAYS);
+    HBox.setHgrow(rightSpacer, Priority.ALWAYS);
+    
+    
+    // Combine Arrow buttons and item grid
     HBox middleSection = new HBox();
     middleSection.setAlignment(Pos. CENTER);
     middleSection.getChildren().addAll(
-        leftArrowButton, rightArrowButton
+        leftMostArrow, leftSpacer,
+        itemGrid,
+        rightSpacer, rightArrowButton
     );
 
 
@@ -160,54 +225,37 @@ public class CheckoutScreen {
 
     // Added all components for the bottom part
     // TODO: insert cancel button here
-    bottomButtons.getChildren().addAll(langButton, spacer, backButton);
 
-
-
-    //layout.setBottom(new VBox(bottomButtons));
-  
-    // Add layout to Stack Pane for dynamic sizing
-    //StackPane mainPane = new StackPane(layout);
-    //mainPane.setPrefSize(windowWidth, windowHeight);
-
-    //HBox.setHgrow(spacer, Priority.ALWAYS);
-
-    //HBox itemDetails = new HBox(50, leftSide);
-    //itemDetails.setAlignment(Pos.CENTER_LEFT);
-
-    //HBox topRightImage = new HBox(30);
-    //topRightImage.setAlignment(Pos.TOP_RIGHT);
-    //topRightImage.getChildren().addAll(imageView);
   
     // Box for add to cart and back
-    //HBox bottomRightBox = new HBox(30);
-    //bottomRightBox.setAlignment(Pos.BOTTOM_RIGHT);
-    //bottomRightBox.getChildren().addAll(backButton, cancelButton);
-    //bottomRightBox.getChildren().addAll(backButton);
+    HBox backAndCancel = new HBox(30);
+    backAndCancel.setAlignment(Pos.BOTTOM_RIGHT);
+    // bottomRightBox.getChildren().addAll(backButton, cancelButton);
+    backAndCancel.getChildren().addAll(backButton);
 
     // Swedish flag on the left
-    //HBox bottomLeftBox = new HBox(langButton);
-    //bottomLeftBox.setAlignment(Pos.CENTER_LEFT);
+    HBox languageBox = new HBox(langButton);
+    languageBox.setAlignment(Pos.CENTER_LEFT);
 
-    //HBox bottomContainer = new HBox();
-    //bottomContainer.setPadding(new Insets(10, 75, 30, 5)); // Top, Right, Bottom, Left padding
-    //bottomContainer.getChildren().addAll(bottomLeftBox, spacer, bottomRightBox);
+    HBox bottomPart = new HBox();
+    bottomPart.setPadding(new Insets(10, 75, 30, 5)); // Top, Right, Bottom, Left padding
+    bottomPart.getChildren().addAll(languageBox, spacer, backAndCancel);
 
-    //BorderPane layout = new BorderPane();
-    //layout.setPadding(new Insets(20));
-    //layout.setCenter(itemDetails);
-    //layout.setBottom(bottomContainer);
-    //layout.setTop(topRightImage);
+
+    HBox topBox = new HBox();
+    topBox.setAlignment(Pos.TOP_LEFT);
+    topBox.getChildren().addAll(spacer, checkoutLabel);
 
 
     // Stacking all Objects/Boxes vertically on each other
     VBox layout = new VBox();
 
     layout.setAlignment(Pos.CENTER);
+    layout.setPadding(new Insets(20));
     layout.getChildren().addAll(
-        checkoutLabel,
+        topBox,
         middleSection,
-        bottomButtons
+        bottomPart
     );
 
     // Create final scene result
