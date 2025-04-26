@@ -2,7 +2,6 @@ package org.example;
 
 import java.io.InputStream;
 import java.util.List;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -147,25 +146,26 @@ public class ItemDetails {
     imageView.setFitHeight(500);
     imageView.setPreserveRatio(true);
 
-    MidButtonWithImage addToCartButton = new MidButtonWithImage("Add To Cart", "cart_wh.png", 
-          "rgb(81, 173, 86)");
-
+    
     SquareButtonWithImg backButton = new SquareButtonWithImg("Back",
-                    "back.png",
-                    "rgb(255, 255, 255)");
-
+        "back.png",
+        "rgb(255, 255, 255)");
+    
     backButton.setOnAction(e -> primaryStage.setScene(prevScene));
-
+    
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
-
+    
     HBox itemDetails = new HBox(50, leftSide);
     itemDetails.setAlignment(Pos.CENTER_LEFT);
-
+    
     HBox topRightImage = new HBox(30);
     topRightImage.setAlignment(Pos.TOP_RIGHT);
     topRightImage.getChildren().addAll(imageView);
-  
+    
+    MidButtonWithImage addToCartButton = new MidButtonWithImage("Add To Cart", "cart_wh.png", 
+          "rgb(81, 173, 86)");
+
     // Box for add to cart and back
     HBox bottomRightBox = new HBox(30);
     bottomRightBox.setAlignment(Pos.BOTTOM_RIGHT);

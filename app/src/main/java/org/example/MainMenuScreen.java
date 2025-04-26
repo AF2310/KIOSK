@@ -249,7 +249,7 @@ public class MainMenuScreen {
           this.primaryStage,
           windowWidth,
           windowHeight,
-          welcomeScrScene,
+          this.primaryStage.getScene(),
           50 // Dummy code
         );
       this.primaryStage.setScene(checkoutScene);
@@ -324,8 +324,8 @@ public class MainMenuScreen {
     for (int i = 0; i < totalItemsPerPage; i++) {
 
       // Create fresh item Slot
-      VBox box = new VBox(10);
-      box.setAlignment(Pos.CENTER);
+      VBox itemBox = new VBox(10);
+      itemBox.setAlignment(Pos.CENTER);
 
       // Make slot with fixed size
       StackPane imageSlot = new StackPane();
@@ -400,16 +400,16 @@ public class MainMenuScreen {
         });
 
         // Connect it all and add to item grid
-        box.getChildren().addAll(imageSlot, name, priceBox);
+        itemBox.getChildren().addAll(imageSlot, name, priceBox);
 
       // No more items exist -> Item list empty
       // Fill the rest up with empty slots until we reach 6 slots per page
       } else {
-        box.getChildren().addAll(imageSlot, new Label(""));
+        itemBox.getChildren().addAll(imageSlot, new Label(""));
       }
 
       // Add new slot to final item grid
-      itemGrid.add(box, i % maxItemsPerRow, i / maxItemsPerRow);
+      itemGrid.add(itemBox, i % maxItemsPerRow, i / maxItemsPerRow);
     }
     updateCategoryButtonStyles();
   }
