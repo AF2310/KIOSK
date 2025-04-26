@@ -217,15 +217,8 @@ public class MainMenuScreen {
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
     // Create cancel button
-    Button cancelButton = new Button();
-    ImageView cancelIcon = new ImageView(new Image(getClass().getResourceAsStream("/cancel.png")));
+    CancelButton cancelButton = new CancelButton();
 
-    // Adjust asthetics of button
-    cancelIcon.setFitWidth(30);
-    cancelIcon.setFitHeight(30);
-    cancelButton.setGraphic(cancelIcon);
-    cancelButton.setStyle("-fx-background-color: transparent;");
-    cancelButton.setMinSize(40, 40);
     cancelButton.setOnAction(e -> primaryStage.setScene(welcomeScrScene));
 
     // Create Cart button
