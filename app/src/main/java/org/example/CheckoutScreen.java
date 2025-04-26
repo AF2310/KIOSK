@@ -136,9 +136,9 @@ public class CheckoutScreen {
         HBox quantityBox = new HBox();
         quantityBox.setAlignment(Pos.CENTER);
         quantityBox.getChildren().addAll(
-          new Label("-"),
+          new CircleButtonWithSign("-"),
           new Label("quantity"),
-          new Label("+")
+          new CircleButtonWithSign("+")
         );
           
         // Adding it all together in one item slot
