@@ -35,15 +35,13 @@ public class CheckoutScreen {
    * @param windowWidth width of window
    * @param windowHeight height of window
    * @param mainMenuScreen the previous scene of this scene
-   * @param orderId the id of the order (database)
    * @return scene containing all the order details
    */
   public Scene createCheckoutScreen(
       Stage primaryStage,
       double windowWidth,
       double windowHeight,
-      Scene mainMenuScreen,
-      int orderId) {
+      Scene mainMenuScreen) {
 
     // Set primary stage
     this.primaryStage = primaryStage;

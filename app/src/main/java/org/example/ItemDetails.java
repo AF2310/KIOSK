@@ -15,6 +15,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.menu.*;
 
 /**
  * Screen for the details of an Item.
@@ -32,7 +33,10 @@ public class ItemDetails {
    * @param imagePath path to the item's image
    * @return scene containing all item details
    */
-  public Scene create(Stage primaryStage, Scene prevScene, String name, String imagePath) {
+  public Scene create(Stage primaryStage, Scene prevScene, SimpleItem item) {
+
+    final String name = item.name();
+    final String imagePath = item.imagePath();
 
     ImageView sweFlag = new ImageView(new Image(getClass().getResourceAsStream("/swe.png")));
     // Set sizes
