@@ -171,7 +171,7 @@ public class ItemDetails {
     bottomRightBox.setAlignment(Pos.BOTTOM_RIGHT);
     bottomRightBox.getChildren().addAll(addToCartButton, backButton);
 
-    // Swedish flag on the left
+    // Swedish flag on the left 
     HBox bottomLeftBox = new HBox(langButton);
     bottomLeftBox.setAlignment(Pos.CENTER_LEFT);
 

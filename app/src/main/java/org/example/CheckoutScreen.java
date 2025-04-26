@@ -26,6 +26,8 @@ public class CheckoutScreen {
   @SuppressWarnings("unused")
   private Stage primaryStage;
 
+  
+
   /**
    * Creating a scene for the checkout menu.
    * TODO: These are most likely not all the variables that are needed.
@@ -47,6 +49,19 @@ public class CheckoutScreen {
 
     // Set primary stage
     this.primaryStage = primaryStage;
+    EatHereButton eatHereButton = new EatHereButton();
+    TakeAwayButton takeawayButton = new TakeAwayButton();
+
+    ReturnButton backButtonWrapper = new ReturnButton();
+    Button backButton = backButtonWrapper.getButton();
+    backButton.setOnAction(e -> primaryStage.setScene(mainMenuScreen));
+
+    CancelButton cancelButtonWrapper = new CancelButton();
+    Button cancelButton = cancelButtonWrapper.getButton();
+    cancelButton.setOnAction(e -> {
+      System.out.println("Order canceled!");
+      primaryStage.setScene(mainMenuScreen);
+    });
 
 
     // Top of layout
@@ -178,6 +193,9 @@ public class CheckoutScreen {
         rightSpacer, rightArrowButton
     );
 
+    HBox eatHereTakeawayBox = new HBox(50, eatHereButton, takeawayButton);
+    eatHereTakeawayBox.setAlignment(Pos.CENTER);
+
 
     // Bottom buttons
 
@@ -207,7 +225,7 @@ public class CheckoutScreen {
 
 
     // Create back button
-    Button backButton = new Button();
+    //Button backButton = new Button();
     ImageView backIcon = new ImageView(new Image(getClass().getResourceAsStream("/back.png")));
 
     // Adjust asthetics of button
@@ -231,7 +249,8 @@ public class CheckoutScreen {
     HBox backAndCancel = new HBox(30);
     backAndCancel.setAlignment(Pos.BOTTOM_RIGHT);
     // bottomRightBox.getChildren().addAll(backButton, cancelButton);
-    backAndCancel.getChildren().addAll(backButton);
+    //backAndCancel.getChildren().addAll(backButton);
+    backAndCancel.getChildren().addAll(backButton, cancelButton);
 
     // Swedish flag on the left
     HBox languageBox = new HBox(langButton);
@@ -254,6 +273,7 @@ public class CheckoutScreen {
     layout.setPadding(new Insets(20));
     layout.getChildren().addAll(
         topBox,
+        eatHereTakeawayBox,
         middleSection,
         bottomPart
     );
