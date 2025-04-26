@@ -229,6 +229,12 @@ public class CheckoutScreen {
     langButton.setStyle("-fx-background-color: transparent;");
     langButton.setMinSize(40, 40);
 
+    // TODO: add price fetching from database to insert correct price
+
+    // Create confirm order button instance
+    ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton(100);
+    // TODO: insert action for button here
+
     // Back button
     BackButton backButton = new BackButton();
     // clicking button means user goes to previous screen
@@ -256,8 +262,14 @@ public class CheckoutScreen {
 
     // Combine all
     HBox bottomPart = new HBox();
-    bottomPart.setPadding(new Insets(10, 75, 30, 5)); // Top, Right, Bottom, Left padding
-    bottomPart.getChildren().addAll(languageBox, spacer, backAndCancel);
+    // Top, Right, Bottom, Left padding
+    bottomPart.setPadding(new Insets(30, 75, 10, 5));
+    bottomPart.getChildren().addAll(
+        languageBox,
+        confirmOrderButton,
+        spacer,
+        backAndCancel
+    );
 
 
     // Stacking all Objects/Boxes vertically on each other
