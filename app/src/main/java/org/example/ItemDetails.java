@@ -33,7 +33,7 @@ public class ItemDetails {
    * @param imagePath path to the item's image
    * @return scene containing all item details
    */
-  public Scene create(Stage primaryStage, Scene prevScene, String name, String imagePath) {
+  public Scene create(Stage primaryStage, Scene prevScene, String name, String imagePath, double price) {
 
     ImageView sweFlag = new ImageView(new Image(getClass().getResourceAsStream("/swe.png")));
     // Set sizes
@@ -56,10 +56,12 @@ public class ItemDetails {
     // Making a line with the ingredient name, the minus and plus buttons and the quantity,
     // for every ingredient in the test list.
     for (String ingredientName : ingredients) {
-      Label nameLabel = new Label(ingredientName);
-      nameLabel.setMinWidth(120);
+      Label ingredientLabel = new Label(ingredientName);
+      ingredientLabel.setMinWidth(120);
+      ingredientLabel.setStyle("-fx-font-size: 25px;");
 
       Label quantityLabel = new Label("1");
+      quantityLabel.setStyle("-fx-font-size: 25px;");
 
       CircleButtonWithSign minusButton = new CircleButtonWithSign("-");
       CircleButtonWithSign plusButton = new CircleButtonWithSign("+");
@@ -86,10 +88,12 @@ public class ItemDetails {
       // If the quantity is 9, this makes the plus button unclickable.
       plusButton.setOnAction(e -> {
         int quantity = Integer.parseInt(quantityLabel.getText());
+
         if (quantity < 9) {
           quantity++;
           quantityLabel.setText(String.valueOf(quantity));
         }
+        
         if (quantity == 9) {
           plusButton.setInvalid(true);
         } else {
@@ -104,18 +108,22 @@ public class ItemDetails {
       minusButton.setInvalid(true);
 
       // Putting the ingredient elements in an hbox for every element.
-      HBox row = new HBox(10, nameLabel, minusButton, quantityLabel, plusButton);
-      row.setAlignment(Pos.CENTER_LEFT);
+      HBox row = new HBox(25, ingredientLabel, minusButton, quantityLabel, plusButton);
+      row.setAlignment(Pos.CENTER_RIGHT);
       ingredientListBox.getChildren().add(row);
     }
 
+    // Item labe
     Label nameLabel = new Label(name);
     nameLabel.setStyle(
-        "-fx-font-size: 20px;"
+        "-fx-font-size: 65px;"
         + "-fx-font-weight: bold;"
     );
 
-    VBox leftSide = new VBox(20);
+    // Left side of the top part of the screen
+    VBox leftSide = new VBox(100);
+    leftSide.setAlignment(Pos.TOP_CENTER);
+    leftSide.setPadding(new Insets(0, 0, 0, 100));
     leftSide.getChildren().addAll(nameLabel, ingredientListBox);
 
     InputStream inputStream = getClass().getResourceAsStream(imagePath);
@@ -144,8 +152,26 @@ public class ItemDetails {
       imageView = new ImageView(new Image(inputStream));
     }
 
-    imageView.setFitHeight(500);
+    imageView.setFitHeight(400);
     imageView.setPreserveRatio(true);
+
+    // Price underneath the picture
+    Label priceLabel = new Label(String.format("%.0f :-", price));
+    priceLabel.setStyle(
+      "-fx-font-size: 35px;"
+      + "-fx-font-weight: bold;"
+    );
+        
+    // Wrapper to align the Label in its VBox
+    HBox priceWrapper = new HBox(priceLabel);
+    priceWrapper.setAlignment(Pos.BOTTOM_RIGHT);
+
+    //VBox for the Picture
+    VBox rightSide = new VBox(20);
+    rightSide.setPadding(new Insets(0, 200, 0, 0));
+    rightSide.setAlignment(Pos.CENTER);
+    rightSide.getChildren().addAll(imageView, priceWrapper);
+
 
     MidButtonWithImage addToCartButton = new MidButtonWithImage("Add To Cart",
                      "cart_wh.png", 
@@ -157,45 +183,37 @@ public class ItemDetails {
 
     backButton.setOnAction(e -> primaryStage.setScene(prevScene));
 
+    
+    //HBox for the upper part of the screen
+    HBox topContainer = new HBox();
+    topContainer.setPadding(new Insets(20));
+    topContainer.setAlignment(Pos.CENTER);
+    topContainer.getChildren().addAll(leftSide, rightSide);
+    
+    // Box for add to cart and back
+    HBox bottomRightBox = new HBox(30);
+    bottomRightBox.setAlignment(Pos.CENTER_RIGHT);
+    bottomRightBox.getChildren().addAll(addToCartButton, backButton);
+    
+    // Swedish flag on the left
+    HBox bottomLeftBox = new HBox(langButton);
+    bottomLeftBox.setAlignment(Pos.BOTTOM_LEFT);
+    
     Region spacerBottom = new Region();
     HBox.setHgrow(spacerBottom, Priority.ALWAYS);
 
-    Region spacerTop = new Region();
-    HBox.setHgrow(spacerTop, Priority.ALWAYS);
-  
-    // Name + All the ingredients
-    HBox itemDetails = new HBox(50, nameLabel, leftSide);
-    itemDetails.setAlignment(Pos.CENTER_LEFT);
-
-    // Product image
-    HBox topRightImage = new HBox(30);
-    topRightImage.setAlignment(Pos.CENTER_RIGHT);
-    topRightImage.getChildren().addAll(imageView);
-  
-    // Box for add to cart and back
-    HBox bottomRightBox = new HBox(30);
-    bottomRightBox.setAlignment(Pos.BOTTOM_RIGHT);
-    bottomRightBox.getChildren().addAll(addToCartButton, backButton);
-
-    // Swedish flag on the left
-    HBox bottomLeftBox = new HBox(langButton);
-    bottomLeftBox.setAlignment(Pos.CENTER_LEFT);
-
-    HBox topContainer = new HBox();
-    // Top, Right, Bottom, Left padding
-    topContainer.setPadding(new Insets(50, 50, 0, 0));
-    topContainer.getChildren().addAll(spacerTop, topRightImage);
-
     HBox bottomContainer = new HBox();
     bottomContainer.setPadding(new Insets(0, 0, 0, 0));
-    bottomContainer.getChildren().addAll(bottomLeftBox, spacerBottom, bottomRightBox);
+    bottomContainer.getChildren().addAll(bottomLeftBox, spacerBottom,  bottomRightBox);
+    bottomContainer.setAlignment(Pos.CENTER);
   
     // Setting positioning of all the elements
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(50));
-    layout.setCenter(itemDetails);
-    layout.setBottom(bottomContainer);
     layout.setTop(topContainer);
+    layout.setLeft(leftSide);
+    layout.setRight(rightSide);
+    layout.setBottom(bottomContainer);
 
     return new Scene(layout, 1920, 1080);
 

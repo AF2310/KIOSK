@@ -415,7 +415,7 @@ public class MainMenuScreen {
           Scene detailScene = detailScreen.create(
               this.primaryStage,
               this.primaryStage.getScene(),
-              item.name(), item.imagePath()
+              item.name(), item.imagePath(), item.price()
           );
           this.primaryStage.setScene(detailScene);
         });
