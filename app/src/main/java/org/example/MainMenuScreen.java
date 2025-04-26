@@ -146,29 +146,11 @@ public class MainMenuScreen {
     // Arrow buttons to navigate menu
 
     // Arrow left
-    Image leftArrow = new Image(getClass().getResourceAsStream("/nav_bl.png"));
-    ImageView leftArrowView = new ImageView(leftArrow);
-    leftArrowView.setFitHeight(40);
-    leftArrowView.setPreserveRatio(true);
-
-    // Wrap arrow ImageView in a StackPane to make borders of button visible
-    StackPane leftArrowWrapper = new StackPane(leftArrowView);
-    leftArrowWrapper.setStyle(
-        "-fx-border-color: black;"
-        + "-fx-border-width: 3px;"
-        + "-fx-border-radius: 9px;" // For round borders
-        + "-fx-padding: 10px;"      // For wider clickable area
-    );
-    // Setting border size (yes this much is needed)
-    leftArrowWrapper.setMinWidth(60);
-    leftArrowWrapper.setMaxWidth(60);
-    leftArrowWrapper.setPrefWidth(60);
-    leftArrowWrapper.setMinHeight(300);
-    leftArrowWrapper.setMaxHeight(300);
-    leftArrowWrapper.setPrefHeight(300);
+    // Make instance of arrow button that points left
+    ArrowButton leftArrowButton = new ArrowButton(true, false);
 
     // left button clickable as long as it's still inside set bounds (>0)
-    leftArrowWrapper.setOnMouseClicked(e -> {
+    leftArrowButton.setOnMouseClicked(e -> {
       if (currentCategoryIndex > 0) {
         currentCategoryIndex--;
         updateGrid();
@@ -179,30 +161,11 @@ public class MainMenuScreen {
     });
 
     // Arrow right
-    // Uses same image as left button just mirrowed
-    ImageView rightArrowView = new ImageView(leftArrow);
-    rightArrowView.setFitHeight(40);
-    rightArrowView.setPreserveRatio(true);
-    rightArrowView.setScaleX(-1);
-
-    // Wrap arrow ImageView in a StackPane to make borders of button visible
-    StackPane rightArrowWrapper = new StackPane(rightArrowView);
-    rightArrowWrapper.setStyle(
-          "-fx-border-color: black;"
-          + "-fx-border-width: 3px;"
-          + "-fx-border-radius: 9px;" // For round borders
-          + "-fx-padding: 10px;"      // For wider clickable area
-    );
-    // Setting border size (yes this much is needed)
-    rightArrowWrapper.setMinWidth(60);
-    rightArrowWrapper.setMaxWidth(60);
-    rightArrowWrapper.setPrefWidth(60);
-    rightArrowWrapper.setMinHeight(300);
-    rightArrowWrapper.setMaxHeight(300);
-    rightArrowWrapper.setPrefHeight(300);
+    // Make instance of arrow button that points right
+    ArrowButton rightArrowButton = new ArrowButton(false, false);
 
     // right button clickable as long as its not in last category (Special offers)
-    rightArrowWrapper.setOnMouseClicked(e -> {
+    rightArrowButton.setOnMouseClicked(e -> {
       if (currentCategoryIndex < categories.length - 1
           && !categories[currentCategoryIndex].equals("Special Offers")) {
         currentCategoryIndex++;
@@ -214,9 +177,9 @@ public class MainMenuScreen {
     });
 
     // Make arrow buttons left right centered vertically
-    VBox leftArrowVcentered = new VBox(leftArrowWrapper);
+    VBox leftArrowVcentered = new VBox(leftArrowButton);
     leftArrowVcentered.setAlignment(Pos.CENTER);
-    VBox rightArrowVcentered = new VBox(rightArrowWrapper);
+    VBox rightArrowVcentered = new VBox(rightArrowButton);
     rightArrowVcentered.setAlignment(Pos.CENTER);
 
     // Add all Menu items and left right buttons in center of menu in the right order
@@ -276,8 +239,24 @@ public class MainMenuScreen {
     cartButton.setStyle("-fx-background-color: transparent;");
     cartButton.setMinSize(40, 40);
 
+    // Checkout screen
+    CheckoutScreen checkoutScreen = new CheckoutScreen();
+
+    // Get Checkout menu when clicking on cart
+    // TODO: add proper database variables to fetch correct order
+    cartButton.setOnMouseClicked(e -> {
+      Scene checkoutScene = checkoutScreen.createCheckoutScreen(
+          this.primaryStage,
+          windowWidth,
+          windowHeight,
+          this.primaryStage.getScene(),
+          50 // Dummy code
+        );
+      this.primaryStage.setScene(checkoutScene);
+    });
+
     // Added all components for the bottom part
-    bottomButtons.getChildren().addAll(langButton, spacer, cancelButton, cartButton);
+    bottomButtons.getChildren().addAll(langButton, spacer, cartButton, cancelButton);
     layout.setBottom(new VBox(bottomButtons));
   
     // Add layout to Stack Pane for dynamic sizing
@@ -345,8 +324,8 @@ public class MainMenuScreen {
     for (int i = 0; i < totalItemsPerPage; i++) {
 
       // Create fresh item Slot
-      VBox box = new VBox(10);
-      box.setAlignment(Pos.CENTER);
+      VBox itemBox = new VBox(10);
+      itemBox.setAlignment(Pos.CENTER);
 
       // Make slot with fixed size
       StackPane imageSlot = new StackPane();
@@ -421,16 +400,16 @@ public class MainMenuScreen {
         });
 
         // Connect it all and add to item grid
-        box.getChildren().addAll(imageSlot, name, priceBox);
+        itemBox.getChildren().addAll(imageSlot, name, priceBox);
 
       // No more items exist -> Item list empty
       // Fill the rest up with empty slots until we reach 6 slots per page
       } else {
-        box.getChildren().addAll(imageSlot, new Label(""));
+        itemBox.getChildren().addAll(imageSlot, new Label(""));
       }
 
       // Add new slot to final item grid
-      itemGrid.add(box, i % maxItemsPerRow, i / maxItemsPerRow);
+      itemGrid.add(itemBox, i % maxItemsPerRow, i / maxItemsPerRow);
     }
     updateCategoryButtonStyles();
   }
