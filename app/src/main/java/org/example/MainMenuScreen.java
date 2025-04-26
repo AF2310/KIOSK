@@ -239,6 +239,22 @@ public class MainMenuScreen {
     cartButton.setStyle("-fx-background-color: transparent;");
     cartButton.setMinSize(40, 40);
 
+    // Checkout screen
+    CheckoutScreen checkoutScreen = new CheckoutScreen();
+
+    // Get Checkout menu when clicking on cart
+    // TODO: add proper database variables to fetch correct order
+    cartButton.setOnMouseClicked(e -> {
+      Scene checkoutScene = checkoutScreen.createCheckoutScreen(
+          this.primaryStage,
+          windowWidth,
+          windowHeight,
+          welcomeScrScene,
+          50 // Dummy code
+        );
+      this.primaryStage.setScene(checkoutScene);
+    });
+
     // Added all components for the bottom part
     bottomButtons.getChildren().addAll(langButton, spacer, cancelButton, cartButton);
     layout.setBottom(new VBox(bottomButtons));
