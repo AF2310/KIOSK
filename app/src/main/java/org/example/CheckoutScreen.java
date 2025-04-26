@@ -22,12 +22,6 @@ import javafx.stage.Stage;
  */
 public class CheckoutScreen {
 
-  // TODO: fix later if needed otherwise remove and alter code accordingly
-  @SuppressWarnings("unused")
-  private Stage primaryStage;
-
-  
-
   /**
    * Creating a scene for the checkout menu.
    * TODO: These are most likely not all the variables that are needed.
@@ -47,10 +41,6 @@ public class CheckoutScreen {
       Scene mainMenuScreen,
       Scene welcomeScrScene,
       int orderId) {
-
-    // Set primary stage
-    this.primaryStage = primaryStage;
-
 
     // Spacer to elements away from each other
     Region spacer = new Region();
@@ -76,9 +66,9 @@ public class CheckoutScreen {
     
     // Combine both in horizontal layout
     HBox eatHereTakeawayBox = new HBox(
-      50,
-      eatHereButton,
-      takeawayButton
+        50,
+        eatHereButton,
+        takeawayButton
     );
     // Align box properly
     eatHereTakeawayBox.setAlignment(Pos.CENTER);
@@ -92,10 +82,10 @@ public class CheckoutScreen {
     HBox topBox = new HBox();
     topBox.setAlignment(Pos.TOP_LEFT);
     topBox.getChildren().addAll(
-      spacer,
-      checkoutLabel,
-      eatHereTakeawayBox
-      // TODO: add promocode box here
+        spacer,
+        checkoutLabel,
+        eatHereTakeawayBox
+        // TODO: add promocode box here
     );
 
 
