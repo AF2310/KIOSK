@@ -25,6 +25,7 @@ public class CheckoutScreen {
   // TODO: fix later if needed otherwise remove and alter code accordingly
   @SuppressWarnings("unused")
   private Stage primaryStage;
+  private String mode;
 
   
 
@@ -45,10 +46,14 @@ public class CheckoutScreen {
       double windowWidth,
       double windowHeight,
       Scene mainMenuScreen,
-      int orderId) {
+      int orderId,
+      String mode) {
 
     // Set primary stage
     this.primaryStage = primaryStage;
+    this.mode = mode;
+    
+
     EatHereButton eatHereButton = new EatHereButton();
     TakeAwayButton takeawayButton = new TakeAwayButton();
 

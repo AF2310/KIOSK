@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.example.menu.Imenu;
+import org.example.menu.Menu;
+import org.example.menu.Single;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -26,9 +31,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import org.example.menu.Imenu;
-import org.example.menu.Menu;
-import org.example.menu.Single;
 
 /**
  * The main menu screen.
@@ -44,6 +46,7 @@ public class MainMenuScreen {
   private int currentCategoryIndex = 0;
   private final GridPane itemGrid = new GridPane();
   private final List<Button> categoryButtons = new ArrayList<>();
+  private String mode;
 
   /**
    * Creates the main menu scene.
@@ -59,9 +62,30 @@ public class MainMenuScreen {
       Stage primaryStage,
       double windowWidth,
       double windowHeight,
-      Scene welcomeScrScene) throws SQLException {
+      Scene welcomeScrScene,
+      int dummyCode,
+      String mode) throws SQLException {
 
     this.primaryStage = primaryStage;
+    this.mode = mode;
+
+    ImageView modeIcon = new ImageView();
+    Label modeLabel = new Label();
+    if ("takeAway".equalsIgnoreCase(mode)) {
+      modeIcon.setImage(new Image(getClass().getResourceAsStream("/takeaway.png")));
+      modeLabel.setText("Take Away");
+    } else {
+      modeIcon.setImage(new Image(getClass().getResourceAsStream("/eatHere.png")));
+      modeLabel.setText("Eat Here");
+    }
+
+    modeIcon.setFitWidth(100);
+    modeIcon.setFitHeight(100);
+
+    modeLabel.setStyle("-fx-font-size: 36px; -fx-font-weight: bold;");
+
+    VBox modeBox = new VBox(10, modeIcon, modeLabel);
+    modeBox.setAlignment(Pos.CENTER);
 
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(20));
@@ -250,7 +274,10 @@ public class MainMenuScreen {
           windowWidth,
           windowHeight,
           this.primaryStage.getScene(),
-          50 // Dummy code
+          50, // Dummy code
+          this.mode
+          
+          
         );
       this.primaryStage.setScene(checkoutScene);
     });
@@ -503,7 +530,7 @@ public class MainMenuScreen {
         );
       }
     }
-  } 
+  }
 
   /**
    * Helper method to update highlighting of category buttons.
