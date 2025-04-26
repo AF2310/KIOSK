@@ -38,14 +38,4 @@ public class CancelButton extends Button {
     this.setGraphic(cancelIcon);
     this.setMinSize(60, 60);
   }
-
-  
-  /**
-   * getter for button instance.
-   *
-   * @return  cancel button instance
-   */
-  public Button getButton() {
-    return this;
-  }
 }

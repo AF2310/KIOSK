@@ -243,6 +243,7 @@ public class MainMenuScreen {
           windowWidth,
           windowHeight,
           this.primaryStage.getScene(),
+          welcomeScrScene,
           50 // Dummy code
         );
       this.primaryStage.setScene(checkoutScene);

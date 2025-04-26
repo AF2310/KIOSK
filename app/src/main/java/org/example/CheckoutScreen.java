@@ -45,26 +45,19 @@ public class CheckoutScreen {
       double windowWidth,
       double windowHeight,
       Scene mainMenuScreen,
+      Scene welcomeScrScene,
       int orderId) {
 
     // Set primary stage
     this.primaryStage = primaryStage;
-    EatHereButton eatHereButton = new EatHereButton();
-    TakeAwayButton takeawayButton = new TakeAwayButton();
-
-    ReturnButton backButtonWrapper = new ReturnButton();
-    Button backButton = backButtonWrapper.getButton();
-    backButton.setOnAction(e -> primaryStage.setScene(mainMenuScreen));
-
-    CancelButton cancelButtonWrapper = new CancelButton();
-    Button cancelButton = cancelButtonWrapper.getButton();
-    cancelButton.setOnAction(e -> {
-      System.out.println("Order canceled!");
-      primaryStage.setScene(mainMenuScreen);
-    });
 
 
-    // Top of layout
+    // Spacer to elements away from each other
+    Region spacer = new Region();
+    HBox.setHgrow(spacer, Priority.ALWAYS);
+
+
+    // Top of layout - creating elements
 
 
     // Title of the checkout screen
@@ -73,9 +66,40 @@ public class CheckoutScreen {
         "-fx-font-size: 60px;"
         + "-fx-font-weight: bold;"
     );
-
+    // Alignment of label
     checkoutLabel.setAlignment(Pos.TOP_LEFT);
     checkoutLabel.setPadding(new Insets(50));
+
+    // Eat here or takeaway choice
+    EatHereButton eatHereButton = new EatHereButton();
+    TakeAwayButton takeawayButton = new TakeAwayButton();
+    
+    // Combine both in horizontal layout
+    HBox eatHereTakeawayBox = new HBox(
+      50,
+      eatHereButton,
+      takeawayButton
+    );
+    // Align box properly
+    eatHereTakeawayBox.setAlignment(Pos.CENTER);
+
+    // TODO: Insert promo code section here
+
+
+    // Top of layout - combining elements
+
+
+    HBox topBox = new HBox();
+    topBox.setAlignment(Pos.TOP_LEFT);
+    topBox.getChildren().addAll(
+      spacer,
+      checkoutLabel,
+      eatHereTakeawayBox
+      // TODO: add promocode box here
+    );
+
+
+    // Middle part - creating elements
 
 
     // Arrow buttons to navigate through order pages
@@ -171,7 +195,7 @@ public class CheckoutScreen {
     }
 
     
-    // Middle section
+    // Middle section - combining all elements
 
 
     // Create spacers
@@ -193,16 +217,13 @@ public class CheckoutScreen {
         rightSpacer, rightArrowButton
     );
 
-    HBox eatHereTakeawayBox = new HBox(50, eatHereButton, takeawayButton);
-    eatHereTakeawayBox.setAlignment(Pos.CENTER);
 
+    // Bottom buttons - creating elements
 
-    // Bottom buttons
-
+    
     HBox bottomButtons = new HBox();
     bottomButtons.setPadding(new Insets(10));
     
-
     // Swedish Flag - Language button
     // Get image
     ImageView sweFlag = new ImageView(new Image(getClass().getResourceAsStream("/swe.png")));
@@ -218,52 +239,35 @@ public class CheckoutScreen {
     langButton.setStyle("-fx-background-color: transparent;");
     langButton.setMinSize(40, 40);
 
-
-    // Spacer to push right buttons
-    Region spacer = new Region();
-    HBox.setHgrow(spacer, Priority.ALWAYS);
-
-
-    // Create back button
-    //Button backButton = new Button();
-    ImageView backIcon = new ImageView(new Image(getClass().getResourceAsStream("/back.png")));
-
-    // Adjust asthetics of button
-    backIcon.setFitWidth(30);
-    backIcon.setFitHeight(30);
-    backButton.setGraphic(backIcon);
-    backButton.setStyle("-fx-background-color: transparent;");
-    backButton.setMinSize(40, 40);
+    // Back button
+    BackButton backButton = new BackButton();
+    // clicking button means user goes to previous screen
     backButton.setOnAction(e -> primaryStage.setScene(mainMenuScreen));
 
+    // Cancel button
+    CancelButton cancelButton = new CancelButton();
+    // clicking button means cancellation of order
+    // and user gets send back to welcome screen
+    cancelButton.setOnAction(e -> {
+      System.out.println("Order canceled!");
+      primaryStage.setScene(welcomeScrScene);
+    });
 
-    // TODO: Create Cancel Button that cancels the whole order and sends 
-    //       user back to Welcome screen
-
-
-    // Added all components for the bottom part
-    // TODO: insert cancel button here
-
-  
-    // Box for add to cart and back
-    HBox backAndCancel = new HBox(30);
-    backAndCancel.setAlignment(Pos.BOTTOM_RIGHT);
-    // bottomRightBox.getChildren().addAll(backButton, cancelButton);
-    //backAndCancel.getChildren().addAll(backButton);
-    backAndCancel.getChildren().addAll(backButton, cancelButton);
-
+    // Bottom part - adding all elements together
+    
     // Swedish flag on the left
     HBox languageBox = new HBox(langButton);
     languageBox.setAlignment(Pos.CENTER_LEFT);
+    
+    // Box for cancel order and back button
+    HBox backAndCancel = new HBox(30);
+    backAndCancel.setAlignment(Pos.BOTTOM_RIGHT);
+    backAndCancel.getChildren().addAll(backButton, cancelButton);
 
+    // Combine all
     HBox bottomPart = new HBox();
     bottomPart.setPadding(new Insets(10, 75, 30, 5)); // Top, Right, Bottom, Left padding
     bottomPart.getChildren().addAll(languageBox, spacer, backAndCancel);
-
-
-    HBox topBox = new HBox();
-    topBox.setAlignment(Pos.TOP_LEFT);
-    topBox.getChildren().addAll(spacer, checkoutLabel);
 
 
     // Stacking all Objects/Boxes vertically on each other
@@ -273,7 +277,6 @@ public class CheckoutScreen {
     layout.setPadding(new Insets(20));
     layout.getChildren().addAll(
         topBox,
-        eatHereTakeawayBox,
         middleSection,
         bottomPart
     );
