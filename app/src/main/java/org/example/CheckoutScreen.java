@@ -22,6 +22,8 @@ import javafx.stage.Stage;
  */
 public class CheckoutScreen {
 
+  private Stage primaryStage;
+
   /**
    * Creating a scene for the checkout menu.
    * TODO: These are most likely not all the variables that are needed.
@@ -31,6 +33,7 @@ public class CheckoutScreen {
    * @param windowWidth width of window
    * @param windowHeight height of window
    * @param mainMenuScreen the previous scene of this scene
+   * @param welcomeScrScene the welcome screen (for cancel order button)
    * @param orderId the id of the order (database)
    * @return scene containing all the order details
    */
@@ -41,6 +44,9 @@ public class CheckoutScreen {
       Scene mainMenuScreen,
       Scene welcomeScrScene,
       int orderId) {
+
+    // Setting primary stage
+    this.primaryStage = primaryStage;
 
     // Spacer to elements away from each other
     Region spacer = new Region();
@@ -98,6 +104,7 @@ public class CheckoutScreen {
     // Make instance of arrow button that points left
     ArrowButton leftArrowButton = new ArrowButton(true, false);
 
+    // TODO: insert action of button
     /*leftArrowButton.setOnMouseClicked(e -> {
       if (currentCategoryIndex > 0) {
         currentCategoryIndex--;
@@ -111,7 +118,8 @@ public class CheckoutScreen {
     // Arrow right
     // Make instance of arrow button that points right
     ArrowButton rightArrowButton = new ArrowButton(false, false);
-
+    
+    // TODO: insert action of button
     // right button clickable as long as its not in last category (Special offers)
     /*rightArrowButton.setOnMouseClicked(e -> {
       if (currentCategoryIndex < categories.length - 1
@@ -234,6 +242,17 @@ public class CheckoutScreen {
     // Create confirm order button instance
     ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton(100);
     // TODO: insert action for button here
+    OrderConfirmationScreen ordConfirmation = new OrderConfirmationScreen();
+    confirmOrderButton.setOnAction(e -> {
+      Scene ordConfirmScene = ordConfirmation.createOrderConfirmationScreen(
+          this.primaryStage,
+          windowWidth,
+          windowHeight,
+          welcomeScrScene,
+          50  // Dummy code
+      );
+      this.primaryStage.setScene(ordConfirmScene);
+    });
 
     // Back button
     BackButton backButton = new BackButton();
