@@ -49,13 +49,13 @@ public class CheckoutScreen {
 
 
     // Set layout limits
-    BorderPane layout = new BorderPane();
-    layout.setPadding(new Insets(20));
+    //BorderPane layout = new BorderPane();
+    //layout.setPadding(new Insets(20));
 
 
     // Title of the checkout screen
-    Label nameLabel = new Label("Checkout");
-    nameLabel.setStyle(
+    Label checkoutLabel = new Label("Checkout");
+    checkoutLabel.setStyle(
         "-fx-font-size: 20px;"
         + "-fx-font-weight: bold;"
     );
@@ -100,15 +100,18 @@ public class CheckoutScreen {
     rightArrowVcentered.setAlignment(Pos.CENTER);
 
 
-    // Add all Menu items and left right buttons in center of menu in the right order
-    // Locking arrows left and right and locking menu items in middle
-    /*BorderPane centerMenuLayout = new BorderPane();
-    centerMenuLayout.setLeft(leftArrowVcentered);
-    centerMenuLayout.setCenter(itemGrid);
-    centerMenuLayout.setRight(rightArrowVcentered);*/
+    // TODO: insert item layout here
 
-    // Setting center menu content to center of actual menu
-    //layout.setCenter(centerMenuLayout);
+
+    // Middle section
+
+    // Adding all Objects/Boxes into middle part of layout
+    // TODO: add items in between arrow buttons
+    HBox middleSection = new HBox();
+    middleSection.setAlignment(Pos. CENTER);
+    middleSection.getChildren().addAll(
+        leftArrowButton, rightArrowButton
+    );
 
 
     // Bottom buttons
@@ -132,36 +135,82 @@ public class CheckoutScreen {
     langButton.setStyle("-fx-background-color: transparent;");
     langButton.setMinSize(40, 40);
 
+
     // Spacer to push right buttons
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
-    // Create cancel button
-    Button cancelButton = new Button();
-    ImageView cancelIcon = new ImageView(new Image(getClass().getResourceAsStream("/cancel.png")));
+
+    // Create back button
+    Button backButton = new Button();
+    ImageView backIcon = new ImageView(new Image(getClass().getResourceAsStream("/back.png")));
 
     // Adjust asthetics of button
-    cancelIcon.setFitWidth(30);
-    cancelIcon.setFitHeight(30);
-    cancelButton.setGraphic(cancelIcon);
-    cancelButton.setStyle("-fx-background-color: transparent;");
-    cancelButton.setMinSize(40, 40);
-    cancelButton.setOnAction(e -> primaryStage.setScene(mainMenuScreen));
+    backIcon.setFitWidth(30);
+    backIcon.setFitHeight(30);
+    backButton.setGraphic(backIcon);
+    backButton.setStyle("-fx-background-color: transparent;");
+    backButton.setMinSize(40, 40);
+    backButton.setOnAction(e -> primaryStage.setScene(mainMenuScreen));
+
 
     // TODO: Create Cancel Button that cancels the whole order and sends 
     //       user back to Welcome screen
 
+
     // Added all components for the bottom part
     // TODO: insert cancel button here
-    bottomButtons.getChildren().addAll(langButton, spacer, cancelButton);
-    layout.setBottom(new VBox(bottomButtons));
+    bottomButtons.getChildren().addAll(langButton, spacer, backButton);
+
+
+
+    //layout.setBottom(new VBox(bottomButtons));
   
     // Add layout to Stack Pane for dynamic sizing
-    StackPane mainPane = new StackPane(layout);
-    mainPane.setPrefSize(windowWidth, windowHeight);
+    //StackPane mainPane = new StackPane(layout);
+    //mainPane.setPrefSize(windowWidth, windowHeight);
 
+    //HBox.setHgrow(spacer, Priority.ALWAYS);
+
+    //HBox itemDetails = new HBox(50, leftSide);
+    //itemDetails.setAlignment(Pos.CENTER_LEFT);
+
+    //HBox topRightImage = new HBox(30);
+    //topRightImage.setAlignment(Pos.TOP_RIGHT);
+    //topRightImage.getChildren().addAll(imageView);
+  
+    // Box for add to cart and back
+    //HBox bottomRightBox = new HBox(30);
+    //bottomRightBox.setAlignment(Pos.BOTTOM_RIGHT);
+    //bottomRightBox.getChildren().addAll(backButton, cancelButton);
+    //bottomRightBox.getChildren().addAll(backButton);
+
+    // Swedish flag on the left
+    //HBox bottomLeftBox = new HBox(langButton);
+    //bottomLeftBox.setAlignment(Pos.CENTER_LEFT);
+
+    //HBox bottomContainer = new HBox();
+    //bottomContainer.setPadding(new Insets(10, 75, 30, 5)); // Top, Right, Bottom, Left padding
+    //bottomContainer.getChildren().addAll(bottomLeftBox, spacer, bottomRightBox);
+
+    //BorderPane layout = new BorderPane();
+    //layout.setPadding(new Insets(20));
+    //layout.setCenter(itemDetails);
+    //layout.setBottom(bottomContainer);
+    //layout.setTop(topRightImage);
+
+
+    // Stacking all Objects/Boxes vertically on each other
+    VBox layout = new VBox();
+
+    layout.setAlignment(Pos.CENTER);
+    layout.getChildren().addAll(
+        checkoutLabel,
+        middleSection,
+        bottomButtons
+    );
 
     // Create final scene result
-    return new Scene(mainPane, windowWidth, windowHeight);
+    return new Scene(layout, windowWidth, windowHeight);
   }
 }

@@ -256,7 +256,7 @@ public class MainMenuScreen {
     });
 
     // Added all components for the bottom part
-    bottomButtons.getChildren().addAll(langButton, spacer, cancelButton, cartButton);
+    bottomButtons.getChildren().addAll(langButton, spacer, cartButton, cancelButton);
     layout.setBottom(new VBox(bottomButtons));
   
     // Add layout to Stack Pane for dynamic sizing
