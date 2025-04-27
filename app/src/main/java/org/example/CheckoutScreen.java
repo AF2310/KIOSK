@@ -258,7 +258,7 @@ public class CheckoutScreen {
     // Create confirm order button instance
     ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton(100);
 
-    // TODO: insert action for button here
+    // User confirms order
     confirmOrderButton.setOnAction(e -> {
       // Create order confirmation screen
       OrderConfirmationScreen ordConfirmation = new OrderConfirmationScreen();
@@ -271,7 +271,16 @@ public class CheckoutScreen {
           50  // Dummy code
       );
       this.primaryStage.setScene(ordConfirmScene);
-      fadeOutAnimation(ordConfirmScene);
+
+      // Creating fading animation
+      // to transition smoothly to welcome screen after order confirmation
+      FadingAnimation fadingAnimation = new FadingAnimation(primaryStage);
+      // Fading out of current scene
+      fadingAnimation.fadeOutAnimation(
+          "white",
+          ordConfirmScene,
+          welcomeScrScene
+      );
     });
 
     // Back button
@@ -325,58 +334,5 @@ public class CheckoutScreen {
 
     // Create final scene result
     return new Scene(layout, windowWidth, windowHeight);
-  }
-
-  /**
-   * This is a helper method for the end of the order.
-   * After the order was confirmed (confirmation button pressed)
-   * and the confirmation screen popped up, it should fade out
-   * to send the user back to the welcome screen in a more
-   * graceful way.
-   */
-  public void fadeOutAnimation(Scene currentScene) {
-    // Create white window as overlay to use as fade
-    // -> covers all elements in scene properly so not to bother with labels etc.
-    StackPane overlay = new StackPane();
-    overlay.setStyle("-fx-background-color: white;");
-
-    // overlay will be invisible at first
-    overlay.setOpacity(0);
-
-    // Combine overlay with scene to cover screen
-    StackPane fadingPane = (StackPane) currentScene.getRoot();
-    fadingPane.getChildren().addAll(overlay);
-
-    // Create fading animation that is for 3 seconds
-    FadeTransition fadeTransition = new FadeTransition(
-        Duration.seconds(3),
-        overlay
-    );
-
-    // Make the fading go from transparent to fully white
-    fadeTransition.setFromValue(0);
-    fadeTransition.setToValue(1);
-
-    // Have event with delay + animation and then welcome screen
-    fadeTransition.setOnFinished(event -> {
-      // Pause after animation with a small delay
-      PauseTransition delay = new PauseTransition(Duration.seconds(0.5));
-
-      // Send user back to welcome screen after delay + fade animation
-      delay.setOnFinished(e -> {
-        primaryStage.setScene(welcomeScrScene);
-      });
-      // have a delay
-      delay.play();
-    });
-
-    // Have a small delay before the animation starts
-    PauseTransition delayBeforeTransition = new PauseTransition(Duration.seconds(3));
-    delayBeforeTransition.setOnFinished(event -> {
-      // Play the animation
-      fadeTransition.play();
-    });
-    
-    delayBeforeTransition.play();
   }
 }
