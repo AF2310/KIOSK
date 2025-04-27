@@ -30,7 +30,6 @@ import org.example.menu.Imenu;
 import org.example.menu.Menu;
 import org.example.menu.SimpleItem;
 import org.example.menu.Single;
-import org.example.menu.*;
 
 /**
  * The main menu screen.
