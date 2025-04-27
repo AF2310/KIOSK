@@ -61,9 +61,8 @@ public class WelcomeScreen {
     rowOfBurgers.setAlignment(Pos.CENTER);
 
     // Setup side images
-    Image burger1 = new Image(getClass().getResourceAsStream("/burger1.png"));
     // Image burger3 = new Image(getClass().getResourceAsStream("/burger3.png"));
-
+    
     // Create a button with the burger image as its graphic
     Button burgerButton = new Button();
     Image burger3 = new Image(getClass().getResourceAsStream("/burger3.png"));
@@ -72,11 +71,13 @@ public class WelcomeScreen {
     burgerView3.setScaleY(0.5);
     burgerButton.setGraphic(burgerView3);
     burgerButton.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
-
+    
+    Image burger1 = new Image(getClass().getResourceAsStream("/burger1.png"));
+    
     // Set the button action
     burgerButton.setOnAction(e -> {
-        System.out.println("Right burger clicked!");
-        // You can handle the click action here, such as navigating to another scene
+      System.out.println("Right burger clicked!");
+      // You can handle the click action here, such as navigating to another scene
     });
 
     // Add the button to the HBox

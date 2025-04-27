@@ -87,7 +87,7 @@ public class AdminLoginScreen {
 
     var loginButton = new MidButton(
         "Login",
-        "rgb(0, 0, 0)");    
+        "rgb(0, 0, 0)");
     
     //login button functionality
     loginButton.setOnAction(e -> {
@@ -99,9 +99,9 @@ public class AdminLoginScreen {
       if (checkLogin) {
         AdminMenuScreen adminMenuScreen = new AdminMenuScreen();
         Scene adminMenuScene = adminMenuScreen.createAdminMenuScreen(primaryStage,
-                       windowWidth, windowHeight, welcomeScrScene);
+                      windowWidth, windowHeight, welcomeScrScene);
         primaryStage.setScene(adminMenuScene);
-      } else { 
+      } else {
         // Shows error if a wrong username or password is entered
         errorLabel.setText("Invalid login details");
         errorLabel.setVisible(true);
@@ -128,7 +128,14 @@ public class AdminLoginScreen {
       primaryStage.setScene(welcomeScrScene);
     });
     
-    adminMenuLayout.getChildren().addAll(adminMenuTitle, usernameField, passwordField, loginButton, backButton, errorLabel);
+    adminMenuLayout.getChildren().addAll(
+        adminMenuTitle,
+        usernameField,
+        passwordField,
+        loginButton,
+        backButton,
+        errorLabel
+    );
 
 
     //put everything into a stackpane

@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Abstract base class for all single items on the menu.
  */
-public class Single {
+public class Single extends Product{
   protected String name;
   protected float price;
   protected List<Ingredient> ingredients;
@@ -163,7 +163,7 @@ public class Single {
   public List<Single> getOptionsByType(Connection conn, SingleType type) throws SQLException {
     List<Single> options = new ArrayList<>();
     //String sql = "SELECT id, name, price, type FROM singles WHERE type = ?";
-    String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type " 
+    String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type "
         + "FROM product p "
         + "JOIN category c ON p.category_id = c.category_id "
         + "WHERE c.name = ?";
