@@ -6,7 +6,6 @@ import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,19 +32,8 @@ public class ItemDetails {
    * @param imagePath path to the item's image
    * @return scene containing all item details
    */
-  public Scene create(Stage primaryStage, Scene prevScene, String name, String imagePath, double price) {
-
-    ImageView sweFlag = new ImageView(new Image(getClass().getResourceAsStream("/swe.png")));
-    // Set sizes
-    sweFlag.setFitWidth(60);
-    sweFlag.setFitHeight(60);
-    sweFlag.setPreserveRatio(true);
-
-    // Create actual language button - putting it all together
-    Button langButton = new Button();
-    langButton.setGraphic(sweFlag);
-    langButton.setStyle("-fx-background-color: transparent;");
-    langButton.setMinSize(40, 40);
+  public Scene create(Stage primaryStage, Scene prevScene, String name,
+      String imagePath, double price) {
 
     //Just a test list of ingredients
     List<String> ingredients = List.of("Sesame bun", "Cheese",
@@ -59,6 +47,7 @@ public class ItemDetails {
       Label ingredientLabel = new Label(ingredientName);
       ingredientLabel.setMinWidth(120);
       ingredientLabel.setStyle("-fx-font-size: 25px;");
+      ingredientLabel.setPadding(new Insets(0, 0, 0, 100));
 
       Label quantityLabel = new Label("1");
       quantityLabel.setStyle("-fx-font-size: 25px;");
@@ -66,15 +55,15 @@ public class ItemDetails {
       CircleButtonWithSign minusButton = new CircleButtonWithSign("-");
       CircleButtonWithSign plusButton = new CircleButtonWithSign("+");
 
-      // If the quantity is 1, this makes the minus button unclickable then,
+      // If the quantity is 0, this makes the minus button unclickable then,
       // and the plus button is clickable.
       minusButton.setOnAction(e -> {
         int quantity = Integer.parseInt(quantityLabel.getText());
-        if (quantity > 1) {
+        if (quantity > 0) {
           quantity--;
           quantityLabel.setText(String.valueOf(quantity));
         }
-        if (quantity == 1) {
+        if (quantity == 0) {
           minusButton.setInvalid(true);
         } else {
           minusButton.setInvalid(false);
@@ -100,15 +89,17 @@ public class ItemDetails {
           plusButton.setInvalid(false);
         }
 
-        if (quantity > 1) {
+        if (quantity > 0) {
           minusButton.setInvalid(false);
         }
       });
 
-      minusButton.setInvalid(true);
+      Region detailsSpacer = new Region();
+      HBox.setHgrow(detailsSpacer, Priority.ALWAYS);
 
       // Putting the ingredient elements in an hbox for every element.
-      HBox row = new HBox(25, ingredientLabel, minusButton, quantityLabel, plusButton);
+      HBox row = new HBox(25, ingredientLabel, detailsSpacer,
+          minusButton, quantityLabel, plusButton);
       row.setAlignment(Pos.CENTER_RIGHT);
       ingredientListBox.getChildren().add(row);
     }
@@ -158,43 +149,48 @@ public class ItemDetails {
     // Price underneath the picture
     Label priceLabel = new Label(String.format("%.0f :-", price));
     priceLabel.setStyle(
-      "-fx-font-size: 35px;"
-      + "-fx-font-weight: bold;"
+        "-fx-font-size: 35px;"
+        + "-fx-font-weight: bold;"
     );
         
     // Wrapper to align the Label in its VBox
     HBox priceWrapper = new HBox(priceLabel);
     priceWrapper.setAlignment(Pos.BOTTOM_RIGHT);
 
-    //VBox for the Picture
+    // VBox for the Picture
     VBox rightSide = new VBox(20);
     rightSide.setPadding(new Insets(0, 200, 0, 0));
     rightSide.setAlignment(Pos.CENTER);
     rightSide.getChildren().addAll(imageView, priceWrapper);
 
 
-    MidButtonWithImage addToCartButton = new MidButtonWithImage("Add To Cart",
-                     "cart_wh.png", 
-                     "rgb(81, 173, 86)");
-
-    SquareButtonWithImg backButton = new SquareButtonWithImg("Back",
-                     "back.png",
-                     "rgb(255, 255, 255)");
-
-    backButton.setOnAction(e -> primaryStage.setScene(prevScene));
-
     
-    //HBox for the upper part of the screen
+    SquareButtonWithImg backButton = new SquareButtonWithImg("Back",
+        "back.png",
+        "rgb(255, 255, 255)");
+    
+    backButton.setOnAction(e -> primaryStage.setScene(prevScene));
+    
+    
+    // HBox for the upper part of the screen
     HBox topContainer = new HBox();
     topContainer.setPadding(new Insets(20));
     topContainer.setAlignment(Pos.CENTER);
     topContainer.getChildren().addAll(leftSide, rightSide);
     
+    MidButtonWithImage addToCartButton = new MidButtonWithImage("Add To Cart",
+        "cart_wh.png", 
+        "rgb(81, 173, 86)");
+
     // Box for add to cart and back
     HBox bottomRightBox = new HBox(30);
     bottomRightBox.setAlignment(Pos.CENTER_RIGHT);
     bottomRightBox.getChildren().addAll(addToCartButton, backButton);
     
+    // Language Button
+    // cycles images on click
+    RoundButton langButton = new RoundButton("languages", 70);
+
     // Swedish flag on the left
     HBox bottomLeftBox = new HBox(langButton);
     bottomLeftBox.setAlignment(Pos.BOTTOM_LEFT);
@@ -202,6 +198,7 @@ public class ItemDetails {
     Region spacerBottom = new Region();
     HBox.setHgrow(spacerBottom, Priority.ALWAYS);
 
+    // Bottom part of the screen
     HBox bottomContainer = new HBox();
     bottomContainer.setPadding(new Insets(0, 0, 0, 0));
     bottomContainer.getChildren().addAll(bottomLeftBox, spacerBottom,  bottomRightBox);
