@@ -201,7 +201,7 @@ public class WelcomeScreen {
             windowHeight,
             scene,
             0,
-            "takeAway"
+            "takeaway"
         );
         primaryStage.setScene(mainMenuScene);
       } catch (SQLException ex) {

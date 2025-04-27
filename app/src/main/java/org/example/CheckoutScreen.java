@@ -26,7 +26,7 @@ import javafx.util.Duration;
 public class CheckoutScreen {
 
   private Stage primaryStage;
-  // private String mode;
+  private String mode;
   private Scene welcomeScrScene;
 
   /**
@@ -53,15 +53,33 @@ public class CheckoutScreen {
 
     // Setting primary stage and welcome screen
     this.primaryStage = primaryStage;
-    // this.mode = mode;
+    this.mode = mode;
     
-
     this.welcomeScrScene = welcomeScrScene;
 
     // Spacer to elements away from each other
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
+    HBox modeIndicatorBox = new HBox();
+    modeIndicatorBox.setAlignment(Pos.CENTER);
+
+    if ("takeaway".equalsIgnoreCase(mode)) {
+      TakeAwayButton takeawayButton = new TakeAwayButton();
+      modeIndicatorBox.getChildren().add(takeawayButton);
+    } else {
+      EatHereButton eatHereButton = new EatHereButton();
+      modeIndicatorBox.getChildren().add(eatHereButton);
+    }
+
+    //BackButton backButton = new BackButton();
+    //backButton.setOnAction(e -> primaryStage.setScene(mainMenuScreen));
+
+    //CancelButton cancelButton = new CancelButton();
+    //cancelButton.setOnAction(e -> {
+    //  System.out.println("Order canceled!");
+    //  primaryStage.setScene(mainMenuScreen);
+    //});
 
     // Top of layout - creating elements
 
@@ -225,8 +243,8 @@ public class CheckoutScreen {
         rightSpacer, rightArrowButton
     );
 
-
-    // Bottom buttons - creating elements
+    //HBox eatHereTakeawayBox = new HBox(50, eatHereButton, takeawayButton);
+    //eatHereTakeawayBox.setAlignment(Pos.CENTER);
 
     
     HBox bottomButtons = new HBox();
@@ -312,6 +330,7 @@ public class CheckoutScreen {
     layout.setPadding(new Insets(20));
     layout.getChildren().addAll(
         topBox,
+        modeIndicatorBox,
         middleSection,
         bottomPart
     );
