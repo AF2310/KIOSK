@@ -26,7 +26,7 @@ import javafx.util.Duration;
 public class CheckoutScreen {
 
   private Stage primaryStage;
-  private String mode;
+  // private String mode;
   private Scene welcomeScrScene;
 
   /**
@@ -53,7 +53,7 @@ public class CheckoutScreen {
 
     // Setting primary stage and welcome screen
     this.primaryStage = primaryStage;
-    this.mode = mode;
+    // this.mode = mode;
     
 
     this.welcomeScrScene = welcomeScrScene;

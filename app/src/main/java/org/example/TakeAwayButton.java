@@ -1,4 +1,5 @@
 package org.example;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -29,21 +30,20 @@ public class TakeAwayButton extends VBox  {
     button = new Button();
     button.setGraphic(icon);
     button.setStyle(
-      "-fx-background-color: transparent;" +
-      "-fx-border-color: black;" +
-      "-fx-border-width: 3;" +
-      "-fx-border-radius: 15;" +
-      "-fx-background-radius: 15;" +
-      "-fx-padding: 15;"
-
+        "-fx-background-color: transparent;"
+        + "-fx-border-color: black;"
+        + "-fx-border-width: 3;"
+        + "-fx-border-radius: 15;"
+        + "-fx-background-radius: 15;"
+        + "-fx-padding: 15;"
     );
+
     button.setMinSize(100, 100);
 
     Label label = new Label("Takeaway");
     label.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
     this.getChildren().addAll(button, label);
-    
   }
 
   /**
