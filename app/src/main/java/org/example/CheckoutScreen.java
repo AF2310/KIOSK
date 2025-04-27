@@ -1,10 +1,5 @@
 package org.example;
 
-//import java.sql.Connection;
-//import java.sql.PreparedStatement;
-//import java.sql.ResultSet;
-//import java.sql.SQLException;
-//import com.mysql.cj.protocol.Resultset;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,7 +13,12 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.example.menu.*;
+import org.example.menu.SimpleItem;
+//import java.sql.Connection;
+//import java.sql.PreparedStatement;
+//import java.sql.ResultSet;
+//import java.sql.SQLException;
+//import com.mysql.cj.protocol.Resultset;
 
 /**
  * This is the Screen that displays the order
@@ -41,7 +41,6 @@ public class CheckoutScreen {
    * @param windowHeight height of window
    * @param mainMenuScreen the previous scene of this scene
    * @param welcomeScrScene the welcome screen (for cancel order button)
-   * @param orderId the id of the order (database)F
    * @return scene containing all the order details
    */
   public Scene createCheckoutScreen(
@@ -175,7 +174,6 @@ public class CheckoutScreen {
     HBox itemRow = new HBox();
     for (int i = 0; i < items.length; i++) {
       SimpleItem item = items[i];
-      int quantity = quantitys[i];
       // Fixed sized slot for image
       StackPane imageSlot = new StackPane();
       imageSlot.setPrefSize(200, 200);
@@ -194,8 +192,9 @@ public class CheckoutScreen {
         new Label(item.name()),
         new Label(String.format(" %.0f :-", item.price()))
       );
-      
+
       // Slot for Plus-/Minus Buttons and Quantity value
+      int quantity = quantitys[i];
       HBox quantityBox = new HBox();
       quantityBox.setAlignment(Pos.CENTER);
       quantityBox.getChildren().addAll(
