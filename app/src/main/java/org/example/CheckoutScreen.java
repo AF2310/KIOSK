@@ -1,7 +1,5 @@
 package org.example;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,8 +12,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.util.Duration;
+import javafx.stage.Stage; 
 
 /**
  * This is the Screen that displays the order
@@ -27,7 +24,6 @@ public class CheckoutScreen {
 
   private Stage primaryStage;
   // private String mode;
-  private Scene welcomeScrScene;
 
   /**
    * Creating a scene for the checkout menu.
@@ -54,8 +50,6 @@ public class CheckoutScreen {
     // Setting primary stage and welcome screen
     this.primaryStage = primaryStage;
     // this.mode = mode;
-    
-    this.welcomeScrScene = welcomeScrScene;
 
     // Spacer to elements away from each other
     Region spacer = new Region();
@@ -158,7 +152,7 @@ public class CheckoutScreen {
     VBox rightArrowVcentered = new VBox(rightArrowButton);
     rightArrowVcentered.setAlignment(Pos.CENTER);
 
-    // Make arrow buttons left and right most position
+    // Make arrow buttons left and right most position horizontally
     HBox leftMostArrow = new HBox(leftArrowButton);
     leftMostArrow.setAlignment(Pos.CENTER_LEFT);
     HBox rightMostArrow = new HBox(rightArrowButton);
@@ -166,7 +160,7 @@ public class CheckoutScreen {
 
 
     // Make item grid - CURRENTLY DUMMY CODE
-    // TODO: insert item layout here
+    // TODO: Replace dummy code with actual item grid code
 
     // Making 2 rows of 4 item slots each
     VBox itemGrid = new VBox();
@@ -234,15 +228,12 @@ public class CheckoutScreen {
         itemGrid,
         rightSpacer, rightArrowButton
     );
-  
-    HBox bottomButtons = new HBox();
-    bottomButtons.setPadding(new Insets(10));
     
     // Swedish Flag - Language button
-    // Get image
+    // Set image
     ImageView sweFlag = new ImageView(new Image(getClass().getResourceAsStream("/swe.png")));
 
-    // Set sizes
+    // Set sizes and make it scalable in a proper way
     sweFlag.setFitWidth(30);
     sweFlag.setFitHeight(30);
     sweFlag.setPreserveRatio(true);
