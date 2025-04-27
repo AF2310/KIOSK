@@ -17,7 +17,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage; 
+import javafx.stage.Stage;
+import org.example.menu.*;
 
 /**
  * This is the Screen that displays the order
@@ -49,9 +50,8 @@ public class CheckoutScreen {
       double windowHeight,
       Scene mainMenuScreen,
       Scene welcomeScrScene,
-      int orderId,
-      //Connection conn,
-      String mode) {
+      String mode,
+      Cart cart) {
 
     // Setting primary stage and welcome screen
     this.primaryStage = primaryStage;
@@ -166,51 +166,54 @@ public class CheckoutScreen {
 
 
     // Make item grid - CURRENTLY DUMMY CODE
+    // TODO: Fix layout, make multiple pages
     // TODO: Replace dummy code with actual item grid code
 
-    // Making 2 rows of 4 item slots each
     VBox itemGrid = new VBox();
-    for (int j = 0; j < 2; j++) {
+    SimpleItem[] items = cart.getItems();
+    int[] quantitys = cart.getQuantity();
+    HBox itemRow = new HBox();
+    for (int i = 0; i < items.length; i++) {
+      SimpleItem item = items[i];
+      int quantity = quantitys[i];
+      // Fixed sized slot for image
+      StackPane imageSlot = new StackPane();
+      imageSlot.setPrefSize(200, 200);
+      imageSlot.setMaxSize(200, 200);
+      imageSlot.setMinSize(200, 200);
+      Image itemImage = new Image(item.imagePath());
+      ImageView image = new ImageView(itemImage);
+      image.setFitHeight(150);
+      image.setPreserveRatio(true);
+      imageSlot.getChildren().addAll(image);
       
-      // Making row of 4 item slots
-      HBox itemRow = new HBox();
-      for (int i = 0; i < 5; i++) {
-        // Fixed sized slot for image
-        StackPane imageSlot = new StackPane();
-        imageSlot.setPrefSize(200, 200);
-        imageSlot.setMaxSize(200, 200);
-        imageSlot.setMinSize(200, 200);
+      // Slot for Label and Price
+      HBox labelAndPrice = new HBox();
+      labelAndPrice.setAlignment(Pos.CENTER);
+      labelAndPrice.getChildren().addAll(
+        new Label(item.name()),
+        new Label(String.format(" %.0f :-", item.price()))
+      );
+      
+      // Slot for Plus-/Minus Buttons and Quantity value
+      HBox quantityBox = new HBox();
+      quantityBox.setAlignment(Pos.CENTER);
+      quantityBox.getChildren().addAll(
+        new AddRemoveBlock(quantity)
+      );
         
-        // Slot for Label and Price
-        HBox labelAndPrice = new HBox();
-        labelAndPrice.setAlignment(Pos.CENTER);
-        labelAndPrice.getChildren().addAll(
-          new Label("name"),
-          new Label("price")
-        );
-          
-        // Slot for Plus-/Minus Buttons and Quantity value
-        HBox quantityBox = new HBox();
-        quantityBox.setAlignment(Pos.CENTER);
-        quantityBox.getChildren().addAll(
-          new CircleButtonWithSign("-"),
-          new Label("quantity"),
-          new CircleButtonWithSign("+")
-        );
-          
-        // Adding it all together in one item slot
-        VBox itemSlot = new VBox();
-        itemSlot.setAlignment(Pos.CENTER);
-        itemSlot.getChildren().addAll(
-            imageSlot,
-            labelAndPrice,
-            quantityBox
-        );
-        itemRow.getChildren().add(itemSlot);
-      }
-
-      itemGrid.getChildren().add(itemRow);
+      // Adding it all together in one item slot
+      VBox itemSlot = new VBox();
+      itemSlot.setAlignment(Pos.CENTER);
+      itemSlot.getChildren().addAll(
+          imageSlot,
+          labelAndPrice,
+          quantityBox
+      );
+      itemRow.getChildren().add(itemSlot);
     }
+
+    itemGrid.getChildren().add(itemRow);
 
     
     // Middle section - combining all elements

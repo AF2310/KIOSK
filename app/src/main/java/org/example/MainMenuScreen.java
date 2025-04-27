@@ -43,6 +43,7 @@ public class MainMenuScreen {
   private int currentCategoryIndex = 0;
   private GridPane itemGrid = new GridPane();
   private List<Button> categoryButtons = new ArrayList<>();
+  public Cart cart = new Cart();
   private String mode;
 
   /**
@@ -257,7 +258,6 @@ public class MainMenuScreen {
     CheckoutScreen checkoutScreen = new CheckoutScreen();
 
     // Get Checkout menu when clicking on cart
-    // TODO: add proper database variables to fetch correct order
     cartButton.setOnMouseClicked(e -> {
       Scene checkoutScene = checkoutScreen.createCheckoutScreen(
           this.primaryStage,
@@ -265,8 +265,8 @@ public class MainMenuScreen {
           windowHeight,
           this.primaryStage.getScene(),
           welcomeScrScene,
-          50, // Dummy code
-          this.mode
+          this.mode,
+          cart
         );
       this.primaryStage.setScene(checkoutScene);
     });
@@ -410,7 +410,8 @@ public class MainMenuScreen {
           Scene detailScene = detailScreen.create(
               this.primaryStage,
               this.primaryStage.getScene(),
-              item
+              item,
+              cart
           );
           this.primaryStage.setScene(detailScene);
         });
