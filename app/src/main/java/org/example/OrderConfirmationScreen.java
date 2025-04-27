@@ -3,6 +3,7 @@ package org.example;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -47,6 +48,10 @@ public class OrderConfirmationScreen {
 
     // Order id label
     Label orderIdLabel = new Label("Order number: " + orderId);
+    orderIdLabel.setStyle(
+        "-fx-font-size: 30px;"
+        + "-fx-font-weight: normal;"
+    );
 
     // Combining both labels
     VBox screenLabelBox = new VBox();
@@ -55,8 +60,12 @@ public class OrderConfirmationScreen {
         orderConfirmationLabel,
         orderIdLabel
     );
+
+    // Making layout into a stackpane to create fade overlay later on
+    StackPane oconfirmStack = new StackPane();
+    oconfirmStack.getChildren().addAll(screenLabelBox);
     
     // Create final scene result
-    return new Scene(screenLabelBox, windowWidth, windowHeight);
+    return new Scene(oconfirmStack, windowWidth, windowHeight);
   }
 }
