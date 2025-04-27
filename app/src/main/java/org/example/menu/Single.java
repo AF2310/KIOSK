@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Abstract base class for all single items on the menu.
  */
-public class Single {
+public class Single extends Product{
   protected String name;
   protected float price;
   protected List<Ingredient> ingredients;

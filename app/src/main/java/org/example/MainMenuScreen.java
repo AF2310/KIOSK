@@ -29,7 +29,7 @@ import javafx.stage.Stage;
 import org.example.menu.Imenu;
 import org.example.menu.Menu;
 import org.example.menu.Single;
-
+import org.example.menu.*;;
 
 /**
  * The main menu screen.
@@ -37,8 +37,6 @@ import org.example.menu.Single;
 public class MainMenuScreen {
 
   private Stage primaryStage;
-
-  private record SimpleItem(String name, String imagePath, double price) {}
 
   private final String[] categories = {"Burgers", "Sides", "Drinks", "Desserts", "Special Offers"};
   private final Map<String, List<SimpleItem>> categoryItems = new HashMap<>();
@@ -412,7 +410,7 @@ public class MainMenuScreen {
           Scene detailScene = detailScreen.create(
               this.primaryStage,
               this.primaryStage.getScene(),
-              item.name(), item.imagePath(), item.price()
+              item
           );
           this.primaryStage.setScene(detailScene);
         });

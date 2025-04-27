@@ -5,6 +5,7 @@ import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,6 +15,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.menu.*;
 
 /**
  * Screen for the details of an Item.
@@ -27,12 +29,24 @@ public class ItemDetails {
    *
    * @param primaryStage what is the primary stage
    * @param prevScene what was the previous stage
-   * @param name name of the item
-   * @param imagePath path to the item's image
    * @return scene containing all item details
    */
-  public Scene create(Stage primaryStage, Scene prevScene, String name,
-      String imagePath, double price) {
+  public Scene create(Stage primaryStage, Scene prevScene, SimpleItem item) {
+
+    final String name = item.name();
+    final String imagePath = item.imagePath();
+
+    ImageView sweFlag = new ImageView(new Image(getClass().getResourceAsStream("/swe.png")));
+    // Set sizes
+    sweFlag.setFitWidth(60);
+    sweFlag.setFitHeight(60);
+    sweFlag.setPreserveRatio(true);
+
+    // Create actual language button - putting it all together
+    Button langButton = new Button();
+    langButton.setGraphic(sweFlag);
+    langButton.setStyle("-fx-background-color: transparent;");
+    langButton.setMinSize(40, 40);
 
     //Just a test list of ingredients
     List<String> ingredients = List.of("Sesame bun", "Cheese",
@@ -146,21 +160,22 @@ public class ItemDetails {
     imageView.setPreserveRatio(true);
 
     // Price underneath the picture
-    Label priceLabel = new Label(String.format("%.0f :-", price));
-    priceLabel.setStyle(
-        "-fx-font-size: 35px;"
-        + "-fx-font-weight: bold;"
-    );
+    //Label priceLabel = new Label(String.format("%.0f :-", price));
+    //priceLabel.setStyle(
+    //    "-fx-font-size: 35px;"
+    //    + "-fx-font-weight: bold;"
+    //);
         
     // Wrapper to align the Label in its VBox
-    HBox priceWrapper = new HBox(priceLabel);
-    priceWrapper.setAlignment(Pos.BOTTOM_RIGHT);
+    //HBox priceWrapper = new HBox(priceLabel);
+    //priceWrapper.setAlignment(Pos.BOTTOM_RIGHT);
 
     // VBox for the Picture
     VBox rightSide = new VBox(20);
     rightSide.setPadding(new Insets(0, 200, 0, 0));
     rightSide.setAlignment(Pos.CENTER);
-    rightSide.getChildren().addAll(imageView, priceWrapper);
+    //rightSide.getChildren().addAll(imageView, priceWrapper);
+    rightSide.getChildren().addAll(imageView);
 
 
     
@@ -198,7 +213,7 @@ public class ItemDetails {
     
     // Language Button
     // cycles images on click
-    RoundButton langButton = new RoundButton("languages", 70);
+    // RoundButton langButton = new RoundButton("languages", 70);
 
     // Swedish flag on the left 
     HBox bottomLeftBox = new HBox(langButton);

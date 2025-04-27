@@ -12,7 +12,7 @@ import java.util.List;
  * The class represents a meal with a name, a list of items, and methods to add items,
  *  calculate total price, and retrieve contents.
  */
-public class Meal {
+public class Meal extends Product{
   private int id;
   private String name;
   private List<Single> contents;
