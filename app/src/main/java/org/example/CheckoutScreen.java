@@ -54,8 +54,16 @@ public class CheckoutScreen {
     this.mode = mode;
     
 
-    EatHereButton eatHereButton = new EatHereButton();
-    TakeAwayButton takeawayButton = new TakeAwayButton();
+    HBox modeIndicatorBox = new HBox();
+    modeIndicatorBox.setAlignment(Pos.CENTER);
+
+    if ("takeaway".equalsIgnoreCase(mode)) {
+      TakeAwayButton takeawayButton = new TakeAwayButton();
+      modeIndicatorBox.getChildren().add(takeawayButton);
+    } else {
+      EatHereButton eatHereButton = new EatHereButton();
+      modeIndicatorBox.getChildren().add(eatHereButton);
+    }
 
     ReturnButton backButtonWrapper = new ReturnButton();
     Button backButton = backButtonWrapper.getButton();
@@ -198,8 +206,8 @@ public class CheckoutScreen {
         rightSpacer, rightArrowButton
     );
 
-    HBox eatHereTakeawayBox = new HBox(50, eatHereButton, takeawayButton);
-    eatHereTakeawayBox.setAlignment(Pos.CENTER);
+    //HBox eatHereTakeawayBox = new HBox(50, eatHereButton, takeawayButton);
+    //eatHereTakeawayBox.setAlignment(Pos.CENTER);
 
 
     // Bottom buttons
@@ -278,7 +286,7 @@ public class CheckoutScreen {
     layout.setPadding(new Insets(20));
     layout.getChildren().addAll(
         topBox,
-        eatHereTakeawayBox,
+        modeIndicatorBox,
         middleSection,
         bottomPart
     );

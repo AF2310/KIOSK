@@ -71,7 +71,7 @@ public class MainMenuScreen {
 
     ImageView modeIcon = new ImageView();
     Label modeLabel = new Label();
-    if ("takeAway".equalsIgnoreCase(mode)) {
+    if ("takeaway".equalsIgnoreCase(mode)) {
       modeIcon.setImage(new Image(getClass().getResourceAsStream("/takeaway.png")));
       modeLabel.setText("Take Away");
     } else {
