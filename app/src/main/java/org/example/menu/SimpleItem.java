@@ -1,9 +1,9 @@
 package org.example.menu;
 
 public class SimpleItem {
-  private final String name;
-  private final String imagePath;
-  private final double price;
+  private String name;
+  private String imagePath;
+  private double price;
 
   public SimpleItem(String name, String imagePath, double price) {
       this.name = name;
