@@ -3,6 +3,8 @@ package org.example;
 import java.io.InputStream;
 import java.util.List;
 
+import org.example.menu.SimpleItem;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -32,8 +34,7 @@ public class ItemDetails {
    * @param imagePath path to the item's image
    * @return scene containing all item details
    */
-  public Scene create(Stage primaryStage, Scene prevScene, String name,
-      String imagePath, double price) {
+  public Scene create(Stage primaryStage, Scene prevScene, SimpleItem item) {
 
     //Just a test list of ingredients
     List<String> ingredients = List.of("Sesame bun", "Cheese",
@@ -105,7 +106,7 @@ public class ItemDetails {
     }
 
     // Item labe
-    Label nameLabel = new Label(name);
+    Label nameLabel = new Label(item.name());
     nameLabel.setStyle(
         "-fx-font-size: 65px;"
         + "-fx-font-weight: bold;"
@@ -117,14 +118,14 @@ public class ItemDetails {
     leftSide.setPadding(new Insets(0, 0, 0, 100));
     leftSide.getChildren().addAll(nameLabel, ingredientListBox);
 
-    InputStream inputStream = getClass().getResourceAsStream(imagePath);
+    InputStream inputStream = getClass().getResourceAsStream(item.imagePath());
 
     // Initiating the image view
     ImageView imageView;
 
     // Errorhandling when no image found
     if (inputStream == null) {
-      System.err.println("ERROR: Image not found - " + imagePath);
+      System.err.println("ERROR: Image not found - " + item.imagePath());
 
       // using Base64-encoded string to generate 1x1 transparent PNG
       // This Base64 string is decoded into a transparent image when
@@ -147,7 +148,7 @@ public class ItemDetails {
     imageView.setPreserveRatio(true);
 
     // Price underneath the picture
-    Label priceLabel = new Label(String.format("%.0f :-", price));
+    Label priceLabel = new Label(String.format("%.0f :-", item.price()));
     priceLabel.setStyle(
         "-fx-font-size: 35px;"
         + "-fx-font-weight: bold;"
@@ -163,14 +164,11 @@ public class ItemDetails {
     rightSide.setAlignment(Pos.CENTER);
     rightSide.getChildren().addAll(imageView, priceWrapper);
 
-
-    
     SquareButtonWithImg backButton = new SquareButtonWithImg("Back",
         "back.png",
         "rgb(255, 255, 255)");
     
     backButton.setOnAction(e -> primaryStage.setScene(prevScene));
-    
     
     // HBox for the upper part of the screen
     HBox topContainer = new HBox();
