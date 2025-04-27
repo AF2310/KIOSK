@@ -30,6 +30,7 @@ import org.example.menu.Imenu;
 import org.example.menu.Menu;
 import org.example.menu.SimpleItem;
 import org.example.menu.Single;
+import org.example.menu.*;
 
 /**
  * The main menu screen.
@@ -38,11 +39,11 @@ public class MainMenuScreen {
 
   private Stage primaryStage;
 
-  private final String[] categories = {"Burgers", "Sides", "Drinks", "Desserts", "Special Offers"};
-  private final Map<String, List<SimpleItem>> categoryItems = new HashMap<>();
+  private String[] categories = {"Burgers", "Sides", "Drinks", "Desserts", "Special Offers"};
+  private Map<String, List<SimpleItem>> categoryItems = new HashMap<>();
   private int currentCategoryIndex = 0;
-  private final GridPane itemGrid = new GridPane();
-  private final List<Button> categoryButtons = new ArrayList<>();
+  private GridPane itemGrid = new GridPane();
+  private List<Button> categoryButtons = new ArrayList<>();
   private String mode;
 
   /**
@@ -429,41 +430,6 @@ public class MainMenuScreen {
     }
     updateCategoryButtonStyles();
   }
-
-  // The old way of adding the images (without database)
-  ///**
-  // * Adds all menu items. Filling each item category with items.
-  // * Added the items for the menu one by one for now, not through the database.
-  // */
-  /*private void setupMenuData() {
-    categoryItems.put("Burgers", List.of(
-        new SimpleItem("Standard Burger", "/food/standard_burger.png", 25),
-        new SimpleItem("Juicy Chicken Burger", "/food/chicken_burger.png", 25),
-        new SimpleItem("All American Burger", "/food/all_american_burger.png", 25),
-        new SimpleItem("Double Cheese & Bacon Burger", "/food/double_burger.png", 25),
-        new SimpleItem("Extra Veggies Burger", "/food/extra_vegies_burger.png", 20),
-        new SimpleItem("King Burger", "/food/king_burger.png", 25)));
-
-    categoryItems.put("Sides", List.of(
-        new SimpleItem("French Fries", "/food/french_fries.png", 15),
-        new SimpleItem("Greek Salad", "/food/salad.png", 25),
-        new SimpleItem("Country-Style Potatoes", "/food/cs_potatoes.png", 15),
-        new SimpleItem("Fried Onion Rings", "/food/rings.png", 12)));
-
-    categoryItems.put("Drinks", List.of(
-        new SimpleItem("Cola Zero", "/food/cola.png", 10),
-        new SimpleItem("Fanta", "/food/fanta.png", 10),
-        new SimpleItem("Americano", "/food/coffee.png", 15)));
-
-    categoryItems.put("Desserts", List.of(
-        new SimpleItem("Milkshake", "/food/Milkshake.png", 29),
-        new SimpleItem("Tiramisu", "/food/tiramisu.png", 18),
-        new SimpleItem("Strawberry Cupcake", "/food/cupcake.png", 12)));
-
-    categoryItems.put("Special Offers", List.of(
-        new SimpleItem("Extra Veggies Burger", "/food/extra_vegies_burger.png", 20),
-        new SimpleItem("Strawberry Cupcake", "/food/cupcake.png", 12)));
-  }*/
 
   /**
    * helper method for dynamic category button highlighting.
