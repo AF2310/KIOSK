@@ -26,7 +26,7 @@ import javafx.util.Duration;
 public class CheckoutScreen {
 
   private Stage primaryStage;
-  private String mode;
+  // private String mode;
   private Scene welcomeScrScene;
 
   /**
@@ -53,7 +53,7 @@ public class CheckoutScreen {
 
     // Setting primary stage and welcome screen
     this.primaryStage = primaryStage;
-    this.mode = mode;
+    // this.mode = mode;
     
     this.welcomeScrScene = welcomeScrScene;
 
@@ -72,14 +72,6 @@ public class CheckoutScreen {
       modeIndicatorBox.getChildren().add(eatHereButton);
     }
 
-    //BackButton backButton = new BackButton();
-    //backButton.setOnAction(e -> primaryStage.setScene(mainMenuScreen));
-
-    //CancelButton cancelButton = new CancelButton();
-    //cancelButton.setOnAction(e -> {
-    //  System.out.println("Order canceled!");
-    //  primaryStage.setScene(mainMenuScreen);
-    //});
 
     // Top of layout - creating elements
 
@@ -242,11 +234,7 @@ public class CheckoutScreen {
         itemGrid,
         rightSpacer, rightArrowButton
     );
-
-    //HBox eatHereTakeawayBox = new HBox(50, eatHereButton, takeawayButton);
-    //eatHereTakeawayBox.setAlignment(Pos.CENTER);
-
-    
+  
     HBox bottomButtons = new HBox();
     bottomButtons.setPadding(new Insets(10));
     
@@ -269,6 +257,7 @@ public class CheckoutScreen {
 
     // Create confirm order button instance
     ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton(100);
+
     // TODO: insert action for button here
     confirmOrderButton.setOnAction(e -> {
       // Create order confirmation screen
@@ -281,7 +270,6 @@ public class CheckoutScreen {
           welcomeScrScene,
           50  // Dummy code
       );
-      
       this.primaryStage.setScene(ordConfirmScene);
       fadeOutAnimation(ordConfirmScene);
     });
@@ -343,7 +331,7 @@ public class CheckoutScreen {
    * This is a helper method for the end of the order.
    * After the order was confirmed (confirmation button pressed)
    * and the confirmation screen popped up, it should fade out
-   * to´send the user back to the welcome screen in a more
+   * to send the user back to the welcome screen in a more
    * graceful way.
    */
   public void fadeOutAnimation(Scene currentScene) {

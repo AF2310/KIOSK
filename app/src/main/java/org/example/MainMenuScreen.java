@@ -269,8 +269,6 @@ public class MainMenuScreen {
           welcomeScrScene,
           50, // Dummy code
           this.mode
-          
-          
         );
       this.primaryStage.setScene(checkoutScene);
     });
