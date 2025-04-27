@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Abstract base class for all single items on the menu.
  */
-public class Single extends Product{
+public class Single extends Product {
   protected String name;
   protected float price;
   protected List<Ingredient> ingredients;
@@ -34,7 +34,7 @@ public class Single extends Product{
   }
 
   /**
-   * The `getName` function in Java returns the value of the `name` variable.
+   * The 'getName' function in Java returns the value of the 'name' variable.
    */
   public String getName() {
     return name;
