@@ -7,12 +7,39 @@ import org.example.menu.*;
  * The cart class.
  */
 public class Cart {
-  ArrayList<SimpleItem> items;
-  ArrayList<Integer> quantity;
+  private ArrayList<SimpleItem> items;
+  private ArrayList<Integer> quantity;
 
   public Cart() {
     items = new ArrayList<>();
     quantity = new ArrayList<>();
+  }
+
+  /**
+   * Method to get an array of the items.
+   *
+   * @return the array of the items
+   */
+  public SimpleItem[] getItems() {
+    SimpleItem[] newItems =  new SimpleItem[items.size()];
+    for (int i = 0; i < items.size(); i++) {
+      newItems[i] = items.get(i);
+    }
+    return newItems;
+  }
+  
+  /**
+   * Method to get an array of the quantitys.
+   *
+   * @return array of quantitys
+   */
+  public int[] getQuantity() {
+    int[] newQuantity = new int[quantity.size()];
+    for (int i = 0; i < items.size(); i++) {
+      newQuantity[i] = quantity.get(i);
+    }
+
+    return newQuantity;
   }
 
   /**

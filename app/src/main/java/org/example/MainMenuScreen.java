@@ -243,13 +243,13 @@ public class MainMenuScreen {
     CheckoutScreen checkoutScreen = new CheckoutScreen();
 
     // Get Checkout menu when clicking on cart
-    // TODO: add proper database variables to fetch correct order
     cartButton.setOnMouseClicked(e -> {
       Scene checkoutScene = checkoutScreen.createCheckoutScreen(
           this.primaryStage,
           windowWidth,
           windowHeight,
-          this.primaryStage.getScene()
+          this.primaryStage.getScene(),
+          cart
         );
       this.primaryStage.setScene(checkoutScene);
     });
