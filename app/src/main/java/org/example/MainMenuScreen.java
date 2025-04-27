@@ -43,6 +43,7 @@ public class MainMenuScreen {
   private int currentCategoryIndex = 0;
   private GridPane itemGrid = new GridPane();
   private List<Button> categoryButtons = new ArrayList<>();
+  public Cart cart = new Cart();
 
   /**
    * Creates the main menu scene.
@@ -392,7 +393,8 @@ public class MainMenuScreen {
           Scene detailScene = detailScreen.create(
               this.primaryStage,
               this.primaryStage.getScene(),
-              item
+              item,
+              cart
           );
           this.primaryStage.setScene(detailScene);
         });

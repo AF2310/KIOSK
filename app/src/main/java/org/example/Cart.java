@@ -29,4 +29,8 @@ public class Cart {
       quantity.add(1);
     }
   }
+
+  public String toString() {
+    return items.toString() + quantity.toString();
+  }
 }
