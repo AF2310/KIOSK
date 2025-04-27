@@ -1,6 +1,7 @@
 package org.example;
 
 import java.sql.SQLException;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -161,23 +162,52 @@ public class WelcomeScreen {
     // });
 
     // Set the main menu
-    MainMenuScreen mainMenuScreen = new MainMenuScreen();
+    /*MainMenuScreen mainMenuScreen = new MainMenuScreen();
     Scene mainMenuScene = mainMenuScreen.createMainMenuScreen(
         primaryStage,
         windowWidth,
         windowHeight,
-        scene
-      );
+        scene,
+        50,
+        mode
+      );*/
 
     
     // Set up action for eat here
     eatHereBtn.setOnAction(e -> {
-      primaryStage.setScene(mainMenuScene);
+      try{
+        MainMenuScreen mainMenuScreen = new MainMenuScreen();
+        Scene mainMenuScene = mainMenuScreen.createMainMenuScreen(
+        primaryStage,
+        windowWidth,
+        windowHeight,
+        scene,
+        0,
+        "eatHere"
+        );
+        primaryStage.setScene(mainMenuScene);
+      } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+
     });
 
     // Set up action for takeaway
     takeAwayBtn.setOnAction(e -> {
-      primaryStage.setScene(mainMenuScene);
+      try{
+        MainMenuScreen mainMenuScreen = new MainMenuScreen();
+        Scene mainMenuScene = mainMenuScreen.createMainMenuScreen(
+            primaryStage,
+            windowWidth,
+            windowHeight,
+            scene,
+            0,
+            "takeAway"
+        );
+        primaryStage.setScene(mainMenuScene);
+      }catch (SQLException ex) {
+        ex.printStackTrace();
+      }
     });
 
     AdminLoginScreen adminLoginScreen = new AdminLoginScreen();

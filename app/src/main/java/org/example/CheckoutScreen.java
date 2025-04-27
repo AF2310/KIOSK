@@ -26,6 +26,7 @@ import javafx.util.Duration;
 public class CheckoutScreen {
 
   private Stage primaryStage;
+  private String mode;
   private Scene welcomeScrScene;
 
   /**
@@ -47,10 +48,14 @@ public class CheckoutScreen {
       double windowHeight,
       Scene mainMenuScreen,
       Scene welcomeScrScene,
-      int orderId) {
+      int orderId,
+      String mode) {
 
     // Setting primary stage and welcome screen
     this.primaryStage = primaryStage;
+    this.mode = mode;
+    
+
     this.welcomeScrScene = welcomeScrScene;
 
     // Spacer to elements away from each other
