@@ -1,5 +1,10 @@
 package org.example;
 
+//import java.sql.Connection;
+//import java.sql.PreparedStatement;
+//import java.sql.ResultSet;
+//import java.sql.SQLException;
+//import com.mysql.cj.protocol.Resultset;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -27,8 +32,8 @@ public class CheckoutScreen {
 
   /**
    * Creating a scene for the checkout menu.
-   * TODO: These are most likely not all the variables that are needed.
-   * We still need the other database variables etc..
+   * TODO: We still need the other database variables etc..
+   *       Most likely not all the variables that are needed.
    *
    * @param primaryStage the primary stage of this scene
    * @param windowWidth width of window
@@ -45,6 +50,7 @@ public class CheckoutScreen {
       Scene mainMenuScreen,
       Scene welcomeScrScene,
       int orderId,
+      //Connection conn,
       String mode) {
 
     // Setting primary stage and welcome screen
@@ -78,7 +84,7 @@ public class CheckoutScreen {
     );
     // Alignment of label
     checkoutLabel.setAlignment(Pos.TOP_LEFT);
-    checkoutLabel.setPadding(new Insets(50));
+    checkoutLabel.setPadding(new Insets(50, 100, 50, 100));
 
     // Eat here or takeaway choice
     EatHereButton eatHereButton = new EatHereButton();
@@ -102,7 +108,7 @@ public class CheckoutScreen {
     HBox topBox = new HBox();
     topBox.setAlignment(Pos.TOP_LEFT);
     topBox.getChildren().addAll(
-        spacer,
+        //spacer,
         checkoutLabel,
         eatHereTakeawayBox
         // TODO: add promocode box here
@@ -246,6 +252,22 @@ public class CheckoutScreen {
 
     // TODO: add price fetching from database to insert correct price
 
+    // Retrieve total price with query
+    /* String sqlQuery = "SELECT amount_total FROM product WHERE order_ID = ?";
+
+    // try () ensures automatic closing
+    try (PreparedStatement s = conn.prepareStatement(sqlQuery)) {
+
+      // Bind order id to sql query
+      s.setString((orderId), sqlQuery);
+
+      // Execute query
+      try (ResultSet r = s.executeQuery()) {
+        // Store total price in variable
+        int price = r.getInt("amount_total");
+      }
+    } */
+
     // Create confirm order button instance
     ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton(100);
 
@@ -259,7 +281,7 @@ public class CheckoutScreen {
           windowWidth,
           windowHeight,
           welcomeScrScene,
-          50  // Dummy code
+          50  // Dummy code for price variable
       );
       this.primaryStage.setScene(ordConfirmScene);
 
@@ -292,7 +314,10 @@ public class CheckoutScreen {
     
     // Swedish flag on the left
     HBox languageBox = new HBox(langButton);
-    languageBox.setAlignment(Pos.CENTER_LEFT);
+    languageBox.setAlignment(Pos.BOTTOM_LEFT);
+
+    HBox confirmOrderBox = new HBox(confirmOrderButton);
+    confirmOrderBox.setAlignment(Pos.BOTTOM_CENTER);
     
     // Box for cancel order and back button
     HBox backAndCancel = new HBox(30);
@@ -305,8 +330,7 @@ public class CheckoutScreen {
     bottomPart.setPadding(new Insets(30, 75, 10, 5));
     bottomPart.getChildren().addAll(
         languageBox,
-        confirmOrderButton,
-        spacer,
+        confirmOrderBox,
         backAndCancel
     );
 
