@@ -36,87 +36,53 @@ public class ItemDetails {
    */
   public Scene create(Stage primaryStage, Scene prevScene, SimpleItem item) {
 
-    //Just a test list of ingredients
-    List<String> ingredients = List.of("Sesame bun", "Cheese",
-        "Onion", "Tomatoes", "Celery", "Cucumber");
+      //Just a test list of ingredients
+      List<String> ingredients = List.of("Sesame bun", "Cheese",
+      "Onion", "Tomatoes", "Celery", "Cucumber");
+      // List<Ingredient> ingredients = item.getIngredients();
 
-    VBox ingredientListBox = new VBox(10);
+      var ingredientListBox = new VBox(10);
 
-    // Making a line with the ingredient name, the minus and plus buttons and the quantity,
-    // for every ingredient in the test list.
-    for (String ingredientName : ingredients) {
-      Label ingredientLabel = new Label(ingredientName);
-      ingredientLabel.setMinWidth(120);
-      ingredientLabel.setStyle("-fx-font-size: 25px;");
-      ingredientLabel.setPadding(new Insets(0, 0, 0, 100));
+      // Making a line with the ingredient name, the minus and plus buttons and the quantity,
+      // for every ingredient in the test list.
+      for (String ingredient : ingredients) {
+      // var nameLabel = new Label(ingredient.getName());
+      Label ingrLabel = new Label(ingredient);
+      ingrLabel.setStyle(
+        "-fx-font-size: 30px;"
+        + "-fx-font-weight: normal;"
+      );
 
-      Label quantityLabel = new Label("1");
-      quantityLabel.setStyle("-fx-font-size: 25px;");
-
-      CircleButtonWithSign minusButton = new CircleButtonWithSign("-");
-      CircleButtonWithSign plusButton = new CircleButtonWithSign("+");
-
-      // If the quantity is 0, this makes the minus button unclickable then,
-      // and the plus button is clickable.
-      minusButton.setOnAction(e -> {
-        int quantity = Integer.parseInt(quantityLabel.getText());
-        if (quantity > 0) {
-          quantity--;
-          quantityLabel.setText(String.valueOf(quantity));
-        }
-        if (quantity == 0) {
-          minusButton.setInvalid(true);
-        } else {
-          minusButton.setInvalid(false);
-        }
-
-        if (quantity < 9) {
-          plusButton.setInvalid(false);
-        }
-      });
-
-      // If the quantity is 9, this makes the plus button unclickable.
-      plusButton.setOnAction(e -> {
-        int quantity = Integer.parseInt(quantityLabel.getText());
-
-        if (quantity < 9) {
-          quantity++;
-          quantityLabel.setText(String.valueOf(quantity));
-        }
-        
-        if (quantity == 9) {
-          plusButton.setInvalid(true);
-        } else {
-          plusButton.setInvalid(false);
-        }
-
-        if (quantity > 0) {
-          minusButton.setInvalid(false);
-        }
-      });
-
-      Region detailsSpacer = new Region();
-      HBox.setHgrow(detailsSpacer, Priority.ALWAYS);
+      // Add/Remove row
+      var addRemoveBlock = new AddRemoveBlock(1);
 
       // Putting the ingredient elements in an hbox for every element.
-      HBox row = new HBox(25, ingredientLabel, detailsSpacer,
-          minusButton, quantityLabel, plusButton);
-      row.setAlignment(Pos.CENTER_RIGHT);
-      ingredientListBox.getChildren().add(row);
-    }
+      HBox ingrRow = new HBox(100, ingrLabel, addRemoveBlock);
+      ingrRow.setAlignment(Pos.CENTER_RIGHT);
+      ingredientListBox.getChildren().add(ingrRow);
+      }
 
-    // Item labe
+    // Item label
     Label nameLabel = new Label(item.name());
     nameLabel.setStyle(
         "-fx-font-size: 65px;"
         + "-fx-font-weight: bold;"
     );
 
+    // TODO: Add description to the item once it has one. This is dummy text
+    var descriptionLabel = new Label("This is a yummy " + item.name().toLowerCase());
+    descriptionLabel.setStyle(
+        "-fx-font-size: 20px;"
+        + "-fx-font-weight: normal;"
+    );
+
     // Left side of the top part of the screen
+    VBox nameAndDescriptionBox = new VBox(20);
+    nameAndDescriptionBox.getChildren().addAll(nameLabel, descriptionLabel);
     VBox leftSide = new VBox(100);
     leftSide.setAlignment(Pos.TOP_CENTER);
     leftSide.setPadding(new Insets(0, 0, 0, 100));
-    leftSide.getChildren().addAll(nameLabel, ingredientListBox);
+    leftSide.getChildren().addAll(nameAndDescriptionBox, ingredientListBox);
 
     InputStream inputStream = getClass().getResourceAsStream(item.imagePath());
 

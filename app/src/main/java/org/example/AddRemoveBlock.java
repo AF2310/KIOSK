@@ -9,9 +9,9 @@ import javafx.scene.layout.HBox;
  * for adding and removing items.
  */
 public class AddRemoveBlock extends HBox {
-  private final Label quantityLabel;
-  private final CircleButtonWithSign minusButton;
-  private final CircleButtonWithSign plusButton;
+  private Label quantityLabel;
+  private CircleButtonWithSign minusButton;
+  private CircleButtonWithSign plusButton;
   private int quantity; // Current quantity (range 0-9)
 
   /**
