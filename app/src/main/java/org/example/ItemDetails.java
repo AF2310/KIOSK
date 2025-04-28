@@ -31,7 +31,7 @@ public class ItemDetails {
    * @param prevScene what was the previous stage
    * @return scene containing all item details
    */
-  public Scene create(Stage primaryStage, Scene prevScene, SimpleItem item) {
+  public Scene create(Stage primaryStage, Scene prevScene, SimpleItem item, Cart cart) {
 
     //Just a test list of ingredients
     List<String> ingredients = List.of("Sesame bun", "Cheese",
@@ -196,6 +196,12 @@ public class ItemDetails {
     MidButtonWithImage addToCartButton = new MidButtonWithImage("Add To Cart",
         "cart_wh.png", 
         "rgb(81, 173, 86)");
+    
+    addToCartButton.setOnAction(e -> {
+      cart.addProduct(item);
+      System.out.println(cart.toString());
+      primaryStage.setScene(prevScene);
+    });
 
     // Box for add to cart and back
     HBox bottomRightBox = new HBox(30);
