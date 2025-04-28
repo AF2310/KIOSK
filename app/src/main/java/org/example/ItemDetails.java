@@ -1,10 +1,8 @@
 package org.example;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
-
-import org.example.menu.SimpleItem;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,6 +15,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.menu.SimpleItem;
 
 /**
  * Screen for the details of an Item.
@@ -36,29 +35,83 @@ public class ItemDetails {
 
     //Just a test list of ingredients
     List<String> ingredients = List.of("Sesame bun", "Cheese",
-        "Onion", "Tomatoes", "Celery", "Cucumber");
+        "Onion", "Tomatoes", "Celery", "Cucumber", "Ingredient 7",
+        "ingredient 8", "ingredient 9");
     // List<Ingredient> ingredients = item.getIngredients();
 
-    var ingredientListBox = new VBox(10);
+    VBox ingredientBox = new VBox(10);
+    ingredientBox.setAlignment(Pos.TOP_RIGHT);
 
-    // Making a line with the ingredient name, the minus and plus buttons and the quantity,
-    // for every ingredient in the test list.
-    for (String ingredient : ingredients) {
-      // var nameLabel = new Label(ingredient.getName());
-      Label ingrLabel = new Label(ingredient);
-      ingrLabel.setStyle(
-          "-fx-font-size: 30px;"
-          + "-fx-font-weight: normal;"
-      );
+    int visibleCount = 7;
+    // Wraps the index in an array
+    final int[] currentStartIndex = {0};
 
-      // Add/Remove row
-      var addRemoveBlock = new AddRemoveBlock(1);
+    // Storing our AddRemoveBlocks to store quantities
+    List<AddRemoveBlock> blocks = new ArrayList<>();
 
-      // Putting the ingredient elements in an hbox for every element.
-      HBox ingrRow = new HBox(100, ingrLabel, addRemoveBlock);
-      ingrRow.setAlignment(Pos.CENTER_RIGHT);
-      ingredientListBox.getChildren().add(ingrRow);
+    // Pre-creating the Blocks corresponding to ingredients.size()
+    // To populate blocks
+    for (int i = 0; i < ingredients.size(); i++) {
+
+      blocks.add(new AddRemoveBlock(1));
+
     }
+
+    // Adds the first 7 ingredients
+    for (int i = 0; i < Math.min(visibleCount, ingredients.size()); i++) {
+      Label ingrLabel = new Label(ingredients.get(i));
+      ingrLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: normal;");
+
+      // Calling on corresponding block from List
+      AddRemoveBlock addRemoveBlock = blocks.get(i);
+
+      HBox row = new HBox(100, ingrLabel, addRemoveBlock);
+      row.setAlignment(Pos.CENTER_RIGHT);
+      ingredientBox.getChildren().add(row);
+    }
+
+    // Scroll button (initially facing down)
+    ArrowButton scrollButton = new ArrowButton(true, false);
+    scrollButton.setRotate(-90);
+
+    // Set the action for the scroll button
+    scrollButton.setOnAction(e -> {
+      // Logic to handle scrolling
+      if (currentStartIndex[0] + visibleCount >= ingredients.size()) {
+        // If we are at the bottom, this resets the index to 0 and scrolls back to the top
+        currentStartIndex[0] = 0;
+        // And sets arrow to face down
+        scrollButton.setRotate(-90);
+      } else {
+        // Otherwise, scroll down by incrementing the index
+        currentStartIndex[0]++;
+        // If it reaches the bottom, it turns the arrow up
+        if (currentStartIndex[0] + visibleCount >= ingredients.size()) {
+          scrollButton.setRotate(90);
+        }
+      }
+
+      // Clear and refill VBox with updated ingredients
+      ingredientBox.getChildren().clear();
+      for (int i = currentStartIndex[0];
+          i < Math.min(currentStartIndex[0] + visibleCount, ingredients.size());
+          i++) {
+
+        Label ingrLabel = new Label(ingredients.get(i));
+        ingrLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: normal;");
+
+        // Calling on corresponding block from List
+        AddRemoveBlock addRemoveBlock = blocks.get(i);
+
+        HBox row = new HBox(100, ingrLabel, addRemoveBlock);
+        row.setAlignment(Pos.CENTER_RIGHT);
+        ingredientBox.getChildren().add(row);
+      }
+    });
+
+    // Putting the ingredient box and the scroll button together in a vboc
+    VBox ingredientListBox = new VBox(20, ingredientBox, scrollButton);
+    ingredientListBox.setAlignment(Pos.CENTER);
 
     // Item label
     Label nameLabel = new Label(item.name());
@@ -158,11 +211,10 @@ public class ItemDetails {
     // Language Button
     // cycles images on click
     RoundButton langButton = new RoundButton("languages", 70);
-
-    // Swedish flag on the left
     HBox bottomLeftBox = new HBox(langButton);
     bottomLeftBox.setAlignment(Pos.BOTTOM_LEFT);
     
+    // Spacer for bottom part of the Screen
     Region spacerBottom = new Region();
     HBox.setHgrow(spacerBottom, Priority.ALWAYS);
 
