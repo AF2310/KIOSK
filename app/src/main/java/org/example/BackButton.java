@@ -1,6 +1,7 @@
 package org.example;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -26,6 +27,8 @@ public class BackButton extends Button {
         + "-fx-border-radius: 12;"
         + "-fx-padding: 10;"
         + "-fx-background-radius: 12;"
+        + "-fx-text-fill: black;" 
+        + "-fx-font-weight: bold;"
     );
 
     // Setting image for back button
@@ -35,6 +38,7 @@ public class BackButton extends Button {
 
     // Put the back image inside the button
     this.setGraphic(backIcon);
+    this.setContentDisplay(ContentDisplay.TOP);
     this.setMinSize(60, 60);
   }
 }
