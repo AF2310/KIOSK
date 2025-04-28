@@ -247,9 +247,18 @@ public class Single {
 
         }
       }
-    }  
+    }
 
     return list;
+  }
+
+  public void deleteSingleById(Connection conn, int id) throws SQLException {
+    String sql = "DELETE FROM product WHERE product_id = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, id);
+      stmt.executeUpdate();
+
+    }
   }
 
   /**
@@ -268,9 +277,9 @@ public class Single {
 
     // TODO: fix wrong name "item". i assume you meant product
 
-    String sql = "SELECT i.id, i.name, i.price, i.image_url, c.name AS category_name " 
+    String sql = "SELECT i.id, i.name, i.price, i.image_url, c.name AS category_name "
         + "FROM item i "
-        + "JOIN category c ON i.category_id = c.category_id " 
+        + "JOIN category c ON i.category_id = c.category_id "
         + "WHERE i.category_id = ?";
 
     // Try with this statement ensures the statement is closed automatically

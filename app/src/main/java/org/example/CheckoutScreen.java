@@ -1,10 +1,13 @@
 package org.example;
 
+import com.sun.scenario.effect.impl.state.LinearConvolveRenderState;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -64,6 +67,15 @@ public class CheckoutScreen {
       EatHereButton eatHereButton = new EatHereButton();
       modeIndicatorBox.getChildren().add(eatHereButton);
     }
+
+    TextField promoField = new TextField();
+    promoField.setPromptText("Enter Promo Code");
+
+    Button applyPromoButton = new Button("Apply Promo");
+    applyPromoButton.setOnAction(e -> applyPromo(promoField.getText()));
+
+    HBox promoBox = new HBox(10, promoField, applyPromoButton);
+    promoBox.setAlignment(Pos.CENTER);
 
     ReturnButton backButtonWrapper = new ReturnButton();
     Button backButton = backButtonWrapper.getButton();
@@ -288,10 +300,18 @@ public class CheckoutScreen {
         topBox,
         modeIndicatorBox,
         middleSection,
+        promoBox,
         bottomPart
     );
 
     // Create final scene result
     return new Scene(layout, windowWidth, windowHeight);
   }
+
+  /*private void applyPromo(String code) {
+
+    
+
+
+  }*/
 }
