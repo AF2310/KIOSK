@@ -57,11 +57,14 @@ public class CheckoutScreen {
     // this.mode = mode;
 
     // Spacer to elements away from each other
-    Region spacer = new Region();
-    HBox.setHgrow(spacer, Priority.ALWAYS);
+    Region topspacer = new Region();
+    HBox.setHgrow(topspacer, Priority.ALWAYS);
+    // You cannot use one spacer twice
+    Region topLeftSpacer = new Region();
+    HBox.setHgrow(topLeftSpacer, Priority.ALWAYS);
 
     HBox modeIndicatorBox = new HBox();
-    modeIndicatorBox.setAlignment(Pos.CENTER);
+    modeIndicatorBox.setAlignment(Pos.TOP_RIGHT);
 
     if ("takeaway".equalsIgnoreCase(mode)) {
       TakeAwayButton takeawayButton = new TakeAwayButton();
@@ -83,7 +86,7 @@ public class CheckoutScreen {
     );
     // Alignment of label
     checkoutLabel.setAlignment(Pos.TOP_LEFT);
-    checkoutLabel.setPadding(new Insets(50, 100, 50, 100));
+    checkoutLabel.setPadding(new Insets(50, 100, 50, 50));
 
     // Eat here or takeaway choice
     EatHereButton eatHereButton = new EatHereButton();
@@ -99,18 +102,44 @@ public class CheckoutScreen {
     eatHereTakeawayBox.setAlignment(Pos.CENTER);
 
     // TODO: Insert promo code section here
-
+    Button promoPlaceholder = new Button();
+    promoPlaceholder.setPrefSize(590, 90);
+    promoPlaceholder.setStyle(
+      "-fx-background-color: rgba(64, 182, 28, 0.82);"
+      + "-fx-border-color: rgb(89, 224, 184);"
+      + "-fx-border-radius: 10;"
+      + "-fx-background-radius: 10;"
+      + "-fx-padding: 10;"
+    );
+    Label promoLabel = new Label("Enter Promocode");
+    // Label should be white, bold, and large font
+    promoLabel.setStyle(
+        "-fx-text-fill: white;"
+        + "-fx-font-weight: bold;"
+        + "-fx-font-size: 40;"
+    );
+    promoPlaceholder.setGraphic(promoLabel);
 
     // Top of layout - combining elements
 
 
+
+    HBox leftsideBox = new HBox(100);
+    leftsideBox.setAlignment(Pos.CENTER);
+    leftsideBox.getChildren().addAll(
+      checkoutLabel,
+      eatHereTakeawayBox,
+      topLeftSpacer,
+      promoPlaceholder
+    );
+
     HBox topBox = new HBox();
     topBox.setAlignment(Pos.TOP_LEFT);
     topBox.getChildren().addAll(
-        //spacer,
-        checkoutLabel,
-        eatHereTakeawayBox
+        leftsideBox,
         // TODO: add promocode box here
+        topspacer,
+        modeIndicatorBox
     );
 
 
@@ -326,25 +355,32 @@ public class CheckoutScreen {
     backAndCancel.setAlignment(Pos.BOTTOM_RIGHT);
     backAndCancel.getChildren().addAll(backButton, cancelButton);
 
-    // Combine all
-    HBox bottomPart = new HBox();
+    // Spacer to elements away from each other
+    // You cannot use the same spacer twice, so a second one is needed
+    Region spacer = new Region();
+    HBox.setHgrow(topspacer, Priority.ALWAYS);
+
+    // Combine all; 300px spacing between each child
+    HBox bottomPart = new HBox(330);
     // Top, Right, Bottom, Left padding
     bottomPart.setPadding(new Insets(30, 75, 10, 5));
     bottomPart.getChildren().addAll(
         languageBox,
         confirmOrderBox,
+        spacer,
         backAndCancel
     );
 
 
     // Stacking all Objects/Boxes vertically on each other
-    VBox layout = new VBox();
+    VBox layout = new VBox(180);
 
-    layout.setAlignment(Pos.CENTER);
-    layout.setPadding(new Insets(20));
+    layout.setAlignment(Pos.TOP_LEFT);
+    layout.setPadding(new Insets(30));
+
+
     layout.getChildren().addAll(
         topBox,
-        modeIndicatorBox,
         middleSection,
         bottomPart
     );
