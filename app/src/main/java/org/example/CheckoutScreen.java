@@ -10,14 +10,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.menu.*;
 
 /**
  * This is the Screen that displays the order
- * of the customer. Here, the customer can check, 
+ * of the customer. Here, the customer can check,
  * edit and confirm his order. It also displays the
  * final price of the order.
  */
@@ -32,9 +31,9 @@ public class CheckoutScreen {
    * TODO: These are most likely not all the variables that are needed.
    * We still need the other database variables etc..
    *
-   * @param primaryStage the primary stage of this scene
-   * @param windowWidth width of window
-   * @param windowHeight height of window
+   * @param primaryStage   the primary stage of this scene
+   * @param windowWidth    width of window
+   * @param windowHeight   height of window
    * @param mainMenuScreen the previous scene of this scene
    * @return scene containing all the order details
    */
@@ -48,52 +47,17 @@ public class CheckoutScreen {
     // Set primary stage
     this.primaryStage = primaryStage;
 
-
     // Top of layout
-
 
     // Title of the checkout screen
     Label checkoutLabel = new Label("Checkout");
     checkoutLabel.setStyle(
         "-fx-font-size: 60px;"
-        + "-fx-font-weight: bold;"
-    );
+            + "-fx-font-weight: bold;");
 
-    checkoutLabel.setAlignment(Pos.TOP_LEFT);
-    checkoutLabel.setPadding(new Insets(50));
-
-
-    // Arrow buttons to navigate through order pages
-
-    // Arrow left
-    // Make instance of arrow button that points left
+    // Create arrow buttons
     ArrowButton leftArrowButton = new ArrowButton(true, false);
-
-    /*leftArrowButton.setOnMouseClicked(e -> {
-      if (currentCategoryIndex > 0) {
-        currentCategoryIndex--;
-        updateGrid();
-      } else {
-        currentCategoryIndex = categoryButtons.size() - 1;
-        updateGrid();
-      }
-    });*/
-
-    // Arrow right
-    // Make instance of arrow button that points right
     ArrowButton rightArrowButton = new ArrowButton(false, false);
-
-    // right button clickable as long as its not in last category (Special offers)
-    /*rightArrowButton.setOnMouseClicked(e -> {
-      if (currentCategoryIndex < categories.length - 1
-          && !categories[currentCategoryIndex].equals("Special Offers")) {
-        currentCategoryIndex++;
-        updateGrid();
-      } else {
-        currentCategoryIndex = 0;
-        updateGrid();
-      }
-    });*/
 
     // Make arrow buttons left + right centered vertically
     VBox leftArrowVcentered = new VBox(leftArrowButton);
@@ -107,85 +71,14 @@ public class CheckoutScreen {
     HBox rightMostArrow = new HBox(rightArrowButton);
     rightMostArrow.setAlignment(Pos.CENTER_RIGHT);
 
-
     // Make item grid - CURRENTLY DUMMY CODE
     // TODO: Fix layout, make multiple pages
-
-    VBox itemGrid = new VBox();
-    SimpleItem[] items = cart.getItems();
-    int[] quantitys = cart.getQuantity();
-    HBox itemRow = new HBox();
-    for (int i = 0; i < items.length; i++) {
-      SimpleItem item = items[i];
-      int quantity = quantitys[i];
-      // Fixed sized slot for image
-      StackPane imageSlot = new StackPane();
-      imageSlot.setPrefSize(200, 200);
-      imageSlot.setMaxSize(200, 200);
-      imageSlot.setMinSize(200, 200);
-      Image itemImage = new Image(item.imagePath());
-      ImageView image = new ImageView(itemImage);
-      image.setFitHeight(150);
-      image.setPreserveRatio(true);
-      imageSlot.getChildren().addAll(image);
-      
-      // Slot for Label and Price
-      HBox labelAndPrice = new HBox();
-      labelAndPrice.setAlignment(Pos.CENTER);
-      labelAndPrice.getChildren().addAll(
-        new Label(item.name()),
-        new Label(String.format(" %.0f :-", item.price()))
-      );
-      
-      // Slot for Plus-/Minus Buttons and Quantity value
-      HBox quantityBox = new HBox();
-      quantityBox.setAlignment(Pos.CENTER);
-      quantityBox.getChildren().addAll(
-        new AddRemoveBlock(quantity)
-      );
-        
-      // Adding it all together in one item slot
-      VBox itemSlot = new VBox();
-      itemSlot.setAlignment(Pos.CENTER);
-      itemSlot.getChildren().addAll(
-          imageSlot,
-          labelAndPrice,
-          quantityBox
-      );
-      itemRow.getChildren().add(itemSlot);
-    }
-
-    itemGrid.getChildren().add(itemRow);
-
-    
-    // Middle section
-
-
-    // Create spacers
-    Region leftSpacer = new Region();
-    Region rightSpacer = new Region();
-
-    // Make spacers grow to fill space as much as needed
-    // to make arrow buttons most left and most right positioned
-    HBox.setHgrow(leftSpacer, Priority.ALWAYS);
-    HBox.setHgrow(rightSpacer, Priority.ALWAYS);
-    
-    
-    // Combine Arrow buttons and item grid
-    HBox middleSection = new HBox();
-    middleSection.setAlignment(Pos. CENTER);
-    middleSection.getChildren().addAll(
-        leftMostArrow, leftSpacer,
-        itemGrid,
-        rightSpacer, rightArrowButton
-    );
 
 
     // Bottom buttons
 
     HBox bottomButtons = new HBox();
     bottomButtons.setPadding(new Insets(10));
-    
 
     // Swedish Flag - Language button
     // Get image
@@ -202,11 +95,9 @@ public class CheckoutScreen {
     langButton.setStyle("-fx-background-color: transparent;");
     langButton.setMinSize(40, 40);
 
-
     // Spacer to push right buttons
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
-
 
     // Create back button
     Button backButton = new Button();
@@ -220,15 +111,12 @@ public class CheckoutScreen {
     backButton.setMinSize(40, 40);
     backButton.setOnAction(e -> primaryStage.setScene(mainMenuScreen));
 
-
-    // TODO: Create Cancel Button that cancels the whole order and sends 
-    //       user back to Welcome screen
-
+    // TODO: Create Cancel Button that cancels the whole order and sends
+    // user back to Welcome screen
 
     // Added all components for the bottom part
     // TODO: insert cancel button here
 
-  
     // Box for add to cart and back
     HBox backAndCancel = new HBox(30);
     backAndCancel.setAlignment(Pos.BOTTOM_RIGHT);
@@ -243,22 +131,32 @@ public class CheckoutScreen {
     bottomPart.setPadding(new Insets(10, 75, 30, 5)); // Top, Right, Bottom, Left padding
     bottomPart.getChildren().addAll(languageBox, spacer, backAndCancel);
 
-
     HBox topBox = new HBox();
     topBox.setAlignment(Pos.TOP_LEFT);
     topBox.getChildren().addAll(spacer, checkoutLabel);
 
-
     // Stacking all Objects/Boxes vertically on each other
     VBox layout = new VBox();
+
+    // get items and there quantities
+    SimpleItem[] items = cart.getItems();
+    int[] quantitys = cart.getQuantity();
+
+    // Create the CheckoutGridWithButtons
+    CheckoutGridWithButtons checkoutGrid = new CheckoutGridWithButtons(
+        items,
+        quantitys,
+        6,
+        leftArrowButton,
+        rightArrowButton
+    );
 
     layout.setAlignment(Pos.CENTER);
     layout.setPadding(new Insets(20));
     layout.getChildren().addAll(
         topBox,
-        middleSection,
-        bottomPart
-    );
+        checkoutGrid,
+        bottomPart);
 
     // Create final scene result
     return new Scene(layout, windowWidth, windowHeight);
