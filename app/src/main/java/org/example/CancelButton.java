@@ -2,6 +2,7 @@ package org.example;
 
 
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -25,15 +26,18 @@ public class CancelButton extends VBox {
     cancelIcon.setFitHeight(30);
 
 
-    cancelButton = new Button();
+    cancelButton = new Button("Cancel", cancelIcon);
     cancelButton.setGraphic(cancelIcon);
+    cancelButton.setContentDisplay(ContentDisplay.TOP);
     cancelButton.setStyle(
       "-fx-background-color: transparent;" +
       "-fx-border-color: red;" +
       "-fx-border-width: 3;" +
       "-fx-border-radius: 12;" +
       "-fx-padding: 10;" +
-      "-fx-background-radius: 12;"
+      "-fx-background-radius: 12;" +
+      "-fx-text-fill: red;" +
+      "-fx-font-weight: bold;"
 
 
       );

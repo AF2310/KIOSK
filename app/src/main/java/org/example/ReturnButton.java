@@ -1,5 +1,6 @@
 package org.example;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -21,15 +22,18 @@ public class ReturnButton extends VBox {
     backIcon.setFitHeight(30);
 
 
-    RButton = new Button();
+    RButton = new Button("back",backIcon);
     RButton.setGraphic(backIcon);
+    RButton.setContentDisplay(ContentDisplay.TOP);
     RButton.setStyle(
       "-fx-background-color: transparent;" +
       "-fx-border-color: black;" +
       "-fx-border-width: 3;" +
       "-fx-border-radius: 12;" +
       "-fx-padding: 10;" +
-      "-fx-background-radius: 12;"
+      "-fx-background-radius: 12;"+
+      "-fx-text-fill: black;" +
+      "-fx-font-weight: bold;"
     );
 
     RButton.setMinSize(60, 60);

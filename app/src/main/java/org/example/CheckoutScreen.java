@@ -1,6 +1,11 @@
 package org.example;
 
-import com.sun.scenario.effect.impl.state.LinearConvolveRenderState;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.example.menu.Meal;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,7 +24,7 @@ import javafx.stage.Stage;
 
 /**
  * This is the Screen that displays the order
- * of the customer. Here, the customer can check, 
+ * of the customer. Here, the customer can check,
  * edit and confirm his order. It also displays the
  * final price of the order.
  */
@@ -29,6 +34,12 @@ public class CheckoutScreen {
   @SuppressWarnings("unused")
   private Stage primaryStage;
   private String mode;
+  private Connection connection;
+  private Meal meal;
+  private Scene welcomeScene;
+  private float totalPrice = 0.0f;
+  private Label totalLabel;
+
 
   
 
@@ -70,11 +81,28 @@ public class CheckoutScreen {
 
     TextField promoField = new TextField();
     promoField.setPromptText("Enter Promo Code");
+    promoField.setStyle(
+        "-fx-background-color: transparent;" +
+        "-fx-text-fill: white;" +
+        "-fx-font-size: 24px;" +
+        "-fx-font-weight: bold;" +
+        "-fx-alignment: center;"
+    );
+    promoField.setMaxWidth(300);
 
-    Button applyPromoButton = new Button("Apply Promo");
+    // Create the Apply Promo button
+    Button applyPromoButton = new Button();
+    applyPromoButton.setGraphic(promoField);
+    applyPromoButton.setStyle(
+        "-fx-background-color: #4CAF50;" +
+        "-fx-background-radius: 15;" +
+        "-fx-padding: 20;"
+    );
+    applyPromoButton.setMinWidth(400);
+    applyPromoButton.setMinHeight(80);
     applyPromoButton.setOnAction(e -> applyPromo(promoField.getText()));
 
-    HBox promoBox = new HBox(10, promoField, applyPromoButton);
+    HBox promoBox = new HBox(applyPromoButton);
     promoBox.setAlignment(Pos.CENTER);
 
     ReturnButton backButtonWrapper = new ReturnButton();
@@ -218,6 +246,23 @@ public class CheckoutScreen {
         rightSpacer, rightArrowButton
     );
 
+    /*Button confirmButton = new Button("Confirm Checkout");
+    confirmButton.setOnAction(e -> {
+      try {
+        for (Single item : meal.getContents()) {
+          item.deleteFromDb(connection);
+        }
+
+        System.out.println("Checkout complete.");
+        meal.getContents().clear();
+        primaryStage.setScene(welcomeScrScene);
+          
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+
+    }*/
+
     //HBox eatHereTakeawayBox = new HBox(50, eatHereButton, takeawayButton);
     //eatHereTakeawayBox.setAlignment(Pos.CENTER);
 
@@ -262,7 +307,7 @@ public class CheckoutScreen {
     backButton.setOnAction(e -> primaryStage.setScene(mainMenuScreen));
 
 
-    // TODO: Create Cancel Button that cancels the whole order and sends 
+    // TODO: Create Cancel Button that cancels the whole order and sends
     //       user back to Welcome screen
 
 
@@ -297,10 +342,10 @@ public class CheckoutScreen {
     layout.setAlignment(Pos.CENTER);
     layout.setPadding(new Insets(20));
     layout.getChildren().addAll(
+        promoBox,
         topBox,
         modeIndicatorBox,
         middleSection,
-        promoBox,
         bottomPart
     );
 
@@ -308,10 +353,25 @@ public class CheckoutScreen {
     return new Scene(layout, windowWidth, windowHeight);
   }
 
-  /*private void applyPromo(String code) {
+  private void applyPromo(String code) {
+    try {
+      String sql = "";
+      PreparedStatement stmt = connection.prepareStatement(sql);
+      stmt.setString(1, code);
+      ResultSet rs = stmt.executeQuery();
+      if (rs.next()) {
+        float discount = rs.getFloat("discount");
+        totalPrice *= (1 - discount);
+        totalLabel.setText(String.format("Total: %.2f :- (%.0f%% discount applied)",
+            totalPrice, discount*100));
+      } else {
+        totalLabel.setText("Invalid promo code");
+      }
 
-    
 
+    } catch (SQLException ex) {
+      ex.printStackTrace();
+    }
 
-  }*/
+  }
 }
