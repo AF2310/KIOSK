@@ -1,11 +1,11 @@
-package org.example;
+/*package org.example;
 
 import java.util.ArrayList;
 import org.example.menu.*;
 
-/**
+
  * The cart class.
- */
+
 public class Cart {
   private ArrayList<SimpleItem> items;
   private ArrayList<Integer> quantity;
@@ -15,11 +15,11 @@ public class Cart {
     quantity = new ArrayList<>();
   }
 
-  /**
+  
    * Method to get an array of the items.
    *
    * @return the array of the items
-   */
+
   public SimpleItem[] getItems() {
     SimpleItem[] newItems =  new SimpleItem[items.size()];
     for (int i = 0; i < items.size(); i++) {
@@ -28,11 +28,11 @@ public class Cart {
     return newItems;
   }
   
-  /**
+  
    * Method to get an array of the quantitys.
    *
    * @return array of quantitys
-   */
+  
   public int[] getQuantity() {
     int[] newQuantity = new int[quantity.size()];
     for (int i = 0; i < items.size(); i++) {
@@ -42,11 +42,11 @@ public class Cart {
     return newQuantity;
   }
 
-  /**
+  
    * Method to add a product to the cart.
    *
    * @param product the product to add
-   */
+  
   public void addProduct(SimpleItem product) {
     if (items.contains(product)) {
       int index = items.indexOf(product);
@@ -61,3 +61,4 @@ public class Cart {
     return items.toString() + quantity.toString();
   }
 }
+*/
