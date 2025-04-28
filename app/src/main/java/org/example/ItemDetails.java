@@ -1,6 +1,7 @@
 package org.example;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -45,11 +46,25 @@ public class ItemDetails {
     // Wraps the index in an array
     final int[] currentStartIndex = {0};
 
+    // Storing our AddRemoveBlocks to store quantities
+    List<AddRemoveBlock> blocks = new ArrayList<>();
+
+    // Pre-creating the Blocks corresponding to ingredients.size()
+    // To populate blocks
+    for (int i = 0; i < ingredients.size(); i++) {
+
+      blocks.add(new AddRemoveBlock(1));
+
+    }
+
     // Adds the first 7 ingredients
     for (int i = 0; i < Math.min(visibleCount, ingredients.size()); i++) {
       Label ingrLabel = new Label(ingredients.get(i));
       ingrLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: normal;");
-      var addRemoveBlock = new AddRemoveBlock(1);
+
+      // Calling on corresponding block from List
+      AddRemoveBlock addRemoveBlock = blocks.get(i);
+
       HBox row = new HBox(100, ingrLabel, addRemoveBlock);
       row.setAlignment(Pos.CENTER_RIGHT);
       ingredientBox.getChildren().add(row);
@@ -81,9 +96,13 @@ public class ItemDetails {
       for (int i = currentStartIndex[0];
           i < Math.min(currentStartIndex[0] + visibleCount, ingredients.size());
           i++) {
+
         Label ingrLabel = new Label(ingredients.get(i));
         ingrLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: normal;");
-        var addRemoveBlock = new AddRemoveBlock(1);
+
+        // Calling on corresponding block from List
+        AddRemoveBlock addRemoveBlock = blocks.get(i);
+
         HBox row = new HBox(100, ingrLabel, addRemoveBlock);
         row.setAlignment(Pos.CENTER_RIGHT);
         ingredientBox.getChildren().add(row);
@@ -186,11 +205,10 @@ public class ItemDetails {
     // Language Button
     // cycles images on click
     RoundButton langButton = new RoundButton("languages", 70);
-
-    // Swedish flag on the left
     HBox bottomLeftBox = new HBox(langButton);
     bottomLeftBox.setAlignment(Pos.BOTTOM_LEFT);
     
+    // Spacer for bottom part of the Screen
     Region spacerBottom = new Region();
     HBox.setHgrow(spacerBottom, Priority.ALWAYS);
 
