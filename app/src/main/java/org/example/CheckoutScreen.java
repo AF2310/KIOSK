@@ -4,9 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.example.menu.Meal;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -22,11 +19,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.menu.SimpleItem;
-//import java.sql.Connection;
-//import java.sql.PreparedStatement;
-//import java.sql.ResultSet;
-//import java.sql.SQLException;
-//import com.mysql.cj.protocol.Resultset;
 
 /**
  * This is the Screen that displays the order
@@ -37,15 +29,9 @@ import org.example.menu.SimpleItem;
 public class CheckoutScreen {
 
   private Stage primaryStage;
-  private String mode;
   private Connection connection;
-  private Meal meal;
-  private Scene welcomeScene;
   private float totalPrice = 0.0f;
   private Label totalLabel;
-
-
-  
 
   /**
    * Creating a scene for the checkout menu.
@@ -70,7 +56,6 @@ public class CheckoutScreen {
 
     // Setting primary stage and welcome screen
     this.primaryStage = primaryStage;
-    // this.mode = mode;
 
     // Spacer to elements away from each other
     Region topspacer = new Region();
@@ -89,33 +74,6 @@ public class CheckoutScreen {
       EatHereButton eatHereButton = new EatHereButton();
       modeIndicatorBox.getChildren().add(eatHereButton);
     }
-
-
-    TextField promoField = new TextField();
-    promoField.setPromptText("Enter Promo Code");
-    promoField.setStyle(
-        "-fx-background-color: transparent;" +
-        "-fx-text-fill: white;" +
-        "-fx-font-size: 24px;" +
-        "-fx-font-weight: bold;" +
-        "-fx-alignment: center;"
-    );
-    promoField.setMaxWidth(300);
-
-    // Create the Apply Promo button
-    Button applyPromoButton = new Button();
-    applyPromoButton.setGraphic(promoField);
-    applyPromoButton.setStyle(
-        "-fx-background-color: #4CAF50;" +
-        "-fx-background-radius: 15;" +
-        "-fx-padding: 20;"
-    );
-    applyPromoButton.setMinWidth(400);
-    applyPromoButton.setMinHeight(80);
-    applyPromoButton.setOnAction(e -> applyPromo(promoField.getText()));
-
-    HBox promoBox = new HBox(applyPromoButton);
-    promoBox.setAlignment(Pos.CENTER);
 
 
     // Top of layout - creating elements
@@ -144,43 +102,46 @@ public class CheckoutScreen {
     // Align box properly
     eatHereTakeawayBox.setAlignment(Pos.CENTER);
 
-    // TODO: Insert promo code section here
-    Button promoPlaceholder = new Button();
-    promoPlaceholder.setPrefSize(590, 90);
-    promoPlaceholder.setStyle(
-      "-fx-background-color: rgba(64, 182, 28, 0.82);"
-      + "-fx-border-color: rgb(89, 224, 184);"
-      + "-fx-border-radius: 10;"
-      + "-fx-background-radius: 10;"
-      + "-fx-padding: 10;"
-    );
-    Label promoLabel = new Label("Enter Promocode");
-    // Label should be white, bold, and large font
-    promoLabel.setStyle(
-        "-fx-text-fill: white;"
+    // Promo code section
+    TextField promoField = new TextField();
+    promoField.setPromptText("Enter Promo Code");
+    promoField.setStyle(
+        "-fx-background-color: transparent;"
+        + "-fx-text-fill: white;"
+        + "-fx-font-size: 24px;"
         + "-fx-font-weight: bold;"
-        + "-fx-font-size: 40;"
+        + "-fx-alignment: center;"
     );
-    promoPlaceholder.setGraphic(promoLabel);
+    promoField.setMaxWidth(300);
+
+    // Create the Apply Promo button
+    Button applyPromoButton = new Button();
+    applyPromoButton.setGraphic(promoField);
+    applyPromoButton.setStyle(
+        "-fx-background-color: #4CAF50;"
+        + "-fx-background-radius: 15;"
+        + "-fx-padding: 20;"
+    );
+    applyPromoButton.setPrefSize(590, 90);
+    applyPromoButton.setOnAction(e -> applyPromo(promoField.getText()));
+
 
     // Top of layout - combining elements
-
 
 
     HBox leftsideBox = new HBox(100);
     leftsideBox.setAlignment(Pos.CENTER);
     leftsideBox.getChildren().addAll(
-      checkoutLabel,
-      eatHereTakeawayBox,
-      topLeftSpacer,
-      promoPlaceholder
+        checkoutLabel,
+        eatHereTakeawayBox,
+        topLeftSpacer,
+        applyPromoButton
     );
 
     HBox topBox = new HBox();
     topBox.setAlignment(Pos.TOP_LEFT);
     topBox.getChildren().addAll(
         leftsideBox,
-        // TODO: add promocode box here
         topspacer,
         modeIndicatorBox
     );
@@ -444,7 +405,6 @@ public class CheckoutScreen {
 
     // Stacking all Objects/Boxes vertically on each other
     VBox layout = new VBox(180);
-    VBox layout = new VBox();
 
     /*Button confirmButton = new Button("Confirm Checkout");
     confirmButton.setOnAction(e -> {
@@ -467,7 +427,6 @@ public class CheckoutScreen {
 
 
     layout.getChildren().addAll(
-        promoBox,
         topBox,
         middleSection,
         bottomPart
@@ -487,7 +446,7 @@ public class CheckoutScreen {
         float discount = rs.getFloat("discount");
         totalPrice *= (1 - discount);
         totalLabel.setText(String.format("Total: %.2f :- (%.0f%% discount applied)",
-            totalPrice, discount*100));
+            totalPrice, discount * 100));
       } else {
         totalLabel.setText("Invalid promo code");
       }
