@@ -1,10 +1,18 @@
 package org.example;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.example.menu.Meal;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -22,14 +30,22 @@ import org.example.menu.SimpleItem;
 
 /**
  * This is the Screen that displays the order
- * of the customer. Here, the customer can check, 
+ * of the customer. Here, the customer can check,
  * edit and confirm his order. It also displays the
  * final price of the order.
  */
 public class CheckoutScreen {
 
   private Stage primaryStage;
-  // private String mode;
+  private String mode;
+  private Connection connection;
+  private Meal meal;
+  private Scene welcomeScene;
+  private float totalPrice = 0.0f;
+  private Label totalLabel;
+
+
+  
 
   /**
    * Creating a scene for the checkout menu.
@@ -73,6 +89,33 @@ public class CheckoutScreen {
       EatHereButton eatHereButton = new EatHereButton();
       modeIndicatorBox.getChildren().add(eatHereButton);
     }
+
+
+    TextField promoField = new TextField();
+    promoField.setPromptText("Enter Promo Code");
+    promoField.setStyle(
+        "-fx-background-color: transparent;" +
+        "-fx-text-fill: white;" +
+        "-fx-font-size: 24px;" +
+        "-fx-font-weight: bold;" +
+        "-fx-alignment: center;"
+    );
+    promoField.setMaxWidth(300);
+
+    // Create the Apply Promo button
+    Button applyPromoButton = new Button();
+    applyPromoButton.setGraphic(promoField);
+    applyPromoButton.setStyle(
+        "-fx-background-color: #4CAF50;" +
+        "-fx-background-radius: 15;" +
+        "-fx-padding: 20;"
+    );
+    applyPromoButton.setMinWidth(400);
+    applyPromoButton.setMinHeight(80);
+    applyPromoButton.setOnAction(e -> applyPromo(promoField.getText()));
+
+    HBox promoBox = new HBox(applyPromoButton);
+    promoBox.setAlignment(Pos.CENTER);
 
 
     // Top of layout - creating elements
@@ -265,7 +308,34 @@ public class CheckoutScreen {
         itemGrid,
         rightSpacer, rightArrowButton
     );
+
+    /*Button confirmButton = new Button("Confirm Checkout");
+    confirmButton.setOnAction(e -> {
+      try {
+        for (Single item : meal.getContents()) {
+          item.deleteFromDb(connection);
+        }
+
+        System.out.println("Checkout complete.");
+        meal.getContents().clear();
+        primaryStage.setScene(welcomeScrScene);
+          
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+
+    }*/
+
+    //HBox eatHereTakeawayBox = new HBox(50, eatHereButton, takeawayButton);
+    //eatHereTakeawayBox.setAlignment(Pos.CENTER);
+
+
+    // Bottom buttons
+
+    HBox bottomButtons = new HBox();
+    bottomButtons.setPadding(new Insets(10));
     
+
     // Swedish Flag - Language button
     // Set image
     ImageView sweFlag = new ImageView(new Image(getClass().getResourceAsStream("/swe.png")));
@@ -374,12 +444,30 @@ public class CheckoutScreen {
 
     // Stacking all Objects/Boxes vertically on each other
     VBox layout = new VBox(180);
+    VBox layout = new VBox();
+
+    /*Button confirmButton = new Button("Confirm Checkout");
+    confirmButton.setOnAction(e -> {
+      try {
+        SimpleItem[] orderedItems = cart.getItems();
+        int[] orderedQuantities = cart.getQuantity();
+        for (int i = 0; i < orderedItems.length; i++) {
+          int productId = orderedItems[i].getId(); 
+          int quantityOrdered = orderedQuantities[i];
+          reduceProductQuantity(connection, productId, quantityOrdered);
+        }
+          
+      } catch (SQLException ex) {
+        ex.printStackTrace();
+      }
+    });*/
 
     layout.setAlignment(Pos.TOP_LEFT);
     layout.setPadding(new Insets(30));
 
 
     layout.getChildren().addAll(
+        promoBox,
         topBox,
         middleSection,
         bottomPart
@@ -387,5 +475,27 @@ public class CheckoutScreen {
 
     // Create final scene result
     return new Scene(layout, windowWidth, windowHeight);
+  }
+
+  private void applyPromo(String code) {
+    try {
+      String sql = "";
+      PreparedStatement stmt = connection.prepareStatement(sql);
+      stmt.setString(1, code);
+      ResultSet rs = stmt.executeQuery();
+      if (rs.next()) {
+        float discount = rs.getFloat("discount");
+        totalPrice *= (1 - discount);
+        totalLabel.setText(String.format("Total: %.2f :- (%.0f%% discount applied)",
+            totalPrice, discount*100));
+      } else {
+        totalLabel.setText("Invalid promo code");
+      }
+
+
+    } catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+
   }
 }

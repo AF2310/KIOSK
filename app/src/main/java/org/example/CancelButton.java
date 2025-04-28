@@ -1,6 +1,7 @@
 package org.example;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -25,6 +26,8 @@ public class CancelButton extends Button {
         + "-fx-border-radius: 12;"
         + "-fx-padding: 10;"
         + "-fx-background-radius: 12;"
+        + "-fx-text-fill: red;" 
+        + "-fx-font-weight: bold;"
     );
 
     // Using hard coded cancel image
