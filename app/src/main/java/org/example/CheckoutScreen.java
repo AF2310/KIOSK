@@ -339,6 +339,22 @@ public class CheckoutScreen {
     // Stacking all Objects/Boxes vertically on each other
     VBox layout = new VBox();
 
+    /*Button confirmButton = new Button("Confirm Checkout");
+    confirmButton.setOnAction(e -> {
+      try {
+        SimpleItem[] orderedItems = cart.getItems();
+        int[] orderedQuantities = cart.getQuantity();
+        for (int i = 0; i < orderedItems.length; i++) {
+          int productId = orderedItems[i].getId(); 
+          int quantityOrdered = orderedQuantities[i];
+          reduceProductQuantity(connection, productId, quantityOrdered);
+        }
+          
+      } catch (SQLException ex) {
+        ex.printStackTrace();
+      }
+    });*/
+
     layout.setAlignment(Pos.CENTER);
     layout.setPadding(new Insets(20));
     layout.getChildren().addAll(

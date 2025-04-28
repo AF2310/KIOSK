@@ -261,6 +261,19 @@ public class Single {
     }
   }
 
+  public void reduceProductQuantity(Connection conn, int id, int amount) throws SQLException {
+    String sql = "UPDATE product SET quantity = quantity - ? WHERE product_id = ? AND quantity >= ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, amount);
+      stmt.setInt(2, id);
+      stmt.setInt(3, amount);
+      stmt.executeUpdate();
+
+    }
+
+
+  }
+
   /**
    * Retrieves a list of Singles that belong to a specific category ID.
    * If the category name does not map to a valid SingleType enum, defaults to SingleType.EXTRA.
