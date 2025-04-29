@@ -87,19 +87,6 @@ public class CheckoutScreen {
     checkoutLabel.setAlignment(Pos.TOP_LEFT);
     checkoutLabel.setPadding(new Insets(50, 100, 50, 50));
 
-    // Eat here or takeaway choice
-    EatHereButton eatHereButton = new EatHereButton();
-    TakeAwayButton takeawayButton = new TakeAwayButton();
-    
-    // Combine both in horizontal layout
-    HBox eatHereTakeawayBox = new HBox(
-        50,
-        eatHereButton,
-        takeawayButton
-    );
-    // Align box properly
-    eatHereTakeawayBox.setAlignment(Pos.CENTER);
-
     // Promo code section
     TextField promoField = new TextField();
     promoField.setPromptText("Enter Promo Code");
@@ -123,6 +110,10 @@ public class CheckoutScreen {
     applyPromoButton.setPrefSize(590, 90);
     applyPromoButton.setOnAction(e -> applyPromo(promoField.getText()));
 
+    // Spacer to elements away from each other
+    Region tspacer = new Region();
+    HBox.setHgrow(topspacer, Priority.ALWAYS);
+
 
     // Top of layout - combining elements
 
@@ -131,7 +122,7 @@ public class CheckoutScreen {
     leftsideBox.setAlignment(Pos.CENTER);
     leftsideBox.getChildren().addAll(
         checkoutLabel,
-        eatHereTakeawayBox,
+        tspacer,
         topLeftSpacer,
         applyPromoButton
     );
