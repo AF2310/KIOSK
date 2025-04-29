@@ -29,6 +29,8 @@ public class ItemDetails {
    *
    * @param primaryStage what is the primary stage
    * @param prevScene what was the previous stage
+   * @param item the item object itself
+   * @param cart the cart where all items are
    * @return scene containing all item details
    */
   public Scene create(Stage primaryStage, Scene prevScene, SimpleItem item, Cart cart) {

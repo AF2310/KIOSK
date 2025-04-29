@@ -1,7 +1,8 @@
 package org.example;
 
 import java.util.ArrayList;
-import org.example.menu.*;
+import org.example.menu.SimpleItem;
+
 
 /**
  * The cart class.
@@ -10,6 +11,9 @@ public class Cart {
   private ArrayList<SimpleItem> items;
   private ArrayList<Integer> quantity;
 
+  /**
+   * Cart constructor.
+   */
   public Cart() {
     items = new ArrayList<>();
     quantity = new ArrayList<>();
@@ -57,6 +61,9 @@ public class Cart {
     }
   }
 
+  /**
+   * Turning cart items into string.
+   */
   public String toString() {
     return items.toString() + quantity.toString();
   }

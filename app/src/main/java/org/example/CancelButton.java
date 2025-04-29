@@ -1,64 +1,42 @@
 package org.example;
 
-
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 
 /**
  * A reusable red cancel button component with a red X icon.
  */
-public class CancelButton extends VBox {
-  private final Button cancelButton;
-
-
-  
-
+public class CancelButton extends Button {
 
   /**
    * Constructs a red cancel button with icon and styling.
    */
   public CancelButton() {
+    // Set default button size
+    this.setPrefSize(30, 30);
+
+    // Set style of button
+    this.setStyle(
+        "-fx-background-color: transparent;" 
+        + "-fx-border-color: red;" 
+        + "-fx-border-width: 3;"
+        + "-fx-border-radius: 12;"
+        + "-fx-padding: 10;"
+        + "-fx-background-radius: 12;"
+        + "-fx-text-fill: red;" 
+        + "-fx-font-weight: bold;"
+    );
+
+    // Using hard coded cancel image
     ImageView cancelIcon = new ImageView(new Image(getClass().getResourceAsStream("/cancel.png")));
+    
+    // Set size of image
     cancelIcon.setFitWidth(30);
     cancelIcon.setFitHeight(30);
 
-
-    cancelButton = new Button();
-    cancelButton.setGraphic(cancelIcon);
-    cancelButton.setStyle(
-      "-fx-background-color: transparent;" +
-      "-fx-border-color: red;" +
-      "-fx-border-width: 3;" +
-      "-fx-border-radius: 12;" +
-      "-fx-padding: 10;" +
-      "-fx-background-radius: 12;"
-
-
-      );
-      cancelButton.setMinSize(60, 60);
-
-
-
-
-
-
-
-
-    this.getChildren().add(cancelButton);
-
+    // Put the cancel image inside the button
+    this.setGraphic(cancelIcon);
+    this.setMinSize(60, 60);
   }
-
-
-  
-  /**
-   * getter for button instance.
-   *
-   * @return  cancel button instance
-   */
-  public Button getButton() {
-    return cancelButton;
-  }
-  
 }

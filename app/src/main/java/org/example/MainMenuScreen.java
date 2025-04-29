@@ -28,8 +28,8 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.example.menu.Imenu;
 import org.example.menu.Menu;
+import org.example.menu.SimpleItem;
 import org.example.menu.Single;
-import org.example.menu.*;
 
 /**
  * The main menu screen.
@@ -44,6 +44,7 @@ public class MainMenuScreen {
   private GridPane itemGrid = new GridPane();
   private List<Button> categoryButtons = new ArrayList<>();
   public Cart cart = new Cart();
+  private String mode;
 
   /**
    * Creates the main menu scene.
@@ -59,9 +60,30 @@ public class MainMenuScreen {
       Stage primaryStage,
       double windowWidth,
       double windowHeight,
-      Scene welcomeScrScene) throws SQLException {
+      Scene welcomeScrScene,
+      int dummyCode,
+      String mode) throws SQLException {
 
     this.primaryStage = primaryStage;
+    this.mode = mode;
+
+    ImageView modeIcon = new ImageView();
+    Label modeLabel = new Label();
+    if ("takeaway".equalsIgnoreCase(mode)) {
+      modeIcon.setImage(new Image(getClass().getResourceAsStream("/takeaway.png")));
+      modeLabel.setText("Take Away");
+    } else {
+      modeIcon.setImage(new Image(getClass().getResourceAsStream("/eatHere.png")));
+      modeLabel.setText("Eat Here");
+    }
+
+    modeIcon.setFitWidth(100);
+    modeIcon.setFitHeight(100);
+
+    modeLabel.setStyle("-fx-font-size: 36px; -fx-font-weight: bold;");
+
+    VBox modeBox = new VBox(10, modeIcon, modeLabel);
+    modeBox.setAlignment(Pos.CENTER);
 
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(20));
@@ -217,15 +239,8 @@ public class MainMenuScreen {
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
     // Create cancel button
-    Button cancelButton = new Button();
-    ImageView cancelIcon = new ImageView(new Image(getClass().getResourceAsStream("/cancel.png")));
+    CancelButton cancelButton = new CancelButton();
 
-    // Adjust asthetics of button
-    cancelIcon.setFitWidth(30);
-    cancelIcon.setFitHeight(30);
-    cancelButton.setGraphic(cancelIcon);
-    cancelButton.setStyle("-fx-background-color: transparent;");
-    cancelButton.setMinSize(40, 40);
     cancelButton.setOnAction(e -> primaryStage.setScene(welcomeScrScene));
 
     // Create Cart button
@@ -249,6 +264,8 @@ public class MainMenuScreen {
           windowWidth,
           windowHeight,
           this.primaryStage.getScene(),
+          welcomeScrScene,
+          this.mode,
           cart
         );
       this.primaryStage.setScene(checkoutScene);
@@ -468,7 +485,7 @@ public class MainMenuScreen {
         );
       }
     }
-  } 
+  }
 
   /**
    * Helper method to update highlighting of category buttons.
