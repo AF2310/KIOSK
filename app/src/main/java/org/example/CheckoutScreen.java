@@ -15,7 +15,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.menu.SimpleItem;
@@ -38,9 +37,9 @@ public class CheckoutScreen {
    * TODO: We still need the other database variables etc..
    *       Most likely not all the variables that are needed.
    *
-   * @param primaryStage the primary stage of this scene
-   * @param windowWidth width of window
-   * @param windowHeight height of window
+   * @param primaryStage   the primary stage of this scene
+   * @param windowWidth    width of window
+   * @param windowHeight   height of window
    * @param mainMenuScreen the previous scene of this scene
    * @param welcomeScrScene the welcome screen (for cancel order button)
    * @return scene containing all the order details
@@ -77,7 +76,6 @@ public class CheckoutScreen {
 
 
     // Top of layout - creating elements
-
 
     // Title of the checkout screen
     Label checkoutLabel = new Label("Checkout");
@@ -196,7 +194,6 @@ public class CheckoutScreen {
     HBox rightMostArrow = new HBox(rightArrowButton);
     rightMostArrow.setAlignment(Pos.CENTER_RIGHT);
 
-
     // Make item grid - CURRENTLY DUMMY CODE
     // TODO: Fix layout, make multiple pages
     // TODO: Replace dummy code with actual item grid code
@@ -295,7 +292,6 @@ public class CheckoutScreen {
 
     HBox bottomButtons = new HBox();
     bottomButtons.setPadding(new Insets(10));
-    
 
     // Swedish Flag - Language button
     // Set image
@@ -402,7 +398,6 @@ public class CheckoutScreen {
         backAndCancel
     );
 
-
     // Stacking all Objects/Boxes vertically on each other
     VBox layout = new VBox(180);
 
@@ -426,11 +421,25 @@ public class CheckoutScreen {
     layout.setPadding(new Insets(30));
 
 
+    // get items and there quantities
+    SimpleItem[] items = cart.getItems();
+    int[] quantitys = cart.getQuantity();
+
+    // Create the CheckoutGridWithButtons
+    CheckoutGridWithButtons checkoutGrid = new CheckoutGridWithButtons(
+        items,
+        quantitys,
+        6,
+        leftArrowButton,
+        rightArrowButton
+    );
+
+    layout.setAlignment(Pos.CENTER);
+    layout.setPadding(new Insets(20));
     layout.getChildren().addAll(
         topBox,
-        middleSection,
-        bottomPart
-    );
+        checkoutGrid,
+        bottomPart);
 
     // Create final scene result
     return new Scene(layout, windowWidth, windowHeight);

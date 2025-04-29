@@ -20,6 +20,7 @@ public class CircleButtonWithSign extends Button {
     this.setFont(Font.font(24));
     this.setPrefSize(50, 50);
     this.setMaxSize(50, 50);
+    this.setMinSize(50, 50);
     // Both buttons have almost everything the same except the colors of the background, border,
     //and the text fill.
     this.setStyle(
