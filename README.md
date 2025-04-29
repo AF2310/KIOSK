@@ -57,3 +57,18 @@ We had 3 meetings, 1 in person on Thursday, 1 on Friday and 1 on Monday on Disco
 ![alt text](references/Class_Sp17.PNG)
 
 
+
+Sprint 2 (Week 18)
+
+This week we worked on the product screen and the checkoutscreen.
+
+For the product screen Ignas Vuk and Vince made the user able to choose different ingredients and put the product into the cart.
+Vuk did the plus and minus buttons.
+Arsney worked on the Product description and the layout. Also he checked that everything is working when we merged.
+Jakob worked on the merging together with Arsney. And on the cart functionality so the user can add an item into the cart and see it in the
+checkout.
+
+For the Checkout screen Achilleas and Michelle worked on the buttons. Michelle also did the Order confirmation screen.
+Arsney did the layout for the items in the cart.
+
+We had 3 Meetings on Discord. One on Thursday, one on Sunday and one on Monday.
