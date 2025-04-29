@@ -144,150 +144,6 @@ public class CheckoutScreen {
         modeIndicatorBox
     );
 
-
-    // Middle part - creating elements
-
-
-    // Arrow buttons to navigate through order pages
-
-    // Arrow left
-    // Make instance of arrow button that points left
-    ArrowButton leftArrowButton = new ArrowButton(true, false);
-
-    // TODO: insert action of button
-    /*leftArrowButton.setOnMouseClicked(e -> {
-      if (currentCategoryIndex > 0) {
-        currentCategoryIndex--;
-        updateGrid();
-      } else {
-        currentCategoryIndex = categoryButtons.size() - 1;
-        updateGrid();
-      }
-    });*/
-
-    // Arrow right
-    // Make instance of arrow button that points right
-    ArrowButton rightArrowButton = new ArrowButton(false, false);
-    
-    // TODO: insert action of button
-    // right button clickable as long as its not in last category (Special offers)
-    /*rightArrowButton.setOnMouseClicked(e -> {
-      if (currentCategoryIndex < categories.length - 1
-          && !categories[currentCategoryIndex].equals("Special Offers")) {
-        currentCategoryIndex++;
-        updateGrid();
-      } else {
-        currentCategoryIndex = 0;
-        updateGrid();
-      }
-    });*/
-
-    // Make arrow buttons left + right centered vertically
-    VBox leftArrowVcentered = new VBox(leftArrowButton);
-    leftArrowVcentered.setAlignment(Pos.CENTER);
-    VBox rightArrowVcentered = new VBox(rightArrowButton);
-    rightArrowVcentered.setAlignment(Pos.CENTER);
-
-    // Make arrow buttons left and right most position horizontally
-    HBox leftMostArrow = new HBox(leftArrowButton);
-    leftMostArrow.setAlignment(Pos.CENTER_LEFT);
-    HBox rightMostArrow = new HBox(rightArrowButton);
-    rightMostArrow.setAlignment(Pos.CENTER_RIGHT);
-
-    // Make item grid - CURRENTLY DUMMY CODE
-    // TODO: Fix layout, make multiple pages
-    // TODO: Replace dummy code with actual item grid code
-
-    VBox itemGrid = new VBox();
-    SimpleItem[] items = cart.getItems();
-    int[] quantitys = cart.getQuantity();
-    HBox itemRow = new HBox();
-    for (int i = 0; i < items.length; i++) {
-      SimpleItem item = items[i];
-      // Fixed sized slot for image
-      StackPane imageSlot = new StackPane();
-      imageSlot.setPrefSize(200, 200);
-      imageSlot.setMaxSize(200, 200);
-      imageSlot.setMinSize(200, 200);
-      Image itemImage = new Image(item.imagePath());
-      ImageView image = new ImageView(itemImage);
-      image.setFitHeight(150);
-      image.setPreserveRatio(true);
-      imageSlot.getChildren().addAll(image);
-      
-      // Slot for Label and Price
-      HBox labelAndPrice = new HBox();
-      labelAndPrice.setAlignment(Pos.CENTER);
-      labelAndPrice.getChildren().addAll(
-        new Label(item.name()),
-        new Label(String.format(" %.0f :-", item.price()))
-      );
-
-      // Slot for Plus-/Minus Buttons and Quantity value
-      int quantity = quantitys[i];
-      HBox quantityBox = new HBox();
-      quantityBox.setAlignment(Pos.CENTER);
-      quantityBox.getChildren().addAll(
-        new AddRemoveBlock(quantity)
-      );
-        
-      // Adding it all together in one item slot
-      VBox itemSlot = new VBox();
-      itemSlot.setAlignment(Pos.CENTER);
-      itemSlot.getChildren().addAll(
-          imageSlot,
-          labelAndPrice,
-          quantityBox
-      );
-      itemRow.getChildren().add(itemSlot);
-    }
-
-    itemGrid.getChildren().add(itemRow);
-
-    
-    // Middle section - combining all elements
-
-
-    // Create spacers
-    Region leftSpacer = new Region();
-    Region rightSpacer = new Region();
-
-    // Make spacers grow to fill space as much as needed
-    // to make arrow buttons most left and most right positioned
-    HBox.setHgrow(leftSpacer, Priority.ALWAYS);
-    HBox.setHgrow(rightSpacer, Priority.ALWAYS);
-    
-    
-    // Combine Arrow buttons and item grid
-    HBox middleSection = new HBox();
-    middleSection.setAlignment(Pos. CENTER);
-    middleSection.getChildren().addAll(
-        leftMostArrow, leftSpacer,
-        itemGrid,
-        rightSpacer, rightArrowButton
-    );
-
-    /*Button confirmButton = new Button("Confirm Checkout");
-    confirmButton.setOnAction(e -> {
-      try {
-        for (Single item : meal.getContents()) {
-          item.deleteFromDb(connection);
-        }
-
-        System.out.println("Checkout complete.");
-        meal.getContents().clear();
-        primaryStage.setScene(welcomeScrScene);
-          
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-
-    }*/
-
-    //HBox eatHereTakeawayBox = new HBox(50, eatHereButton, takeawayButton);
-    //eatHereTakeawayBox.setAlignment(Pos.CENTER);
-
-
     // Bottom buttons
 
     HBox bottomButtons = new HBox();
@@ -399,7 +255,6 @@ public class CheckoutScreen {
     );
 
     // Stacking all Objects/Boxes vertically on each other
-    VBox layout = new VBox(180);
 
     /*Button confirmButton = new Button("Confirm Checkout");
     confirmButton.setOnAction(e -> {
@@ -417,6 +272,7 @@ public class CheckoutScreen {
       }
     });*/
 
+    VBox layout = new VBox(100);
     layout.setAlignment(Pos.TOP_LEFT);
     layout.setPadding(new Insets(30));
 
@@ -424,6 +280,10 @@ public class CheckoutScreen {
     // get items and there quantities
     SimpleItem[] items = cart.getItems();
     int[] quantitys = cart.getQuantity();
+
+    // Arrow buttons
+    ArrowButton leftArrowButton = new ArrowButton(true, false);
+    ArrowButton rightArrowButton = new ArrowButton(false, false);
 
     // Create the CheckoutGridWithButtons
     CheckoutGridWithButtons checkoutGrid = new CheckoutGridWithButtons(
