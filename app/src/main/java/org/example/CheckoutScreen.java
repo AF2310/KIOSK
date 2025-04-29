@@ -110,10 +110,6 @@ public class CheckoutScreen {
     applyPromoButton.setPrefSize(590, 90);
     applyPromoButton.setOnAction(e -> applyPromo(promoField.getText()));
 
-    // Spacer to elements away from each other
-    Region tspacer = new Region();
-    HBox.setHgrow(topspacer, Priority.ALWAYS);
-
 
     // Top of layout - combining elements
 
@@ -122,7 +118,6 @@ public class CheckoutScreen {
     leftsideBox.setAlignment(Pos.CENTER);
     leftsideBox.getChildren().addAll(
         checkoutLabel,
-        tspacer,
         topLeftSpacer,
         applyPromoButton
     );
