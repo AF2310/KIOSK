@@ -72,3 +72,5 @@ For the Checkout screen Achilleas and Michelle worked on the buttons. Michelle a
 Arsney did the layout for the items in the cart.
 
 We had 3 Meetings on Discord. One on Thursday, one on Sunday and one on Monday.
+
+![alt text](references/Class_Sp18.png)
