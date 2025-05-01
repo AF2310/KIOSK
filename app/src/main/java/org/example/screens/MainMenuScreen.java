@@ -1,4 +1,4 @@
-package org.example;
+package org.example.screens;
 
 import java.io.InputStream;
 import java.sql.Connection;
@@ -26,6 +26,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+
+import org.example.Cart;
+import org.example.buttons.ArrowButton;
+import org.example.buttons.CancelButton;
 import org.example.menu.Imenu;
 import org.example.menu.Menu;
 import org.example.menu.SimpleItem;

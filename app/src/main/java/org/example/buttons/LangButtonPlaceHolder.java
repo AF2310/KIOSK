@@ -1,4 +1,4 @@
-package org.example;
+package org.example.buttons;
 
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;

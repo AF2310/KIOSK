@@ -1,6 +1,9 @@
-package org.example;
+package org.example.screens;
 
 import java.sql.SQLException;
+
+import org.example.buttons.MidButtonWithImage;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

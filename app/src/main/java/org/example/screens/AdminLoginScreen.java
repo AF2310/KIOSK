@@ -1,4 +1,9 @@
-package org.example;
+package org.example.screens;
+
+import org.example.buttons.MidButton;
+import org.example.buttons.SquareButtonWithImg;
+import org.example.sql.SqlConnectionCheck;
+import org.example.users.AdminAuth;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

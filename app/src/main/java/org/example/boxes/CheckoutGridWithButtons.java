@@ -1,4 +1,4 @@
-package org.example;
+package org.example.boxes;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;
@@ -12,6 +12,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+
 import org.example.menu.SimpleItem;
 
 /**

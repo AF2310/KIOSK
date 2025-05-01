@@ -1,4 +1,4 @@
-package org.example;
+package org.example.buttons;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

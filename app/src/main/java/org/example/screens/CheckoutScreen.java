@@ -1,4 +1,4 @@
-package org.example;
+package org.example.screens;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,6 +17,13 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import org.example.buttons.ArrowButton;
+import org.example.buttons.BackButton;
+import org.example.buttons.CancelButton;
+import org.example.buttons.ConfirmOrderButton;
+import org.example.buttons.EatHereButton;
+import org.example.buttons.TakeAwayButton;
 import org.example.menu.SimpleItem;
 
 /**

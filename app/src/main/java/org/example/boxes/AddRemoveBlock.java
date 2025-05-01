@@ -1,4 +1,6 @@
-package org.example;
+package org.example.boxes;
+
+import org.example.buttons.CircleButtonWithSign;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;

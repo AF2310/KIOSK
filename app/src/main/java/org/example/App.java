@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.screens.WelcomeScreen;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

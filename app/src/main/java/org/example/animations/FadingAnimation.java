@@ -1,4 +1,4 @@
-package org.example;
+package org.example.animations;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
