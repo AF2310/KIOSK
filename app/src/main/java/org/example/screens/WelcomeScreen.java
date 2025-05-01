@@ -1,9 +1,6 @@
 package org.example.screens;
 
 import java.sql.SQLException;
-
-import org.example.buttons.MidButtonWithImage;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,6 +12,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.buttons.MidButtonWithImage;
+import org.example.sql.SqlConnectionCheck;
 
 /**
  * The welcome screen class.

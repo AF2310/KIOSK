@@ -15,14 +15,13 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import org.example.Cart;
 import org.example.boxes.AddRemoveBlock;
 import org.example.buttons.ArrowButton;
 import org.example.buttons.MidButtonWithImage;
 import org.example.buttons.RoundButton;
 import org.example.buttons.SquareButtonWithImg;
 import org.example.menu.SimpleItem;
+import org.example.orders.Cart;
 
 /**
  * Screen for the details of an Item.

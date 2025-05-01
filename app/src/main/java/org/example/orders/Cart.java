@@ -1,4 +1,4 @@
-package org.example;
+package org.example.orders;
 
 import java.util.ArrayList;
 import org.example.menu.SimpleItem;

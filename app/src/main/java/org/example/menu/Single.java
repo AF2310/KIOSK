@@ -252,6 +252,14 @@ public class Single extends Product {
     return list;
   }
 
+  /**
+   * Lets you delete a single item from the database
+   * by using the single's id.
+   *
+   * @param conn remote server connection
+   * @param id id of the product (single)
+   * @throws SQLException if server issues arise
+   */
   public void deleteSingleById(Connection conn, int id) throws SQLException {
     String sql = "DELETE FROM product WHERE product_id = ?";
     try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -261,17 +269,24 @@ public class Single extends Product {
     }
   }
 
+  /**
+   * Lets you reduce the product quantity inside
+   * the database.
+   *
+   * @param conn remote server connection
+   * @param id id of the product (single)
+   * @param amount new amount of this product
+   * @throws SQLException if server issues arise
+   */
   public void reduceProductQuantity(Connection conn, int id, int amount) throws SQLException {
-    String sql = "UPDATE product SET quantity = quantity - ? WHERE product_id = ? AND quantity >= ?";
+    String sql = "UPDATE product SET quantity"
+        + "= quantity - ? WHERE product_id = ? AND quantity >= ?";
     try (PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setInt(1, amount);
       stmt.setInt(2, id);
       stmt.setInt(3, amount);
       stmt.executeUpdate();
-
     }
-
-
   }
 
   /**
@@ -329,8 +344,7 @@ public class Single extends Product {
             SingleType.valueOf(rs.getString("type").toLowerCase()),
             rs.getString("image_url")
             // TODO: fix this quickfix
-            //type;
-            
+            //type;           
             ));
       }
       // Close result set

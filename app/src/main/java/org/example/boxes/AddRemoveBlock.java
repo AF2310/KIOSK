@@ -1,10 +1,9 @@
 package org.example.boxes;
 
-import org.example.buttons.CircleButtonWithSign;
-
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import org.example.buttons.CircleButtonWithSign;
 
 /**
  * Class for the AddRemoveBlock. Includes a label with quantity and two buttons

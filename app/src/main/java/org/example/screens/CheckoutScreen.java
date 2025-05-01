@@ -17,7 +17,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
+import org.example.animations.FadingAnimation;
+import org.example.boxes.CheckoutGridWithButtons;
 import org.example.buttons.ArrowButton;
 import org.example.buttons.BackButton;
 import org.example.buttons.CancelButton;
@@ -25,6 +26,7 @@ import org.example.buttons.ConfirmOrderButton;
 import org.example.buttons.EatHereButton;
 import org.example.buttons.TakeAwayButton;
 import org.example.menu.SimpleItem;
+import org.example.orders.Cart;
 
 /**
  * This is the Screen that displays the order
