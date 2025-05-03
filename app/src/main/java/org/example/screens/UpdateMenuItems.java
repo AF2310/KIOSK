@@ -13,8 +13,6 @@ import org.example.buttons.MidButton;
  * Updating menu class.
  */
 public class UpdateMenuItems {
-  public static Parent adminUpdateMenuItems;
-
   /**
    * Scene for adding/removing items on the menu.
    *
