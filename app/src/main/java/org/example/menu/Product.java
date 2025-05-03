@@ -5,7 +5,7 @@ package org.example.menu;
  */
 public abstract class Product {
   private String name;
-  private float price;
+  private double price;
   private int id;
   private Type type;
   private String imagePath;
@@ -18,11 +18,11 @@ public abstract class Product {
     this.name = name;
   }
 
-  public float getPrice() {
+  public double getPrice() {
     return price;
   }
 
-  public void setPrice(float price) {
+  public void setPrice(double price) {
     this.price = price;
   }
 

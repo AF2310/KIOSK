@@ -19,7 +19,7 @@ public class Single extends Product {
    * This constructor is used to create instances of the Single class with the specified name,
    * price, and an empty list of ingredients.
    */
-  public Single(int id, String name, float price, Type type, String imgPath) {
+  public Single(int id, String name, double price, Type type, String imgPath) {
     setId(id);
     setName(name);
     setPrice(price);
@@ -31,8 +31,7 @@ public class Single extends Product {
   /**
    * The method calculates the total cost by adding the base price to the cost of ingredients.
    */
-  public float recalc() {
-    
+  public double recalc() {
     return getPrice() + ingredients.size() * 0.5f;
   }
 
@@ -98,7 +97,7 @@ public class Single extends Product {
     String sql = "INSERT INTO products (name, price, type) VALUES (?, ?, ?)";
     PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
     stmt.setString(1, getName());
-    stmt.setFloat(2, getPrice());
+    stmt.setDouble(2, getPrice());
     stmt.executeUpdate();
 
     ResultSet rs = stmt.getGeneratedKeys();
