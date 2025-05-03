@@ -14,7 +14,7 @@ public class Side extends Single {
    * @param type what type of dish it is
    * @param imgPath the path to the items image
    */
-  public Side(int id, String name, float price, SingleType type, String imgPath) {
+  public Side(int id, String name, float price, Type type, String imgPath) {
     super(id, name, price, type, imgPath);
   }
 }
