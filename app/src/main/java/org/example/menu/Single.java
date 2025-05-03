@@ -13,45 +13,19 @@ import java.util.List;
  * Abstract base class for all single items on the menu.
  */
 public class Single extends Product {
-  protected String name;
-  protected float price;
   protected List<Ingredient> ingredients;
-  public int id;
-  private SingleType type;
-  private String imagePath;
 
   /**
    * This constructor is used to create instances of the Single class with the specified name,
    * price, and an empty list of ingredients.
    */
-  public Single(int id, String name, float price, SingleType type, String imgPath) {
-    this.id = id;
-    this.name = name;
-    this.price = price;
+  public Single(int id, String name, float price, Type type, String imgPath) {
+    setId(id);
+    setName(name);
+    setPrice(price);
     this.ingredients = new ArrayList<>();
-    this.type = type;
-    this.imagePath = imgPath;
-  }
-
-  /**
-   * The 'getName' function in Java returns the value of the 'name' variable.
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * The method the price as a float.
-   */
-  public float getPrice() {
-    return price;
-  }
-
-  /**
-   * The method returns a list of ingredient objects.
-   */
-  public List<Ingredient> getIngredients() {
-    return ingredients;
+    setType(type);
+    setImagePath(imgPath);
   }
 
   /**
@@ -59,18 +33,7 @@ public class Single extends Product {
    */
   public float recalc() {
     
-    return price + ingredients.size() * 0.5f;
-  }
-
-  /**
-   * The function  returns the id value.
-   */
-  public int getId() {
-    return id;
-  }
-
-  public SingleType getType() {
-    return type;
+    return getPrice() + ingredients.size() * 0.5f;
   }
 
   /**
@@ -96,10 +59,6 @@ public class Single extends Product {
     ingredients.removeIf(i -> i.getId() == ingredient.getId());
   }
 
-  public String getImagePath() {
-    return imagePath;
-  }
-
   /**
    * The function  retrieves all singles data from a database table and returns a list of objects.
    */
@@ -117,7 +76,7 @@ public class Single extends Product {
           rs.getFloat("price"),
           // TODO: fix path -> fix query by connecting table category and
           //        retrieving type from there
-          SingleType.valueOf(rs.getString("type")),
+          Type.valueOf(rs.getString("type")),
           rs.getString("image_url")
       ));
     }
@@ -138,13 +97,13 @@ public class Single extends Product {
 
     String sql = "INSERT INTO products (name, price, type) VALUES (?, ?, ?)";
     PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-    stmt.setString(1, name);
-    stmt.setFloat(2, price);
+    stmt.setString(1, getName());
+    stmt.setFloat(2, getPrice());
     stmt.executeUpdate();
 
     ResultSet rs = stmt.getGeneratedKeys();
     if (rs.next()) {
-      id = rs.getInt(1);
+      setId(rs.getInt(1));
     }
 
     stmt.close();
@@ -160,7 +119,7 @@ public class Single extends Product {
    * @return options by type
    * @throws SQLException error with sql
    */
-  public List<Single> getOptionsByType(Connection conn, SingleType type) throws SQLException {
+  public List<Single> getOptionsByType(Connection conn, Type type) throws SQLException {
     List<Single> options = new ArrayList<>();
     //String sql = "SELECT id, name, price, type FROM singles WHERE type = ?";
     String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type "
@@ -180,7 +139,7 @@ public class Single extends Product {
               rs.getString("name"),
               rs.getFloat("price"),
               // Just to be sure, use uppercase since enum uses uppercase
-              SingleType.valueOf(rs.getString("type").toUpperCase()),
+              Type.valueOf(rs.getString("type").toUpperCase()),
               rs.getString("image_url")
           ));
         }
@@ -202,7 +161,7 @@ public class Single extends Product {
    */
   public List<Single> getOptionsByType(Connection conn, String type) throws SQLException {
     // Convert input string to uppercase and map it to the enum and hand it down
-    return getOptionsByType(conn, SingleType.valueOf(type.toUpperCase()));
+    return getOptionsByType(conn, Type.valueOf(type.toUpperCase()));
   }
 
   /**
@@ -241,7 +200,7 @@ public class Single extends Product {
               rs.getString("name"),
               rs.getFloat("price"),
               // Just to be sure, use uppercase since enum uses uppercase
-              SingleType.valueOf(rs.getString("type").toLowerCase()),
+              Type.valueOf(rs.getString("type").toLowerCase()),
               rs.getString("image_url")
               ));
 
@@ -323,15 +282,15 @@ public class Single extends Product {
 
         // Quickfix; TODO: deal with later
         @SuppressWarnings("unused")
-        SingleType type;
+        Type type;
 
         // Trying to convert category name to valid enum value
         try {
-          type = SingleType.valueOf(categoryName);
+          type = Type.valueOf(categoryName);
 
         // going back to to EXTRA if no matches found
         } catch (IllegalArgumentException e) {
-          type = SingleType.EXTRA;
+          type = Type.EXTRA;
         }
 
         // Create and add new Single to the list
@@ -341,7 +300,7 @@ public class Single extends Product {
             rs.getFloat("price"),
 
             // Just to be sure, use uppercase since enum uses uppercase
-            SingleType.valueOf(rs.getString("type").toLowerCase()),
+            Type.valueOf(rs.getString("type").toLowerCase()),
             rs.getString("image_url")
             // TODO: fix this quickfix
             //type;           
