@@ -91,7 +91,8 @@ public class AdminLoginScreen {
 
     var loginButton = new MidButton(
         "Login",
-        "rgb(0, 0, 0)");
+        "rgb(0, 0, 0)",
+        50);
     
     //login button functionality
     loginButton.setOnAction(e -> {
