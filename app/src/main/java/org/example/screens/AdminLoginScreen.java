@@ -13,7 +13,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.buttons.MidButton;
 import org.example.buttons.MidButtonWithImage;
-import org.example.buttons.SquareButtonWithImg;
 import org.example.sql.SqlConnectionCheck;
 import org.example.users.AdminAuth;
 

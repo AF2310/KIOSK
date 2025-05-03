@@ -28,6 +28,7 @@ public class AdminMenuScreen {
       double windowWidth,
       double windowHeight,
       Scene welcomeScrScene) {
+
     //the mainlayout
     VBox adminMenuLayout = new VBox(20);
     adminMenuLayout.setAlignment(Pos.TOP_CENTER);
@@ -74,6 +75,13 @@ public class AdminMenuScreen {
     CancelButtonWithText cancelButton = new CancelButtonWithText();
     HBox bottomRightBox = new HBox(cancelButton);
     bottomRightBox.setAlignment(Pos.BOTTOM_RIGHT);
+
+    updateMenuBtn.setOnAction(e -> {
+      Scene updateMenuScene = new UpdateMenuItems().adminUpdateMenuItems(
+          primaryStage, 
+          adminMenuLayout.getScene());
+      primaryStage.setScene(updateMenuScene);
+    });
 
     // go back to the main screen if clicked
     cancelButton.setOnAction(e -> {
