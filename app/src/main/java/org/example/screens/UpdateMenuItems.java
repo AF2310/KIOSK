@@ -2,17 +2,22 @@ package org.example.screens;
 
 
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.buttons.MidButton;
+import org.example.buttons.RectangleTextFieldWithLabel;
 
 /**
  * Updating menu class.
  */
 public class UpdateMenuItems {
+  private Stage primaryStage;
   /**
    * Scene for adding/removing items on the menu.
    *
@@ -26,8 +31,13 @@ public class UpdateMenuItems {
     MidButton removeProductButton = new MidButton("Remove product from menu", 
                                                   "rgb(255, 255, 255)", 30);
 
+    this.primaryStage = primaryStage;
+
     addProductButton.setOnAction(e -> {
-        //TODO: Not sure what to do here, I suppose make another scene from another class?
+        Scene productScene = new UpdateMenuItems().addProductScene(
+            this.primaryStage,
+            prevScene);
+        primaryStage.setScene(productScene);
     });
 
     changePriceButton.setOnAction(e -> {
@@ -54,5 +64,17 @@ public class UpdateMenuItems {
 ;
     return updateItemScene;
 
+  }
+  public Scene addProductScene(Stage primaryStage, Scene prevScene) {
+    HBox menuLayout = new HBox(20);
+    
+    RectangleTextFieldWithLabel productName = new RectangleTextFieldWithLabel("Product Name:", "rgb(255, 255, 255)");
+    menuLayout.getChildren().addAll(productName);
+    menuLayout.setAlignment(Pos.CENTER);
+    BorderPane layout = new BorderPane();
+    layout.setCenter(menuLayout);
+
+    Scene addProductScene = new Scene(layout, 1920, 1080);
+    return addProductScene;
   }
 }
