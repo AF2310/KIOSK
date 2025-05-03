@@ -1,4 +1,4 @@
-package org.example;
+package org.example.screens;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,6 +11,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.buttons.MidButton;
+import org.example.buttons.SquareButtonWithImg;
+import org.example.sql.SqlConnectionCheck;
+import org.example.users.AdminAuth;
 
 /**
  * Admin login screen.

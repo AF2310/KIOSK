@@ -1,4 +1,4 @@
-package org.example;
+package org.example.boxes;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;
@@ -12,7 +12,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import org.example.menu.SimpleItem;
+import org.example.menu.Product;
 
 /**
  * The grid with the arrow buttons class.
@@ -25,13 +25,13 @@ public class CheckoutGridWithButtons extends HBox {
   private Button rightArrowButton;
   private int itemsPerPage;
   private SimpleIntegerProperty currentPage;
-  private SimpleItem[] items;
+  private Product[] items;
   private int[] quantitys;
 
   /**
    * Constructor for the CheckoutGridWithButtons instance.
    */
-  public CheckoutGridWithButtons(SimpleItem[] items, int[] quantitys, int itemsPerPage,
+  public CheckoutGridWithButtons(Product[] items, int[] quantitys, int itemsPerPage,
       Button leftArrowButton, Button rightArrowButton) {
     this.items = items;
     this.quantitys = quantitys;
@@ -105,8 +105,8 @@ public class CheckoutGridWithButtons extends HBox {
 
     // Populate the grid with the items
     for (int i = pageStartIndex; i < pageEndIndex; i++) {
-      SimpleItem item = items[i];
-      Image itemImage = new Image(item.imagePath());
+      Product item = items[i];
+      Image itemImage = new Image(item.getImagePath());
       ImageView image = new ImageView(itemImage);
       image.setFitHeight(200);
       image.setFitHeight(150);
@@ -116,8 +116,8 @@ public class CheckoutGridWithButtons extends HBox {
       HBox labelAndPrice = new HBox();
       labelAndPrice.setAlignment(Pos.CENTER);
       labelAndPrice.getChildren().addAll(
-          new Label(item.name()),
-          new Label(String.format(" %.0f :-", item.price())));
+          new Label(item.getName()),
+          new Label(String.format(" %.0f :-", item.getPrice())));
 
       // Slot for Plus-/Minus Buttons and Quantity value
       int quantity = quantitys[i];

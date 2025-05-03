@@ -1,4 +1,4 @@
-package org.example;
+package org.example.screens;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +17,16 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.example.menu.SimpleItem;
+import org.example.animations.FadingAnimation;
+import org.example.boxes.CheckoutGridWithButtons;
+import org.example.buttons.ArrowButton;
+import org.example.buttons.BackButton;
+import org.example.buttons.CancelButton;
+import org.example.buttons.ConfirmOrderButton;
+import org.example.buttons.EatHereButton;
+import org.example.buttons.TakeAwayButton;
+import org.example.menu.Product;
+import org.example.orders.Cart;
 
 /**
  * This is the Screen that displays the order
@@ -87,19 +96,6 @@ public class CheckoutScreen {
     checkoutLabel.setAlignment(Pos.TOP_LEFT);
     checkoutLabel.setPadding(new Insets(50, 100, 50, 50));
 
-    // Eat here or takeaway choice
-    EatHereButton eatHereButton = new EatHereButton();
-    TakeAwayButton takeawayButton = new TakeAwayButton();
-    
-    // Combine both in horizontal layout
-    HBox eatHereTakeawayBox = new HBox(
-        50,
-        eatHereButton,
-        takeawayButton
-    );
-    // Align box properly
-    eatHereTakeawayBox.setAlignment(Pos.CENTER);
-
     // Promo code section
     TextField promoField = new TextField();
     promoField.setPromptText("Enter Promo Code");
@@ -131,7 +127,6 @@ public class CheckoutScreen {
     leftsideBox.setAlignment(Pos.CENTER);
     leftsideBox.getChildren().addAll(
         checkoutLabel,
-        eatHereTakeawayBox,
         topLeftSpacer,
         applyPromoButton
     );
@@ -278,7 +273,7 @@ public class CheckoutScreen {
 
 
     // get items and there quantities
-    SimpleItem[] items = cart.getItems();
+    Product[] items = cart.getItems();
     int[] quantitys = cart.getQuantity();
 
     // Arrow buttons

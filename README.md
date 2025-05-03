@@ -44,7 +44,7 @@ This week we worked on the welcome screen, main menu and admin login functionali
 
 For the welcome screen Michelle and Arseny added the main elements and added button functionality to make them let the user travel to the other 2 screens.
 
-For the admin screen Ignas and Jacob implemented the login functionality and set the scene for the admin menu. Jacob also set up the meetings, cleaned up the repository with Arseny and did all the organisational work and merging. Ignas also worked on testing and populating the database and helping others with the database connectivity, made the error mesage according to the design. 
+For the admin screen Ignas and Jakob implemented the login functionality and set the scene for the admin menu. Jakob also set up the meetings, cleaned up the repository with Arseny and did all the organisational work and merging. Ignas also worked on testing and populating the database and helping others with the database connectivity, made the error mesage according to the design. 
 
 The main menu screen was done by Vuk, Vince and Michelle. Vuk made the whole menu interactable. Vince added animations and connected items to the next scene. Vince updated the uml diagram.
 
@@ -57,3 +57,25 @@ We had 3 meetings, 1 in person on Thursday, 1 on Friday and 1 on Monday on Disco
 ![alt text](references/Class_Sp17.PNG)
 
 
+
+Sprint 2 (Week 18)
+
+This week we worked on the product screen and the checkoutscreen.
+
+For the product screen Ignas Vuk and Vince made the user able to choose different ingredients and put the product into the cart. Ignas also added the add to cart button and was invovled in putting the whole item screen together.
+
+Vuk did the plus and minus buttons with logic to limit quantity from 0 to 9. He aslo did the igredient table and functional button to browse via the ingredients according to the design. Vuk also worked on the layout of the item screen.
+
+Vince worked on the design allignment of the product screen, added memory feature to the ingredient list and updated the diagram.
+
+Arseny added product description. Also he checked that everything is working when we merged.
+
+Jakob worked on the merging together with Arseny. Jakob also made the initial layout for the cart grid, made the reusable product tiles. He also worked on the cart functionality so the user can add an item into the cart and see it in the checkout. He also worked on improving the item class, did all the organisational work and most of the future planning.
+
+For the Checkout screen Achilleas and Michelle worked on the buttons. Achilleas also worked on the promocode field. Michelle also did the Order confirmation screen added default text into the promocode text field and the layout final adjustments.
+
+Arseny added rows to the cart and pages with the page counter.
+
+We had 1 meeting in person after the client meeting on Wednesday and 3 meetings on Discord. One on Thursday, one on Sunday and one on Monday.
+
+![alt text](references/Class_Sp18.png)
