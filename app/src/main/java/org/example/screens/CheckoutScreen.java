@@ -141,6 +141,7 @@ public class CheckoutScreen {
 
     // Bottom buttons
 
+
     HBox bottomButtons = new HBox();
     bottomButtons.setPadding(new Insets(10));
 
@@ -177,8 +178,23 @@ public class CheckoutScreen {
       }
     } */
 
-    // Create confirm order button instance
-    ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton(100);
+    // Get items and their quantities
+    Product[] items = cart.getItems();
+    int[] quantitys = cart.getQuantity();
+
+    // Get total price
+    double total = 0.0;
+
+    // Iterate through the lists to get item and corresponding quantity
+    for (int index = 0; index < items.length; index++) {
+
+      // Multiply price of current item by its' quantity
+      // and add calculated price to total
+      total += items[index].getPrice() * quantitys[index];
+    }
+
+    // Create confirm order button instance and hand total price down
+    ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton(total);
 
     // User confirms order
     confirmOrderButton.setOnAction(e -> {
@@ -219,8 +235,10 @@ public class CheckoutScreen {
       primaryStage.setScene(welcomeScrScene);
     });
 
+
     // Bottom part - adding all elements together
     
+
     // Swedish flag on the left
     HBox languageBox = new HBox(langButton);
     languageBox.setAlignment(Pos.BOTTOM_LEFT);
@@ -272,9 +290,7 @@ public class CheckoutScreen {
     layout.setPadding(new Insets(30));
 
 
-    // get items and there quantities
-    Product[] items = cart.getItems();
-    int[] quantitys = cart.getQuantity();
+
 
     // Arrow buttons
     ArrowButton leftArrowButton = new ArrowButton(true, false);
