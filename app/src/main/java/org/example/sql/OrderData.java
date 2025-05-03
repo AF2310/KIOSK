@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 /**
  * This is for retrieving order data like order id etc..
+ * TODO: add insert and retrieval queries; replace dummy code
  */
 public class OrderData {
 

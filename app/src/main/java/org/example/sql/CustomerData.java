@@ -3,7 +3,8 @@ package org.example.sql;
 import java.time.LocalDate;
 
 /**
- * This is for retrieving customer data like order id etc..
+ * This is for retrieving customer data like customer id etc..
+ * TODO: add insert and retrieval queries; replace dummy code
  */
 public class CustomerData {
   
