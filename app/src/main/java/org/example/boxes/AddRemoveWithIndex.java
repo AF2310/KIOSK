@@ -66,7 +66,7 @@ public class AddRemoveWithIndex extends HBox {
       Product item = items[itemIndex];
       if (quantity == 0) {
         Cart.getInstance().removeProduct(item);
-      } else if (quantity > 1) {
+      } else if (delta == 1) {
         Cart.getInstance().addProduct(item);
       } else {
         Cart.getInstance().removeProduct(item);
