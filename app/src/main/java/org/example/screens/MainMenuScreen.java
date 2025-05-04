@@ -245,7 +245,11 @@ public class MainMenuScreen {
     // Create cancel button
     CancelButton cancelButton = new CancelButton();
 
-    cancelButton.setOnAction(e -> primaryStage.setScene(welcomeScrScene));
+    cancelButton.setOnAction(e -> {
+      Cart.getInstance().clearCart();    
+      System.out.println("Order canceled!");
+      primaryStage.setScene(welcomeScrScene);
+    });
 
     // Create Cart button
     Button cartButton = new Button();

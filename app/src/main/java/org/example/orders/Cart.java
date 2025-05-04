@@ -55,7 +55,7 @@ public class Cart {
       newQuantity[i] = quantity.get(i);
     }
     return newQuantity;
-}
+    }
 
   /**
    * Method to add a product to the cart.
@@ -97,5 +97,13 @@ public class Cart {
    */
   public String toString() {
     return items.toString() + quantity.toString();
+  }
+
+  /**
+   * Empties all items and quantities from the cart.
+   */
+  public void clearCart() {
+    items.clear();
+    quantity.clear();
   }
 }

@@ -215,6 +215,7 @@ public class CheckoutScreen {
     // clicking button means cancellation of order
     // and user gets send back to welcome screen
     cancelButton.setOnAction(e -> {
+      Cart.getInstance().clearCart();    
       System.out.println("Order canceled!");
       primaryStage.setScene(welcomeScrScene);
     });
