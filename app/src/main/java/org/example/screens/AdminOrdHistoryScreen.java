@@ -1,10 +1,12 @@
 package org.example.screens;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Insets;
@@ -19,6 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.buttons.BackButton;
 import org.example.buttons.RoundButton;
+import org.example.orders.TestOrder;
 
 /**
  * Order History class.
@@ -162,7 +165,7 @@ public class AdminOrdHistoryScreen {
 
       stmt.setInt(1, 1);
       stmt.setInt(1, 1);
-      stmt.setBigDecimal(3, new java.math.BigDecimal("123"));
+      stmt.setDouble(3, 123);
       stmt.setString(4, "PAID");
 
       stmt.executeUpdate();
