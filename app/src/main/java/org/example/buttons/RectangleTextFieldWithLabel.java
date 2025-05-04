@@ -2,7 +2,6 @@ package org.example.buttons;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -46,14 +45,13 @@ public class RectangleTextFieldWithLabel extends VBox {
                 + "-fx-border-color: black;"
                 + "-fx-border-width: 2;"
                 + "-fx-border-radius: 30;"
-                + "-fx-background-radius: 30;"); }
-
-
+                + "-fx-background-radius: 30;"); 
+    
     // Set the non-white button
-    else {
+    } else {
       buttonLabel.setStyle(buttonLabel.getStyle() + "-fx-text-fill: white;");
-      textField.setStyle(textField.getStyle() + 
-                "-fx-background-color: " + buttonColor + ";"
+      textField.setStyle(textField.getStyle()  
+                + "-fx-background-color: " + buttonColor + ";"
                 + "-fx-border-radius: 30;"
                 + "-fx-background-radius: 30;");
     }

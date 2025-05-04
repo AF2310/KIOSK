@@ -25,6 +25,7 @@ public class UpdateMenuItems {
    * @param prevScene Previous scene to return to.
    * @return The scene itself.
    */
+
   public Scene adminUpdateMenuItems(Stage primaryStage, Scene prevScene) {
     MidButton addProductButton = new MidButton("Add product to menu", "rgb(255, 255, 255)", 30);
     MidButton changePriceButton = new MidButton("Change prices", "rgb(255, 255, 255)", 30);
@@ -34,10 +35,10 @@ public class UpdateMenuItems {
     this.primaryStage = primaryStage;
 
     addProductButton.setOnAction(e -> {
-        Scene productScene = new UpdateMenuItems().addProductScene(
+      Scene productScene = new UpdateMenuItems().addProductScene(
             this.primaryStage,
             prevScene);
-        primaryStage.setScene(productScene);
+      primaryStage.setScene(productScene);
     });
 
     changePriceButton.setOnAction(e -> {
@@ -65,10 +66,19 @@ public class UpdateMenuItems {
     return updateItemScene;
 
   }
+  /**
+   * Scene for adding a product to the menu.
+   *
+   * @param primaryStage Stage itself.
+   * @param prevScene previous scene to return to.
+   * @return The add product scene.
+   */
+  
   public Scene addProductScene(Stage primaryStage, Scene prevScene) {
     HBox menuLayout = new HBox(20);
     
-    RectangleTextFieldWithLabel productName = new RectangleTextFieldWithLabel("Product Name:", "rgb(255, 255, 255)");
+    RectangleTextFieldWithLabel productName = new RectangleTextFieldWithLabel("Product Name:",
+                                                   "rgb(255, 255, 255)");
     menuLayout.getChildren().addAll(productName);
     menuLayout.setAlignment(Pos.CENTER);
     BorderPane layout = new BorderPane();
