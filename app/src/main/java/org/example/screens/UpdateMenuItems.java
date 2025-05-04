@@ -4,11 +4,9 @@ package org.example.screens;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.buttons.MidButton;
 import org.example.buttons.RectangleTextFieldWithLabel;
@@ -73,13 +71,20 @@ public class UpdateMenuItems {
    * @param prevScene previous scene to return to.
    * @return The add product scene.
    */
-  
+
   public Scene addProductScene(Stage primaryStage, Scene prevScene) {
     HBox menuLayout = new HBox(20);
-    
+    var menuLabel = new Label("Add A Product to the Menu");
+
+    // Textfields for the information to put into the SQL query
     RectangleTextFieldWithLabel productName = new RectangleTextFieldWithLabel("Product Name:",
-                                                   "rgb(255, 255, 255)");
-    menuLayout.getChildren().addAll(productName);
+        "rgb(255, 255, 255)");
+    RectangleTextFieldWithLabel productPrice = new RectangleTextFieldWithLabel("Product Price:",
+        "rgb(255, 255, 255)");
+    RectangleTextFieldWithLabel productDescription = new RectangleTextFieldWithLabel(
+        "Product Description:", "rgb(255, 255, 255)");
+
+    menuLayout.getChildren().addAll(menuLabel, productName, productPrice, productDescription);
     menuLayout.setAlignment(Pos.CENTER);
     BorderPane layout = new BorderPane();
     layout.setCenter(menuLayout);
