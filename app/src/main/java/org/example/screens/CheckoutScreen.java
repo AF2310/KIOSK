@@ -178,8 +178,12 @@ public class CheckoutScreen {
       }
     } */
 
-    // Create confirm order button instance and hand total price down
+    // Create confirm order button instance
     ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton();
+
+    // Add confirmation button to listeners of cart changes
+    // -> so price label of button updates when cart changes
+    Cart.getInstance().addListener(() -> confirmOrderButton.updatePriceLabel());;
 
     // User confirms order
     confirmOrderButton.setOnAction(e -> {

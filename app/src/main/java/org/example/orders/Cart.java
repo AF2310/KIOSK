@@ -12,11 +12,13 @@ public class Cart {
   private static Cart instance;
   private ArrayList<Product> items;
   private ArrayList<Integer> quantity;
+  private ArrayList<Runnable> allListeners;
 
   // Private constructor to prevent instantiation from outside
   private Cart() {
     items = new ArrayList<>();
     quantity = new ArrayList<>();
+    allListeners = new ArrayList<>();
   }
 
   /**
@@ -70,6 +72,7 @@ public class Cart {
       items.add(product);
       quantity.add(1);
     }
+    notifyAllListeners();
   }
 
   /**
@@ -89,6 +92,7 @@ public class Cart {
         items.remove(index);
         quantity.remove(index);
       }
+      notifyAllListeners();
     }
   }
 
@@ -105,5 +109,38 @@ public class Cart {
   public void clearCart() {
     items.clear();
     quantity.clear();
+    //TODO: uncomment one by one to test functionality
+    // notifyAllListeners();
+  }
+
+  /**
+   * Add a listener for later notifications when the
+   * cart updates.
+   * Since cart is a singleton and other classes aren't or 
+   * things like scene components, that cannot be made into
+   * a singleton at all, it is simpler to notify all other
+   * listeners by adding them here.
+   * This way, you can use the cart immediately to notify
+   * other liseners, instead of using/making extra instances
+   * to notify other liseners separately, and prevent
+   * possible complications with those instances.
+   *
+   * @param listener operation from another class that should
+   *                 listen to changes in cart
+   */
+  public void addListener(Runnable listener) {
+    allListeners.add(listener);
+  }
+
+  /**
+   * Notifying all listeners in the private array when
+   * a change in the cart occurs.
+   * For now, only used inside the class but left public
+   * for possible later improvements.
+   */
+  public void notifyAllListeners() {
+    for (Runnable eachListener : allListeners) {
+      eachListener.run();
+    }
   }
 }

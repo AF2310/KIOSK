@@ -16,10 +16,11 @@ import org.example.orders.Cart;
  * and its' functionality ("Confirm Order") as a label.
  */
 public class ConfirmOrderButton extends Button {
+
+  private Label priceLabel;
   
   /**
    * This is the constructor for the confirm order button.
-   * TODO: total price could also be an array instead
    * so it would calculate the total price inside the class!
    */
   public ConfirmOrderButton() {
@@ -36,7 +37,9 @@ public class ConfirmOrderButton extends Button {
     );
 
     // Create total price label
-    Label priceLabel = new Label("Total: " + updatePrice() + "kr");
+    priceLabel = new Label();
+    updatePriceLabel();
+
     // Label should be white, normal, and large fontb
     priceLabel.setStyle(
         "-fx-text-fill: white;"
@@ -92,5 +95,15 @@ public class ConfirmOrderButton extends Button {
     }
 
     return total;
+  }
+
+  /**
+   * Updates the full price label when initially called and
+   * also in case of an event, such as quantity updates.
+   */
+  public void updatePriceLabel() {
+    priceLabel.setText(
+        "Total: " + String.format("%.2f", updatePrice()) + "kr"
+    );
   }
 }
