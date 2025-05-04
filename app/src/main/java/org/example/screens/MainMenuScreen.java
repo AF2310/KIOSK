@@ -47,7 +47,7 @@ public class MainMenuScreen {
   private int currentCategoryIndex = 0;
   private GridPane itemGrid = new GridPane();
   private List<Button> categoryButtons = new ArrayList<>();
-  public Cart cart = new Cart();
+  public Cart cart = Cart.getInstance();
   private String mode;
 
   /**
@@ -245,15 +245,19 @@ public class MainMenuScreen {
     // Create cancel button
     CancelButton cancelButton = new CancelButton();
 
-    cancelButton.setOnAction(e -> primaryStage.setScene(welcomeScrScene));
+    cancelButton.setOnAction(e -> {
+      Cart.getInstance().clearCart();    
+      System.out.println("Order canceled!");
+      primaryStage.setScene(welcomeScrScene);
+    });
 
     // Create Cart button
     Button cartButton = new Button();
     ImageView cartIcon = new ImageView(new Image(getClass().getResourceAsStream("/cart_bl.png")));
 
     // Adjust asthetics of button
-    cartIcon.setFitWidth(30);
-    cartIcon.setFitHeight(30);
+    cartIcon.setFitWidth(60);
+    cartIcon.setFitHeight(60);
     cartButton.setGraphic(cartIcon);
     cartButton.setStyle("-fx-background-color: transparent;");
     cartButton.setMinSize(40, 40);

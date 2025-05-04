@@ -3,6 +3,7 @@ package org.example.buttons;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.example.orders.Cart;
 
 /**
  * A reusable red cancel button component with a red X icon.
@@ -38,5 +39,8 @@ public class CancelButton extends Button {
     // Put the cancel image inside the button
     this.setGraphic(cancelIcon);
     this.setMinSize(60, 60);
+
+    // Clear cart when clicked
+    this.setOnAction(e -> Cart.getInstance().clearCart());
   }
 }
