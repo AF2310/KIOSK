@@ -414,13 +414,17 @@ public class MainMenuScreen {
 
         // Get item details when clicking on item
         imageSlot.setOnMouseClicked(e -> {
-          Scene detailScene = detailScreen.create(
-              this.primaryStage,
-              this.primaryStage.getScene(),
-              item,
-              cart
-          );
-          this.primaryStage.setScene(detailScene);
+          try {
+            Scene detailScene = detailScreen.create(
+                this.primaryStage,
+                this.primaryStage.getScene(),
+                (Single) item,
+                cart
+              );
+            this.primaryStage.setScene(detailScene);
+          } catch (SQLException ex) {
+            ex.printStackTrace();
+          }
         });
 
         // Connect it all and add to item grid
