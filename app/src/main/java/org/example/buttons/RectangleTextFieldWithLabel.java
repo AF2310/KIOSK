@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
@@ -19,10 +20,10 @@ public class RectangleTextFieldWithLabel extends VBox {
   * @param buttonColor color of the button.
   */
   public RectangleTextFieldWithLabel(String labelText, String buttonColor) {
-    this.setPrefSize(460, 140);
-    this.setAlignment(Pos.CENTER_LEFT);
+    this.setAlignment(Pos.TOP_CENTER);
     this.setSpacing(10);
-    this.setPadding(new Insets(10));
+    this.setPadding(new Insets(10, 30, 10, 30));
+    this.setMaxWidth(460);
 
     // Label setup
     Label buttonLabel = new Label(labelText);
@@ -35,6 +36,8 @@ public class RectangleTextFieldWithLabel extends VBox {
     // TextField setup
     textField = new TextField();
     textField.setPrefHeight(60);
+    textField.setPrefWidth(400);
+    textField.setMaxWidth(400);
     textField.setStyle("-fx-font-size: 28;");
 
     // Set the white button
@@ -55,6 +58,9 @@ public class RectangleTextFieldWithLabel extends VBox {
                 + "-fx-background-radius: 30;");
     }
 
+    HBox textFieldContainer = new HBox(textField);
+    textFieldContainer.setAlignment(Pos.CENTER);
+    textField.setPrefWidth(300);  
     this.getChildren().addAll(buttonLabel, textField);
   }
     

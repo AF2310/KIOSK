@@ -7,9 +7,16 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import org.example.buttons.MidButton;
 import org.example.buttons.RectangleTextFieldWithLabel;
+import org.example.buttons.SquareButtonWithImg;
+import org.example.sql.SqlConnectionCheck;
 
 /**
  * Updating menu class.
@@ -73,8 +80,12 @@ public class UpdateMenuItems {
    */
 
   public Scene addProductScene(Stage primaryStage, Scene prevScene) {
-    HBox menuLayout = new HBox(20);
+    VBox menuLayout = new VBox(20);
     var menuLabel = new Label("Add A Product to the Menu");
+    menuLabel.setStyle("-fx-font-size: 40");
+
+    SquareButtonWithImg confirmButton = new SquareButtonWithImg("Add", "green_tick.png","rgb(81, 173, 86)");
+    SquareButtonWithImg backButton = new SquareButtonWithImg("Cancel", "cancel.png", "rgb(255, 0, 0)");
 
     // Textfields for the information to put into the SQL query
     RectangleTextFieldWithLabel productName = new RectangleTextFieldWithLabel("Product Name:",
@@ -83,8 +94,35 @@ public class UpdateMenuItems {
         "rgb(255, 255, 255)");
     RectangleTextFieldWithLabel productDescription = new RectangleTextFieldWithLabel(
         "Product Description:", "rgb(255, 255, 255)");
+    RectangleTextFieldWithLabel productCategoryID = new RectangleTextFieldWithLabel(
+        "Product Category ID:", "rgb(255, 255, 255)");
 
-    menuLayout.getChildren().addAll(menuLabel, productName, productPrice, productDescription);
+    // Bottom container for add and back button
+    HBox bottomContainer = new HBox(20);
+    bottomContainer.setAlignment(Pos.CENTER);
+    bottomContainer.getChildren().addAll(confirmButton, backButton);
+    productName.setPrefWidth(300);
+
+    confirmButton.setOnAction(e -> {
+      SqlConnectionCheck connection = new SqlConnectionCheck(); // TODO: fix sql statement
+
+      String sql = "INSERT INTO product (name, price, category, stock_quantity) VALUES (?, ?, ?, ?)";
+      PreparedStatement stmt = connection.getConnection().prepareStatement(sql);
+      stmt.setString(1, productName.getText());
+      stmt.setDouble(2, productPrice.getText());
+      stmt.setString(3, "Coffee");
+      stmt.setInt(4, 100);
+      stmt.executeUpdate();
+
+      try {
+        
+      } catch (SQLException error) {
+        // TODO: handle exception
+      }
+    });
+
+
+    menuLayout.getChildren().addAll(menuLabel, productName, productPrice, productDescription, productCategoryID, bottomContainer);
     menuLayout.setAlignment(Pos.CENTER);
     BorderPane layout = new BorderPane();
     layout.setCenter(menuLayout);
