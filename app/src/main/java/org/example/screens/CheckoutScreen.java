@@ -291,10 +291,6 @@ public class CheckoutScreen {
     layout.setPadding(new Insets(30));
 
 
-    // get items and there quantities
-    Product[] items = cart.getItems();
-    int[] quantitys = cart.getQuantity();
-
     // Arrow buttons
     ArrowButton leftArrowButton = new ArrowButton(true, false);
     ArrowButton rightArrowButton = new ArrowButton(false, false);
