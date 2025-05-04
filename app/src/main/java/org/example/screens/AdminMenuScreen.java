@@ -36,7 +36,7 @@ public class AdminMenuScreen {
     // Making the title on top of the admin menu screen
     Label adminMenuText = new Label("Welcome, admin!");
     adminMenuText.setStyle(
-        "-fx-font-size: 100px"
+        "-fx-font-size: 100px;"
         + "-fx-font-weight: bold;");
 
     adminMenuLayout.getChildren().addAll(adminMenuText);
