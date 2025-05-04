@@ -178,23 +178,8 @@ public class CheckoutScreen {
       }
     } */
 
-    // Get items and their quantities
-    Product[] items = cart.getItems();
-    int[] quantitys = cart.getQuantity();
-
-    // Get total price
-    double total = 0.0;
-
-    // Iterate through the lists to get item and corresponding quantity
-    for (int index = 0; index < items.length; index++) {
-
-      // Multiply price of current item by its' quantity
-      // and add calculated price to total
-      total += items[index].getPrice() * quantitys[index];
-    }
-
     // Create confirm order button instance and hand total price down
-    ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton(total);
+    ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton();
 
     // User confirms order
     confirmOrderButton.setOnAction(e -> {
@@ -290,6 +275,9 @@ public class CheckoutScreen {
     layout.setAlignment(Pos.TOP_LEFT);
     layout.setPadding(new Insets(30));
 
+    // Get items and their quantities
+    Product[] items = cart.getItems();
+    int[] quantitys = cart.getQuantity();
 
     // Arrow buttons
     ArrowButton leftArrowButton = new ArrowButton(true, false);

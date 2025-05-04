@@ -6,6 +6,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import org.example.menu.Product;
+import org.example.orders.Cart;
 
 /**
  * This button will confirm the order in the checkout
@@ -19,10 +21,8 @@ public class ConfirmOrderButton extends Button {
    * This is the constructor for the confirm order button.
    * TODO: total price could also be an array instead
    * so it would calculate the total price inside the class!
-   *
-   * @param totalPrice double variable of total price of order
    */
-  public ConfirmOrderButton(double totalPrice) {
+  public ConfirmOrderButton() {
     // Set default size
     this.setPrefSize(590, 90);
 
@@ -36,7 +36,7 @@ public class ConfirmOrderButton extends Button {
     );
 
     // Create total price label
-    Label priceLabel = new Label("Total: " + totalPrice + "kr");
+    Label priceLabel = new Label("Total: " + updatePrice() + "kr");
     // Label should be white, normal, and large fontb
     priceLabel.setStyle(
         "-fx-text-fill: white;"
@@ -70,5 +70,27 @@ public class ConfirmOrderButton extends Button {
 
     // Add label to button
     this.setGraphic(buttonLabel);
+  }
+
+  private double updatePrice() {
+    Cart theCart = Cart.getInstance();
+    
+    // Get items and their quantities
+    Product[] theItems = theCart.getItems();
+    int[] theQuantities = theCart.getQuantity();
+
+    // Get total price
+    double total = 0.0;
+
+    // Iterate through the lists to get item and corresponding quantity
+    for (int index = 0; index < theItems.length; index++) {
+
+      // Multiply price of current item by its' quantity
+      // and add calculated price to total
+      total += 
+      theItems[index].getPrice() * theQuantities[index];
+    }
+
+    return total;
   }
 }

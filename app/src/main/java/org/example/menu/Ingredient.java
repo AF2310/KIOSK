@@ -44,6 +44,9 @@ public class Ingredient {
     return name;
   }
 
+  /**
+   * Getting string representation of name.
+   */
   public String toString() {
     return name;
   }
