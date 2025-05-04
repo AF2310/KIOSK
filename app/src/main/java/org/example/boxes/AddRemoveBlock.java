@@ -13,68 +13,72 @@ public class AddRemoveBlock extends HBox {
   private Label quantityLabel;
   private CircleButtonWithSign minusButton;
   private CircleButtonWithSign plusButton;
-  private int quantity; // Current quantity (range 0-9)
+  private int quantity;
 
-  /**
-   * Constructor for the AddRemoveBlock.
-   *
-   * @param initialQuantity Initial quantity (0-9)
-   */
+  // Listener to notify parent when quantity changes
+  private QuantityChangeListener quantityChangeListener;
+
   public AddRemoveBlock(int initialQuantity) {
-    // Clamp initial quantity between 0 and 9
-    if (initialQuantity < 0) {
-      initialQuantity = 0;
-    }
-    if (initialQuantity > 9) {
-      initialQuantity = 9;
-    }
-    this.quantity = initialQuantity;
+      this.quantity = Math.max(0, Math.min(initialQuantity, 9));
 
-    // Initialize components
-    quantityLabel = new Label(String.valueOf(quantity));
-    quantityLabel.setMinWidth(20);
-    quantityLabel.setStyle("-fx-alignment: center; -fx-font-size: 16px;");
+      quantityLabel = new Label(String.valueOf(quantity));
+      minusButton = new CircleButtonWithSign("-");
+      plusButton = new CircleButtonWithSign("+");
 
-    minusButton = new CircleButtonWithSign("-");
-    plusButton = new CircleButtonWithSign("+");
+      setupButtonActions();
 
-    // Set up button actions
-    setupButtonActions();
+      this.setSpacing(10);
+      this.setAlignment(Pos.CENTER);
+      this.getChildren().addAll(minusButton, quantityLabel, plusButton);
 
-    // Layout setup
-    this.setSpacing(10);
-    this.setAlignment(Pos.CENTER);
-    this.getChildren().addAll(minusButton, quantityLabel, plusButton);
-
-    // Update button states initially
-    updateButtonStates();
+      updateButtonStates();
   }
 
   private void setupButtonActions() {
-    minusButton.setOnAction(e -> {
-      if (quantity > 0) {
-        quantity--;
-        quantityLabel.setText(String.valueOf(quantity));
-        updateButtonStates();
-      }
-    });
+      minusButton.setOnAction(e -> {
+          if (quantity > 0) {
+              quantity--;
+              quantityLabel.setText(String.valueOf(quantity));
+              updateButtonStates();
+              notifyQuantityChanged();  // Notify parent about the change
+          }
+      });
 
-    plusButton.setOnAction(e -> {
-      if (quantity < 9) {
-        quantity++;
-        quantityLabel.setText(String.valueOf(quantity));
-        updateButtonStates();
-      }
-    });
+      plusButton.setOnAction(e -> {
+          if (quantity < 9) {
+              quantity++;
+              quantityLabel.setText(String.valueOf(quantity));
+              updateButtonStates();
+              notifyQuantityChanged();  // Notify parent about the change
+          }
+      });
   }
 
   private void updateButtonStates() {
-    minusButton.setInvalid(quantity <= 0);
-    plusButton.setInvalid(quantity >= 9);
+      minusButton.setInvalid(quantity <= 0);
+      plusButton.setInvalid(quantity >= 9);
   }
 
-  // getter for quantity
+  // Notify the listener about quantity changes
+  private void notifyQuantityChanged() {
+      if (quantityChangeListener != null) {
+          quantityChangeListener.onQuantityChanged(quantity);
+      }
+  }
+
+  // Set listener to handle quantity change events
+  public void setQuantityChangeListener(QuantityChangeListener listener) {
+      this.quantityChangeListener = listener;
+  }
+
+  // Interface for quantity change listener
+  public interface QuantityChangeListener {
+      void onQuantityChanged(int newQuantity);
+  }
+
+  // Getter for quantity
   public int getQuantity() {
-    return quantity;
+      return quantity;
   }
 }
+

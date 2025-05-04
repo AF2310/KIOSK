@@ -252,8 +252,8 @@ public class MainMenuScreen {
     ImageView cartIcon = new ImageView(new Image(getClass().getResourceAsStream("/cart_bl.png")));
 
     // Adjust asthetics of button
-    cartIcon.setFitWidth(30);
-    cartIcon.setFitHeight(30);
+    cartIcon.setFitWidth(60);
+    cartIcon.setFitHeight(60);
     cartButton.setGraphic(cartIcon);
     cartButton.setStyle("-fx-background-color: transparent;");
     cartButton.setMinSize(40, 40);

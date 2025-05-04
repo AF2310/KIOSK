@@ -165,13 +165,28 @@ public class CheckoutGridWithButtons extends HBox {
       leftArrowButton.setOpacity(1);
     }
 
-    // Disable right button if on the last page
-    if (currentPage.get() == items.length / itemsPerPage) {
+    // Disable right button if there are no more items beyond the current page
+    if ((currentPage.get() + 1) * itemsPerPage >= items.length) {
       rightArrowButton.setDisable(true);
       rightArrowButton.setOpacity(0.2);
     } else {
       rightArrowButton.setDisable(false);
       rightArrowButton.setOpacity(1);
     }
+
+    // If there are no items show 0 pages
+    if (items.length == 0) {
+      pageCounterLabel.setText("Page 0 of 0");
+      leftArrowButton.setDisable(true);
+      rightArrowButton.setDisable(true);
+    }
   }
+
+  // Update the grid with the new data
+  public void setCartData(Product[] items, int[] quantitys) {
+    this.items = items;
+    this.quantitys = quantitys;
+    updateGrid();
+  }
+
 }
