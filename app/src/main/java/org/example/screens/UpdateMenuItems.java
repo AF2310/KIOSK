@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import org.example.buttons.MidButton;
 import org.example.buttons.RectangleTextFieldWithLabel;
 import org.example.buttons.SquareButtonWithImg;
+import org.example.buttons.TickBoxWithLabel;
 import org.example.sql.SqlConnectionCheck;
 
 /**
@@ -81,8 +82,8 @@ public class UpdateMenuItems {
 
   public Scene addProductScene(Stage primaryStage, Scene prevScene) {
 
-    SquareButtonWithImg confirmButton = new SquareButtonWithImg("Next",
-        "green_right_arrow.png", "rgb(81, 173, 86)");
+    SquareButtonWithImg confirmButton = new SquareButtonWithImg("Confirm",
+        "green_tick.png", "rgb(81, 173, 86)");
     SquareButtonWithImg backButton = new SquareButtonWithImg("Cancel",
         "cancel.png", "rgb(255, 0, 0)");
 
@@ -95,10 +96,8 @@ public class UpdateMenuItems {
         "Product Description:", "rgb(255, 255, 255)");
     RectangleTextFieldWithLabel productCategoryid = new RectangleTextFieldWithLabel(
         "Product Category ID:", "rgb(255, 255, 255)");
-    RectangleTextFieldWithLabel productIsLimited = new RectangleTextFieldWithLabel("Is limited?",
-        "rgb(255, 255, 255)");
-    RectangleTextFieldWithLabel productIsActive = new RectangleTextFieldWithLabel("Is active?",
-        "rgb(255, 255, 255)");
+    TickBoxWithLabel productIsActive = new TickBoxWithLabel("Is active?");
+    TickBoxWithLabel productIsLimited = new TickBoxWithLabel("Is limited?");
 
     confirmButton.setOnAction(e -> {
       try {
@@ -124,8 +123,8 @@ public class UpdateMenuItems {
         stmt.setDouble(3, Double.parseDouble(productPrice.getText()));
         stmt.setInt(4, Integer.parseInt(productCategoryid.getText()));
 
-        byte isActive = 0;
-        byte isLimited = 0;
+        byte isActive = (byte) (productIsActive.isSelected() ? 1 : 0);
+        byte isLimited = (byte) (productIsLimited.isSelected() ? 1 : 0);
 
         
         stmt.setByte(5, isActive);
@@ -146,30 +145,48 @@ public class UpdateMenuItems {
       }
     });
 
+    BorderPane layout = new BorderPane();
+    
+    var menuLabel = new Label("Add A Product to the Menu");
+    menuLabel.setStyle("-fx-font-size: 40");
+    HBox menuTitle = new HBox(menuLabel);
+    menuTitle.setAlignment(Pos.CENTER);
+    layout.setTop(menuTitle);
+
+
+    VBox menuLayoutLeft = new VBox(20);
+
+    menuLayoutLeft.getChildren().addAll(productName,
+                                    productDescription, 
+                                    productPrice);
+    menuLayoutLeft.setAlignment(Pos.BASELINE_LEFT);
+    layout.setLeft(menuLayoutLeft);
+
+    VBox activeLimitedBox = new VBox(20);
+    activeLimitedBox.getChildren().addAll(productIsActive, productIsLimited);
+
+    activeLimitedBox.setAlignment(Pos.CENTER_LEFT);
+
+    VBox categoryIdBox = new VBox(productCategoryid);
+    categoryIdBox.setAlignment(Pos.TOP_CENTER);
+
+    HBox menuLayoutCenter = new HBox();
+    menuLayoutCenter.getChildren().addAll(activeLimitedBox, categoryIdBox);
+    layout.setCenter(menuLayoutCenter);
+
+    var ingredientList = new Label("Ingredient List");
+    ingredientList.setStyle("-fx-font-size: 30");
+    HBox ingredientBox = new HBox(ingredientList);
+    ingredientBox.setAlignment(Pos.CENTER);
+
+    layout.setRight(ingredientList);
     // Bottom container for add and back button
     HBox bottomContainer = new HBox(20);
-    bottomContainer.setAlignment(Pos.CENTER);
+    bottomContainer.setAlignment(Pos.BOTTOM_CENTER);
     bottomContainer.getChildren().addAll(confirmButton, backButton);
     productName.setPrefWidth(300);
 
-    VBox menuLayoutRight = new VBox(20);
-    VBox menuLayoutLeft = new VBox(20);
-    var menuLabel = new Label("Add A Product to the Menu");
-    menuLabel.setStyle("-fx-font-size: 40");
-
-    
-    menuLayoutLeft.getChildren().addAll(menuLabel, productName, productPrice, 
-                                    productDescription, productCategoryid,
-                                    bottomContainer);
-
-    menuLayoutRight.getChildren().addAll(productIsActive, productIsLimited);
-    menuLayoutLeft.setAlignment(Pos.CENTER_LEFT);
-    menuLayoutRight.setAlignment(Pos.CENTER_RIGHT);
-
-    HBox menuLayout = new HBox(15);
-    menuLayout.getChildren().addAll(menuLayoutLeft, menuLayoutRight);
-    BorderPane layout = new BorderPane();
-    layout.setCenter(menuLayout);
+    layout.setBottom(bottomContainer);
 
     Scene addProductScene = new Scene(layout, 1920, 1080);
     return addProductScene;
