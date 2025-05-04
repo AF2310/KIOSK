@@ -183,7 +183,7 @@ public class CheckoutScreen {
 
     // Add confirmation button to listeners of cart changes
     // -> so price label of button updates when cart changes
-    Cart.getInstance().addListener(() -> confirmOrderButton.updatePriceLabel());;
+    Cart.getInstance().addListener(() -> confirmOrderButton.updatePriceLabel());
 
     // User confirms order
     confirmOrderButton.setOnAction(e -> {
@@ -208,6 +208,9 @@ public class CheckoutScreen {
           ordConfirmScene,
           welcomeScrScene
       );
+
+      // Clear cart after order has been done
+      Cart.getInstance().clearCart();
     });
 
     // Back button
