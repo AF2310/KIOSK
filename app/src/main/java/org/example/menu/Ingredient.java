@@ -44,6 +44,10 @@ public class Ingredient {
     return name;
   }
 
+  public String toString() {
+    return name;
+  }
+
   /**
    * The  function inserts an ingredient name
    * into a database table and retrieves the generated ID from the database.

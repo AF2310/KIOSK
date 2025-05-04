@@ -13,7 +13,8 @@ import java.util.List;
  * Abstract base class for all single items on the menu.
  */
 public class Single extends Product {
-  protected List<Ingredient> ingredients;
+  public List<Ingredient> ingredients;
+  public List<Integer> quantity;
 
   /**
    * This constructor is used to create instances of the Single class with the specified name,
@@ -24,6 +25,7 @@ public class Single extends Product {
     setName(name);
     setPrice(price);
     this.ingredients = new ArrayList<>();
+    this.quantity = new ArrayList<>();
     setType(type);
     setImagePath(imgPath);
   }
@@ -310,6 +312,32 @@ public class Single extends Product {
     }
     return options;
   }
+
+  /**
+   * Method to set the ingredients to them in the database.
+   *
+   * @param conn database connection
+   */
+  public void setIngredients(Connection conn) throws SQLException {
+    String sql = "SELECT pi.ingredient_id, pi.ingredientCount, i.ingredient_name "
+        + "FROM productingredients pi "
+        + "JOIN ingredient i ON pi.ingredient_id = i.ingredient_id "
+        + "WHERE product_id = ?";
+    
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, getId());
+
+      ResultSet rs = stmt.executeQuery();
+
+      while (rs.next()) {
+        ingredients.add(new Ingredient(
+            rs.getInt("ingredient_id"), rs.getString("ingredient_name")));
+        quantity.add(rs.getInt("ingredientCount"));
+      }
+      rs.close();
+    }
+  }
+
 
   /*public List<Single> getOptionsByCategoryName(Connection conn,
                           String categoryName) throws SQLException {

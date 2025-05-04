@@ -1,6 +1,8 @@
 package org.example.screens;
 
 import java.io.InputStream;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Insets;
@@ -20,7 +22,8 @@ import org.example.buttons.ArrowButton;
 import org.example.buttons.MidButtonWithImage;
 import org.example.buttons.RoundButton;
 import org.example.buttons.SquareButtonWithImg;
-import org.example.menu.Product;
+import org.example.menu.Ingredient;
+import org.example.menu.Single;
 import org.example.orders.Cart;
 
 /**
@@ -32,6 +35,7 @@ public class ItemDetails {
 
   /**
    * Creating a scene for a specific item, displaying all item details.
+   * Only for single items
    *
    * @param primaryStage what is the primary stage
    * @param prevScene what was the previous stage
@@ -39,13 +43,16 @@ public class ItemDetails {
    * @param cart the cart where all items are
    * @return scene containing all item details
    */
-  public Scene create(Stage primaryStage, Scene prevScene, Product item, Cart cart) {
-
-    //Just a test list of ingredients
-    List<String> ingredients = List.of("Sesame bun", "Cheese",
-        "Onion", "Tomatoes", "Celery", "Cucumber", "Ingredient 7",
-        "ingredient 8", "ingredient 9");
-    // List<Ingredient> ingredients = item.getIngredients();
+  public Scene create(Stage primaryStage, Scene prevScene, Single item, Cart cart) 
+      throws SQLException {
+    item.setIngredients(DriverManager.getConnection(
+        "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
+          + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
+          + "?user=u5urh19mtnnlgmog"
+          + "&password=zPgqf8o6na6pv8j8AX8r"
+          + "&useSSL=true"
+          + "&allowPublicKeyRetrieval=true"));
+    List<Ingredient> ingredients = item.ingredients;
 
     VBox ingredientBox = new VBox(10);
     ingredientBox.setAlignment(Pos.TOP_RIGHT);
@@ -67,7 +74,8 @@ public class ItemDetails {
 
     // Adds the first 7 ingredients
     for (int i = 0; i < Math.min(visibleCount, ingredients.size()); i++) {
-      Label ingrLabel = new Label(ingredients.get(i));
+      Label ingrLabel = new Label(ingredients.get(i).getName());
+      System.out.println(ingredients.get(i).getName());
       ingrLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: normal;");
 
       // Calling on corresponding block from List
@@ -105,7 +113,7 @@ public class ItemDetails {
           i < Math.min(currentStartIndex[0] + visibleCount, ingredients.size());
           i++) {
 
-        Label ingrLabel = new Label(ingredients.get(i));
+        Label ingrLabel = new Label(ingredients.get(i).getName());
         ingrLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: normal;");
 
         // Calling on corresponding block from List
