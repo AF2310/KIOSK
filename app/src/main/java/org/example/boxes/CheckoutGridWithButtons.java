@@ -12,7 +12,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import org.example.menu.SimpleItem;
+import org.example.menu.Product;
 
 /**
  * The grid with the arrow buttons class.
@@ -25,13 +25,13 @@ public class CheckoutGridWithButtons extends HBox {
   private Button rightArrowButton;
   private int itemsPerPage;
   private SimpleIntegerProperty currentPage;
-  private SimpleItem[] items;
+  private Product[] items;
   private int[] quantitys;
 
   /**
    * Constructor for the CheckoutGridWithButtons instance.
    */
-  public CheckoutGridWithButtons(SimpleItem[] items, int[] quantitys, int itemsPerPage,
+  public CheckoutGridWithButtons(Product[] items, int[] quantitys, int itemsPerPage,
       Button leftArrowButton, Button rightArrowButton) {
     this.items = items;
     this.quantitys = quantitys;
@@ -98,33 +98,47 @@ public class CheckoutGridWithButtons extends HBox {
 
   // Update grid content based on the current page
   private void updateGrid() {
-    itemGrid.getChildren().clear(); // Clear previous items
+    // Clear previous items
+    itemGrid.getChildren().clear();
 
     int pageStartIndex = currentPage.get() * itemsPerPage;
     int pageEndIndex = Math.min(pageStartIndex + itemsPerPage, items.length);
 
     // Populate the grid with the items
     for (int i = pageStartIndex; i < pageEndIndex; i++) {
-      SimpleItem item = items[i];
-      Image itemImage = new Image(item.imagePath());
+      Product item = items[i];
+      Image itemImage = new Image(item.getImagePath());
       ImageView image = new ImageView(itemImage);
       image.setFitHeight(200);
-      image.setFitHeight(150);
+      image.setFitWidth(150);
       image.setPreserveRatio(true);
 
       // Slot for Label and Price
       HBox labelAndPrice = new HBox();
       labelAndPrice.setAlignment(Pos.CENTER);
       labelAndPrice.getChildren().addAll(
-          new Label(item.name()),
-          new Label(String.format(" %.0f :-", item.price())));
+          new Label(item.getName()),
+          new Label(String.format(" %.0f :-", item.getPrice())));
 
-      // Slot for Plus-/Minus Buttons and Quantity value
+      // Slot for Plus/Minus Buttons and Quantity value
       int quantity = quantitys[i];
       HBox quantityBox = new HBox();
       quantityBox.setAlignment(Pos.CENTER);
-      quantityBox.getChildren().addAll(
-          new AddRemoveBlock(quantity));
+
+      // Create AddRemoveBlock and set the listener
+      final int itemIndex = i;
+      AddRemoveWithIndex addRemoveBlock = new AddRemoveWithIndex(items, quantity, itemIndex);
+      addRemoveBlock.setQuantityChangeListener(new AddRemoveWithIndex.QuantityChangeListener() {
+        @Override
+        public void onQuantityChanged(int newQuantity) {
+          // Use itemIndex to update the quantity
+          quantitys[itemIndex] = newQuantity;
+          // Rerender grid after updating the quantity
+          updateGrid();
+        }
+      });
+
+      quantityBox.getChildren().addAll(addRemoveBlock);
 
       // Adding it all together in one item slot
       VBox itemSlot = new VBox();
@@ -165,13 +179,20 @@ public class CheckoutGridWithButtons extends HBox {
       leftArrowButton.setOpacity(1);
     }
 
-    // Disable right button if on the last page
-    if (currentPage.get() == items.length / itemsPerPage) {
+    // Disable right button if there are no more items beyond the current page
+    if ((currentPage.get() + 1) * itemsPerPage >= items.length) {
       rightArrowButton.setDisable(true);
       rightArrowButton.setOpacity(0.2);
     } else {
       rightArrowButton.setDisable(false);
       rightArrowButton.setOpacity(1);
+    }
+
+    // If there are no items show 0 pages
+    if (items.length == 0) {
+      pageCounterLabel.setText("Page 0 of 0");
+      leftArrowButton.setDisable(true);
+      rightArrowButton.setDisable(true);
     }
   }
 }

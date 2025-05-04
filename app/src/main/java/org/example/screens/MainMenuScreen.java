@@ -30,8 +30,9 @@ import org.example.buttons.ArrowButton;
 import org.example.buttons.CancelButton;
 import org.example.menu.Imenu;
 import org.example.menu.Menu;
-import org.example.menu.SimpleItem;
+import org.example.menu.Product;
 import org.example.menu.Single;
+import org.example.menu.Type;
 import org.example.orders.Cart;
 
 /**
@@ -42,11 +43,11 @@ public class MainMenuScreen {
   private Stage primaryStage;
 
   private String[] categories = {"Burgers", "Sides", "Drinks", "Desserts", "Special Offers"};
-  private Map<String, List<SimpleItem>> categoryItems = new HashMap<>();
+  private Map<String, List<Product>> categoryItems = new HashMap<>();
   private int currentCategoryIndex = 0;
   private GridPane itemGrid = new GridPane();
   private List<Button> categoryButtons = new ArrayList<>();
-  public Cart cart = new Cart();
+  public Cart cart = Cart.getInstance();
   private String mode;
 
   /**
@@ -251,8 +252,8 @@ public class MainMenuScreen {
     ImageView cartIcon = new ImageView(new Image(getClass().getResourceAsStream("/cart_bl.png")));
 
     // Adjust asthetics of button
-    cartIcon.setFitWidth(30);
-    cartIcon.setFitHeight(30);
+    cartIcon.setFitWidth(60);
+    cartIcon.setFitHeight(60);
     cartButton.setGraphic(cartIcon);
     cartButton.setStyle("-fx-background-color: transparent;");
     cartButton.setMinSize(40, 40);
@@ -287,14 +288,17 @@ public class MainMenuScreen {
     return new Scene(mainPane, windowWidth, windowHeight);
   }
 
-  private List<SimpleItem> convert(Connection conn, List<Single> items) throws SQLException {
-    List<SimpleItem> result = new ArrayList<>();
+  private List<Product> convert(Connection conn, List<Single> items) throws SQLException {
+    List<Product> result = new ArrayList<>();
 
     for (Single item : items) {
+      int id = item.getId();
       String name = item.getName();
-      String imagePath = item.getImagePath();
       double price = item.getPrice();
-      result.add(new SimpleItem(name, imagePath, price));
+      Type type = item.getType();
+      String imagePath = item.getImagePath();
+      
+      result.add(new Single(id, name, price, type, imagePath));
     }
     return result;
   }
@@ -333,7 +337,7 @@ public class MainMenuScreen {
 
     // Fetch data
     String category = categories[currentCategoryIndex];
-    List<SimpleItem> items = categoryItems.get(category);
+    List<Product> items = categoryItems.get(category);
 
     // Max item slots in rows and pages
     int maxItemsPerRow = 3;
@@ -355,10 +359,10 @@ public class MainMenuScreen {
       // Item exists
       if (i < items.size()) {
         // Get current item
-        SimpleItem item = items.get(i);
+        Product item = items.get(i);
 
         // Get image path
-        String imagePath = item.imagePath();
+        String imagePath = item.getImagePath();
         InputStream inputStream = getClass().getResourceAsStream(imagePath);
 
         // Initiating the image view
@@ -395,12 +399,12 @@ public class MainMenuScreen {
         imageSlot.setAlignment(Pos.CENTER);
 
         // Give item a name
-        Label name = new Label(item.name());
+        Label name = new Label(item.getName());
         name.setStyle("-fx-font-size: 16px;");
 
         // Format the price (with :-)
         // Put the price in an Hbox to align it to the right
-        Label price = new Label(String.format("%.0f :-", item.price()));
+        Label price = new Label(String.format("%.0f :-", item.getPrice()));
         price.setStyle("-fx-font-weight: bold; -fx-font-size: 18px;");
         HBox priceBox = new HBox(price);
         priceBox.setAlignment(Pos.BASELINE_RIGHT);

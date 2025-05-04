@@ -4,26 +4,33 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import org.example.buttons.CircleButtonWithSign;
+import org.example.menu.Product;
+import org.example.orders.Cart;
 
 /**
- * Class for the AddRemoveBlock. Includes a label with quantity and two buttons
- * for adding and removing items.
+ * Class for the AddRemoveWithIndex. Includes a label with quantity and two
+ * buttons for adding and removing items. This version uses an index for
+ * identifying the item.
  */
-public class AddRemoveBlock extends HBox {
+public class AddRemoveWithIndex extends HBox {
+
   private Label quantityLabel;
   private CircleButtonWithSign minusButton;
   private CircleButtonWithSign plusButton;
   private int quantity;
+  private int itemIndex; // To track the item index in the array
+  private Product[] items; // Reference to the items array
 
   // Listener to notify parent when quantity changes
   private QuantityChangeListener quantityChangeListener;
 
   /**
-   * Class for the AddRemoveBlock. Includes a label with quantity and two buttons
-   * for adding and removing items.
+   * Constructor for AddRemoveWithIndex.
    */
-  public AddRemoveBlock(int initialQuantity) {
+  public AddRemoveWithIndex(Product[] items, int initialQuantity, int itemIndex) {
+    this.items = items; // Assign items to the instance variable
     this.quantity = Math.max(0, Math.min(initialQuantity, 9));
+    this.itemIndex = itemIndex;
 
     quantityLabel = new Label(String.valueOf(quantity));
     minusButton = new CircleButtonWithSign("-");
@@ -39,25 +46,35 @@ public class AddRemoveBlock extends HBox {
   }
 
   private void setupButtonActions() {
-    minusButton.setOnAction(e -> {
-      if (quantity > 0) {
-        quantity--;
-        quantityLabel.setText(String.valueOf(quantity));
-        updateButtonStates();
-        notifyQuantityChanged();
-      }
-    });
-
-    plusButton.setOnAction(e -> {
-      if (quantity < 9) {
-        quantity++;
-        quantityLabel.setText(String.valueOf(quantity));
-        updateButtonStates();
-        notifyQuantityChanged();
-      }
-    });
+    minusButton.setOnAction(e -> updateQuantity(-1));
+    plusButton.setOnAction(e -> updateQuantity(1));
   }
 
+  /**
+   * Updates the quantity and handles adding/removing the product to/from the
+   * cart.
+   */
+  private void updateQuantity(int delta) {
+    int newQuantity = quantity + delta;
+    if (newQuantity >= 0 && newQuantity <= 9) {
+      quantity = newQuantity;
+      quantityLabel.setText(String.valueOf(quantity));
+      updateButtonStates();
+      notifyQuantityChanged();
+
+      // Handle cart updates for adding/removing products
+      Product item = items[itemIndex];
+      if (quantity == 0) {
+        Cart.getInstance().removeProduct(item);
+      } else if (delta == 1) {
+        Cart.getInstance().addProduct(item);
+      } else {
+        Cart.getInstance().removeProduct(item);
+      }
+    }
+  }
+
+  // Enable/Disable minus button if quantity is out of range 0-9
   private void updateButtonStates() {
     minusButton.setInvalid(quantity <= 0);
     plusButton.setInvalid(quantity >= 9);
