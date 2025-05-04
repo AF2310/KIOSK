@@ -47,7 +47,7 @@ public class MainMenuScreen {
   private int currentCategoryIndex = 0;
   private GridPane itemGrid = new GridPane();
   private List<Button> categoryButtons = new ArrayList<>();
-  public Cart cart = new Cart();
+  public Cart cart = Cart.getInstance();
   private String mode;
 
   /**
