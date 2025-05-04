@@ -109,8 +109,7 @@ public class Cart {
   public void clearCart() {
     items.clear();
     quantity.clear();
-    //TODO: uncomment one by one to test functionality
-    // notifyAllListeners();
+    notifyAllListeners();
   }
 
   /**
