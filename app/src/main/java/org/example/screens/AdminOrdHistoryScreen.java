@@ -21,7 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.buttons.BackButton;
 import org.example.buttons.RoundButton;
-import org.example.orders.TestOrder;
+import org.example.orders.Order;
 
 /**
  * Order History class.
@@ -75,6 +75,7 @@ public class AdminOrdHistoryScreen {
     VBox topBox = new VBox();
     topBox.getChildren().addAll(historyLabel, orderHistory);
 
+    // Upper part of the screen
     HBox topContainer = new HBox();
     topContainer.setAlignment(Pos.TOP_LEFT);
 
@@ -103,9 +104,11 @@ public class AdminOrdHistoryScreen {
     // cycles images on click
     RoundButton langButton = new RoundButton("languages", 70);
     
+    // Spacer for Bottom Row
     Region spacerBottom = new Region();
     HBox.setHgrow(spacerBottom, Priority.ALWAYS);
     
+    // Bottom row of the screen
     HBox bottomContainer = new HBox();
     bottomContainer.setAlignment(Pos.BOTTOM_LEFT);
     bottomContainer.getChildren().addAll(langButton, spacerBottom, backButton);
@@ -122,15 +125,43 @@ public class AdminOrdHistoryScreen {
 
   private ArrayList<Order> queryOrders() throws SQLException {
 
+    // ArrayList to hold all orders queried from the db
     ArrayList<Order> history = new ArrayList<>();
 
-    Connection conn = DriverManager.getConnection(
-        "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
-          + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
-          + "?user=u5urh19mtnnlgmog"
-          + "&password=zPgqf8o6na6pv8j8AX8r"
-          + "&useSSL=true"
-          + "&allowPublicKeyRetrieval=true");
+    String querySql = "SELECT order_ID, kiosk_ID, customer_ID, order_date, amount_total, status "
+        + "FROM `order`";
+
+    try (
+
+        Connection conn = DriverManager.getConnection(
+            "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
+            + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
+            + "?user=u5urh19mtnnlgmog"
+            + "&password=zPgqf8o6na6pv8j8AX8r"
+            + "&useSSL=true"
+            + "&allowPublicKeyRetrieval=true"
+        );
+
+        PreparedStatement stmt = conn.prepareStatement(querySql);
+        ResultSet results = stmt.executeQuery()
+
+    ) {
+      // Creates Orders from queried data
+      while (results.next()) {
+
+        int orderId = results.getInt("order_ID");
+        int kioskId = results.getInt("kiosk_ID");
+        int customerId = results.getInt("customer_ID");
+        Timestamp orderDate = results.getTimestamp("order_date");
+        double amountTotal = results.getDouble("amount_total");
+        String status = results.getString("status");
+
+        Order order = new Order(orderId, kioskId, customerId, orderDate, amountTotal, status);
+        history.add(order);
+
+      }
+
+    }
 
     return history;
 
