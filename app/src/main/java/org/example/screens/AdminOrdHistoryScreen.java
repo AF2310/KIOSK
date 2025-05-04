@@ -1,6 +1,5 @@
 package org.example.screens;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,11 +7,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -59,25 +60,58 @@ public class AdminOrdHistoryScreen {
     // So the admin doesnt forget where he is lol
     Label historyLabel = new Label("Order History:");
     historyLabel.setStyle(
-        "-fx-font-size: 65px;"
+        "-fx-font-size: 45px; "
         + "-fx-font-weight: bold;"
     );
 
-    // Placeholder for the actual history
-    Label tempLabel = new Label("Here will be all the orders");
-    tempLabel.setStyle(
-        "-fx-font-size: 35px;"
-        + "-fx-font-weight: bold;"
-    );
+    // Displaying the fetched data in a neat table
+    TableView<Order> historyTable = new TableView<>();
 
-    HBox orderHistory = new HBox(tempLabel);
+    TableColumn<Order, Integer> idColumn = new TableColumn<>("Order ID");
+    idColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+    TableColumn<Order, Integer> kioskColumn = new TableColumn<>("Kiosk ID");
+    kioskColumn.setCellValueFactory(new PropertyValueFactory<>("kioskId"));
+    TableColumn<Order, Double> amountColumn = new TableColumn<>("Amount Total");
+    amountColumn.setCellValueFactory(new PropertyValueFactory<>("amountTotal"));
+    TableColumn<Order, String> statusColumn = new TableColumn<>("Status");
+    statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+    TableColumn<Order, Timestamp> dateColumn = new TableColumn<>("Order Date");
+    dateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
+
+    // Puts the table together
+    historyTable.getColumns().add(idColumn);
+    historyTable.getColumns().add(kioskColumn);
+    historyTable.getColumns().add(amountColumn);
+    historyTable.getColumns().add(statusColumn);
+    historyTable.getColumns().add(dateColumn);
+    
+    // Auto-resizing of columns
+    // Usefull when Products of each order gonna be added here
+    historyTable.setColumnResizePolicy(tv -> true);
+
+    // Querys data into the table
+    try {
+
+      historyTable.getItems().addAll(queryOrders());
+
+    } catch (SQLException e) {
+
+      e.printStackTrace();
+
+    }
+
+    VBox orderHistory = new VBox(historyTable);
+    orderHistory.setSpacing(20);
+    orderHistory.setPadding(new Insets(20, 0, 0, 0));
       
     VBox topBox = new VBox();
+    topBox.setAlignment(Pos.TOP_LEFT);
     topBox.getChildren().addAll(historyLabel, orderHistory);
 
     // Upper part of the screen
     HBox topContainer = new HBox();
-    topContainer.setAlignment(Pos.TOP_LEFT);
+    topContainer.setAlignment(Pos.CENTER);
+    topContainer.getChildren().addAll(topBox);
 
     // Back button
     // Clicking button means user goes to previous screen
@@ -195,7 +229,7 @@ public class AdminOrdHistoryScreen {
     ) {
 
       stmt.setInt(1, 1);
-      stmt.setInt(1, 1);
+      stmt.setInt(2, 1);
       stmt.setDouble(3, 123);
       stmt.setString(4, "PAID");
 
