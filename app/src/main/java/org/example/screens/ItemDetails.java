@@ -202,7 +202,10 @@ public class ItemDetails {
         "back.png",
         "rgb(255, 255, 255)");
     
-    backButton.setOnAction(e -> primaryStage.setScene(prevScene));
+    backButton.setOnAction(e -> {
+      save(blocks, quantities, item);
+      primaryStage.setScene(prevScene);
+    });
     
     // HBox for the upper part of the screen
     HBox topContainer = new HBox();
@@ -215,6 +218,7 @@ public class ItemDetails {
         "rgb(81, 173, 86)");
     
     addToCartButton.setOnAction(e -> {
+      save(blocks, quantities, item);
       cart.addProduct(item);
       System.out.println(cart.toString());
       primaryStage.setScene(prevScene);
@@ -251,5 +255,12 @@ public class ItemDetails {
 
     return new Scene(layout, 1920, 1080);
 
+  }
+
+  private void save(List<AddRemoveBlock> blocks, List<Integer> quantitys, Single item) {
+    for (int i = 0; i < quantitys.size(); i++) {
+      quantitys.set(i, blocks.get(i).getQuantity());
+    }
+    item.quantity = quantitys;
   }
 }
