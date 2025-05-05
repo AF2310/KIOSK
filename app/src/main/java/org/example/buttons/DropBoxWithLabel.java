@@ -8,7 +8,7 @@ import javafx.scene.layout.VBox;
 /**
  * A class for a drop box fow options with a label on top.
  */
-public class DropBoxWithLabel extends VBox{
+public class DropBoxWithLabel extends VBox {
   private final Label label;
   private final ComboBox<String> comboBox;
 

@@ -89,8 +89,7 @@ public class UpdateMenuItems {
 
     SquareButtonWithImg confirmButton = new SquareButtonWithImg("Confirm",
         "green_tick.png", "rgb(81, 173, 86)");
-    SquareButtonWithImg backButton = new SquareButtonWithImg("Cancel",
-        "cancel.png", "rgb(255, 0, 0)");
+
 
     // Textfields for the information to put into the SQL query
     RectangleTextFieldWithLabel productName = new RectangleTextFieldWithLabel("Product Name:",
@@ -204,6 +203,11 @@ public class UpdateMenuItems {
     ingredientBox.setAlignment(Pos.CENTER);
 
     layout.setRight(ingredientList);
+
+
+    SquareButtonWithImg backButton = new SquareButtonWithImg("Cancel",
+        "cancel.png", "rgb(255, 0, 0)");
+
     // Bottom container for add and back button
     HBox bottomContainer = new HBox(20);
     bottomContainer.setAlignment(Pos.BOTTOM_CENTER);
