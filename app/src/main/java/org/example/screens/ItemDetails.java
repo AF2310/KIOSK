@@ -257,6 +257,13 @@ public class ItemDetails {
 
   }
 
+  /**
+   * Method to save the quantites.
+   *
+   * @param blocks the list of add and remove blocks
+   * @param quantitys the list of quantites
+   * @param item the item
+   */
   private void save(List<AddRemoveBlock> blocks, List<Integer> quantitys, Single item) {
     for (int i = 0; i < quantitys.size(); i++) {
       quantitys.set(i, blocks.get(i).getQuantity());
