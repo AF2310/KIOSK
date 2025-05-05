@@ -14,7 +14,7 @@ public class Menu implements Imenu {
   private final List<Single> extras;
   private final List<Single> desserts;
   // TODO: needs fixing do add actual image path
-  Single singleHelper = new Single(0, "", 0.0f, SingleType.EXTRA, "dummy_path");
+  Single singleHelper = new Single(0, "", 0.0f, Type.EXTRA, "dummy_path");
   
 
   /**
@@ -25,11 +25,11 @@ public class Menu implements Imenu {
    */
   public Menu(Connection conn) throws SQLException {
     
-    this.mains = singleHelper.getOptionsByType(conn, SingleType.BURGERS);
-    this.sides = singleHelper.getOptionsByType(conn, SingleType.SIDES);
-    this.drinks = singleHelper.getOptionsByType(conn, SingleType.DRINKS);
-    this.extras = singleHelper.getOptionsByType(conn, SingleType.EXTRA);
-    this.desserts = singleHelper.getOptionsByType(conn, SingleType.DESSERTS);
+    this.mains = singleHelper.getOptionsByType(conn, Type.BURGERS);
+    this.sides = singleHelper.getOptionsByType(conn, Type.SIDES);
+    this.drinks = singleHelper.getOptionsByType(conn, Type.DRINKS);
+    this.extras = singleHelper.getOptionsByType(conn, Type.EXTRA);
+    this.desserts = singleHelper.getOptionsByType(conn, Type.DESSERTS);
   }
 
   @Override

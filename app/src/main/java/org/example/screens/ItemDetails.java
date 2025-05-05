@@ -1,6 +1,8 @@
 package org.example.screens;
 
 import java.io.InputStream;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Insets;
@@ -20,7 +22,8 @@ import org.example.buttons.ArrowButton;
 import org.example.buttons.MidButtonWithImage;
 import org.example.buttons.RoundButton;
 import org.example.buttons.SquareButtonWithImg;
-import org.example.menu.SimpleItem;
+import org.example.menu.Ingredient;
+import org.example.menu.Single;
 import org.example.orders.Cart;
 
 /**
@@ -32,6 +35,7 @@ public class ItemDetails {
 
   /**
    * Creating a scene for a specific item, displaying all item details.
+   * Only for single items
    *
    * @param primaryStage what is the primary stage
    * @param prevScene what was the previous stage
@@ -39,13 +43,16 @@ public class ItemDetails {
    * @param cart the cart where all items are
    * @return scene containing all item details
    */
-  public Scene create(Stage primaryStage, Scene prevScene, SimpleItem item, Cart cart) {
-
-    //Just a test list of ingredients
-    List<String> ingredients = List.of("Sesame bun", "Cheese",
-        "Onion", "Tomatoes", "Celery", "Cucumber", "Ingredient 7",
-        "ingredient 8", "ingredient 9");
-    // List<Ingredient> ingredients = item.getIngredients();
+  public Scene create(Stage primaryStage, Scene prevScene, Single item, Cart cart) 
+      throws SQLException {
+    item.setIngredients(DriverManager.getConnection(
+        "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
+          + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
+          + "?user=u5urh19mtnnlgmog"
+          + "&password=zPgqf8o6na6pv8j8AX8r"
+          + "&useSSL=true"
+          + "&allowPublicKeyRetrieval=true"));
+    List<Ingredient> ingredients = item.ingredients;
 
     VBox ingredientBox = new VBox(10);
     ingredientBox.setAlignment(Pos.TOP_RIGHT);
@@ -67,7 +74,8 @@ public class ItemDetails {
 
     // Adds the first 7 ingredients
     for (int i = 0; i < Math.min(visibleCount, ingredients.size()); i++) {
-      Label ingrLabel = new Label(ingredients.get(i));
+      Label ingrLabel = new Label(ingredients.get(i).getName());
+      System.out.println(ingredients.get(i).getName());
       ingrLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: normal;");
 
       // Calling on corresponding block from List
@@ -105,7 +113,7 @@ public class ItemDetails {
           i < Math.min(currentStartIndex[0] + visibleCount, ingredients.size());
           i++) {
 
-        Label ingrLabel = new Label(ingredients.get(i));
+        Label ingrLabel = new Label(ingredients.get(i).getName());
         ingrLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: normal;");
 
         // Calling on corresponding block from List
@@ -122,14 +130,14 @@ public class ItemDetails {
     ingredientListBox.setAlignment(Pos.CENTER);
 
     // Item label
-    Label nameLabel = new Label(item.name());
+    Label nameLabel = new Label(item.getName());
     nameLabel.setStyle(
         "-fx-font-size: 65px;"
         + "-fx-font-weight: bold;"
     );
 
     // TODO: Add description to the item once it has one. This is dummy text
-    var descriptionLabel = new Label("This is a yummy " + item.name().toLowerCase());
+    var descriptionLabel = new Label("This is a yummy " + item.getName().toLowerCase());
     descriptionLabel.setStyle(
         "-fx-font-size: 20px;"
         + "-fx-font-weight: normal;"
@@ -143,14 +151,14 @@ public class ItemDetails {
     leftSide.setPadding(new Insets(0, 0, 0, 100));
     leftSide.getChildren().addAll(nameAndDescriptionBox, ingredientListBox);
 
-    InputStream inputStream = getClass().getResourceAsStream(item.imagePath());
+    InputStream inputStream = getClass().getResourceAsStream(item.getImagePath());
 
     // Initiating the image view
     ImageView imageView;
 
     // Errorhandling when no image found
     if (inputStream == null) {
-      System.err.println("ERROR: Image not found - " + item.imagePath());
+      System.err.println("ERROR: Image not found - " + item.getName());
 
       // using Base64-encoded string to generate 1x1 transparent PNG
       // This Base64 string is decoded into a transparent image when
@@ -173,7 +181,7 @@ public class ItemDetails {
     imageView.setPreserveRatio(true);
 
     // Price underneath the picture
-    Label priceLabel = new Label(String.format("%.0f :-", item.price()));
+    Label priceLabel = new Label(String.format("%.0f :-", item.getPrice()));
     priceLabel.setStyle(
         "-fx-font-size: 35px;"
         + "-fx-font-weight: bold;"

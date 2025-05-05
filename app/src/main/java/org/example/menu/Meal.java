@@ -13,10 +13,7 @@ import java.util.List;
  *  calculate total price, and retrieve contents.
  */
 public class Meal extends Product {
-  private int id;
-  private String name;
   private List<Single> contents;
-  private String type;
 
   /**
    * Constructs a meal with a given name.
@@ -24,20 +21,8 @@ public class Meal extends Product {
    * @param name the name of the meal
    */
   public Meal(String name) {
-    this.name = name;
+    setName(name);
     this.contents = new ArrayList<>();
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
-  public int getId() {
-    return id;
   }
 
   /**
@@ -56,10 +41,6 @@ public class Meal extends Product {
    */
   public List<Single> getContents() {
     return contents;
-  }
-
-  public String getName() {
-    return name;
   }
 
   /**
@@ -156,7 +137,7 @@ public class Meal extends Product {
 
     try (ResultSet rs = pstmt.getGeneratedKeys()) {
       if (rs.next()) {
-        this.id = rs.getInt(1);
+        setId(rs.getInt(1));
       }
     }
   }
@@ -175,7 +156,7 @@ public class Meal extends Product {
 
     while (rs.next()) {
       Meal meal = new Meal(rs.getString("name"));
-      meal.id = rs.getInt("id");
+      meal.setId(rs.getInt("id"));
       list.add(meal);
     }
 
@@ -213,7 +194,7 @@ public class Meal extends Product {
     ResultSet rs = ps.executeQuery();
     while (rs.next()) {
       Meal m = new Meal(rs.getString("name"));
-      m.id = rs.getInt("id");
+      m.setId(rs.getInt("id"));
       list.add(m);
     }
     ps.close();
@@ -250,7 +231,7 @@ public class Meal extends Product {
     // Iterate over result set and construct Meal objects from each row
     while (rs.next()) {
       Meal m = new Meal(rs.getString("name"));
-      m.id = rs.getInt("id");
+      m.setId(rs.getInt("id"));
       list.add(m);
     }
 
@@ -266,7 +247,7 @@ public class Meal extends Product {
    * and total price.
    */
   public void printSummary() {
-    System.out.println("Meal: " + name);
+    System.out.println("Meal: " + getName());
 
     for (Single s : contents) {
       System.out.printf(" - %s (%s): $%.2f\n", s.getName(), s.getType(), s.getPrice());
@@ -274,7 +255,4 @@ public class Meal extends Product {
     System.out.printf("Total: $%.2f\n", getTotalPrice());
 
   }
-
-
-
 }

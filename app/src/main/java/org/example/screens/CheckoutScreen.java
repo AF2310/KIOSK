@@ -25,7 +25,7 @@ import org.example.buttons.CancelButton;
 import org.example.buttons.ConfirmOrderButton;
 import org.example.buttons.EatHereButton;
 import org.example.buttons.TakeAwayButton;
-import org.example.menu.SimpleItem;
+import org.example.menu.Product;
 import org.example.orders.Cart;
 
 /**
@@ -215,6 +215,7 @@ public class CheckoutScreen {
     // clicking button means cancellation of order
     // and user gets send back to welcome screen
     cancelButton.setOnAction(e -> {
+      Cart.getInstance().clearCart();    
       System.out.println("Order canceled!");
       primaryStage.setScene(welcomeScrScene);
     });
@@ -273,7 +274,7 @@ public class CheckoutScreen {
 
 
     // get items and there quantities
-    SimpleItem[] items = cart.getItems();
+    Product[] items = cart.getItems();
     int[] quantitys = cart.getQuantity();
 
     // Arrow buttons
