@@ -171,6 +171,12 @@ public class UpdateMenuItems {
       showAlert("Database error", "Failed to load categories", Alert.AlertType.ERROR);
     } // TODO: Make connection to sql a singleton so we don't create new connections each time.
 
+
+    Map<String, String> categoryImageMap = new HashMap<>();
+    categoryImageMap.put("Burger", "/food/default_burger.png");
+    categoryImageMap.put("Side", "/food/default_side.png");
+    categoryImageMap.put("Drink", "/food/default_drink.png");
+    categoryImageMap.put("Dessert", "/food/default_dessert.png");
     confirmButton.setOnAction(e -> {
       try {
         SqlConnectionCheck connection = new SqlConnectionCheck();
@@ -184,7 +190,7 @@ public class UpdateMenuItems {
         String selectedCategory = productCategoryDropBox.getSelectedItem();
         // Validate inputs first
         if (productName.getText().isEmpty() || productPrice.getText().isEmpty() 
-            || productDescription.getText().isEmpty() || selectedCategory == null) {
+            || selectedCategory == null) {
           showAlert("Error", "All fields are required!", Alert.AlertType.ERROR);
           return;
         } 
@@ -193,14 +199,18 @@ public class UpdateMenuItems {
         }     
 
         String sqlProduct = "INSERT INTO"
-                   + " product (name, description, price, category_id, is_active, is_limited)"
-                   + " VALUES (?, ?, ?, ?, ?, ?)";
+                   + " product (name, description, price, category_id,"
+                   + " is_active, is_limited, image_url)"
+                   + " VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         byte isActive = (byte) (productIsActive.isSelected() ? 1 : 0);
         byte isLimited = (byte) (productIsLimited.isSelected() ? 1 : 0);
 
         PreparedStatement stmtProduct = connection.getConnection()
             .prepareStatement(sqlProduct, PreparedStatement.RETURN_GENERATED_KEYS);
+
+        String imagePath = categoryImageMap.getOrDefault(selectedCategory,
+            "/food/default_burger.png");
 
         stmtProduct.setString(1, productName.getText());
         stmtProduct.setString(2, productDescription.getText());
@@ -209,6 +219,7 @@ public class UpdateMenuItems {
         stmtProduct.setInt(4, categoryMap.get(selectedCategory));
         stmtProduct.setByte(5, isActive);
         stmtProduct.setByte(6, isLimited);
+        stmtProduct.setString(7, imagePath);
 
         int affectedRows = stmtProduct.executeUpdate();
 
