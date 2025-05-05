@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -97,26 +98,14 @@ public class UpdateMenuItems {
 
     ingredientListView.setPrefSize(300, 400);
     Label ingredientListLabel = new Label("Ingredient List");
+    ingredientListLabel.setAlignment(Pos.CENTER);
     ingredientListLabel.setStyle("-fx-font-size: 30");
     VBox ingredientBox = new VBox(10, ingredientListLabel, ingredientListView);
-    ingredientBox.setAlignment(Pos.TOP_CENTER);    
-
-    SquareButtonWithImg confirmButton = new SquareButtonWithImg("Confirm",
-        "green_tick.png", "rgb(81, 173, 86)");
-           
-    SquareButtonWithImg backButton = new SquareButtonWithImg("Cancel",
-        "cancel.png", "rgb(255, 0, 0)");   
-    // Textfields for the information to put into the SQL query
-    RectangleTextFieldWithLabel productName = new RectangleTextFieldWithLabel("Product Name:",
-        "rgb(255, 255, 255)");
-    RectangleTextFieldWithLabel productPrice = new RectangleTextFieldWithLabel("Product Price:",
-        "rgb(255, 255, 255)");
-    RectangleTextFieldWithLabel productDescription = new RectangleTextFieldWithLabel(
-        "Product Description:", "rgb(255, 255, 255)");
+    ingredientBox.setAlignment(Pos.CENTER_LEFT);
+    ingredientBox.setPadding(new Insets(0, 150, 50, 0));
 
     DropBoxWithLabel productCategoryDropBox = new DropBoxWithLabel("Product Category:");
-    TickBoxWithLabel productIsActive = new TickBoxWithLabel("Is active?");
-    TickBoxWithLabel productIsLimited = new TickBoxWithLabel("Is limited?");
+
 
     Map<String, Integer> categoryMap = new HashMap<>();
 
@@ -177,6 +166,20 @@ public class UpdateMenuItems {
     categoryImageMap.put("Side", "/food/default_side.png");
     categoryImageMap.put("Drink", "/food/default_drink.png");
     categoryImageMap.put("Dessert", "/food/default_dessert.png");
+
+    SquareButtonWithImg confirmButton = new SquareButtonWithImg("Confirm",
+        "green_tick.png", "rgb(81, 173, 86)");
+
+    // Textfields for the information to put into the SQL query
+    RectangleTextFieldWithLabel productName = new RectangleTextFieldWithLabel("Product Name:",
+        "rgb(255, 255, 255)");
+    RectangleTextFieldWithLabel productPrice = new RectangleTextFieldWithLabel("Product Price:",
+        "rgb(255, 255, 255)");
+    RectangleTextFieldWithLabel productDescription = new RectangleTextFieldWithLabel(
+        "Product Description:", "rgb(255, 255, 255)");
+    TickBoxWithLabel productIsActive = new TickBoxWithLabel("Is active?");
+    TickBoxWithLabel productIsLimited = new TickBoxWithLabel("Is limited?");
+
     confirmButton.setOnAction(e -> {
       try {
         SqlConnectionCheck connection = new SqlConnectionCheck();
@@ -266,16 +269,22 @@ public class UpdateMenuItems {
       }
     });
 
+    SquareButtonWithImg backButton = new SquareButtonWithImg("Cancel",
+        "cancel.png", "rgb(255, 0, 0)");   
+
     backButton.setOnAction(e -> {
       primaryStage.setScene(prevScene);
     });
 
-    BorderPane layout = new BorderPane();
-    
     var menuLabel = new Label("Add A Product to the Menu");
-    menuLabel.setStyle("-fx-font-size: 40");
+    menuLabel.setStyle("-fx-font-size: 40; -fx-font-weight: bold;");
     HBox menuTitle = new HBox(menuLabel);
     menuTitle.setAlignment(Pos.CENTER);
+    menuTitle.setPadding(new Insets(70, 0, 20, 0));
+
+    BorderPane layout = new BorderPane();
+
+
     layout.setTop(menuTitle);
 
 
@@ -293,10 +302,11 @@ public class UpdateMenuItems {
     activeLimitedBox.setAlignment(Pos.CENTER_LEFT);
 
     VBox categoryIdBox = new VBox(productCategoryDropBox);
-    categoryIdBox.setAlignment(Pos.TOP_CENTER);
-
+    categoryIdBox.setAlignment(Pos.CENTER_RIGHT);
+    categoryIdBox.setPadding(new Insets(0, 0, 160, 0));
     HBox menuLayoutCenter = new HBox();
     menuLayoutCenter.getChildren().addAll(activeLimitedBox, categoryIdBox);
+    menuLayoutCenter.setPadding(new Insets(0, 10, 280, 30));
     layout.setCenter(menuLayoutCenter);
 
     layout.setRight(ingredientBox);
