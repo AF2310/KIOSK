@@ -11,17 +11,20 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.example.buttons.BackButton;
 import org.example.buttons.RoundButton;
+import org.example.menu.Product;
 import org.example.orders.Order;
 
 /**
@@ -32,7 +35,7 @@ public class AdminOrdHistoryScreen {
   private Stage primaryStage;
 
   // for testing purposes
-  private Integer tempOrderId = null;
+  //private Integer tempOrderId = null;
 
   /**
    * Scene to display the order history.
@@ -44,72 +47,115 @@ public class AdminOrdHistoryScreen {
   public Scene showHistoryScene(Stage primaryStage, Scene prevScene) {
 
     this.primaryStage = primaryStage;
-
-    // Temporarily inserting an order into db for testing purposes
-    try {
-
-      insertTempOrder();
-
-    } catch (SQLException e) {
-
-      e.printStackTrace();
-      
-    }
-
     
     // So the admin doesnt forget where he is lol
     Label historyLabel = new Label("Order History:");
     historyLabel.setStyle(
-        "-fx-font-size: 45px; "
+        "-fx-font-size: 45px;"
         + "-fx-font-weight: bold;"
     );
 
-    // Displaying the fetched data in a neat table
-    TableView<Order> historyTable = new TableView<>();
-
+    // Setting up the table
     TableColumn<Order, Integer> idColumn = new TableColumn<>("Order ID");
     idColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+    idColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
     TableColumn<Order, Integer> kioskColumn = new TableColumn<>("Kiosk ID");
     kioskColumn.setCellValueFactory(new PropertyValueFactory<>("kioskId"));
+    kioskColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+    TableColumn<Order, String> productsColumn = new TableColumn<>("Products");
+    productsColumn.setCellValueFactory(new PropertyValueFactory<>("productSummary"));
+
+    // To enable multi line string in one cell
+    productsColumn.setCellFactory(column -> {
+      return new TableCell<>() {
+
+        private final Label label = new Label();
+
+        {
+
+          label.setWrapText(true);
+          label.setStyle("-fx-padding: 5px;");
+          setGraphic(label);
+
+        }
+        
+        // Overrides default cell update behaviour of javafx
+
+        @Override
+        protected void updateItem(String item, boolean empty) {
+
+          super.updateItem(item, empty);
+
+          if (empty || item == null) {
+
+            label.setText(null);
+            setGraphic(null);
+
+          } else {
+
+            label.setText(item);
+            setGraphic(label);
+
+          }
+
+        }
+
+      };
+
+    });
+    productsColumn.setMaxWidth(1f * Integer.MAX_VALUE * 40);
     TableColumn<Order, Double> amountColumn = new TableColumn<>("Amount Total");
     amountColumn.setCellValueFactory(new PropertyValueFactory<>("amountTotal"));
+    amountColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
     TableColumn<Order, String> statusColumn = new TableColumn<>("Status");
     statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+    statusColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
     TableColumn<Order, Timestamp> dateColumn = new TableColumn<>("Order Date");
     dateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
-
+    dateColumn.setMaxWidth(1f * Integer.MAX_VALUE * 20);
+    
+    // Displaying the fetched data in a neat table
+    TableView<Order> historyTable = new TableView<>();
+    historyTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+    historyTable.setMaxWidth(Double.MAX_VALUE);
+    historyTable.setPrefWidth(Region.USE_COMPUTED_SIZE);
+    
     // Puts the table together
     historyTable.getColumns().add(idColumn);
     historyTable.getColumns().add(kioskColumn);
+    historyTable.getColumns().add(productsColumn);
     historyTable.getColumns().add(amountColumn);
     historyTable.getColumns().add(statusColumn);
     historyTable.getColumns().add(dateColumn);
     
-    // Auto-resizing of columns
-    // Usefull when Products of each order gonna be added here
-    historyTable.setColumnResizePolicy(tv -> true);
-
     // Querys data into the table
     try {
-
-      historyTable.getItems().addAll(queryOrders());
-
-    } catch (SQLException e) {
-
-      e.printStackTrace();
-
-    }
-
-    VBox orderHistory = new VBox(historyTable);
-    orderHistory.setSpacing(20);
-    orderHistory.setPadding(new Insets(20, 0, 0, 0));
       
+      ArrayList<Order> orders = queryOrders();
+      queryOrderItemsFor(orders);
+      historyTable.getItems().addAll(orders);
+      
+    } catch (SQLException e) {
+      
+      e.printStackTrace();
+      
+    }
+    
+    VBox orderHistory = new VBox(historyTable);
+    VBox.setVgrow(orderHistory, Priority.ALWAYS);
+    historyTable.prefWidthProperty().bind(orderHistory.widthProperty());
+    orderHistory.setPadding(new Insets(20, 0, 0, 0));
+    
     VBox topBox = new VBox();
-    topBox.setAlignment(Pos.TOP_LEFT);
+    topBox.setMaxWidth(Double.MAX_VALUE);
+    topBox.setAlignment(Pos.TOP_CENTER);
+    topBox.setSpacing(40);
     topBox.getChildren().addAll(historyLabel, orderHistory);
 
     // Upper part of the screen
     HBox topContainer = new HBox();
+    topContainer.setMaxWidth(Double.MAX_VALUE);
+    HBox.setHgrow(topBox, Priority.ALWAYS);
     topContainer.setAlignment(Pos.CENTER);
     topContainer.getChildren().addAll(topBox);
 
@@ -119,20 +165,9 @@ public class AdminOrdHistoryScreen {
     BackButton backButton = new BackButton();
     backButton.setOnAction(e -> {
 
-      try {
-
-        deleteTempOrder();
-
-      } catch (SQLException ex) {
-
-        ex.printStackTrace();
-
-      }
-
       primaryStage.setScene(prevScene);
 
     });
-
 
     // Language Button
     // cycles images on click
@@ -201,17 +236,14 @@ public class AdminOrdHistoryScreen {
 
   }
 
-  /**
-   * FOR TESTING PURPOSES ONLY!
-   * Inserts a temporary order to the Database.
-   */
-  private void insertTempOrder() throws SQLException {
+  private void queryOrderItemsFor(ArrayList<Order> orders) throws SQLException {
 
-    String insertSql = 
-        "INSERT INTO `order`(kiosk_ID, customer_ID, amount_total, status) "
-        + "VALUES (?, ?, ?, ?)";
+    String itemQuery = "SELECT oi.order_id, p.product_id, p.name, p.price "
+          + "From order_item oi "
+          + "JOIN product p on oi.product_id = p.product_id";
 
     try (
+
         Connection conn = DriverManager.getConnection(
             "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
             + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
@@ -221,63 +253,117 @@ public class AdminOrdHistoryScreen {
             + "&allowPublicKeyRetrieval=true"
         );
 
-        PreparedStatement stmt = conn.prepareStatement(
-            insertSql,
-            PreparedStatement.RETURN_GENERATED_KEYS
-        )
-        
+        PreparedStatement stmt = conn.prepareStatement(itemQuery);
+        ResultSet rs = stmt.executeQuery()
+
     ) {
 
-      stmt.setInt(1, 1);
-      stmt.setInt(2, 1);
-      stmt.setDouble(3, 123);
-      stmt.setString(4, "PAID");
+      while (rs.next()) {
 
-      stmt.executeUpdate();
+        int orderId = rs.getInt("order_id");
+        int productId = rs.getInt("product_id");
+        String name = rs.getString("name");
+        double price = rs.getDouble("price");
 
-      ResultSet rs = stmt.getGeneratedKeys();
+        for (Order order : orders) {
 
-      if (rs.next()) {
+          if (order.getOrderId() == orderId) {
 
-        tempOrderId = rs.getInt(1);
+            Product product = new Product() {};
+            product.setId(productId);
+            product.setName(name);
+            product.setPrice(price);
+
+            order.getProducts().add(product);
+            break;
+
+          }
+
+        }
 
       }
 
     }
 
-  }
+  } 
 
   /**
    * FOR TESTING PURPOSES ONLY!
-   * Deletes the temporary order from db.
+   * Inserts a temporary order to the Database.
    */
-  private void deleteTempOrder() throws SQLException {
+  // private void insertTempOrder() throws SQLException {
 
-    if (tempOrderId == null) {
+  //   String insertSql = 
+  //       "INSERT INTO `order`(kiosk_ID, customer_ID, amount_total, status) "
+  //       + "VALUES (?, ?, ?, ?)";
 
-      return;
+  //   try (
+  //       Connection conn = DriverManager.getConnection(
+  //           "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
+  //           + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
+  //           + "?user=u5urh19mtnnlgmog"
+  //           + "&password=zPgqf8o6na6pv8j8AX8r"
+  //           + "&useSSL=true"
+  //           + "&allowPublicKeyRetrieval=true"
+  //       );
 
-    }
-
-    String deleteSql = "DELETE FROM `order` WHERE order_ID = ?";
-
-    try (
-        Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
-            + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
-            + "?user=u5urh19mtnnlgmog"
-            + "&password=zPgqf8o6na6pv8j8AX8r"
-            + "&useSSL=true"
-            + "&allowPublicKeyRetrieval=true"
-        );
-
-        PreparedStatement stmt = conn.prepareStatement(deleteSql)) {
-
-      stmt.setInt(1, tempOrderId);
-      stmt.executeUpdate();
+  //       PreparedStatement stmt = conn.prepareStatement(
+  //           insertSql,
+  //           PreparedStatement.RETURN_GENERATED_KEYS
+  //       )
         
-    }
+  //   ) {
 
-  }
+  //     stmt.setInt(1, 123);
+  //     stmt.setInt(2, 1);
+  //     stmt.setDouble(3, 123);
+  //     stmt.setString(4, "PAID");
+
+  //     stmt.executeUpdate();
+
+  //     ResultSet rs = stmt.getGeneratedKeys();
+
+  //     if (rs.next()) {
+
+  //       tempOrderId = rs.getInt(1);
+
+  //     }
+
+  //   }
+
+  // }
+
+  // /**
+  //  * FOR TESTING PURPOSES ONLY!
+  //  * Deletes the temporary order from db.
+  //  */
+  // private void deleteTempOrder() throws SQLException {
+
+  //   if (tempOrderId == null) {
+
+  //     return;
+
+  //   }
+
+  //   String deleteSql = "DELETE FROM `order` WHERE order_ID = ?";
+
+  //   try (
+  //       Connection conn = DriverManager.getConnection(
+  //           "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
+  //           + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
+  //           + "?user=u5urh19mtnnlgmog"
+  //           + "&password=zPgqf8o6na6pv8j8AX8r"
+  //           + "&useSSL=true"
+  //           + "&allowPublicKeyRetrieval=true"
+  //       );
+
+  //       PreparedStatement stmt = conn.prepareStatement(deleteSql)) {
+
+  //     stmt.setInt(1, tempOrderId);
+  //     stmt.executeUpdate();
+        
+  //   }
+
+  // }
 
 }

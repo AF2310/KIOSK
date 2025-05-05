@@ -125,4 +125,21 @@ public class Order {
     return products;
 
   }
+
+  /**
+   * Stringbuilder for a well readable display in OrderHistory.
+   */
+  public String getProductSummary() {
+
+    StringBuilder sb = new StringBuilder();
+
+    for (Product p : products) {
+
+      sb.append(p.getName()).append(" - ").append(p.getPrice()).append(" SEK\n");
+
+    }
+
+    return sb.toString().trim();
+
+  }
 }
