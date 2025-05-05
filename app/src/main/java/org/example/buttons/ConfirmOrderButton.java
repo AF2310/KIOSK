@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import org.example.orders.Order;
 
 /**
  * This button will confirm the order in the checkout
@@ -14,15 +15,14 @@ import javafx.scene.layout.Region;
  * and its' functionality ("Confirm Order") as a label.
  */
 public class ConfirmOrderButton extends Button {
+
+  private Label priceLabel;
   
   /**
    * This is the constructor for the confirm order button.
-   * TODO: total price could also be an array instead
    * so it would calculate the total price inside the class!
-   *
-   * @param totalPrice double variable of total price of order
    */
-  public ConfirmOrderButton(double totalPrice) {
+  public ConfirmOrderButton() {
     // Set default size
     this.setPrefSize(590, 90);
 
@@ -36,7 +36,9 @@ public class ConfirmOrderButton extends Button {
     );
 
     // Create total price label
-    Label priceLabel = new Label("Total: " + totalPrice + "kr");
+    priceLabel = new Label();
+    updatePriceLabel();
+
     // Label should be white, normal, and large fontb
     priceLabel.setStyle(
         "-fx-text-fill: white;"
@@ -70,5 +72,18 @@ public class ConfirmOrderButton extends Button {
 
     // Add label to button
     this.setGraphic(buttonLabel);
+  }
+
+  /**
+   * Updates the full price label when initially called and
+   * also in case of an event, such as quantity updates.
+   */
+  public void updatePriceLabel() {
+
+    Order order = new Order();
+
+    priceLabel.setText(
+        "Total: " + String.format("%.2f", order.calculatePrice()) + "kr"
+    );
   }
 }

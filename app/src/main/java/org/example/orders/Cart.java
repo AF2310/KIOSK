@@ -1,7 +1,14 @@
 package org.example.orders;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import org.example.menu.Ingredient;
 import org.example.menu.Product;
+import org.example.menu.Single;
 
 /**
  * The cart class implemented as a singleton.
@@ -12,11 +19,13 @@ public class Cart {
   private static Cart instance;
   private ArrayList<Product> items;
   private ArrayList<Integer> quantity;
+  private ArrayList<Runnable> allListeners;
 
   // Private constructor to prevent instantiation from outside
   private Cart() {
     items = new ArrayList<>();
     quantity = new ArrayList<>();
+    allListeners = new ArrayList<>();
   }
 
   /**
@@ -55,7 +64,7 @@ public class Cart {
       newQuantity[i] = quantity.get(i);
     }
     return newQuantity;
-    }
+  }
 
   /**
    * Method to add a product to the cart.
@@ -70,6 +79,7 @@ public class Cart {
       items.add(product);
       quantity.add(1);
     }
+    notifyAllListeners();
   }
 
   /**
@@ -89,8 +99,61 @@ public class Cart {
         items.remove(index);
         quantity.remove(index);
       }
+      notifyAllListeners();
     }
   }
+
+  /**
+   * to save quantity to database.
+   *
+   * @param conn database connection
+   * @param orderId order id from database
+   * @throws SQLException database error
+   */
+  public void saveQuantityToDb(Connection conn, int orderId) throws SQLException {
+    for (int i = 0; i < items.size(); i++) {
+
+      String s = "INSERT INTO order_item "
+          + "(order_id, product_id, quantity)"
+          + "VALUES (?, ?, ?)";
+
+      // Prepare statement to be actual query
+      PreparedStatement ps = conn.prepareStatement(s);
+
+      // Get product ID from the item
+      int productId = items.get(i).getId();
+
+      // Insert values into prepared statement
+      ps.setInt(1, orderId); 
+      ps.setInt(2, productId);
+      ps.setInt(3, quantity.get(i));
+      
+      // Execute query
+      ps.executeUpdate();
+      int orderItemid = receiveOrderId(conn);
+
+      if (items.get(i) instanceof Single) {
+        System.out.println("Hallo");
+        List<Ingredient> ingrediets = ((Single) items.get(i)).ingredients;
+        List<Integer> quantitys = ((Single) items.get(i)).quantity;
+        for (int j = 0; j < ingrediets.size(); j++) {
+          String query = "INSERT INTO orderitemingredients "
+                + "(order_item_id, ingredient_id, ingredientCount)"
+                + "VALUES (?, ?, ?)";
+            
+          PreparedStatement ps2 = conn.prepareStatement(query);
+          ps2.setInt(1, orderItemid);
+          ps2.setInt(2, ingrediets.get(j).getId());
+          ps2.setInt(3, quantitys.get(j));
+            
+          ps2.executeUpdate();
+        }
+      } else {
+        System.out.println("Item is not an instance of Single: " + items.get(i));
+      }
+    }
+  }
+  
 
   /**
    * Turning cart items into string.
@@ -105,5 +168,60 @@ public class Cart {
   public void clearCart() {
     items.clear();
     quantity.clear();
+    notifyAllListeners();
+  }
+
+  /**
+   * Add a listener for later notifications when the
+   * cart updates.
+   * Since cart is a singleton and other classes aren't or 
+   * things like scene components, that cannot be made into
+   * a singleton at all, it is simpler to notify all other
+   * listeners by adding them here.
+   * This way, you can use the cart immediately to notify
+   * other liseners, instead of using/making extra instances
+   * to notify other liseners separately, and prevent
+   * possible complications with those instances.
+   *
+   * @param listener operation from another class that should
+   *                 listen to changes in cart
+   */
+  public void addListener(Runnable listener) {
+    allListeners.add(listener);
+  }
+
+  /**
+   * Notifying all listeners in the private array when
+   * a change in the cart occurs.
+   * For now, only used inside the class but left public
+   * for possible later improvements.
+   */
+  public void notifyAllListeners() {
+    for (Runnable eachListener : allListeners) {
+      eachListener.run();
+    }
+  }
+
+  private int receiveOrderId(Connection conn) throws SQLException {
+    // Set default order id
+    int id = -1;
+
+    // SQL Query as string statement
+    String s = "SELECT LAST_INSERT_ID()";
+
+    // Prepare statement to be actual query
+    // Using try to save ressources and close process automatically
+    try (PreparedStatement ps = conn.prepareStatement(s)) {
+      // Open result set to fetch order id (execute query)
+      ResultSet rs = ps.executeQuery();
+
+      // if there is a result
+      if (rs.next()) {
+        // store result as order id integer
+        id = rs.getInt(1);
+      }
+    }
+
+    return id;
   }
 }
