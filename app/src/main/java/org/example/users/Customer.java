@@ -1,6 +1,11 @@
 package org.example.users;
 
-import com.mysql.cj.x.protobuf.MysqlxCrud.Order;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import org.example.orders.Order;
+//import com.mysql.cj.x.protobuf.MysqlxCrud.Order;
 
 /**
  * Represents a customer using the Self Service Kiosk.
@@ -8,10 +13,24 @@ import com.mysql.cj.x.protobuf.MysqlxCrud.Order;
 public class Customer implements User {
 
   /**
-    * Creates a new order.
-    */
-  public void placeOrder() {
+   * Creates a new order.
+   *
+   * @throws SQLException error
+   */
+  public int placeOrder(Connection conn) throws SQLException {
+    Order order = new Order();
+    double price = order.calculatePrice();
 
+    String s = "INSERT INTO `order` "
+        + "(kiosk_ID, customer_ID, order_date, amount_total, status)"
+        + "VALUES (123, 1, NOW(), ?, 'pending')";
+    
+    PreparedStatement ps = conn.prepareStatement(s);
+    ps.setObject(1, price);
+    ps.executeUpdate();
+
+    // immediately fetch the auto generated order id
+    return receiveOrderId(conn);
   }
 
   /**
@@ -32,9 +51,25 @@ public class Customer implements User {
 
   /**
    * Generates or shows the order ID.
+   * This has to be used right after order creation.
+   * To not get false IDs on wrong usage, this is private
+   * and used in the place order method only.
+   *
+   * @throws SQLException error
    */
-  public void receiveOrderId() {
+  private int receiveOrderId(Connection conn) throws SQLException {
+    int id = -1;
+    String s = "SELECT LAST_INSERT_ID()";
 
+    try (PreparedStatement ps = conn.prepareStatement(s)) {
+      ResultSet rs = ps.executeQuery();
+
+      if (rs.next()) {
+        id = rs.getInt(1);
+      }
+    }
+
+    return id;
   }
 
   /**

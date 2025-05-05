@@ -6,8 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import org.example.menu.Product;
-import org.example.orders.Cart;
+import org.example.orders.Order;
 
 /**
  * This button will confirm the order in the checkout
@@ -75,35 +74,16 @@ public class ConfirmOrderButton extends Button {
     this.setGraphic(buttonLabel);
   }
 
-  private double updatePrice() {
-    Cart theCart = Cart.getInstance();
-    
-    // Get items and their quantities
-    Product[] theItems = theCart.getItems();
-    int[] theQuantities = theCart.getQuantity();
-
-    // Get total price
-    double total = 0.0;
-
-    // Iterate through the lists to get item and corresponding quantity
-    for (int index = 0; index < theItems.length; index++) {
-
-      // Multiply price of current item by its' quantity
-      // and add calculated price to total
-      total += 
-      theItems[index].getPrice() * theQuantities[index];
-    }
-
-    return total;
-  }
-
   /**
    * Updates the full price label when initially called and
    * also in case of an event, such as quantity updates.
    */
   public void updatePriceLabel() {
+
+    Order order = new Order();
+
     priceLabel.setText(
-        "Total: " + String.format("%.2f", updatePrice()) + "kr"
+        "Total: " + String.format("%.2f", order.calculatePrice()) + "kr"
     );
   }
 }

@@ -27,6 +27,7 @@ import org.example.buttons.EatHereButton;
 import org.example.buttons.TakeAwayButton;
 import org.example.menu.Product;
 import org.example.orders.Cart;
+import org.example.users.Customer;
 
 /**
  * This is the Screen that displays the order
@@ -37,20 +38,21 @@ import org.example.orders.Cart;
 public class CheckoutScreen {
 
   private Stage primaryStage;
-  private Connection connection;
+  private Connection conn;
   private float totalPrice = 0.0f;
   private Label totalLabel;
 
   /**
    * Creating a scene for the checkout menu.
    * TODO: We still need the other database variables etc..
-   *       Most likely not all the variables that are needed.
+   * Most likely not all the variables that are needed.
    *
-   * @param primaryStage   the primary stage of this scene
-   * @param windowWidth    width of window
-   * @param windowHeight   height of window
-   * @param mainMenuScreen the previous scene of this scene
+   * @param primaryStage    the primary stage of this scene
+   * @param windowWidth     width of window
+   * @param windowHeight    height of window
+   * @param mainMenuScreen  the previous scene of this scene
    * @param welcomeScrScene the welcome screen (for cancel order button)
+   * @param conn            the database connection
    * @return scene containing all the order details
    */
   public Scene createCheckoutScreen(
@@ -60,7 +62,8 @@ public class CheckoutScreen {
       Scene mainMenuScreen,
       Scene welcomeScrScene,
       String mode,
-      Cart cart) {
+      Cart cart,
+      Connection conn) {
 
     // Setting primary stage and welcome screen
     this.primaryStage = primaryStage;
@@ -83,15 +86,13 @@ public class CheckoutScreen {
       modeIndicatorBox.getChildren().add(eatHereButton);
     }
 
-
     // Top of layout - creating elements
 
     // Title of the checkout screen
     Label checkoutLabel = new Label("Checkout");
     checkoutLabel.setStyle(
         "-fx-font-size: 60px;"
-        + "-fx-font-weight: bold;"
-    );
+            + "-fx-font-weight: bold;");
     // Alignment of label
     checkoutLabel.setAlignment(Pos.TOP_LEFT);
     checkoutLabel.setPadding(new Insets(50, 100, 50, 50));
@@ -101,11 +102,10 @@ public class CheckoutScreen {
     promoField.setPromptText("Enter Promo Code");
     promoField.setStyle(
         "-fx-background-color: transparent;"
-        + "-fx-text-fill: white;"
-        + "-fx-font-size: 24px;"
-        + "-fx-font-weight: bold;"
-        + "-fx-alignment: center;"
-    );
+            + "-fx-text-fill: white;"
+            + "-fx-font-size: 24px;"
+            + "-fx-font-weight: bold;"
+            + "-fx-alignment: center;");
     promoField.setMaxWidth(300);
 
     // Create the Apply Promo button
@@ -113,34 +113,28 @@ public class CheckoutScreen {
     applyPromoButton.setGraphic(promoField);
     applyPromoButton.setStyle(
         "-fx-background-color: #4CAF50;"
-        + "-fx-background-radius: 15;"
-        + "-fx-padding: 20;"
-    );
+            + "-fx-background-radius: 15;"
+            + "-fx-padding: 20;");
     applyPromoButton.setPrefSize(590, 90);
     applyPromoButton.setOnAction(e -> applyPromo(promoField.getText()));
 
-
     // Top of layout - combining elements
-
 
     HBox leftsideBox = new HBox(100);
     leftsideBox.setAlignment(Pos.CENTER);
     leftsideBox.getChildren().addAll(
         checkoutLabel,
         topLeftSpacer,
-        applyPromoButton
-    );
+        applyPromoButton);
 
     HBox topBox = new HBox();
     topBox.setAlignment(Pos.TOP_LEFT);
     topBox.getChildren().addAll(
         leftsideBox,
         topspacer,
-        modeIndicatorBox
-    );
+        modeIndicatorBox);
 
     // Bottom buttons
-
 
     HBox bottomButtons = new HBox();
     bottomButtons.setPadding(new Insets(10));
@@ -160,24 +154,6 @@ public class CheckoutScreen {
     langButton.setStyle("-fx-background-color: transparent;");
     langButton.setMinSize(40, 40);
 
-    // TODO: add price fetching from database to insert correct price
-
-    // Retrieve total price with query
-    /* String sqlQuery = "SELECT amount_total FROM product WHERE order_ID = ?";
-
-    // try () ensures automatic closing
-    try (PreparedStatement s = conn.prepareStatement(sqlQuery)) {
-
-      // Bind order id to sql query
-      s.setString((orderId), sqlQuery);
-
-      // Execute query
-      try (ResultSet r = s.executeQuery()) {
-        // Store total price in variable
-        int price = r.getInt("amount_total");
-      }
-    } */
-
     // Create confirm order button instance
     ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton();
 
@@ -187,6 +163,16 @@ public class CheckoutScreen {
 
     // User confirms order
     confirmOrderButton.setOnAction(e -> {
+      int orderId = -1;
+
+      Customer customer = new Customer();
+      try {
+        orderId = customer.placeOrder(conn);
+      } catch (SQLException err) {
+        // TODO Auto-generated catch block
+        err.printStackTrace();
+      }
+
       // Create order confirmation screen
       OrderConfirmationScreen ordConfirmation = new OrderConfirmationScreen();
 
@@ -195,7 +181,7 @@ public class CheckoutScreen {
           windowWidth,
           windowHeight,
           welcomeScrScene,
-          50  // Dummy code for price variable
+          orderId // TODO: fix the order id fetching
       );
       this.primaryStage.setScene(ordConfirmScene);
 
@@ -206,8 +192,7 @@ public class CheckoutScreen {
       fadingAnimation.fadeOutAnimation(
           "white",
           ordConfirmScene,
-          welcomeScrScene
-      );
+          welcomeScrScene);
 
       // Clear cart after order has been done
       Cart.getInstance().clearCart();
@@ -223,14 +208,12 @@ public class CheckoutScreen {
     // clicking button means cancellation of order
     // and user gets send back to welcome screen
     cancelButton.setOnAction(e -> {
-      Cart.getInstance().clearCart();    
+      Cart.getInstance().clearCart();
       System.out.println("Order canceled!");
       primaryStage.setScene(welcomeScrScene);
     });
 
-
     // Bottom part - adding all elements together
-    
 
     // Swedish flag on the left
     HBox languageBox = new HBox(langButton);
@@ -238,7 +221,7 @@ public class CheckoutScreen {
 
     HBox confirmOrderBox = new HBox(confirmOrderButton);
     confirmOrderBox.setAlignment(Pos.BOTTOM_CENTER);
-    
+
     // Box for cancel order and back button
     HBox backAndCancel = new HBox(30);
     backAndCancel.setAlignment(Pos.BOTTOM_RIGHT);
@@ -257,8 +240,7 @@ public class CheckoutScreen {
         languageBox,
         confirmOrderBox,
         spacer,
-        backAndCancel
-    );
+        backAndCancel);
 
     // Stacking all Objects/Boxes vertically on each other
 
@@ -296,8 +278,7 @@ public class CheckoutScreen {
         quantitys,
         6,
         leftArrowButton,
-        rightArrowButton
-    );
+        rightArrowButton);
 
     layout.setAlignment(Pos.CENTER);
     layout.setPadding(new Insets(20));
@@ -313,7 +294,7 @@ public class CheckoutScreen {
   private void applyPromo(String code) {
     try {
       String sql = "";
-      PreparedStatement stmt = connection.prepareStatement(sql);
+      PreparedStatement stmt = conn.prepareStatement(sql);
       stmt.setString(1, code);
       ResultSet rs = stmt.executeQuery();
       if (rs.next()) {
@@ -324,7 +305,6 @@ public class CheckoutScreen {
       } else {
         totalLabel.setText("Invalid promo code");
       }
-
 
     } catch (SQLException ex) {
       ex.printStackTrace();
