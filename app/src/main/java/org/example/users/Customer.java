@@ -21,6 +21,7 @@ public class Customer implements User {
     Order order = new Order();
     double price = order.calculatePrice();
 
+    // TODO customer id can be null -> remove/replace with null 
     String s = "INSERT INTO `order` "
         + "(kiosk_ID, customer_ID, order_date, amount_total, status)"
         + "VALUES (123, 1, NOW(), ?, 'pending')";
