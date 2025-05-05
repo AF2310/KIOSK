@@ -5,11 +5,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -36,13 +38,14 @@ public class UpdateMenuItems {
    */
 
   public Scene adminUpdateMenuItems(Stage primaryStage, Scene prevScene) {
-
     this.primaryStage = primaryStage;
+
     // All the buttons for updating menu items
     MidButton addProductButton = new MidButton("Add product to menu", "rgb(255, 255, 255)", 30);
     MidButton changePriceButton = new MidButton("Change prices", "rgb(255, 255, 255)", 30);
     MidButton removeProductButton = new MidButton("Remove product from menu", 
                                                   "rgb(255, 255, 255)", 30);
+
 
     // Action for clicking on adding a product
     addProductButton.setOnAction(e -> {
@@ -53,11 +56,11 @@ public class UpdateMenuItems {
     });
 
     changePriceButton.setOnAction(e -> {
-
+      // TODO: update product button.
     });
 
     removeProductButton.setOnAction(e -> {
-        
+      // TODO: remove product button.
     });
 
     GridPane gridPane = new GridPane();
@@ -87,10 +90,19 @@ public class UpdateMenuItems {
 
   public Scene addProductScene(Stage primaryStage, Scene prevScene) {
 
+    // List view box for showing all the ingredients upon category selection
+    ListView<String> ingredientListView = new ListView<>();
+    ingredientListView.setPrefSize(300, 400);
+    Label ingredientListLabel = new Label("Ingredient List");
+    ingredientListLabel.setStyle("-fx-font-size: 30");
+    VBox ingredientBox = new VBox(10, ingredientListLabel, ingredientListView);
+    ingredientBox.setAlignment(Pos.TOP_CENTER);    
+
     SquareButtonWithImg confirmButton = new SquareButtonWithImg("Confirm",
         "green_tick.png", "rgb(81, 173, 86)");
-
-
+           
+    SquareButtonWithImg backButton = new SquareButtonWithImg("Cancel",
+        "cancel.png", "rgb(255, 0, 0)");   
     // Textfields for the information to put into the SQL query
     RectangleTextFieldWithLabel productName = new RectangleTextFieldWithLabel("Product Name:",
         "rgb(255, 255, 255)");
@@ -98,6 +110,7 @@ public class UpdateMenuItems {
         "rgb(255, 255, 255)");
     RectangleTextFieldWithLabel productDescription = new RectangleTextFieldWithLabel(
         "Product Description:", "rgb(255, 255, 255)");
+
     DropBoxWithLabel productCategoryDropBox = new DropBoxWithLabel("Product Category:");
     TickBoxWithLabel productIsActive = new TickBoxWithLabel("Is active?");
     TickBoxWithLabel productIsLimited = new TickBoxWithLabel("Is limited?");
@@ -116,10 +129,44 @@ public class UpdateMenuItems {
         categoryMap.put(name, id);
         productCategoryDropBox.getComboBox().getItems().add(name);
       }
+      // When users selects a category, the ingredient list is updated
+      productCategoryDropBox.getComboBox().setOnAction(e -> {
+        // Gets selected category
+        String selectedCategory = productCategoryDropBox.getSelectedItem();
+        if (selectedCategory != null) {
+          try {
+            // Joins category onto ingredients so we have ingredient_name + ingredient_id
+            String categoryOnIngredientsql = 
+                 "SELECT i.ingredient_id, i.ingredient_name " 
+                + "FROM ingredient i "
+                + "JOIN categoryingredients ci ON i.ingredient_id = ci.ingredient_id " 
+                + "JOIN category c ON ci.category_id = c.category_id " 
+                + "WHERE c.name = ?";
+
+            PreparedStatement statement = connection.getConnection().prepareStatement(
+                    categoryOnIngredientsql);
+            // Selects the category ingredients
+            statement.setString(1, selectedCategory);
+            ResultSet resultSet = statement.executeQuery();
+
+            ObservableList<String> ingredients = FXCollections.observableArrayList();
+            while (resultSet.next()) {
+              // Only shows the ingredients for the selected category
+              String ingredientName = resultSet.getString("ingredient_name");
+              ingredients.add(ingredientName);
+
+            }
+            ingredientListView.setItems(ingredients);
+          } catch (SQLException ex) {
+            ex.printStackTrace();
+            showAlert("Database error", "Failed to load categories", Alert.AlertType.ERROR);
+          }
+        }
+      });
     } catch (SQLException ex) {
       ex.printStackTrace();
       showAlert("Database error", "Failed to load categories", Alert.AlertType.ERROR);
-    }
+    } // TODO: Make connection to sql a singleton so we don't create new connections each time.
 
     confirmButton.setOnAction(e -> {
       try {
@@ -168,6 +215,13 @@ public class UpdateMenuItems {
       }
     });
 
+    // TODO: Add functionality for adding the ingredient IDs with the product
+
+
+    backButton.setOnAction(e -> {
+      primaryStage.setScene(prevScene);
+    });
+
     BorderPane layout = new BorderPane();
     
     var menuLabel = new Label("Add A Product to the Menu");
@@ -197,16 +251,7 @@ public class UpdateMenuItems {
     menuLayoutCenter.getChildren().addAll(activeLimitedBox, categoryIdBox);
     layout.setCenter(menuLayoutCenter);
 
-    var ingredientList = new Label("Ingredient List");
-    ingredientList.setStyle("-fx-font-size: 30");
-    HBox ingredientBox = new HBox(ingredientList);
-    ingredientBox.setAlignment(Pos.CENTER);
-
-    layout.setRight(ingredientList);
-
-
-    SquareButtonWithImg backButton = new SquareButtonWithImg("Cancel",
-        "cancel.png", "rgb(255, 0, 0)");
+    layout.setRight(ingredientBox);
 
     // Bottom container for add and back button
     HBox bottomContainer = new HBox(20);
