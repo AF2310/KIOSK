@@ -53,6 +53,7 @@ public class ItemDetails {
           + "&useSSL=true"
           + "&allowPublicKeyRetrieval=true"));
     List<Ingredient> ingredients = item.ingredients;
+    List<Integer> quantities = item.quantity;
 
     VBox ingredientBox = new VBox(10);
     ingredientBox.setAlignment(Pos.TOP_RIGHT);
@@ -68,7 +69,7 @@ public class ItemDetails {
     // To populate blocks
     for (int i = 0; i < ingredients.size(); i++) {
 
-      blocks.add(new AddRemoveBlock(1));
+      blocks.add(new AddRemoveBlock(quantities.get(i)));
 
     }
 
