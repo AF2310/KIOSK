@@ -242,11 +242,8 @@ public class UpdateMenuItems {
           ingredientCount++;
         }
 
-        //int[] batchResults = stmtIngredients.executeBatch();
-        //if (batchResults.length != ingredientCount) {
-        //connection.getConnection().rollback();
-        //throw new SQLException("Not all ingredient associations were saved.");
-        //}
+        stmtIngredients.executeBatch();
+        connection.getConnection().commit();
                 
       } catch (NumberFormatException ex) {
         showAlert("Input error", "Enter valid numbers for price and category ID",
