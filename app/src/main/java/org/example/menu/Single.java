@@ -15,6 +15,7 @@ import java.util.List;
 public class Single extends Product {
   public List<Ingredient> ingredients;
   public List<Integer> quantity;
+  private boolean modified;
 
   /**
    * This constructor is used to create instances of the Single class with the specified name,
@@ -28,6 +29,14 @@ public class Single extends Product {
     this.quantity = new ArrayList<>();
     setType(type);
     setImagePath(imgPath);
+  }
+
+  public void setModefied(boolean modified) {
+    this.modified = modified;
+  }
+
+  public boolean getModified() {
+    return modified;
   }
 
   /**

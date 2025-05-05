@@ -53,7 +53,13 @@ public class ItemDetails {
           + "&useSSL=true"
           + "&allowPublicKeyRetrieval=true"));
     List<Ingredient> ingredients = item.ingredients;
-    List<Integer> quantities = item.quantity;
+    List<Integer> quantities = new ArrayList<>();
+    /*
+     * Making a deep copy of item.quantity.
+     */
+    for (int i = 0; i < item.quantity.size(); i++) {
+      quantities.add(item.quantity.get(i));
+    }
 
     VBox ingredientBox = new VBox(10);
     ingredientBox.setAlignment(Pos.TOP_RIGHT);
@@ -202,7 +208,6 @@ public class ItemDetails {
         "rgb(255, 255, 255)");
     
     backButton.setOnAction(e -> {
-      save(blocks, quantities, item);
       primaryStage.setScene(prevScene);
     });
     
@@ -217,8 +222,12 @@ public class ItemDetails {
         "rgb(81, 173, 86)");
     
     addToCartButton.setOnAction(e -> {
-      save(blocks, quantities, item);
-      cart.addProduct(item);
+      // Making a new product with the modified ingredients.
+      Single newProduct = new Single(item.getId(), item.getName() + "*", item.getPrice(),
+          item.getType(), item.getImagePath());
+      newProduct.setModefied(true);
+      save(blocks, quantities, newProduct, item.quantity);
+      cart.addProduct(newProduct);
       primaryStage.setScene(prevScene);
     });
 
@@ -262,9 +271,12 @@ public class ItemDetails {
    * @param quantitys the list of quantites
    * @param item the item
    */
-  private void save(List<AddRemoveBlock> blocks, List<Integer> quantitys, Single item) {
+  private void save(List<AddRemoveBlock> blocks, List<Integer> quantitys, 
+        Single item, List<Integer> basequant) {
     for (int i = 0; i < quantitys.size(); i++) {
       quantitys.set(i, blocks.get(i).getQuantity());
+      // setting the variable display to the base again.
+      blocks.get(i).setQuantity(basequant.get(i));
     }
     item.quantity = quantitys;
   }

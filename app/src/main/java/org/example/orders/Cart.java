@@ -55,7 +55,7 @@ public class Cart {
       newQuantity[i] = quantity.get(i);
     }
     return newQuantity;
-    }
+  }
 
   /**
    * Method to add a product to the cart.
