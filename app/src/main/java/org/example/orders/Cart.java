@@ -1,5 +1,8 @@
 package org.example.orders;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import org.example.menu.Product;
 
@@ -94,6 +97,38 @@ public class Cart {
       }
       notifyAllListeners();
     }
+  }
+
+  /**
+   * to save quantity to database.
+   *
+   * @param conn database connection
+   * @param orderId order id from database
+   * @throws SQLException database error
+   */
+  public void saveQuantityToDb(Connection conn, int orderId) throws SQLException {
+    for (int i = 0; i < items.size(); i++) {
+
+      String s = "INSERT INTO order_item "
+          + "(order_item_id, order_id, product_id, quantity)"
+          + "VALUES (?, ?, ?, ?)";
+
+      // Prepare statement to be actual query
+      PreparedStatement ps = conn.prepareStatement(s);
+
+      // Get product ID from the item
+      int productId = items.get(i).getId();
+
+      // Insert values into prepared statement
+      ps.setInt(1, i + 1);   //TODO unsure what do insert here
+      ps.setInt(2, orderId); 
+      ps.setInt(3, productId);
+      ps.setInt(4, quantity.get(i));
+
+      // Execute query
+      ps.executeUpdate();
+    }
+
   }
 
   /**

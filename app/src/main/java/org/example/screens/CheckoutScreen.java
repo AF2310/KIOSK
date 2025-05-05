@@ -173,6 +173,13 @@ public class CheckoutScreen {
         err.printStackTrace();
       }
 
+      try {
+        Cart.getInstance().saveQuantityToDb(conn, orderId);
+      } catch (SQLException e1) {
+        // TODO Auto-generated catch block
+        e1.printStackTrace();
+      }
+
       // Create order confirmation screen
       OrderConfirmationScreen ordConfirmation = new OrderConfirmationScreen();
 
