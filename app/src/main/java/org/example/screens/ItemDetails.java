@@ -223,8 +223,8 @@ public class ItemDetails {
     
     addToCartButton.setOnAction(e -> {
       // Making a new product with the modified ingredients.
-      Single newProduct = new Single(item.getId(), item.getName() + "*", item.getPrice(),
-          item.getType(), item.getImagePath());
+      Single newProduct = new Single(item.getId(), item.getName(), item.getPrice(),
+          item.getType(), item.getImagePath(), item.ingredients);
       newProduct.setModefied(true);
       save(blocks, quantities, newProduct, item.quantity);
       cart.addProduct(newProduct);

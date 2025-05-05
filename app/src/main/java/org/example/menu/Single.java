@@ -31,6 +31,17 @@ public class Single extends Product {
     setImagePath(imgPath);
   }
 
+  public Single(int id, String name, double price, Type type, String imgPath, List<Ingredient> ingredients) {
+    setId(id);
+    setName(name);
+    setPrice(price);
+    this.ingredients = new ArrayList<>();
+    this.quantity = new ArrayList<>();
+    setType(type);
+    setImagePath(imgPath);
+    this.ingredients = ingredients;
+  }
+
   public void setModefied(boolean modified) {
     this.modified = modified;
   }
