@@ -12,7 +12,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.buttons.MidButton;
-import org.example.buttons.SquareButtonWithImg;
+import org.example.buttons.MidButtonWithImage;
 import org.example.sql.SqlConnectionCheck;
 import org.example.users.AdminAuth;
 
@@ -91,7 +91,8 @@ public class AdminLoginScreen {
 
     var loginButton = new MidButton(
         "Login",
-        "rgb(0, 0, 0)");
+        "rgb(0, 0, 0)",
+        50);
     
     //login button functionality
     loginButton.setOnAction(e -> {
@@ -116,8 +117,8 @@ public class AdminLoginScreen {
     });
 
     //back button
-    var backButton = new SquareButtonWithImg(
-        "Back",
+    var backButton = new MidButtonWithImage(
+        "Back to Menu",
         "/back.png",
         "rgb(255, 255, 255)");
         

@@ -14,7 +14,7 @@ public class MidButton extends Button {
   /**
    * Class constructor.
    */
-  public MidButton(String buttonText, String buttonColor) {
+  public MidButton(String buttonText, String buttonColor, int fontSize) {
     // Set button size
     this.setPrefSize(460, 140);
 
@@ -22,7 +22,7 @@ public class MidButton extends Button {
     Label buttonLabel = new Label(buttonText);
     buttonLabel.setStyle("-fx-background-color: transparent;"
         + "-fx-font-weight: normal;"
-        + "-fx-font-size: 50;"
+        + "-fx-font-size: " + fontSize + "px;"
         + "-fx-padding: 5 10;"
         + "-fx-background-radius: 10;");
 
