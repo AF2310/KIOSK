@@ -1,7 +1,11 @@
 package org.example.screens;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -11,6 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.buttons.DropBoxWithLabel;
 import org.example.buttons.MidButton;
 import org.example.buttons.RectangleTextFieldWithLabel;
 import org.example.buttons.SquareButtonWithImg;
@@ -94,19 +99,38 @@ public class UpdateMenuItems {
         "rgb(255, 255, 255)");
     RectangleTextFieldWithLabel productDescription = new RectangleTextFieldWithLabel(
         "Product Description:", "rgb(255, 255, 255)");
-    RectangleTextFieldWithLabel productCategoryid = new RectangleTextFieldWithLabel(
-        "Product Category ID:", "rgb(255, 255, 255)");
+    DropBoxWithLabel productCategoryDropBox = new DropBoxWithLabel("Product Category:");
     TickBoxWithLabel productIsActive = new TickBoxWithLabel("Is active?");
     TickBoxWithLabel productIsLimited = new TickBoxWithLabel("Is limited?");
+
+    Map<String, Integer> categoryMap = new HashMap<>();
+
+    try {
+      SqlConnectionCheck connection = new SqlConnectionCheck();
+      String sql = "SELECT category_id, name FROM category";
+      PreparedStatement stmt = connection.getConnection().prepareStatement(sql);
+      ResultSet rs = stmt.executeQuery();
+
+      while (rs.next()) {
+        int id = rs.getInt("category_id");
+        String name = rs.getString("name");
+        categoryMap.put(name, id);
+        productCategoryDropBox.getComboBox().getItems().add(name);
+      }
+    } catch (SQLException ex) {
+      ex.printStackTrace();
+      showAlert("Database error", "Failed to load categories", Alert.AlertType.ERROR);
+    }
 
     confirmButton.setOnAction(e -> {
       try {
         SqlConnectionCheck connection = new SqlConnectionCheck();
         connection.getConnection().setAutoCommit(true);
 
+        String selectedCategory = productCategoryDropBox.getSelectedItem();
         // Validate inputs first
         if (productName.getText().isEmpty() || productPrice.getText().isEmpty() 
-            || productDescription.getText().isEmpty() || productCategoryid.getText().isEmpty()) {
+            || productDescription.getText().isEmpty() || selectedCategory == null) {
           showAlert("Error", "All fields are required!", Alert.AlertType.ERROR);
           return;
         }        
@@ -121,7 +145,7 @@ public class UpdateMenuItems {
         // Must parse the string as a double
         stmt.setString(2, productDescription.getText());
         stmt.setDouble(3, Double.parseDouble(productPrice.getText()));
-        stmt.setInt(4, Integer.parseInt(productCategoryid.getText()));
+        stmt.setInt(4, categoryMap.get(selectedCategory));
 
         byte isActive = (byte) (productIsActive.isSelected() ? 1 : 0);
         byte isLimited = (byte) (productIsLimited.isSelected() ? 1 : 0);
@@ -167,7 +191,7 @@ public class UpdateMenuItems {
 
     activeLimitedBox.setAlignment(Pos.CENTER_LEFT);
 
-    VBox categoryIdBox = new VBox(productCategoryid);
+    VBox categoryIdBox = new VBox(productCategoryDropBox);
     categoryIdBox.setAlignment(Pos.TOP_CENTER);
 
     HBox menuLayoutCenter = new HBox();
