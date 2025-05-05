@@ -131,8 +131,11 @@ public class AdminOrdHistoryScreen {
     // Querys data into the table
     try {
       
+      // Gets orders
       ArrayList<Order> orders = queryOrders();
+      // Gets Products for each order
       queryOrderItemsFor(orders);
+      // Inputs it into the table
       historyTable.getItems().addAll(orders);
       
     } catch (SQLException e) {
@@ -141,11 +144,13 @@ public class AdminOrdHistoryScreen {
       
     }
     
+    // VBox for the table
     VBox orderHistory = new VBox(historyTable);
     VBox.setVgrow(orderHistory, Priority.ALWAYS);
     historyTable.prefWidthProperty().bind(orderHistory.widthProperty());
     orderHistory.setPadding(new Insets(20, 0, 0, 0));
     
+    // VBox to align screen label and table
     VBox topBox = new VBox();
     topBox.setMaxWidth(Double.MAX_VALUE);
     topBox.setAlignment(Pos.TOP_CENTER);
@@ -192,6 +197,7 @@ public class AdminOrdHistoryScreen {
 
   }
 
+  // Query for the orders
   private ArrayList<Order> queryOrders() throws SQLException {
 
     // ArrayList to hold all orders queried from the db
@@ -236,6 +242,7 @@ public class AdminOrdHistoryScreen {
 
   }
 
+  // Query for the Products belonging to each queried order
   private void queryOrderItemsFor(ArrayList<Order> orders) throws SQLException {
 
     String itemQuery = "SELECT oi.order_id, p.product_id, p.name, p.price "
@@ -287,10 +294,10 @@ public class AdminOrdHistoryScreen {
 
   } 
 
-  /**
-   * FOR TESTING PURPOSES ONLY!
-   * Inserts a temporary order to the Database.
-   */
+  // /**
+  //  * FOR TESTING PURPOSES ONLY!
+  //  * Inserts a temporary order to the Database.
+  //  */
   // private void insertTempOrder() throws SQLException {
 
   //   String insertSql = 
