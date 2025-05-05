@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -92,6 +93,8 @@ public class UpdateMenuItems {
 
     // List view box for showing all the ingredients upon category selection
     ListView<String> ingredientListView = new ListView<>();
+    ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
     ingredientListView.setPrefSize(300, 400);
     Label ingredientListLabel = new Label("Ingredient List");
     ingredientListLabel.setStyle("-fx-font-size: 30");
@@ -171,7 +174,12 @@ public class UpdateMenuItems {
     confirmButton.setOnAction(e -> {
       try {
         SqlConnectionCheck connection = new SqlConnectionCheck();
-        connection.getConnection().setAutoCommit(true);
+        connection.getConnection().setAutoCommit(false);
+
+
+
+        ObservableList<String> selectedItems = ingredientListView
+            .getSelectionModel().getSelectedItems();
 
         String selectedCategory = productCategoryDropBox.getSelectedItem();
         // Validate inputs first
@@ -179,32 +187,67 @@ public class UpdateMenuItems {
             || productDescription.getText().isEmpty() || selectedCategory == null) {
           showAlert("Error", "All fields are required!", Alert.AlertType.ERROR);
           return;
-        }        
+        } 
+        if (selectedItems.isEmpty()) {
+          showAlert("Info", "No ingredients selected!", Alert.AlertType.INFORMATION);
+        }     
 
-        String sql = "INSERT INTO"
+        String sqlProduct = "INSERT INTO"
                    + " product (name, description, price, category_id, is_active, is_limited)"
                    + " VALUES (?, ?, ?, ?, ?, ?)";
-
-        PreparedStatement stmt = connection.getConnection().prepareStatement(sql);
-        
-        stmt.setString(1, productName.getText());
-        // Must parse the string as a double
-        stmt.setString(2, productDescription.getText());
-        stmt.setDouble(3, Double.parseDouble(productPrice.getText()));
-        stmt.setInt(4, categoryMap.get(selectedCategory));
 
         byte isActive = (byte) (productIsActive.isSelected() ? 1 : 0);
         byte isLimited = (byte) (productIsLimited.isSelected() ? 1 : 0);
 
-        
-        stmt.setByte(5, isActive);
-        stmt.setByte(6, isLimited);
-        int affectedRows = stmt.executeUpdate();
+        PreparedStatement stmtProduct = connection.getConnection()
+            .prepareStatement(sqlProduct, PreparedStatement.RETURN_GENERATED_KEYS);
+
+        stmtProduct.setString(1, productName.getText());
+        stmtProduct.setString(2, productDescription.getText());
+        // Must parse the string as a double
+        stmtProduct.setDouble(3, Double.parseDouble(productPrice.getText()));
+        stmtProduct.setInt(4, categoryMap.get(selectedCategory));
+        stmtProduct.setByte(5, isActive);
+        stmtProduct.setByte(6, isLimited);
+
+        int affectedRows = stmtProduct.executeUpdate();
 
         if (affectedRows > 0) {
           showAlert("Success!", "Product Added Successfully!", Alert.AlertType.INFORMATION);
         }
+
+        int productId;
+        try (ResultSet generatedKeys = stmtProduct.getGeneratedKeys()) {
+          if (generatedKeys.next()) {
+            productId = generatedKeys.getInt(1);
+          } else {
+            throw new SQLException("Creating producted failed, no ID obtained");
+          }
+        }
         
+        String sqlIngredients = "INSERT INTO productingredients (product_id, "
+                                + "ingredient_id, ingredientCount) "
+                                + "VALUES (?, (SELECT ingredient_id FROM "
+                                + "ingredient WHERE ingredient_name = ?), ?)";
+
+        PreparedStatement stmtIngredients = connection.getConnection()
+              .prepareStatement(sqlIngredients);
+
+        int ingredientCount = 1;
+        for (String ingredientName : selectedItems) {
+          stmtIngredients.setInt(1, productId);
+          stmtIngredients.setString(2, ingredientName);
+          stmtIngredients.setInt(3, ingredientCount);
+          stmtIngredients.addBatch();
+          ingredientCount++;
+        }
+
+        //int[] batchResults = stmtIngredients.executeBatch();
+        //if (batchResults.length != ingredientCount) {
+        //connection.getConnection().rollback();
+        //throw new SQLException("Not all ingredient associations were saved.");
+        //}
+                
       } catch (NumberFormatException ex) {
         showAlert("Input error", "Enter valid numbers for price and category ID",
                   Alert.AlertType.ERROR);
@@ -214,9 +257,6 @@ public class UpdateMenuItems {
         showAlert("Database Error", "Failed to save product", Alert.AlertType.ERROR);
       }
     });
-
-    // TODO: Add functionality for adding the ingredient IDs with the product
-
 
     backButton.setOnAction(e -> {
       primaryStage.setScene(prevScene);
