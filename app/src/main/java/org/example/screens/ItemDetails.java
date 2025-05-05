@@ -76,7 +76,6 @@ public class ItemDetails {
     // Adds the first 7 ingredients
     for (int i = 0; i < Math.min(visibleCount, ingredients.size()); i++) {
       Label ingrLabel = new Label(ingredients.get(i).getName());
-      System.out.println(ingredients.get(i).getName());
       ingrLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: normal;");
 
       // Calling on corresponding block from List
@@ -220,7 +219,6 @@ public class ItemDetails {
     addToCartButton.setOnAction(e -> {
       save(blocks, quantities, item);
       cart.addProduct(item);
-      System.out.println(cart.toString());
       primaryStage.setScene(prevScene);
     });
 
