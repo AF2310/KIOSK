@@ -105,10 +105,14 @@ public class Single extends Product {
     //       while also adding the other stuff in product table and keeping it linked.
     // TODO: So, this whole method here needs fixing to match the database and needs completion.
 
-    String sql = "INSERT INTO products (name, price, type) VALUES (?, ?, ?)";
+    String sql = "INSERT INTO product "
+        + "(name, price, is_active, preparation_time) VALUES (?, ?, ?, ?)";
     PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
     stmt.setString(1, getName());
     stmt.setDouble(2, getPrice());
+    stmt.setString(3, "1");        // hardcoded dummy
+    // TODO type obtainable with getType() but id where?
+    stmt.setInt(4, 5);             // hardcoded dummy
     stmt.executeUpdate();
 
     ResultSet rs = stmt.getGeneratedKeys();
