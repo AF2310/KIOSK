@@ -15,7 +15,7 @@ public class Drink extends Single {
    * @param type what type of single it is
    * @param imgPath path to items image
    */
-  public Drink(int id, String name, float price, SingleType type, String imgPath) {
+  public Drink(int id, String name, float price, Type type, String imgPath) {
     super(id, name, price, type, imgPath);
   }
 }

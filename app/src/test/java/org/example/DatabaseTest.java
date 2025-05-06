@@ -7,6 +7,7 @@ import java.sql.Connection;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import org.example.sql.SqlConnectionCheck;
 
 /**
  * Testing database.
