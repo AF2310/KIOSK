@@ -24,6 +24,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.example.buttons.BackButton;
 import org.example.buttons.RoundButton;
+import org.example.menu.OrderItem;
 import org.example.menu.Product;
 import org.example.orders.Order;
 
@@ -245,9 +246,9 @@ public class AdminOrdHistoryScreen {
   // Query for the Products belonging to each queried order
   private void queryOrderItemsFor(ArrayList<Order> orders) throws SQLException {
 
-    String itemQuery = "SELECT oi.order_id, p.product_id, p.name, p.price "
-          + "From order_item oi "
-          + "JOIN product p on oi.product_id = p.product_id";
+    String itemQuery = "SELECT oi.order_id, oi.product_id, p.name, p.price, oi.quantity "
+          + "FROM order_item oi "
+          + "JOIN product p ON oi.product_id = p.product_id";
 
     try (
 
@@ -271,6 +272,7 @@ public class AdminOrdHistoryScreen {
         int productId = rs.getInt("product_id");
         String name = rs.getString("name");
         double price = rs.getDouble("price");
+        int quantity = rs.getInt("quantity");
 
         for (Order order : orders) {
 
@@ -281,7 +283,10 @@ public class AdminOrdHistoryScreen {
             product.setName(name);
             product.setPrice(price);
 
-            order.getProducts().add(product);
+            OrderItem orderItem = new OrderItem(product, quantity, price);
+
+            order.getProducts().add(orderItem);
+
             break;
 
           }
