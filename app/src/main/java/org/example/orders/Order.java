@@ -2,7 +2,8 @@ package org.example.orders;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import org.example.menu.Product;
+import java.util.stream.Collectors;
+import org.example.menu.OrderItem;
 
 /**
  * Handles the ordering process and holds the carted items.
@@ -15,7 +16,7 @@ public class Order {
   private Timestamp orderDate;
   private double amountTotal;
   private String status;
-  private ArrayList<Product> products = new ArrayList<>();
+  private ArrayList<OrderItem> items = new ArrayList<>();
 
   /**
    * Constructor for orderes queried from the db.
@@ -120,9 +121,9 @@ public class Order {
   /**
    * Getter for the products of the order.
    */
-  public ArrayList<Product> getProducts() {
+  public ArrayList<OrderItem> getProducts() {
 
-    return products;
+    return items;
 
   }
 
@@ -131,15 +132,9 @@ public class Order {
    */
   public String getProductSummary() {
 
-    StringBuilder sb = new StringBuilder();
-
-    for (Product p : products) {
-
-      sb.append(p.getName()).append(" - ").append(p.getPrice()).append(" SEK\n");
-
-    }
-
-    return sb.toString().trim();
+    return items.stream()
+      .map(OrderItem::getSummary)
+      .collect(Collectors.joining("\n"));
 
   }
 }
