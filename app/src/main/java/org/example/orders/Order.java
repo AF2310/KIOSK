@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import org.example.menu.OrderItem;
+import org.example.menu.Product;
 
 /**
  * Handles the ordering process and holds the carted items.
@@ -32,6 +33,10 @@ public class Order {
     this.status = status;
 
   }
+
+  public Order() {
+    //Empty constr
+}
 
   /**
    * Will calculate the overall cost of the order
