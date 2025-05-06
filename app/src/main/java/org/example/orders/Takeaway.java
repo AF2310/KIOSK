@@ -1,5 +1,7 @@
 package org.example.orders;
 
+import java.sql.Timestamp;
+
 // import java.util.ArrayList;
 // import org.example.menu.Meal;
 // import org.example.menu.Single;
@@ -14,7 +16,12 @@ public class Takeaway extends Order {
   /**
    * Empty constructor, reason -> see Order.java.
    */
-  public Takeaway() {}
+  public Takeaway(int orderId, int kioskId, int customerId,
+      Timestamp orderDate, double amountTotal, String status) {
+
+    super(orderId, kioskId, customerId, orderDate, amountTotal, status);
+
+  }
 
   /**
    * Overrides Order.java method as to include the vat in the calculation.

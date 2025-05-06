@@ -51,9 +51,18 @@ public class AdminMenuScreen {
     // All the same instances of the MidButton
     MidButton updateMenuBtn = new MidButton("Update Menu Items", "rgb(255, 255, 255)", 30);
     MidButton changeTimerBtn = new MidButton("Change timer setting", "rgb(255, 255, 255)", 30);
-    MidButton specialOffersBtn = new MidButton("Set special offers", "rgb(255, 255, 255)", 30);
+
     MidButton orderHistoryBtn = new MidButton("Order History", "rgb(255, 255, 255)", 30);
+    orderHistoryBtn.setOnAction(e -> {
+      Scene historyScene = new AdminOrdHistoryScreen().showHistoryScene(
+          primaryStage, 
+          adminMenuLayout.getScene());
+      primaryStage.setScene(historyScene);
+    });
+
+    MidButton specialOffersBtn = new MidButton("Set special offers", "rgb(255, 255, 255)", 30);
     MidButton salesSummaryBtn = new MidButton("See sales summary", "rgb(255, 255, 255)", 30);
+
 
     centerGrid.add(updateMenuBtn, 0, 0);
     centerGrid.add(changeTimerBtn, 0, 1);
