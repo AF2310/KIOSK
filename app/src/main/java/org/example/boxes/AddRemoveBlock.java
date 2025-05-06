@@ -38,6 +38,10 @@ public class AddRemoveBlock extends HBox {
     updateButtonStates();
   }
 
+  public void setQuantity(int newQuantity) {
+    this.quantity = newQuantity;
+  }
+
   private void setupButtonActions() {
     minusButton.setOnAction(e -> {
       if (quantity > 0) {
@@ -79,6 +83,12 @@ public class AddRemoveBlock extends HBox {
    * Listener for the quantity.
    */
   public interface QuantityChangeListener {
+    /**
+     * Used for quantity change in +/- buttons.
+     * Other classes use this as callback when the quantities change.
+     *
+     * @param newQuantity updated quantity value (<=0 and >=9)
+     */
     void onQuantityChanged(int newQuantity);
   }
 

@@ -49,6 +49,7 @@ public class MainMenuScreen {
   private List<Button> categoryButtons = new ArrayList<>();
   public Cart cart = Cart.getInstance();
   private String mode;
+  private Connection conn;
 
   /**
    * Creates the main menu scene.
@@ -70,6 +71,15 @@ public class MainMenuScreen {
 
     this.primaryStage = primaryStage;
     this.mode = mode;
+
+    Connection conn = DriverManager.getConnection(
+        "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
+        + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
+        + "?user=u5urh19mtnnlgmog"
+        + "&password=zPgqf8o6na6pv8j8AX8r"
+        + "&useSSL=true"
+        + "&allowPublicKeyRetrieval=true");
+    this.conn = conn;
 
     ImageView modeIcon = new ImageView();
     Label modeLabel = new Label();
@@ -245,7 +255,11 @@ public class MainMenuScreen {
     // Create cancel button
     CancelButton cancelButton = new CancelButton();
 
-    cancelButton.setOnAction(e -> primaryStage.setScene(welcomeScrScene));
+    cancelButton.setOnAction(e -> {
+      Cart.getInstance().clearCart();    
+      System.out.println("Order canceled!");
+      primaryStage.setScene(welcomeScrScene);
+    });
 
     // Create Cart button
     Button cartButton = new Button();
@@ -270,7 +284,8 @@ public class MainMenuScreen {
           this.primaryStage.getScene(),
           welcomeScrScene,
           this.mode,
-          cart
+          cart,
+          conn
         );
       this.primaryStage.setScene(checkoutScene);
     });
@@ -308,13 +323,13 @@ public class MainMenuScreen {
    * Added the items for the menu one by one for now, not through the database.
    */
   private void setupMenuData() throws SQLException {
-    Connection conn = DriverManager.getConnection(
+    /* Connection conn = DriverManager.getConnection(
         "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
           + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
           + "?user=u5urh19mtnnlgmog"
           + "&password=zPgqf8o6na6pv8j8AX8r"
           + "&useSSL=true"
-          + "&allowPublicKeyRetrieval=true");
+          + "&allowPublicKeyRetrieval=true"); */
     Imenu menu = new Menu(conn);
 
     categoryItems.put("Burgers", convert(conn, menu.getMains()));
@@ -414,13 +429,17 @@ public class MainMenuScreen {
 
         // Get item details when clicking on item
         imageSlot.setOnMouseClicked(e -> {
-          Scene detailScene = detailScreen.create(
-              this.primaryStage,
-              this.primaryStage.getScene(),
-              item,
-              cart
-          );
-          this.primaryStage.setScene(detailScene);
+          try {
+            Scene detailScene = detailScreen.create(
+                this.primaryStage,
+                this.primaryStage.getScene(),
+                (Single) item,
+                cart
+              );
+            this.primaryStage.setScene(detailScene);
+          } catch (SQLException ex) {
+            ex.printStackTrace();
+          }
         });
 
         // Connect it all and add to item grid

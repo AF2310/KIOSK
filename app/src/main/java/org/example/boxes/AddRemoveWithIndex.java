@@ -96,6 +96,12 @@ public class AddRemoveWithIndex extends HBox {
    * Listener for the quantity.
    */
   public interface QuantityChangeListener {
+    /**
+     * Used for quantity change in +/- buttons.
+     * Other classes use this as callback when the quantities change.
+     *
+     * @param newQuantity updated quantity value (<=0 and >=9)
+     */
     void onQuantityChanged(int newQuantity);
   }
 

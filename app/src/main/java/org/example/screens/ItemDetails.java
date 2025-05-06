@@ -1,6 +1,8 @@
 package org.example.screens;
 
 import java.io.InputStream;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Insets;
@@ -20,7 +22,8 @@ import org.example.buttons.ArrowButton;
 import org.example.buttons.MidButtonWithImage;
 import org.example.buttons.RoundButton;
 import org.example.buttons.SquareButtonWithImg;
-import org.example.menu.Product;
+import org.example.menu.Ingredient;
+import org.example.menu.Single;
 import org.example.orders.Cart;
 
 /**
@@ -32,6 +35,7 @@ public class ItemDetails {
 
   /**
    * Creating a scene for a specific item, displaying all item details.
+   * Only for single items
    *
    * @param primaryStage what is the primary stage
    * @param prevScene what was the previous stage
@@ -39,13 +43,23 @@ public class ItemDetails {
    * @param cart the cart where all items are
    * @return scene containing all item details
    */
-  public Scene create(Stage primaryStage, Scene prevScene, Product item, Cart cart) {
-
-    //Just a test list of ingredients
-    List<String> ingredients = List.of("Sesame bun", "Cheese",
-        "Onion", "Tomatoes", "Celery", "Cucumber", "Ingredient 7",
-        "ingredient 8", "ingredient 9");
-    // List<Ingredient> ingredients = item.getIngredients();
+  public Scene create(Stage primaryStage, Scene prevScene, Single item, Cart cart) 
+      throws SQLException {
+    item.setIngredients(DriverManager.getConnection(
+        "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
+          + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
+          + "?user=u5urh19mtnnlgmog"
+          + "&password=zPgqf8o6na6pv8j8AX8r"
+          + "&useSSL=true"
+          + "&allowPublicKeyRetrieval=true"));
+    List<Ingredient> ingredients = item.ingredients;
+    List<Integer> quantities = new ArrayList<>();
+    /*
+     * Making a deep copy of item.quantity.
+     */
+    for (int i = 0; i < item.quantity.size(); i++) {
+      quantities.add(item.quantity.get(i));
+    }
 
     VBox ingredientBox = new VBox(10);
     ingredientBox.setAlignment(Pos.TOP_RIGHT);
@@ -61,13 +75,13 @@ public class ItemDetails {
     // To populate blocks
     for (int i = 0; i < ingredients.size(); i++) {
 
-      blocks.add(new AddRemoveBlock(1));
+      blocks.add(new AddRemoveBlock(quantities.get(i)));
 
     }
 
     // Adds the first 7 ingredients
     for (int i = 0; i < Math.min(visibleCount, ingredients.size()); i++) {
-      Label ingrLabel = new Label(ingredients.get(i));
+      Label ingrLabel = new Label(ingredients.get(i).getName());
       ingrLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: normal;");
 
       // Calling on corresponding block from List
@@ -105,7 +119,7 @@ public class ItemDetails {
           i < Math.min(currentStartIndex[0] + visibleCount, ingredients.size());
           i++) {
 
-        Label ingrLabel = new Label(ingredients.get(i));
+        Label ingrLabel = new Label(ingredients.get(i).getName());
         ingrLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: normal;");
 
         // Calling on corresponding block from List
@@ -193,7 +207,9 @@ public class ItemDetails {
         "back.png",
         "rgb(255, 255, 255)");
     
-    backButton.setOnAction(e -> primaryStage.setScene(prevScene));
+    backButton.setOnAction(e -> {
+      primaryStage.setScene(prevScene);
+    });
     
     // HBox for the upper part of the screen
     HBox topContainer = new HBox();
@@ -206,8 +222,12 @@ public class ItemDetails {
         "rgb(81, 173, 86)");
     
     addToCartButton.setOnAction(e -> {
-      cart.addProduct(item);
-      System.out.println(cart.toString());
+      // Making a new product with the modified ingredients.
+      Single newProduct = new Single(item.getId(), item.getName(), item.getPrice(),
+          item.getType(), item.getImagePath(), item.ingredients);
+      newProduct.setModefied(true);
+      save(blocks, quantities, newProduct, item.quantity);
+      cart.addProduct(newProduct);
       primaryStage.setScene(prevScene);
     });
 
@@ -242,5 +262,29 @@ public class ItemDetails {
 
     return new Scene(layout, 1920, 1080);
 
+  }
+
+  /**
+   * Method to save the quantites.
+   *
+   * @param blocks the list of add and remove blocks
+   * @param quantitys the list of quantites
+   * @param item the item
+   */
+  private void save(List<AddRemoveBlock> blocks, List<Integer> quantitys, 
+        Single item, List<Integer> basequant) {
+    for (int i = 0; i < quantitys.size(); i++) {
+      quantitys.set(i, blocks.get(i).getQuantity());
+      // setting the variable display to the base again.
+      blocks.get(i).setQuantity(basequant.get(i));
+    }
+    item.quantity = quantitys;
+
+
+    /* int itemId = item.getId();
+
+    String s = "INSERT INTO order_item "
+        + "(order_item_id, order_id, order_date, amount_total, status)"
+        + "VALUES (123, 1, NOW(), ?, 'pending')"; */
   }
 }

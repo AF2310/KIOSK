@@ -13,7 +13,9 @@ import java.util.List;
  * Abstract base class for all single items on the menu.
  */
 public class Single extends Product {
-  protected List<Ingredient> ingredients;
+  public List<Ingredient> ingredients;
+  public List<Integer> quantity;
+  private boolean modified;
 
   /**
    * This constructor is used to create instances of the Single class with the specified name,
@@ -24,8 +26,28 @@ public class Single extends Product {
     setName(name);
     setPrice(price);
     this.ingredients = new ArrayList<>();
+    this.quantity = new ArrayList<>();
     setType(type);
     setImagePath(imgPath);
+  }
+
+  public Single(int id, String name, double price, Type type, String imgPath, List<Ingredient> ingredients) {
+    setId(id);
+    setName(name);
+    setPrice(price);
+    this.ingredients = new ArrayList<>();
+    this.quantity = new ArrayList<>();
+    setType(type);
+    setImagePath(imgPath);
+    this.ingredients = ingredients;
+  }
+
+  public void setModefied(boolean modified) {
+    this.modified = modified;
+  }
+
+  public boolean getModified() {
+    return modified;
   }
 
   /**
@@ -94,10 +116,14 @@ public class Single extends Product {
     //       while also adding the other stuff in product table and keeping it linked.
     // TODO: So, this whole method here needs fixing to match the database and needs completion.
 
-    String sql = "INSERT INTO products (name, price, type) VALUES (?, ?, ?)";
+    String sql = "INSERT INTO product "
+        + "(name, price, is_active, preparation_time) VALUES (?, ?, ?, ?)";
     PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
     stmt.setString(1, getName());
     stmt.setDouble(2, getPrice());
+    stmt.setString(3, "1");        // hardcoded dummy
+    // TODO type obtainable with getType() but id where?
+    stmt.setInt(4, 5);             // hardcoded dummy
     stmt.executeUpdate();
 
     ResultSet rs = stmt.getGeneratedKeys();
@@ -310,6 +336,32 @@ public class Single extends Product {
     }
     return options;
   }
+
+  /**
+   * Method to set the ingredients to them in the database.
+   *
+   * @param conn database connection
+   */
+  public void setIngredients(Connection conn) throws SQLException {
+    String sql = "SELECT pi.ingredient_id, pi.ingredientCount, i.ingredient_name "
+        + "FROM productingredients pi "
+        + "JOIN ingredient i ON pi.ingredient_id = i.ingredient_id "
+        + "WHERE product_id = ?";
+    
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, getId());
+
+      ResultSet rs = stmt.executeQuery();
+
+      while (rs.next()) {
+        ingredients.add(new Ingredient(
+            rs.getInt("ingredient_id"), rs.getString("ingredient_name")));
+        quantity.add(rs.getInt("ingredientCount"));
+      }
+      rs.close();
+    }
+  }
+
 
   /*public List<Single> getOptionsByCategoryName(Connection conn,
                           String categoryName) throws SQLException {
