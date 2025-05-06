@@ -20,7 +20,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.example.buttons.BackButton;
 import org.example.buttons.RoundButton;
@@ -34,9 +33,6 @@ import org.example.orders.Order;
 public class AdminOrdHistoryScreen {
 
   private Stage primaryStage;
-
-  // for testing purposes
-  //private Integer tempOrderId = null;
 
   /**
    * Scene to display the order history.
@@ -167,7 +163,6 @@ public class AdminOrdHistoryScreen {
 
     // Back button
     // Clicking button means user goes to previous screen
-    // Also deletes the order that has previously been added to the db
     BackButton backButton = new BackButton();
     backButton.setOnAction(e -> {
 
@@ -298,84 +293,5 @@ public class AdminOrdHistoryScreen {
     }
 
   } 
-
-  // /**
-  //  * FOR TESTING PURPOSES ONLY!
-  //  * Inserts a temporary order to the Database.
-  //  */
-  // private void insertTempOrder() throws SQLException {
-
-  //   String insertSql = 
-  //       "INSERT INTO `order`(kiosk_ID, customer_ID, amount_total, status) "
-  //       + "VALUES (?, ?, ?, ?)";
-
-  //   try (
-  //       Connection conn = DriverManager.getConnection(
-  //           "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
-  //           + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
-  //           + "?user=u5urh19mtnnlgmog"
-  //           + "&password=zPgqf8o6na6pv8j8AX8r"
-  //           + "&useSSL=true"
-  //           + "&allowPublicKeyRetrieval=true"
-  //       );
-
-  //       PreparedStatement stmt = conn.prepareStatement(
-  //           insertSql,
-  //           PreparedStatement.RETURN_GENERATED_KEYS
-  //       )
-        
-  //   ) {
-
-  //     stmt.setInt(1, 123);
-  //     stmt.setInt(2, 1);
-  //     stmt.setDouble(3, 123);
-  //     stmt.setString(4, "PAID");
-
-  //     stmt.executeUpdate();
-
-  //     ResultSet rs = stmt.getGeneratedKeys();
-
-  //     if (rs.next()) {
-
-  //       tempOrderId = rs.getInt(1);
-
-  //     }
-
-  //   }
-
-  // }
-
-  // /**
-  //  * FOR TESTING PURPOSES ONLY!
-  //  * Deletes the temporary order from db.
-  //  */
-  // private void deleteTempOrder() throws SQLException {
-
-  //   if (tempOrderId == null) {
-
-  //     return;
-
-  //   }
-
-  //   String deleteSql = "DELETE FROM `order` WHERE order_ID = ?";
-
-  //   try (
-  //       Connection conn = DriverManager.getConnection(
-  //           "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
-  //           + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
-  //           + "?user=u5urh19mtnnlgmog"
-  //           + "&password=zPgqf8o6na6pv8j8AX8r"
-  //           + "&useSSL=true"
-  //           + "&allowPublicKeyRetrieval=true"
-  //       );
-
-  //       PreparedStatement stmt = conn.prepareStatement(deleteSql)) {
-
-  //     stmt.setInt(1, tempOrderId);
-  //     stmt.executeUpdate();
-        
-  //   }
-
-  // }
 
 }
