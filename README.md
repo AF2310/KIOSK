@@ -79,3 +79,26 @@ Arseny added rows to the cart and pages with the page counter.
 We had 1 meeting in person after the client meeting on Wednesday and 3 meetings on Discord. One on Thursday, one on Sunday and one on Monday.
 
 ![alt text](references/Class_Sp18.png)
+
+
+Sprint 3 (Week 19)
+
+This week we primarily worked on the admin menu features, fixing some bugs, reworking the product class, and working with the database.
+
+Jakob reworked the product class. As always, he also did all the organisational work and helped people pick user stories for the next sprint. He also collaborated with teammates in remote coding sessions, solving or helping to solve various problems. He connected the list of ingredients in the product screen with the database and made sure they show the correct quantity as well as update it. He also made each product be copied into a custom product type so that in the checkout the user can have the same product with different ingredients.
+
+Michelle cleaned up the repository at the start of the sprint. She also reworked the checkout screen button to track and constantly update the total price of the contents of the cart. She worked on storing the orders into the database with Jakob and added the emptying cart functionality where needed.
+
+Vuk prepared the initial admin main menu with Ignas. He made the custom tickbox and dropbox classes for the admin menu. The dropbox avoids writing the category of the product manually and instead lets the user choose the existing one.
+
+Ignas slightly reworked the admin login screen design. He created a custom button class for the admin menu. He made the ingredient table that shows the list of ingredients for the new product based on the chosen category.
+
+Ignas and Vuk also added images for the default product upon creation so that the products would fit nicely within the product grid and to zero out all the null-value-related errors. They both also worked on handling merge-related issues. They did all the testing related to the creation of the new item.
+
+Vince worked on the order history screen. He did both the UI and functional aspects of the screen. He also fixed the product not showing up in its corresponding column. He made reusable code that can be used for future receipt print functionality.
+
+Achilleas was involved in working on tracking the orders and testing the database. He also helped debug the code by finding the instances of the previous product class and replacing them with the updated one. He then worked on the product search bar that is needed for both the admin and the customer menu.
+
+Arseny was fixing some bugs he didn’t deal with during the previous sprint: fixing the page counter, page-swapping buttons' behavior, registering item quantity changes, and recording them to the cart. He also added a few ingredients to the database.
+
+We had one 1-hour-long meeting on Discord on Monday to discuss our work and plan out the next sprint. Throughout the whole sprint, we were actively discussing the sprint and sharing the latest work.
