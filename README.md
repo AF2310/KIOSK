@@ -102,3 +102,5 @@ Achilleas was involved in working on tracking the orders and testing the databas
 Arseny was fixing some bugs he didn’t deal with during the previous sprint: fixing the page counter, page-swapping buttons' behavior, registering item quantity changes, and recording them to the cart. He also added a few ingredients to the database.
 
 We had one 1-hour-long meeting on Discord on Monday to discuss our work and plan out the next sprint. Throughout the whole sprint, we were actively discussing the sprint and sharing the latest work.
+
+![alt text](references/Class_Sp19.png)
