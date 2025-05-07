@@ -10,7 +10,7 @@ import org.example.menu.Product;
  * Handles the ordering process and holds the carted items.
  */
 public class Order {
-  
+
   private int orderId;
   private int kioskId;
   private int customerId;
@@ -35,8 +35,8 @@ public class Order {
   }
 
   public Order() {
-    //Empty constr
-}
+    // Empty constr
+  }
 
   /**
    * Will calculate the overall cost of the order
@@ -45,7 +45,7 @@ public class Order {
   public double calculatePrice() {
 
     Cart theCart = Cart.getInstance();
-    
+
     // Get items and their quantities
     Product[] theItems = theCart.getItems();
     int[] theQuantities = theCart.getQuantity();
@@ -58,8 +58,7 @@ public class Order {
 
       // Multiply price of current item by its' quantity
       // and add calculated price to total
-      total += 
-      theItems[index].getPrice() * theQuantities[index];
+      total += theItems[index].getPrice() * theQuantities[index];
     }
 
     return total;
@@ -70,19 +69,22 @@ public class Order {
    * Will add a Meal to the corresponding ArrayList
    * Must call on calculatePrice() to update orders cost.
    */
-  public void addMeal() {}
+  public void addMeal() {
+  }
 
   /**
    * Will add a Single to the corresponding ArrayList
    * Must call on calculatePrice() to update orders cost.
    */
-  public void addSingle() {}
+  public void addSingle() {
+  }
 
   /**
    * Will remove a selected Item from its ArrayList
    * Must call on calculatePrice() to update orders cost.
    */
-  public void removeItem() {}
+  public void removeItem() {
+  }
 
   /**
    * Getter for the orders ID.
@@ -153,8 +155,8 @@ public class Order {
   public String getProductSummary() {
 
     return items.stream()
-      .map(OrderItem::getSummary)
-      .collect(Collectors.joining("\n"));
+        .map(OrderItem::getSummary)
+        .collect(Collectors.joining("\n"));
 
   }
 }
