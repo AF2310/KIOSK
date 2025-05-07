@@ -343,6 +343,8 @@ public class UpdateMenuItems {
 
     layout.setBottom(bottomContainer);
 
+    layout.setPadding(new Insets(0, 0, 50, 0));
+
     Scene addProductScene = new Scene(layout, 1920, 1080);
     return addProductScene;
   }
