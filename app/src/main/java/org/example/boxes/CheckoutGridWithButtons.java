@@ -12,8 +12,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import org.example.menu.Product;
 import org.example.buttons.ArrowButton;
+import org.example.menu.Product;
 
 /**
  * The grid with the arrow buttons class.

@@ -27,8 +27,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.example.buttons.ArrowButton;
-import org.example.buttons.CancelButton;
 import org.example.buttons.CancelButtonWithText;
+import org.example.buttons.LangBtn;
 import org.example.buttons.SqrBtnImgOnly;
 import org.example.menu.Imenu;
 import org.example.menu.Menu;
@@ -244,12 +244,6 @@ public class MainMenuScreen {
     sweFlag.setFitHeight(30);
     sweFlag.setPreserveRatio(true);
 
-    // Create actual language button - putting it all together
-    Button langButton = new Button();
-    langButton.setGraphic(sweFlag);
-    langButton.setStyle("-fx-background-color: transparent;");
-    langButton.setMinSize(40, 40);
-
     // Spacer to push right buttons
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -283,6 +277,9 @@ public class MainMenuScreen {
         );
       this.primaryStage.setScene(checkoutScene);
     });
+
+    // Create actual language button - putting it all together
+    var langButton = new LangBtn();
 
     // Added all components for the bottom part
     bottomButtons.getChildren().addAll(langButton, spacer, cartButton, cancelButton);

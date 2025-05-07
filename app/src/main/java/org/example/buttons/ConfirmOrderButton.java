@@ -24,7 +24,7 @@ public class ConfirmOrderButton extends Button {
    */
   public ConfirmOrderButton() {
     // Set default size
-    this.setPrefSize(590, 90);
+    this.setPrefSize(590, 140);
 
     // Set astetics of button itself
     this.setStyle(

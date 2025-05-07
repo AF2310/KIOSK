@@ -19,8 +19,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.boxes.AddRemoveBlock;
 import org.example.buttons.ArrowButton;
+import org.example.buttons.LangBtn;
 import org.example.buttons.MidButtonWithImage;
-import org.example.buttons.RoundButton;
 import org.example.buttons.SquareButtonWithImg;
 import org.example.menu.Ingredient;
 import org.example.menu.Single;
@@ -238,7 +238,8 @@ public class ItemDetails {
     
     // Language Button
     // cycles images on click
-    RoundButton langButton = new RoundButton("languages", 70);
+    //Language button
+    var langButton = new LangBtn();
     HBox bottomLeftBox = new HBox(langButton);
     bottomLeftBox.setAlignment(Pos.BOTTOM_LEFT);
     

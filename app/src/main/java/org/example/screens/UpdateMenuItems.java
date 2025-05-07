@@ -23,7 +23,6 @@ import org.example.buttons.DropBoxWithLabel;
 import org.example.buttons.MidButton;
 import org.example.buttons.RectangleTextFieldWithLabel;
 import org.example.buttons.SqrBtnWithOutline;
-import org.example.buttons.SquareButtonWithImg;
 import org.example.buttons.TickBoxWithLabel;
 import org.example.sql.SqlConnectionCheck;
 

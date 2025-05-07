@@ -21,8 +21,10 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.BackButton;
-import org.example.buttons.RoundButton;
+import org.example.buttons.LangBtn;
 import org.example.menu.OrderItem;
 import org.example.menu.Product;
 import org.example.orders.Order;
@@ -32,8 +34,6 @@ import org.example.orders.Order;
  */
 public class AdminOrdHistoryScreen {
 
-  private Stage primaryStage;
-
   /**
    * Scene to display the order history.
    *
@@ -42,8 +42,6 @@ public class AdminOrdHistoryScreen {
    * @return the scene itself
    */
   public Scene showHistoryScene(Stage primaryStage, Scene prevScene) {
-
-    this.primaryStage = primaryStage;
     
     // So the admin doesnt forget where he is lol
     Label historyLabel = new Label("Order History:");
@@ -163,7 +161,7 @@ public class AdminOrdHistoryScreen {
 
     // Back button
     // Clicking button means user goes to previous screen
-    BackButton backButton = new BackButton();
+    var backButton = new BackBtnWithTxt();
     backButton.setOnAction(e -> {
 
       primaryStage.setScene(prevScene);
@@ -172,7 +170,7 @@ public class AdminOrdHistoryScreen {
 
     // Language Button
     // cycles images on click
-    RoundButton langButton = new RoundButton("languages", 70);
+    var langButton = new LangBtn();
     
     // Spacer for Bottom Row
     Region spacerBottom = new Region();

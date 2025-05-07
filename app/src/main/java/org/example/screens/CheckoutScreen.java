@@ -1,17 +1,12 @@
 package org.example.screens;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -19,10 +14,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.animations.FadingAnimation;
 import org.example.boxes.CheckoutGridWithButtons;
-import org.example.buttons.BackButton;
-import org.example.buttons.CancelButton;
+import org.example.buttons.BackBtnWithTxt;
+import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.ConfirmOrderButton;
 import org.example.buttons.EatHereButton;
+import org.example.buttons.LangBtn;
 import org.example.buttons.TakeAwayButton;
 import org.example.menu.Product;
 import org.example.orders.Cart;
@@ -37,9 +33,9 @@ import org.example.users.Customer;
 public class CheckoutScreen {
 
   private Stage primaryStage;
-  private Connection conn;
-  private float totalPrice = 0.0f;
-  private Label totalLabel;
+  // private Connection conn;
+  // private float totalPrice = 0.0f;
+  // private Label totalLabel;
 
   /**
    * Creating a scene for the checkout menu.
@@ -140,21 +136,6 @@ public class CheckoutScreen {
     HBox bottomButtons = new HBox();
     bottomButtons.setPadding(new Insets(10));
 
-    // Swedish Flag - Language button
-    // Set image
-    ImageView sweFlag = new ImageView(new Image(getClass().getResourceAsStream("/swe.png")));
-
-    // Set sizes and make it scalable in a proper way
-    sweFlag.setFitWidth(30);
-    sweFlag.setFitHeight(30);
-    sweFlag.setPreserveRatio(true);
-
-    // Create actual language button - putting it all together
-    Button langButton = new Button();
-    langButton.setGraphic(sweFlag);
-    langButton.setStyle("-fx-background-color: transparent;");
-    langButton.setMinSize(40, 40);
-
     // Create confirm order button instance
     ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton();
 
@@ -207,12 +188,12 @@ public class CheckoutScreen {
     });
 
     // Back button
-    BackButton backButton = new BackButton();
+    var backButton = new BackBtnWithTxt();
     // clicking button means user goes to previous screen
     backButton.setOnAction(e -> primaryStage.setScene(mainMenuScreen));
 
     // Cancel button
-    CancelButton cancelButton = new CancelButton();
+    var cancelButton = new CancelButtonWithText();
     // clicking button means cancellation of order
     // and user gets send back to welcome screen
     cancelButton.setOnAction(e -> {
@@ -222,13 +203,6 @@ public class CheckoutScreen {
     });
 
     // Bottom part - adding all elements together
-
-    // Swedish flag on the left
-    HBox languageBox = new HBox(langButton);
-    languageBox.setAlignment(Pos.BOTTOM_LEFT);
-
-    HBox confirmOrderBox = new HBox(confirmOrderButton);
-    confirmOrderBox.setAlignment(Pos.BOTTOM_CENTER);
 
     // Box for cancel order and back button
     HBox backAndCancel = new HBox(30);
@@ -240,19 +214,18 @@ public class CheckoutScreen {
     Region spacer = new Region();
     HBox.setHgrow(topspacer, Priority.ALWAYS);
 
+    //Language button
+    var langButton = new LangBtn();
+
     // Combine all; 300px spacing between each child
-    HBox bottomPart = new HBox(330);
+    HBox bottomPart = new HBox(250);
     // Top, Right, Bottom, Left padding
     bottomPart.setPadding(new Insets(30, 75, 10, 5));
     bottomPart.getChildren().addAll(
-        languageBox,
-        confirmOrderBox,
+        langButton,
         spacer,
+        confirmOrderButton,
         backAndCancel);
-
-
-
-
 
     VBox layout = new VBox(100);
     layout.setAlignment(Pos.TOP_LEFT);

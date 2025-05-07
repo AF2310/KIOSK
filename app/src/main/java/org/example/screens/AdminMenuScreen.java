@@ -12,6 +12,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.buttons.CancelButtonWithText;
+import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
 import org.example.buttons.RoundButton;
 
@@ -72,7 +73,7 @@ public class AdminMenuScreen {
 
     // Adding the language button which already has the functionality of
     // changing the logo of the language
-    RoundButton langButton = new RoundButton("languages", 70);
+    var langButton = new LangBtn();
     HBox bottomLeftBox = new HBox(langButton);
     bottomLeftBox.setAlignment(Pos.BOTTOM_LEFT);
 
