@@ -12,16 +12,16 @@ import javafx.scene.layout.VBox;
 /**
  * Square button with an image on top and a label below.
  */
-public class SquareButtonWithImg extends Button {
+public class SqrBtnWithOutline extends Button {
 
   /**
    * Constructor for vertically stacked button (image on top, label below).
    */
-  public SquareButtonWithImg(String buttonText, String imageName, String buttonColor) {
+  public SqrBtnWithOutline(String buttonText, String imageName, String buttonColor) {
     // Set fixed square button size (140x140)
     this.setPrefSize(140, 140);
 
-    // Image setup (smaller than before)
+    // Image setup
     Image image = new Image(imageName);
     ImageView buttonImage = new ImageView(image);
     buttonImage.setFitWidth(60);
@@ -32,34 +32,26 @@ public class SquareButtonWithImg extends Button {
     buttonLabel.setStyle("-fx-background-color: transparent;"
         + "-fx-font-size: 18;"
         + "-fx-font-weight: normal;"
-        + "-fx-padding: 5 0;");
+        + "-fx-padding: 5 0;"
+        + "-fx-text-fill: " + buttonColor + ";");
 
-    // Adjust text color based on background color
-    if (buttonColor.equals("rgb(255, 255, 255)")) {
-      buttonLabel.setStyle(buttonLabel.getStyle() + "-fx-text-fill: black;");
-      this.setStyle(
-          "-fx-background-color: rgb(255, 255, 255);"
-              + "-fx-border-color: black;"
-              + "-fx-border-width: 2;"
-              + "-fx-border-radius: 20;"
-              + "-fx-background-radius: 20;");
-    } else {
-      buttonLabel.setStyle(buttonLabel.getStyle() + "-fx-text-fill: white;");
-      this.setStyle(
-          "-fx-background-color: " + buttonColor + ";"
-              + "-fx-border-radius: 20;"
-              + "-fx-background-radius: 20;");
-    }
+    // Always use white background
+    this.setStyle(
+        "-fx-background-color: white;"
+            + "-fx-border-color: " + buttonColor + ";"
+            + "-fx-border-width: 2;"
+            + "-fx-border-radius: 20;"
+            + "-fx-background-radius: 20;");
 
     // Image on top, label below
     VBox contentColumn = new VBox(8, buttonImage, buttonLabel);
     contentColumn.setAlignment(Pos.CENTER);
 
-    // Stackpane for centering and padding
+    // Wrap in StackPane for centering and padding
     StackPane stack = new StackPane(contentColumn);
     stack.setPadding(new Insets(10));
 
-    // Set button's graphic (stacked layout)
+    // Set button's graphic stacked layout
     this.setGraphic(stack);
   }
 }
