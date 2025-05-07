@@ -19,7 +19,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.animations.FadingAnimation;
 import org.example.boxes.CheckoutGridWithButtons;
-import org.example.buttons.ArrowButton;
 import org.example.buttons.BackButton;
 import org.example.buttons.CancelButton;
 import org.example.buttons.ConfirmOrderButton;
@@ -101,22 +100,23 @@ public class CheckoutScreen {
     TextField promoField = new TextField();
     promoField.setPromptText("Enter Promo Code");
     promoField.setStyle(
-        "-fx-background-color: transparent;"
+        "-fx-background-color: grey;"
             + "-fx-text-fill: white;"
             + "-fx-font-size: 24px;"
             + "-fx-font-weight: bold;"
+            + "-fx-background-radius: 15;"
             + "-fx-alignment: center;");
     promoField.setMaxWidth(300);
 
-    // Create the Apply Promo button
-    Button applyPromoButton = new Button();
-    applyPromoButton.setGraphic(promoField);
-    applyPromoButton.setStyle(
-        "-fx-background-color: #4CAF50;"
-            + "-fx-background-radius: 15;"
-            + "-fx-padding: 20;");
-    applyPromoButton.setPrefSize(590, 90);
-    applyPromoButton.setOnAction(e -> applyPromo(promoField.getText()));
+    // // Create the Apply Promo button
+    // Button applyPromoButton = new Button();
+    // applyPromoButton.setGraphic(promoField);
+    // applyPromoButton.setStyle(
+    //     "-fx-background-color: #4CAF50;"
+    //         + "-fx-background-radius: 15;"
+    //         + "-fx-padding: 20;");
+    // applyPromoButton.setPrefSize(590, 90);
+    // applyPromoButton.setOnAction(e -> applyPromo(promoField.getText()));
 
     // Top of layout - combining elements
 
@@ -124,8 +124,9 @@ public class CheckoutScreen {
     leftsideBox.setAlignment(Pos.CENTER);
     leftsideBox.getChildren().addAll(
         checkoutLabel,
-        topLeftSpacer,
-        applyPromoButton);
+        promoField,
+        topLeftSpacer
+    );
 
     HBox topBox = new HBox();
     topBox.setAlignment(Pos.TOP_LEFT);
@@ -249,23 +250,9 @@ public class CheckoutScreen {
         spacer,
         backAndCancel);
 
-    // Stacking all Objects/Boxes vertically on each other
 
-    /*Button confirmButton = new Button("Confirm Checkout");
-    confirmButton.setOnAction(e -> {
-      try {
-        SimpleItem[] orderedItems = cart.getItems();
-        int[] orderedQuantities = cart.getQuantity();
-        for (int i = 0; i < orderedItems.length; i++) {
-          int productId = orderedItems[i].getId(); 
-          int quantityOrdered = orderedQuantities[i];
-          reduceProductQuantity(connection, productId, quantityOrdered);
-        }
-          
-      } catch (SQLException ex) {
-        ex.printStackTrace();
-      }
-    });*/
+
+
 
     VBox layout = new VBox(100);
     layout.setAlignment(Pos.TOP_LEFT);
@@ -275,17 +262,11 @@ public class CheckoutScreen {
     Product[] items = cart.getItems();
     int[] quantitys = cart.getQuantity();
 
-    // Arrow buttons
-    ArrowButton leftArrowButton = new ArrowButton(true, false);
-    ArrowButton rightArrowButton = new ArrowButton(false, false);
-
-    // Create the CheckoutGridWithButtons
+    // Create the grid with items and quantities
     CheckoutGridWithButtons checkoutGrid = new CheckoutGridWithButtons(
         items,
         quantitys,
-        6,
-        leftArrowButton,
-        rightArrowButton);
+        6);
 
     layout.setAlignment(Pos.CENTER);
     layout.setPadding(new Insets(20));
@@ -298,24 +279,24 @@ public class CheckoutScreen {
     return new Scene(layout, windowWidth, windowHeight);
   }
 
-  private void applyPromo(String code) {
-    try {
-      String sql = "";
-      PreparedStatement stmt = conn.prepareStatement(sql);
-      stmt.setString(1, code);
-      ResultSet rs = stmt.executeQuery();
-      if (rs.next()) {
-        float discount = rs.getFloat("discount");
-        totalPrice *= (1 - discount);
-        totalLabel.setText(String.format("Total: %.2f :- (%.0f%% discount applied)",
-            totalPrice, discount * 100));
-      } else {
-        totalLabel.setText("Invalid promo code");
-      }
+  // private void applyPromo(String code) {
+  //   try {
+  //     String sql = "";
+  //     PreparedStatement stmt = conn.prepareStatement(sql);
+  //     stmt.setString(1, code);
+  //     ResultSet rs = stmt.executeQuery();
+  //     if (rs.next()) {
+  //       float discount = rs.getFloat("discount");
+  //       totalPrice *= (1 - discount);
+  //       totalLabel.setText(String.format("Total: %.2f :- (%.0f%% discount applied)",
+  //           totalPrice, discount * 100));
+  //     } else {
+  //       totalLabel.setText("Invalid promo code");
+  //     }
 
-    } catch (SQLException ex) {
-      ex.printStackTrace();
-    }
+  //   } catch (SQLException ex) {
+  //     ex.printStackTrace();
+  //   }
 
-  }
+  // }
 }

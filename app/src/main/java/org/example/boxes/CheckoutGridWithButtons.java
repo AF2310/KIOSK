@@ -13,6 +13,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.example.menu.Product;
+import org.example.buttons.ArrowButton;
 
 /**
  * The grid with the arrow buttons class.
@@ -31,13 +32,12 @@ public class CheckoutGridWithButtons extends HBox {
   /**
    * Constructor for the CheckoutGridWithButtons instance.
    */
-  public CheckoutGridWithButtons(Product[] items, int[] quantitys, int itemsPerPage,
-      Button leftArrowButton, Button rightArrowButton) {
+  public CheckoutGridWithButtons(Product[] items, int[] quantitys, int itemsPerPage) {
     this.items = items;
     this.quantitys = quantitys;
     this.itemsPerPage = itemsPerPage;
-    this.leftArrowButton = leftArrowButton;
-    this.rightArrowButton = rightArrowButton;
+    this.leftArrowButton = new ArrowButton(true, false);
+    this.rightArrowButton = new ArrowButton(false, false);
     this.currentPage = new SimpleIntegerProperty(0);
     this.itemGrid = new GridPane();
     this.pageCounterLabel = new Label();

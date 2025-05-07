@@ -132,47 +132,6 @@ public class WelcomeScreen {
     mainPane.setPrefSize(windowWidth, windowHeight);
 
     Scene scene = new Scene(mainPane, windowWidth, windowHeight);
-
-    // // Fix aspect ratio
-    // final double aspect_ratio = 1920.0 / 1080.0;
-    // final boolean[] resizing = {true};
-
-    // // Adjust width on the go
-    // primaryStage.widthProperty().addListener((observer, givenValue, upddValue) -> {
-    //   if (!resizing[0]) {
-    //     resizing[0] = true;
-    //     double newWidth = upddValue.doubleValue();
-    //     double newHeight = newWidth / aspect_ratio;
-    //     primaryStage.setHeight(newHeight);
-    //     resizing[0] = false;
-    //   }
-    // });
-
-    // // Adjust height on the go
-    // scene.heightProperty().addListener((oberver, oldVal, updtValue) -> {
-    //   double newWidth = scene.getWidth() / windowWidth;
-    //   double newHeight = updtValue.doubleValue() / windowHeight;
-    //   double newScale = Math.min(newWidth, newHeight);
-    //   mainWindow.setScaleX(newScale);
-    //   mainWindow.setScaleY(newScale);
-
-    //   ScaleTransition st = new ScaleTransition(Duration.millis(200), mainWindow);
-    //   st.setToX(newScale);
-    //   st.setToY(newScale);
-    //   st.play();
-    // });
-
-    // Set the main menu
-    /*MainMenuScreen mainMenuScreen = new MainMenuScreen();
-    Scene mainMenuScene = mainMenuScreen.createMainMenuScreen(
-        primaryStage,
-        windowWidth,
-        windowHeight,
-        scene,
-        50,
-        mode
-      );*/
-
     
     // Set up action for eat here
     eatHereBtn.setOnAction(e -> {

@@ -28,6 +28,8 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.example.buttons.ArrowButton;
 import org.example.buttons.CancelButton;
+import org.example.buttons.CancelButtonWithText;
+import org.example.buttons.SqrBtnImgOnly;
 import org.example.menu.Imenu;
 import org.example.menu.Menu;
 import org.example.menu.Product;
@@ -253,7 +255,7 @@ public class MainMenuScreen {
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
     // Create cancel button
-    CancelButton cancelButton = new CancelButton();
+    var cancelButton = new CancelButtonWithText();
 
     cancelButton.setOnAction(e -> {
       Cart.getInstance().clearCart();    
@@ -262,15 +264,7 @@ public class MainMenuScreen {
     });
 
     // Create Cart button
-    Button cartButton = new Button();
-    ImageView cartIcon = new ImageView(new Image(getClass().getResourceAsStream("/cart_bl.png")));
-
-    // Adjust asthetics of button
-    cartIcon.setFitWidth(60);
-    cartIcon.setFitHeight(60);
-    cartButton.setGraphic(cartIcon);
-    cartButton.setStyle("-fx-background-color: transparent;");
-    cartButton.setMinSize(40, 40);
+    var cartButton = new SqrBtnImgOnly();
 
     // Checkout screen
     CheckoutScreen checkoutScreen = new CheckoutScreen();
@@ -323,13 +317,6 @@ public class MainMenuScreen {
    * Added the items for the menu one by one for now, not through the database.
    */
   private void setupMenuData() throws SQLException {
-    /* Connection conn = DriverManager.getConnection(
-        "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
-          + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
-          + "?user=u5urh19mtnnlgmog"
-          + "&password=zPgqf8o6na6pv8j8AX8r"
-          + "&useSSL=true"
-          + "&allowPublicKeyRetrieval=true"); */
     Imenu menu = new Menu(conn);
 
     categoryItems.put("Burgers", convert(conn, menu.getMains()));
