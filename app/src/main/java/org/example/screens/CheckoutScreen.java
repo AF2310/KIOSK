@@ -96,13 +96,14 @@ public class CheckoutScreen {
     TextField promoField = new TextField();
     promoField.setPromptText("Enter Promo Code");
     promoField.setStyle(
-        "-fx-background-color: grey;"
+        "-fx-background-color: white;"
             + "-fx-text-fill: white;"
             + "-fx-font-size: 24px;"
             + "-fx-font-weight: bold;"
             + "-fx-background-radius: 15;"
             + "-fx-alignment: center;");
     promoField.setMaxWidth(300);
+    promoField.setMaxHeight(100);
 
     // // Create the Apply Promo button
     // Button applyPromoButton = new Button();
@@ -116,20 +117,21 @@ public class CheckoutScreen {
 
     // Top of layout - combining elements
 
-    HBox leftsideBox = new HBox(100);
-    leftsideBox.setAlignment(Pos.CENTER);
-    leftsideBox.getChildren().addAll(
-        checkoutLabel,
-        promoField,
-        topLeftSpacer
-    );
+    // HBox leftsideBox = new HBox(100);
+    // leftsideBox.setAlignment(Pos.CENTER);
+    // leftsideBox.getChildren().addAll(
+    //     checkoutLabel,
+    //     promoField,
+    //     topLeftSpacer
+    // );
 
     HBox topBox = new HBox();
     topBox.setAlignment(Pos.TOP_LEFT);
     topBox.getChildren().addAll(
-        leftsideBox,
+        checkoutLabel,
+        modeIndicatorBox,
         topspacer,
-        modeIndicatorBox);
+        promoField);
 
     // Bottom buttons
 
