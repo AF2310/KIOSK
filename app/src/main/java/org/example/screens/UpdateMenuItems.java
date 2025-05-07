@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import org.example.buttons.DropBoxWithLabel;
 import org.example.buttons.MidButton;
 import org.example.buttons.RectangleTextFieldWithLabel;
+import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.SquareButtonWithImg;
 import org.example.buttons.TickBoxWithLabel;
 import org.example.sql.SqlConnectionCheck;
@@ -172,7 +173,7 @@ public class UpdateMenuItems {
     categoryImageMap.put("Drink", "/food/default_drink.png");
     categoryImageMap.put("Dessert", "/food/default_dessert.png");
 
-    SquareButtonWithImg confirmButton = new SquareButtonWithImg("Confirm",
+    SqrBtnWithOutline confirmButton = new SqrBtnWithOutline("Confirm",
         "green_tick.png", "rgb(81, 173, 86)");
 
     // Textfields for the information to put into the SQL query
@@ -292,7 +293,7 @@ public class UpdateMenuItems {
       }
     });
 
-    SquareButtonWithImg backButton = new SquareButtonWithImg("Cancel",
+    SqrBtnWithOutline backButton = new SqrBtnWithOutline("Cancel",
         "cancel.png", "rgb(255, 0, 0)");   
 
     backButton.setOnAction(e -> {
