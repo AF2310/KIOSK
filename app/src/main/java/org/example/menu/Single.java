@@ -328,7 +328,7 @@ public class Single extends Product {
             Type.valueOf(rs.getString("type").toLowerCase()),
             rs.getString("image_url")
             // TODO: fix this quickfix
-            //type;
+            //type;           
             ));
       }
       // Close result set
@@ -361,31 +361,6 @@ public class Single extends Product {
       rs.close();
     }
   }
-
-  public List<Single> searchByName(Connection conn, String name) throws SQLException {
-    List<Single> results = new ArrayList<>();
-    String sql =  "SELECT p.product_id AS id, p.name, CAST(p.price AS DECIMAL(10,2)) AS price, " +
-    "c.name AS type, p.image_url " +
-    "FROM product p " +
-    "JOIN category c ON p.category_id = c.category_id " +
-    "WHERE LOWER(p.name) LIKE ? " +
-    "AND p.is_active = 1";
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setString(1, "%" + name.toLowerCase() + "%");
-      ResultSet rs = stmt.executeQuery();
-      while (rs.next()) {
-        results.add(new Single(
-          rs.getInt("id"),
-          rs.getString("name"),
-          rs.getFloat("price"),
-          Type.valueOf(rs.getString("type").toUpperCase()),
-          rs.getString("image_url")
-        ));
-      }
-
-      }
-      return results;
-    }
 
 
   /*public List<Single> getOptionsByCategoryName(Connection conn,
