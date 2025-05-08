@@ -1,7 +1,6 @@
 package org.example.screens;
 
 import java.io.InputStream;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +24,7 @@ import org.example.buttons.SquareButtonWithImg;
 import org.example.menu.Ingredient;
 import org.example.menu.Single;
 import org.example.orders.Cart;
+import org.example.sql.SqlQueries;
 
 /**
  * Screen for the details of an Item.
@@ -32,7 +32,7 @@ import org.example.orders.Cart;
  * (add, remove ingredients and such).
  */
 public class ItemDetails {
-
+  SqlQueries queries = new SqlQueries();
   /**
    * Creating a scene for a specific item, displaying all item details.
    * Only for single items
@@ -43,15 +43,10 @@ public class ItemDetails {
    * @param cart the cart where all items are
    * @return scene containing all item details
    */
+
   public Scene create(Stage primaryStage, Scene prevScene, Single item, Cart cart) 
       throws SQLException {
-    item.setIngredients(DriverManager.getConnection(
-        "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
-          + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
-          + "?user=u5urh19mtnnlgmog"
-          + "&password=zPgqf8o6na6pv8j8AX8r"
-          + "&useSSL=true"
-          + "&allowPublicKeyRetrieval=true"));
+    item.setIngredients(queries.getConnection());
     List<Ingredient> ingredients = item.ingredients;
     List<Integer> quantities = new ArrayList<>();
     /*
