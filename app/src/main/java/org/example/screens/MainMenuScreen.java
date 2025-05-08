@@ -44,7 +44,8 @@ public class MainMenuScreen {
 
   private Stage primaryStage;
 
-  private String[] categories = {"Burgers", "Sides", "Drinks", "Desserts", "Special Offers"};
+  private String[] categories = {"Burgers", "Sides", "Drinks",
+    "Desserts", "Meals", "Special Offers"};
   private Map<String, List<Product>> categoryItems = new HashMap<>();
   private int currentCategoryIndex = 0;
   private GridPane itemGrid = new GridPane();
@@ -321,6 +322,9 @@ public class MainMenuScreen {
     categoryItems.put("Drinks", convert(conn, menu.getDrinks()));
     categoryItems.put("Desserts", convert(conn, menu.getDesserts()));
     categoryItems.put("Special Offers", List.of());
+    categoryItems.put("Meals", null);
+
+  
   }
 
   /**
@@ -337,7 +341,10 @@ public class MainMenuScreen {
     // Fetch data
     String category = categories[currentCategoryIndex];
     List<Product> items = categoryItems.get(category);
-
+    if ("Meals".equals(category)) {
+      showDummyMeals();
+      return;
+    }
     // Max item slots in rows and pages
     int maxItemsPerRow = 3;
     int totalItemsPerPage = 6;
@@ -506,6 +513,76 @@ public class MainMenuScreen {
     for (int i = 0; i < categoryButtons.size(); i++) {
       styleCategoryButton(categoryButtons.get(i), i == currentCategoryIndex, i);
     }
+  }
+
+  // a method to show the meals before connecting the database for it
+  // basically I copied all the same settings from updateGrid for the middle grid
+  private void showDummyMeals() {
+    itemGrid.getChildren().clear();
+    itemGrid.setHgap(20);
+    itemGrid.setVgap(20);
+    itemGrid.setPadding(new Insets(10));
+    itemGrid.setAlignment(Pos.CENTER);
+
+    int maxItemsPerRow = 3;
+
+    // Just instead putting in hardcoded items for now
+    // the name, image and price same as other products
+    String[][] dummyMeals = {
+      {"Standard Meal", "/food/standard_burger.png", "34"},
+      {"All American Meal", "/food/all_american_burger.png", "38"},
+      {"Chicken Burger Meal", "/food/chicken_burger.png", "33"},
+      {"Double Burger Meal", "/food/double_burger.png", "41"}
+    };
+    for (int i = 0; i < dummyMeals.length; i++) {
+      VBox itemBox = new VBox(10);
+      itemBox.setAlignment(Pos.CENTER);
+
+      StackPane imageSlot = new StackPane();
+      imageSlot.setPrefSize(200, 200);
+      imageSlot.setMaxSize(200, 200);
+      imageSlot.setMinSize(200, 200);
+
+      String imagePath = dummyMeals[i][1];
+      
+      InputStream inputStream = getClass().getResourceAsStream(imagePath);
+      ImageView imageView;
+      if (inputStream == null) {
+        imageView = new ImageView(new Image(
+          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABC"
+          + "AQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/hd5JnkAAAAASUVORK5CYII="));
+      } else {
+        imageView = new ImageView(new Image(inputStream));
+      }
+        
+      
+      imageView.setFitHeight(150);
+      imageView.setPreserveRatio(true);
+      imageSlot.getChildren().add(imageView);
+      imageSlot.setAlignment(Pos.CENTER);
+
+      String nameStr = dummyMeals[i][0];
+      String priceStr = dummyMeals[i][2];
+      
+      Label name = new Label(nameStr);
+      name.setStyle("-fx-font-size: 16px;");
+
+      Label price = new Label(priceStr + " :-");
+      price.setStyle("-fx-font-weight: bold; -fx-font-size: 18px;");
+      HBox priceBox = new HBox(price);
+      priceBox.setAlignment(Pos.BASELINE_RIGHT);
+
+      // For now just print clicked, later navigate to sides and drinks selection
+      imageSlot.setOnMouseClicked(e -> {
+        System.out.println("Meal clicked: " + nameStr);
+        // Later: go to meal customization screen
+      });
+
+      itemBox.getChildren().addAll(imageSlot, name, priceBox);
+      itemGrid.add(itemBox, i % maxItemsPerRow, i / maxItemsPerRow);
+    }
+
+    updateCategoryButtonStyles();
   }
 }
 
