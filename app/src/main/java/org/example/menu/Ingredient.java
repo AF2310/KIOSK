@@ -85,4 +85,34 @@ public class Ingredient {
 
     return list;
   }
+
+  public List<Ingredient> searchIngredientsByName(String name, Connection conn) throws SQLException {
+    List<Ingredient> list = new ArrayList<>();
+    String sql = "SELECT ingredient_id AS id, ingredient_name AS name " +
+                "FROM ingredient " +
+                "WHERE LOWER(ingredient_name) LIKE ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setString(1, "%" + name.toLowerCase() + "%");
+      ResultSet rs = stmt.executeQuery();
+      while (rs.next()) {
+        list.add(new Ingredient(rs.getInt("id"), rs.getString("name")));
+      }
+    }
+    return list;
+
+  }
+
+
+  public  List<Ingredient> searchIngredientsByPrice(float maxPrice, Connection conn) throws SQLException {
+    List<Ingredient> list = new ArrayList<>();
+    String sql = "";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setFloat(1, maxPrice);
+      ResultSet rs = stmt.executeQuery();
+      while (rs.next()) {
+        list.add(new Ingredient(rs.getInt("id"), rs.getString("name")));
+      }
+    }
+    return list;
+  }
 }
