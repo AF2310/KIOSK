@@ -12,10 +12,11 @@ import org.example.menu.Single;
 
 /**
  * The cart class implemented as a singleton.
+ * That it can be accessed anywhere without
+ * making multiple instances.
  */
 public class Cart {
-  // Changed the cart into a singleton so
-  // that it can be accessed anywhere easier
+  
   private static Cart instance;
   private ArrayList<Product> items;
   private ArrayList<Integer> quantity;

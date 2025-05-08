@@ -6,6 +6,9 @@ package org.example.buttons;
  */
 public class LangBtn extends RoundButton {
 
+  /**
+   * Language button constructor.
+   */
   public LangBtn() {
     super("languages", 140);
   }

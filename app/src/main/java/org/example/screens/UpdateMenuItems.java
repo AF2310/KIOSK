@@ -164,7 +164,7 @@ public class UpdateMenuItems {
       showAlert("Database error", "Failed to load categories", Alert.AlertType.ERROR);
     } // TODO: Make connection to sql a singleton so we don't create new connections each time.
 
-    //Maps categories to default image paths for now
+    // Maps categories to default image paths for now
     // TODO: Make an implementation for putting in new images for products
     Map<String, String> categoryImageMap = new HashMap<>();
     categoryImageMap.put("Burger", "/food/default_burger.png");

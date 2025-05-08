@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.example.orders.Order;
-//import com.mysql.cj.x.protobuf.MysqlxCrud.Order;
 
 /**
  * Represents a customer using the Self Service Kiosk.
@@ -22,7 +21,6 @@ public class Customer implements User {
     Order order = new Order();
     double price = order.calculatePrice();
 
-    // Customer id is NOT nullable for now TODO make nullable
     // SQL Query as string statement
     String s = "INSERT INTO `order` "
         + "(kiosk_ID, customer_ID, order_date, amount_total, status)"
@@ -75,6 +73,7 @@ public class Customer implements User {
     // Prepare statement to be actual query
     // Using try to save ressources and close process automatically
     try (PreparedStatement ps = conn.prepareStatement(s)) {
+      
       // Open result set to fetch order id (execute query)
       ResultSet rs = ps.executeQuery();
 

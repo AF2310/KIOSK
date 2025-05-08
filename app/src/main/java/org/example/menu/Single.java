@@ -31,7 +31,24 @@ public class Single extends Product {
     setImagePath(imgPath);
   }
 
-  public Single(int id, String name, double price, Type type, String imgPath, List<Ingredient> ingredients) {
+  /**
+   * The single class constructor.
+   *
+   * @param id int id of the single
+   * @param name string name
+   * @param price double variable of price
+   * @param type type of single
+   * @param imgPath image path as string
+   * @param ingredients all ingredients inside this single
+   */
+  public Single(
+      int id,
+      String name,
+      double price,
+      Type type,
+      String imgPath,
+      List<Ingredient> ingredients
+  ) {
     setId(id);
     setName(name);
     setPrice(price);

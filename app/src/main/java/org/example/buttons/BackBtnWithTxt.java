@@ -1,5 +1,8 @@
 package org.example.buttons;
 
+/**
+ * A reusable Back button with text.
+ */
 public class BackBtnWithTxt extends SqrBtnWithOutline {
 
   /**

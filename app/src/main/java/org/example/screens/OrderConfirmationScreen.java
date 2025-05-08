@@ -22,7 +22,6 @@ public class OrderConfirmationScreen {
   /**
    * This is the constructor of the order confirmation
    * screen. It will screate a scene for it.
-   * TODO: we still need proper database queries for orderid for e.g.
    *
    * @param primaryStage the primary stage of this scene
    * @param windowWidth width of window

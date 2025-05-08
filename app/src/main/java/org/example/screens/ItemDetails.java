@@ -280,12 +280,5 @@ public class ItemDetails {
       blocks.get(i).setQuantity(basequant.get(i));
     }
     item.quantity = quantitys;
-
-
-    /* int itemId = item.getId();
-
-    String s = "INSERT INTO order_item "
-        + "(order_item_id, order_id, order_date, amount_total, status)"
-        + "VALUES (123, 1, NOW(), ?, 'pending')"; */
   }
 }

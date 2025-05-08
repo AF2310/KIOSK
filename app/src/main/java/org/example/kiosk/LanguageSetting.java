@@ -6,7 +6,8 @@ import java.util.List;
  * Represents the LanguageSetting for the Self Service Kiosk system.
  */
 public class LanguageSetting {
-  // These should be changed to private.
+
+  // TODO: These should be changed to private.
   public List<String> availableLanguages;
   public String selectedLanguage;
 
