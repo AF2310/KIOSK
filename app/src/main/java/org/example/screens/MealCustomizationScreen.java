@@ -110,7 +110,8 @@ public class MealCustomizationScreen {
 
     // Goes to the next scene which is the drink options scene
     confirmButton.setOnMouseClicked(e -> {
-      Scene drinkScene = createDrinkSelectionScene(stage, returnScene, mealName, imagePath);
+      Scene drinkScene = createDrinkSelectionScene(stage, returnScene, mealName, imagePath,
+          stage.getScene());
       stage.setScene(drinkScene);
     });
 
@@ -121,13 +122,14 @@ public class MealCustomizationScreen {
    * This constructor creates the scene for selecting a drink for a meal.
    *
    * @param stage primary stage
-   * @param returnScene goes back to the side options
+   * @param mainScene goes back to the mainscreen
    * @param mealName name of the meal
    * @param imagePath image of the selected meal
+   * @param sideScene goesback to the side scene
    * @return it returns the scene for drink options.
    */
-  public Scene createDrinkSelectionScene(Stage stage, Scene returnScene,
-      String mealName, String imagePath) {
+  public Scene createDrinkSelectionScene(Stage stage, Scene mainScene,
+      String mealName, String imagePath, Scene sideScene) {
 
     Label title = new Label("Pick a Drink for your Meal");
     title.setStyle("-fx-font-size: 40px;"
@@ -188,8 +190,7 @@ public class MealCustomizationScreen {
 
     // Here we go back to the side options scene when we click cancel
     cancelBtn.setOnMouseClicked(e -> {
-      Scene sideScene = createSideSelectionScene(stage, returnScene, mealName, imagePath);
-      stage.setScene(sideScene);
+      stage.setScene(mainScene);
     });
 
     return new Scene(layout, 1920, 1080);
