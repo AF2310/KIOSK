@@ -15,6 +15,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SqrBtnWithOutline;
@@ -178,15 +179,21 @@ public class MealCustomizationScreen {
     var languageBtn = new LangBtn();
     var confirmBtn = new SqrBtnWithOutline("Confirm", "green_tick.png", "rgb(81, 173, 86)");
     var cancelBtn = new CancelButtonWithText();
+    var backButton = new BackBtnWithTxt();
 
     Region spacer1 = new Region();
     Region spacer2 = new Region();
     HBox.setHgrow(spacer1, Priority.ALWAYS);
     HBox.setHgrow(spacer2, Priority.ALWAYS);
 
-    HBox bottomBar = new HBox(20, languageBtn, spacer1, confirmBtn, spacer2, cancelBtn);
+    HBox bottomBar = new HBox(20, languageBtn, spacer1, confirmBtn, spacer2, backButton, cancelBtn);
     bottomBar.setPadding(new Insets(20));
     layout.setBottom(bottomBar);
+
+    //Setting the onclick for the backbutton (going back to the side options)
+    backButton.setOnMouseClicked(e -> {
+      stage.setScene(sideScene);
+    });
 
     // Here we go back to the side options scene when we click cancel
     cancelBtn.setOnMouseClicked(e -> {
