@@ -538,6 +538,7 @@ public class MainMenuScreen {
       VBox itemBox = new VBox(10);
       itemBox.setAlignment(Pos.CENTER);
 
+      // Looking at updateGrid and adding the same values for sizes
       StackPane imageSlot = new StackPane();
       imageSlot.setPrefSize(200, 200);
       imageSlot.setMaxSize(200, 200);
@@ -555,7 +556,8 @@ public class MainMenuScreen {
         imageView = new ImageView(new Image(inputStream));
       }
         
-      
+      // Everything is same for the scene,
+      // its just that its not the same logic fully because of dummy code
       imageView.setFitHeight(150);
       imageView.setPreserveRatio(true);
       imageSlot.getChildren().add(imageView);
@@ -572,7 +574,7 @@ public class MainMenuScreen {
       HBox priceBox = new HBox(price);
       priceBox.setAlignment(Pos.BASELINE_RIGHT);
 
-      // For now just print clicked, later navigate to sides and drinks selection
+      // Clicking the image we go to the side options screen first then drinks option
       imageSlot.setOnMouseClicked(e -> {
         MealCustomizationScreen customizationScreen = new MealCustomizationScreen();
         Scene sideSelectionScene = customizationScreen.createSideSelectionScene(

@@ -36,20 +36,22 @@ public class MealCustomizationScreen {
    */
   public Scene createSideSelectionScene(Stage stage, Scene returnScene,
       String mealName, String imagePath) {
+    // Creating the title for the scene
     Label title = new Label("Pick a Side for your Meal");
     title.setStyle("-fx-font-size: 40px;"
         + "-fx-font-weight: bold;");
-
+    // Centering it on top of the layout
     HBox titleBox = new HBox(title);
     titleBox.setAlignment(Pos.CENTER);
     titleBox.setPadding(new Insets(30, 0, 0, 0));
     BorderPane layout = new BorderPane();
     layout.setTop(titleBox);
-    
+    // Making an hbox to separate two things in the center
     HBox centerBox = new HBox(50);
     centerBox.setPadding(new Insets(20));
     centerBox.setAlignment(Pos.CENTER);
 
+    // gridpane is used here for the side options
     GridPane sideOptionsGrid = new GridPane();
     sideOptionsGrid.setHgap(20);
     sideOptionsGrid.setVgap(20);
@@ -63,6 +65,8 @@ public class MealCustomizationScreen {
       sideBtn.setPrefSize(150, 100);
       sideOptionsGrid.add(sideBtn, i % 2, i / 2);
     }
+    // Inputing the image of the selected meal and the name so
+    // the user is aware what burger/meal they picked
     VBox mealDisplay = new VBox(10);
     mealDisplay.setAlignment(Pos.CENTER);
     InputStream imageStream = getClass().getResourceAsStream(imagePath);
@@ -76,6 +80,8 @@ public class MealCustomizationScreen {
     centerBox.getChildren().addAll(sideOptionsGrid, mealDisplay);
     layout.setCenter(centerBox);
 
+    // Implementing a lot of the same stuff we implemented in other scenes,
+    // the bottom bar with the language button and confirm and canccel
     var languageBtn = new LangBtn();
     HBox bottomLeftBox = new HBox(languageBtn);
     bottomLeftBox.setAlignment(Pos.BOTTOM_LEFT);
@@ -97,10 +103,12 @@ public class MealCustomizationScreen {
     bottomLayout.getChildren().addAll(languageBtn, leftSpacer, confirmBox, rightSpacer, cancelBox);
     layout.setBottom(bottomLayout);
 
+    // goes back to the main screen when the user clicks cancel
     cancelBtn.setOnMouseClicked(e -> {
       stage.setScene(returnScene);
     });
 
+    // Goes to the next scene which is the drink options scene
     confirmButton.setOnMouseClicked(e -> {
       Scene drinkScene = createDrinkSelectionScene(stage, returnScene, mealName, imagePath);
       stage.setScene(drinkScene);
@@ -125,6 +133,9 @@ public class MealCustomizationScreen {
     title.setStyle("-fx-font-size: 40px;"
         + "-fx-font-weight: bold;");
 
+
+    // The drink options scene is for now almost exact same as the side scene one,
+    // It just has a different label, so no need for commenting this part
     HBox titleBox = new HBox(title);
     titleBox.setAlignment(Pos.CENTER);
     titleBox.setPadding(new Insets(30, 0, 0, 0));
@@ -141,8 +152,7 @@ public class MealCustomizationScreen {
     sideOptionsGrid.setAlignment(Pos.CENTER_LEFT);
     sideOptionsGrid.setPadding(new Insets(10));
 
-    //for now they are normal buttons,
-    // i decided the 2x3 grid looks fine for this
+
     for (int i = 0; i < 6; i++) {
       Button sideBtn = new Button("Side " + (i + 1));
       sideBtn.setPrefSize(150, 100);
@@ -162,7 +172,7 @@ public class MealCustomizationScreen {
     layout.setCenter(centerBox);
 
 
-    // Bottom buttons
+
     var languageBtn = new LangBtn();
     var confirmBtn = new SqrBtnWithOutline("Confirm", "green_tick.png", "rgb(81, 173, 86)");
     var cancelBtn = new CancelButtonWithText();
@@ -176,7 +186,7 @@ public class MealCustomizationScreen {
     bottomBar.setPadding(new Insets(20));
     layout.setBottom(bottomBar);
 
-
+    // Here we go back to the side options scene when we click cancel
     cancelBtn.setOnMouseClicked(e -> {
       Scene sideScene = createSideSelectionScene(stage, returnScene, mealName, imagePath);
       stage.setScene(sideScene);
