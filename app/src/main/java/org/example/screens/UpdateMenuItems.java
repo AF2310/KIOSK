@@ -20,6 +20,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -27,6 +28,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.converter.DoubleStringConverter;
 
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.DropBoxWithLabel;
@@ -404,12 +406,18 @@ public class UpdateMenuItems {
     // Product activity column
     TableColumn<Product, Integer> activityColumn = new TableColumn<>("Product Active");
     activityColumn.setCellValueFactory(new PropertyValueFactory<>("activity"));
-    // TODO: not sure if this next line works with tiny int value; check later
     activityColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
 
     // Product price column
     TableColumn<Product, Double> priceColumn = new TableColumn<>("Product Price");
+    priceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
     priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+    priceColumn.setOnEditCommit(event -> {
+      Product product = event.getRowValue();
+      Double newPrice = event.getNewValue();
+      product.setPrice(newPrice);
+      // TODO insert price update database
+    });
     priceColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
 
     // Creating Table
@@ -417,6 +425,7 @@ public class UpdateMenuItems {
     productTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
     productTable.setMaxWidth(Double.MAX_VALUE);
     productTable.setPrefWidth(Region.USE_COMPUTED_SIZE);
+    productTable.setEditable(true);
     
     // Combining columns in table
     productTable.getColumns().add(idColumn);
@@ -496,6 +505,7 @@ public class UpdateMenuItems {
     return new Scene(layout, 1920, 1080);
   }
 
+  // TODO: will be moved later
   private ArrayList<Product> fetchAllProductData(Connection connection) throws SQLException {
     // ArrayList to store product data
     ArrayList<Product> products = new ArrayList<>();
@@ -528,5 +538,10 @@ public class UpdateMenuItems {
     }
 
     return products;
+  }
+
+  // TODO: will be moved later
+  private void updateProductPrice(double newPrice) {
+    
   }
 }
