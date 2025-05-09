@@ -365,10 +365,11 @@ public class Single extends Product {
   /**
    * Overloading the equality operator.
    *
-   * @param other the other single
+   * @param obj the other single
    * @return the equality value
    */
-  public boolean equals(Single other) {
+  public boolean equals(Object obj) {
+    Single other = (Single) obj;
     if (this.getId() == other.getId()) {
       for (int i = 0; i < this.quantity.size(); i++) {
         if (!this.quantity.get(i).equals(other.quantity.get(i))) {
