@@ -362,6 +362,25 @@ public class Single extends Product {
     }
   }
 
+  /**
+   * Overloading the equality operator.
+   *
+   * @param other the other single
+   * @return the equality value
+   */
+  public boolean equals(Single other) {
+    if (this.getId() == other.getId()) {
+      for (int i = 0; i < this.quantity.size(); i++) {
+        if (!this.quantity.get(i).equals(other.quantity.get(i))) {
+          return false;
+        }
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 
   /*public List<Single> getOptionsByCategoryName(Connection conn,
                           String categoryName) throws SQLException {
