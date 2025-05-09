@@ -368,11 +368,15 @@ public class Single extends Product {
    * @param obj the other single
    * @return the equality value
    */
+  @Override
   public boolean equals(Object obj) {
     Single other = (Single) obj;
     if (this.getId() == other.getId()) {
-      for (int i = 0; i < this.quantity.size(); i++) {
-        if (!this.quantity.get(i).equals(other.quantity.get(i))) {
+      System.out.println("Sizes:");
+      System.out.println(other.quantity.size());
+      System.out.println(this.quantity.size());
+      for (int i = 0; i < other.quantity.size(); i++) {
+        if (this.quantity.get(i) != (other.quantity.get(i))) {
           return false;
         }
       }
