@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -200,6 +201,17 @@ public class MealCustomizationScreen {
       stage.setScene(mainScene);
     });
 
+    //Onclick for the confirm button (loading meal confirmation scene)
+    confirmBtn.setOnMouseClicked(e -> {
+      Scene mealConfirmationScene = createMealConfirmationScene(stage, stage.getScene());
+      stage.setScene(mealConfirmationScene);
+    });
+
+    return new Scene(layout, 1920, 1080);
+  }
+
+  public Scene createMealConfirmationScene(Stage stage, Scene drinkSelectionScene) {
+    BorderPane layout = new BorderPane();
     return new Scene(layout, 1920, 1080);
   }
 }
