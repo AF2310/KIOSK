@@ -574,8 +574,14 @@ public class MainMenuScreen {
 
       // For now just print clicked, later navigate to sides and drinks selection
       imageSlot.setOnMouseClicked(e -> {
-        System.out.println("Meal clicked: " + nameStr);
-        // Later: go to meal customization screen
+        MealCustomizationScreen customizationScreen = new MealCustomizationScreen();
+        Scene sideSelectionScene = customizationScreen.createSideSelectionScene(
+            primaryStage,
+            primaryStage.getScene(),
+            nameStr,
+            imagePath
+        );
+        primaryStage.setScene(sideSelectionScene);
       });
 
       itemBox.getChildren().addAll(imageSlot, name, priceBox);
