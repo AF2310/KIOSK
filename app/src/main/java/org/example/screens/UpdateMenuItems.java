@@ -29,7 +29,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
-
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.DropBoxWithLabel;
 import org.example.buttons.LangBtn;
@@ -37,10 +36,8 @@ import org.example.buttons.MidButton;
 import org.example.buttons.RectangleTextFieldWithLabel;
 import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.TickBoxWithLabel;
-import org.example.menu.OrderItem;
 import org.example.menu.Product;
 import org.example.menu.Type;
-import org.example.orders.Order;
 import org.example.sql.SqlConnectionCheck;
 
 /**
@@ -415,9 +412,29 @@ public class UpdateMenuItems {
     priceColumn.setOnEditCommit(event -> {
       Product product = event.getRowValue();
       Double newPrice = event.getNewValue();
+      int productId = product.getId();
       product.setPrice(newPrice);
-      // TODO insert price update database
+
+      // TODO: This will be moved later
+      Connection conn;
+      try {
+        conn = DriverManager.getConnection(
+            "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
+            + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
+            + "?user=u5urh19mtnnlgmog"
+            + "&password=zPgqf8o6na6pv8j8AX8r"
+            + "&useSSL=true"
+            + "&allowPublicKeyRetrieval=true"
+        );
+
+        // update the newly inserted price in database
+        updateProductPrice(newPrice, productId, conn);
+
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
     });
+
     priceColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
 
     // Creating Table
@@ -446,7 +463,7 @@ public class UpdateMenuItems {
           + "&allowPublicKeyRetrieval=true"
       );
       
-      // Gets orders
+      // Gets products with needed data
       ArrayList<Product> products = fetchAllProductData(conn);
 
       // Insert fetched data in table
@@ -506,10 +523,22 @@ public class UpdateMenuItems {
   }
 
   // TODO: will be moved later
+  /**
+   * This method fetches all necessary product data from the
+   * database and returns an array of products that contain
+   * all that fetched data.
+   * This method is used in the price update section of the
+   * admin menu.
+   *
+   * @param connection database connection
+   * @return array containing all products with data from database
+   * @throws SQLException database error
+   */
   private ArrayList<Product> fetchAllProductData(Connection connection) throws SQLException {
     // ArrayList to store product data
     ArrayList<Product> products = new ArrayList<>();
 
+    // SQL query to fetch needed data from database
     String sql = "SELECT p.product_id, p.`name`, c.`name` AS type, p.is_active, p.price "
         + "FROM product p "
         + "JOIN category c ON p.category_id = c.category_id";
@@ -520,12 +549,14 @@ public class UpdateMenuItems {
     ) {
       while (rs.next()) {
 
+        // Fetch all product data from database
         int productId = rs.getInt("product_id");
         String name = rs.getString("name");
         Type type = Type.valueOf(rs.getString("type").toUpperCase());
         int isActive = rs.getInt("is_active");
         double price = rs.getDouble("price");
         
+        // Make new product with all fetched database data
         Product product = new Product() {};
         product.setId(productId);
         product.setName(name);
@@ -533,6 +564,7 @@ public class UpdateMenuItems {
         product.setActivity(isActive);
         product.setPrice(price);
 
+        // Add completed product to array
         products.add(product);
       }
     }
@@ -541,7 +573,30 @@ public class UpdateMenuItems {
   }
 
   // TODO: will be moved later
-  private void updateProductPrice(double newPrice) {
-    
+  /**
+   * This method updates the price of a specific product in
+   * the database.
+   * This method is used in the update price section of the admin menu.
+   *
+   * @param newPrice int new price of the product
+   * @param productId int product id of product that will be updated
+   * @param connection database connection
+   * @throws SQLException database error
+   */
+  private void updateProductPrice(
+        double newPrice,
+        int productId,
+        Connection connection
+  ) throws SQLException {
+
+    String sql = "UPDATE product "
+        + "SET price = ? "
+        + "WHERE product_id = ?";
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+      stmt.setDouble(1, newPrice);
+      stmt.setInt(2, productId);
+      stmt.executeUpdate();
+    }
   }
 }
