@@ -72,7 +72,6 @@ public class UpdateMenuItems {
     });
 
     changePriceButton.setOnAction(e -> {
-      // TODO: update product button.
       Scene productScene = new UpdateMenuItems().changePriceScene(
             this.primaryStage,
             prevScene);
@@ -81,6 +80,7 @@ public class UpdateMenuItems {
 
     removeProductButton.setOnAction(e -> {
       // TODO: remove product button.
+
     });
 
     // Layout for arranging buttons in a grid
@@ -376,16 +376,17 @@ public class UpdateMenuItems {
     alert.showAndWait();
   }
 
-  private Scene changePriceScene(Stage primaryStage, Scene prevScene) {
-
-    // Label for screen
-    Label historyLabel = new Label("Price Editor:");
-    historyLabel.setStyle(
-        "-fx-font-size: 45px;"
-        + "-fx-font-weight: bold;"
-    );
-
-    // Table for item lisitngs
+  /**
+   * This is a method to get a product table for
+   * admin menu sections like price editor and product
+   * deletion menu.
+   *
+   * @param priceEditable true if the price should be editable
+   *                      false if the price should not be editable
+   * @return a table filled with products and data about them, like
+   *         product id, name, type, activity and price
+   */
+  private TableView<Product> getProductTable(boolean priceEditable) {
 
     // Product ID column
     TableColumn<Product, Integer> idColumn = new TableColumn<>("Product ID");
@@ -407,34 +408,37 @@ public class UpdateMenuItems {
 
     // Product price column
     TableColumn<Product, Double> priceColumn = new TableColumn<>("Product Price");
-    priceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
     priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-    priceColumn.setOnEditCommit(event -> {
-      Product product = event.getRowValue();
-      Double newPrice = event.getNewValue();
-      int productId = product.getId();
-      product.setPrice(newPrice);
-
-      // TODO: This will be moved later
-      Connection conn;
-      try {
-        conn = DriverManager.getConnection(
-            "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
-            + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
-            + "?user=u5urh19mtnnlgmog"
-            + "&password=zPgqf8o6na6pv8j8AX8r"
-            + "&useSSL=true"
-            + "&allowPublicKeyRetrieval=true"
-        );
-
-        // update the newly inserted price in database
-        updateProductPrice(newPrice, productId, conn);
-
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    });
-
+    
+    // If product price is editable
+    if (priceEditable) {
+      priceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+      priceColumn.setOnEditCommit(event -> {
+        Product product = event.getRowValue();
+        Double newPrice = event.getNewValue();
+        int productId = product.getId();
+        product.setPrice(newPrice);
+  
+        // TODO: This will be moved later
+        Connection conn;
+        try {
+          conn = DriverManager.getConnection(
+              "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
+              + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
+              + "?user=u5urh19mtnnlgmog"
+              + "&password=zPgqf8o6na6pv8j8AX8r"
+              + "&useSSL=true"
+              + "&allowPublicKeyRetrieval=true"
+          );
+  
+          // update the newly inserted price in database
+          updateProductPrice(newPrice, productId, conn);
+  
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      });
+    }
     priceColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
 
     // Creating Table
@@ -472,6 +476,21 @@ public class UpdateMenuItems {
     } catch (SQLException e) {    
       e.printStackTrace();
     }
+
+    return productTable;
+  }
+
+  private Scene changePriceScene(Stage primaryStage, Scene prevScene) {
+
+    // Label for screen
+    Label historyLabel = new Label("Price Editor:");
+    historyLabel.setStyle(
+        "-fx-font-size: 45px;"
+        + "-fx-font-weight: bold;"
+    );
+
+    // Table for item lisitngs
+    TableView<Product> productTable = getProductTable(true);
 
     // VBox for the table
     VBox productListings = new VBox(productTable);
@@ -599,4 +618,6 @@ public class UpdateMenuItems {
       stmt.executeUpdate();
     }
   }
+
+  //private Scene deleteProduct() {}
 }
