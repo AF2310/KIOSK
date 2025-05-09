@@ -1,8 +1,11 @@
 package org.example.screens;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.collections.FXCollections;
@@ -14,16 +17,28 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.DropBoxWithLabel;
+import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
 import org.example.buttons.RectangleTextFieldWithLabel;
 import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.TickBoxWithLabel;
+import org.example.menu.OrderItem;
+import org.example.menu.Product;
+import org.example.menu.Type;
+import org.example.orders.Order;
 import org.example.sql.SqlConnectionCheck;
 
 /**
@@ -59,6 +74,10 @@ public class UpdateMenuItems {
 
     changePriceButton.setOnAction(e -> {
       // TODO: update product button.
+      Scene productScene = new UpdateMenuItems().changePriceScene(
+            this.primaryStage,
+            prevScene);
+      primaryStage.setScene(productScene);
     });
 
     removeProductButton.setOnAction(e -> {
@@ -358,4 +377,156 @@ public class UpdateMenuItems {
     alert.showAndWait();
   }
 
+  private Scene changePriceScene(Stage primaryStage, Scene prevScene) {
+
+    // Label for screen
+    Label historyLabel = new Label("Price Editor:");
+    historyLabel.setStyle(
+        "-fx-font-size: 45px;"
+        + "-fx-font-weight: bold;"
+    );
+
+    // Table for item lisitngs
+
+    // Product ID column
+    TableColumn<Product, Integer> idColumn = new TableColumn<>("Product ID");
+    idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+    idColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+
+    // Product name column
+    TableColumn<Product, String> nameColumn = new TableColumn<>("Product Name");
+    nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+    // Product category column
+    TableColumn<Product, String> categoryColumn = new TableColumn<>("Product Category");
+    categoryColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+    // Product activity column
+    TableColumn<Product, Integer> activityColumn = new TableColumn<>("Product Active");
+    activityColumn.setCellValueFactory(new PropertyValueFactory<>("activity"));
+    // TODO: not sure if this next line works with tiny int value; check later
+    activityColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+
+    // Product price column
+    TableColumn<Product, Double> priceColumn = new TableColumn<>("Product Price");
+    priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+    priceColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+
+    // Creating Table
+    TableView<Product> productTable = new TableView<>();
+    productTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+    productTable.setMaxWidth(Double.MAX_VALUE);
+    productTable.setPrefWidth(Region.USE_COMPUTED_SIZE);
+    
+    // Combining columns in table
+    productTable.getColumns().add(idColumn);
+    productTable.getColumns().add(nameColumn);
+    productTable.getColumns().add(categoryColumn);
+    productTable.getColumns().add(activityColumn);
+    productTable.getColumns().add(priceColumn);
+
+    // Querys data into the table
+    try {
+      // TODO: This will be moved later
+      Connection conn = DriverManager.getConnection(
+          "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
+          + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
+          + "?user=u5urh19mtnnlgmog"
+          + "&password=zPgqf8o6na6pv8j8AX8r"
+          + "&useSSL=true"
+          + "&allowPublicKeyRetrieval=true"
+      );
+      
+      // Gets orders
+      ArrayList<Product> products = fetchAllProductData(conn);
+
+      // Insert fetched data in table
+      productTable.getItems().addAll(products);
+      
+    } catch (SQLException e) {    
+      e.printStackTrace();
+    }
+
+    // VBox for the table
+    VBox productListings = new VBox(productTable);
+    VBox.setVgrow(productListings, Priority.ALWAYS);
+    productTable.prefWidthProperty().bind(productListings.widthProperty());
+    productListings.setPadding(new Insets(20, 0, 0, 0));
+
+    // VBox to align screen label and table
+    VBox topBox = new VBox();
+    topBox.setMaxWidth(Double.MAX_VALUE);
+    topBox.setAlignment(Pos.TOP_CENTER);
+    topBox.setSpacing(40);
+    topBox.getChildren().addAll(historyLabel, productListings);
+
+    // Upper part of the screen
+    HBox topContainer = new HBox();
+    topContainer.setMaxWidth(Double.MAX_VALUE);
+    HBox.setHgrow(topBox, Priority.ALWAYS);
+    topContainer.setAlignment(Pos.CENTER);
+    topContainer.getChildren().addAll(topBox);
+
+    // Back button
+    // Clicking button means user goes to previous screen
+    var backButton = new BackBtnWithTxt();
+    backButton.setOnAction(e -> {
+      primaryStage.setScene(prevScene);
+    });
+
+    // Language Button
+    // cycles images on click
+    var langButton = new LangBtn();
+
+    // Spacer for Bottom Row
+    Region spacerBottom = new Region();
+    HBox.setHgrow(spacerBottom, Priority.ALWAYS);
+    
+    // Bottom row of the screen
+    HBox bottomContainer = new HBox();
+    bottomContainer.setAlignment(Pos.BOTTOM_LEFT);
+    bottomContainer.getChildren().addAll(langButton, spacerBottom, backButton);
+
+    // Setting positioning of all the elements
+    BorderPane layout = new BorderPane();
+    layout.setPadding(new Insets(50));
+    layout.setTop(topContainer);
+    layout.setBottom(bottomContainer);
+
+    return new Scene(layout, 1920, 1080);
+  }
+
+  private ArrayList<Product> fetchAllProductData(Connection connection) throws SQLException {
+    // ArrayList to store product data
+    ArrayList<Product> products = new ArrayList<>();
+
+    String sql = "SELECT p.product_id, p.`name`, c.`name` AS type, p.is_active, p.price "
+        + "FROM product p "
+        + "JOIN category c ON p.category_id = c.category_id";
+
+    try (
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+    ) {
+      while (rs.next()) {
+
+        int productId = rs.getInt("product_id");
+        String name = rs.getString("name");
+        Type type = Type.valueOf(rs.getString("type").toUpperCase());
+        int isActive = rs.getInt("is_active");
+        double price = rs.getDouble("price");
+        
+        Product product = new Product() {};
+        product.setId(productId);
+        product.setName(name);
+        product.setType(type);
+        product.setActivity(isActive);
+        product.setPrice(price);
+
+        products.add(product);
+      }
+    }
+
+    return products;
+  }
 }
