@@ -34,6 +34,7 @@ public class LangBtn extends RoundButton {
       String translated = dictionary.translate(currentText);
       component.setText(translated);
     }
+    this.isEnglish = !this.isEnglish;
   }
 
   /**
@@ -55,5 +56,6 @@ public class LangBtn extends RoundButton {
       String translated = dictionary.translate(prompt);
       input.setPromptText(translated);
     }
+    this.isEnglish = !this.isEnglish;
   }
 }
