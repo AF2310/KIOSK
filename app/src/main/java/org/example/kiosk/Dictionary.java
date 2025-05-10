@@ -16,6 +16,7 @@ public class Dictionary {
   public Dictionary(boolean startInEnglish) {
     this.toEnglish = startInEnglish;
 
+    // TODO: Move the translations to a separate file
     // Translations, will move to a separate file later
     // Welcome screen vocabulary
     addTranslation("Welcome to", "Välkommen till");
@@ -47,7 +48,7 @@ public class Dictionary {
     addTranslation("Change Timer Setting", "Ändra Timerinställningar");
     addTranslation("See Sales Summary", "Försäljningsöversikt");
     addTranslation("Set Special Offers", "Sätt Specialerbjudanden");
-    addTranslation("Cancel", "Avbryt");
+    // addTranslation("Cancel", "Avbryt");
 
     // Admin Item Screen vocabulary
     addTranslation("Add Product to Menu", "Lägg till produkten");
@@ -63,7 +64,51 @@ public class Dictionary {
     addTranslation("Product Category:", "Produktkategori:");
     addTranslation("Ingredient List", "Ingredienslista");
     addTranslation("Confirm", "Bekräfta");
-    addTranslation("Cancel", "Avbryt");
+    // addTranslation("Cancel", "Avbryt");
+
+    // Item Details vocabulary
+    addTranslation("Add To Cart", "Lägg till");
+    addTranslation("Back", "Tillbaks");
+    addTranslation("Chicken Burger", "Kycklingburgare");
+    addTranslation("Beef Burger", "Nötköttsburgare");
+    addTranslation("Beer Burger", "Ölburgare");
+    addTranslation("Onion Rings", "Lökringar");
+    addTranslation("Fries", "Pommes frites");
+    addTranslation("Ice Cream", "Glass");
+
+    // Item Descriptions
+    addTranslation("This is a yummy chicken burger", "Det här är en god kycklingburgare");
+    addTranslation("This is a yummy beef burger", "Det här är en god nötköttsburgare");
+    addTranslation("This is a yummy beer burger", "Det här är en god ölburgare");
+    addTranslation("This is a yummy onion rings", "Det här är goda lökringar");
+    addTranslation("This is a yummy fries", "Det här är goda pommes frites");
+    addTranslation("This is a yummy ice cream", "Det här är en god glass");
+    
+    // Ingredients
+    addTranslation("Beef Patty", "Nötköttspuck");
+    addTranslation("Bun", "Bröd");
+    addTranslation("Swiss Cheese", "Schweizerost");
+    addTranslation("Pickles", "Picklad gurka");
+    addTranslation("Onion", "Lök");
+    // addTranslation("Ketchup", "Ketchup");
+    addTranslation("Mustard", "Senap");
+    addTranslation("Cream", "Grädde");
+    addTranslation("Chocolate Bits", "Chokladbitar");
+    addTranslation("Rainbow Sprinkles", "Strössel");
+    addTranslation("Whipped Cream", "Vispad grädde");
+    addTranslation("Sugar", "Socker");
+    addTranslation("Lemon", "Citron");
+    // addTranslation("Lime", "Lime");
+    addTranslation("Mint Leaves", "Myntablad");
+    addTranslation("Ice", "Is");
+    addTranslation("Chili Flakes", "Chiliflakes");
+    addTranslation("Black Pepper", "Svartpeppar");
+    addTranslation("Sea Salt", "Havssalt");
+    addTranslation("Chicken Patty", "Kycklingpuck");
+    addTranslation("Lettuce", "Sallad");
+    addTranslation("Tomato", "Tomat");
+    addTranslation("Cheddar Cheese", "Cheddarost");
+    addTranslation("Mayonnaise", "Majonnäs");
   }
 
   private void addTranslation(String english, String swedish) {
