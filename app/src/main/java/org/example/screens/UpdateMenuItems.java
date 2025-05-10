@@ -639,6 +639,26 @@ public class UpdateMenuItems {
         + "-fx-font-weight: bold;"
     );
 
+
+    // Label for system messages
+    Label systemMessageLabel = new Label();
+
+    // Button for deletion confirmation
+    Button confirmButton = new Button("Yes");
+
+    // Button for deletion cancellation
+    Button abbruchButton = new Button("No");
+
+    // Adding buttons in separate box
+    HBox buttonBox = new HBox(10, confirmButton, abbruchButton);
+    buttonBox.setVisible(false);
+    buttonBox.setAlignment(Pos.CENTER);
+
+    // Adding all deletion related action elements in Box
+    HBox actionBox = new HBox(10, systemMessageLabel, buttonBox);
+    actionBox.setVisible(false);
+    actionBox.setAlignment(Pos.CENTER);
+
     // Table for item lisitngs
     TableView<Product> productTable = getProductTable(false);
 
@@ -656,7 +676,9 @@ public class UpdateMenuItems {
     topBox.setSpacing(40);
     topBox.getChildren().addAll(
         productDeletionLabel,
-        productListings
+        productListings,
+        systemMessageLabel,
+        actionBox
     );
 
     // Upper part of the screen
