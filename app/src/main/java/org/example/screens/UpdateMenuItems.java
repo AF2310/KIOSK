@@ -662,6 +662,52 @@ public class UpdateMenuItems {
     // Table for item lisitngs
     TableView<Product> productTable = getProductTable(false);
 
+    // Set action for each row in table
+    productTable.setRowFactory(tv -> {
+      // Create instance of row
+      TableRow<Product> row = new TableRow<>();
+
+      // Admin clicks on a row (product)
+      row.setOnMouseClicked(event -> {
+        // Row needs to be double-clicked
+        if (!row.isEmpty() && event.getClickCount() == 2) {
+
+          // Get clicked product as object and its' name
+          Product clickedProduct = row.getItem();
+          String productName = clickedProduct.getName();
+
+          // System message printed in the label below table
+          systemMessageLabel.setText(
+              "Product '" + productName + "' should be deleted?"
+          );
+          // action box now visible (replacement for popup)
+          actionBox.setVisible(true);
+
+          // Confirm deletion
+          confirmButton.setOnAction(e -> {
+            systemMessageLabel.setText(
+                "Product '" + productName + "' successfully deleted!"
+            );
+            // Buttond disappear after clicking one to prevent unwanted double actions
+            buttonBox.setVisible(true);
+          });
+
+          // Cancel deletion
+          abbruchButton.setOnAction(e -> {
+            systemMessageLabel.setText(
+                "Product '" + productName + "' deletion cancelled!"
+            );
+            // Buttond disappear after clicking one to prevent unwanted double actions
+            buttonBox.setVisible(true);
+          });
+        }
+      });
+      return row;
+    });
+
+    // TODO: visible again after table update -> deletion
+    //buttonBox.setVisible(true);
+
     // VBox for the table
     VBox productListings = new VBox(productTable);
     VBox.setVgrow(productListings, Priority.ALWAYS);
