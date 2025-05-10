@@ -48,6 +48,11 @@ public class Dictionary {
     addTranslation("See Sales Summary", "Försäljningsöversikt");
     addTranslation("Set Special Offers", "Sätt Specialerbjudanden");
     addTranslation("Cancel", "Avbryt");
+
+    // Admin Item Screen vocabulary
+    addTranslation("Add Product to Menu", "Lägg till produkten");
+    addTranslation("Change Prices", "Ändra priser");
+    addTranslation("Remove Product from Menu", "Ta bort produkten");
   }
 
   private void addTranslation(String english, String swedish) {
