@@ -1,8 +1,8 @@
 package org.example.screens;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -120,15 +120,10 @@ public class UpdateMenuItems {
         String selectedCategory = productCategoryDropBox.getSelectedItem();
         if (selectedCategory != null) {
           try {
-            ObservableList<String> ingredients = FXCollections.observableArrayList();
-            ResultSet resultSet = queries.getIngredientsByCategory(selectedCategory);
-            // Here we populate the ingredient list view with the results
-            while (resultSet.next()) {
-              // Only shows the ingredients for the selected category
-              String ingredientName = resultSet.getString("ingredient_name");
-              ingredients.add(ingredientName);
-            }
-            ingredientListView.setItems(ingredients);
+            List<String> ingredients = queries.getIngredientsByCategory(selectedCategory);
+            ingredientListView.setItems(FXCollections.observableArrayList(ingredients));
+
+
           } catch (SQLException ex) {
             ex.printStackTrace();
             showAlert("Database error", "Failed to load categories", Alert.AlertType.ERROR);

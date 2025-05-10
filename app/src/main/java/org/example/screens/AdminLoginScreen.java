@@ -1,5 +1,7 @@
 package org.example.screens;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -13,7 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.buttons.MidButton;
 import org.example.buttons.MidButtonWithImage;
-import org.example.sql.SqlConnectionCheck;
+import org.example.sql.DatabaseManager;
 import org.example.users.AdminAuth;
 
 /**
@@ -96,25 +98,29 @@ public class AdminLoginScreen {
     
     //login button functionality
     loginButton.setOnAction(e -> {
-      String username = usernameField.getText();
-      String password = passwordField.getText();
-      SqlConnectionCheck connection = new SqlConnectionCheck();
-      AdminAuth adminauth = new AdminAuth(connection.getConnection());
-      Boolean checkLogin = adminauth.verifyAdmin(username, password);
-      if (checkLogin) {
-        AdminMenuScreen adminMenuScreen = new AdminMenuScreen();
-        Scene adminMenuScene = adminMenuScreen.createAdminMenuScreen(primaryStage,
-                      windowWidth, windowHeight, welcomeScrScene);
-        primaryStage.setScene(adminMenuScene);
-      } else {
-        // Shows error if a wrong username or password is entered
-        errorLabel.setText("Invalid login details");
-        errorLabel.setVisible(true);
-        passwordField.clear();
+      try (Connection connection = DatabaseManager.getConnection()) {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+        AdminAuth adminauth = new AdminAuth(connection);
+        Boolean checkLogin = adminauth.verifyAdmin(username, password);
+        if (checkLogin) {
+          AdminMenuScreen adminMenuScreen = new AdminMenuScreen();
+          Scene adminMenuScene = adminMenuScreen.createAdminMenuScreen(primaryStage,
+                        windowWidth, windowHeight, welcomeScrScene);
+          primaryStage.setScene(adminMenuScene);
+        } else {
+          // Shows error if a wrong username or password is entered
+          errorLabel.setText("Invalid login details");
+          errorLabel.setVisible(true);
+          passwordField.clear();
 
 
+        }
+      } catch (SQLException e1) {
+        e1.printStackTrace();
       }
     });
+        
 
     //back button
     var backButton = new MidButtonWithImage(

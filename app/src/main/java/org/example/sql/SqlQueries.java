@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.example.menu.OrderItem;
 import org.example.menu.Product;
@@ -16,13 +17,6 @@ import org.example.orders.Order;
  * Class for all queries related to the DB.
  */
 public class SqlQueries {
-  public SqlConnectionCheck connectionCheck = new SqlConnectionCheck();
-  public Connection connection = connectionCheck.getConnection();
-
-  public Connection getConnection() {
-    return connection;
-  }
-
   /**
    * Order query method.
    *
@@ -37,10 +31,10 @@ public class SqlQueries {
     String querySql = "SELECT order_ID, kiosk_ID, customer_ID, order_date, amount_total, status "
         + "FROM `order`";
 
-    try (
-        PreparedStatement stmt = connection.prepareStatement(querySql);
-        ResultSet results = stmt.executeQuery()
-    ) {
+    try (Connection connection = DatabaseManager.getConnection()) {
+      PreparedStatement stmt = connection.prepareStatement(querySql);
+      ResultSet results = stmt.executeQuery();
+    
       // Creates Orders from queried data
       while (results.next()) {
         int orderId = results.getInt("order_ID");
@@ -69,11 +63,10 @@ public class SqlQueries {
           + "FROM order_item oi "
           + "JOIN product p ON oi.product_id = p.product_id";
 
-    try (
-        PreparedStatement stmt = connection.prepareStatement(itemQuery);
-        ResultSet rs = stmt.executeQuery()
-    ) {
-
+    try (Connection connection = DatabaseManager.getConnection()) {
+      PreparedStatement stmt = connection.prepareStatement(itemQuery);
+      ResultSet rs = stmt.executeQuery();
+     
       while (rs.next()) {
         int orderId = rs.getInt("order_id");
         int productId = rs.getInt("product_id");
@@ -111,8 +104,10 @@ public class SqlQueries {
     Map<String, Integer> categoryMap = new HashMap<>();
     String sql = "SELECT category_id, name FROM category";
         
-    try (PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+    try (Connection connection = DatabaseManager.getConnection()) {
+      PreparedStatement stmt = connection.prepareStatement(sql);
+      ResultSet rs = stmt.executeQuery();
+
       while (rs.next()) {
         int id = rs.getInt("category_id");
         String name = rs.getString("name");
@@ -129,16 +124,23 @@ public class SqlQueries {
    * @return a result set for all ingredients.
    * @throws SQLException error handling.
    */
-  public ResultSet getIngredientsByCategory(String categoryName) throws SQLException {
+  public List<String> getIngredientsByCategory(String categoryName) throws SQLException {
+    List<String> ingredients = new ArrayList<>();
     String sql = "SELECT i.ingredient_id, i.ingredient_name " 
-                + "FROM ingredient i "
-                + "JOIN categoryingredients ci ON i.ingredient_id = ci.ingredient_id " 
-                + "JOIN category c ON ci.category_id = c.category_id " 
-                + "WHERE c.name = ?";
-        
-    PreparedStatement stmt = connection.prepareStatement(sql);
-    stmt.setString(1, categoryName);
-    return stmt.executeQuery();
+                    + "FROM ingredient i "
+                    + "JOIN categoryingredients ci ON i.ingredient_id = ci.ingredient_id " 
+                    + "JOIN category c ON ci.category_id = c.category_id " 
+                    + "WHERE c.name = ?";
+    try (Connection connection = DatabaseManager.getConnection()) {
+      PreparedStatement stmt = connection.prepareStatement(sql);
+      stmt.setString(1, categoryName);
+      try (ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+          ingredients.add(rs.getString("ingredient_name"));
+        }
+      }
+    }
+    return ingredients;
   }
 
   /**
@@ -155,12 +157,15 @@ public class SqlQueries {
    */
   public int addProduct(String name, String description, double price, int categoryId, 
                          byte isActive, byte isLimited, String imageUrl) throws SQLException {
+
     String sql = "INSERT INTO product (name, description, price, category_id, "
                    + "is_active, is_limited, image_url) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         
-    try (PreparedStatement stmt = connection
-        .prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+    try (Connection connection = DatabaseManager.getConnection();
+        PreparedStatement stmt = connection
+            .prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+
       stmt.setString(1, name);
       stmt.setString(2, description);
       stmt.setDouble(3, price);
@@ -168,6 +173,7 @@ public class SqlQueries {
       stmt.setByte(5, isActive);
       stmt.setByte(6, isLimited);
       stmt.setString(7, imageUrl);
+        
             
       int affectedRows = stmt.executeUpdate();
       if (affectedRows == 0) {
@@ -185,7 +191,7 @@ public class SqlQueries {
   }
 
   /**
-   * Query for adding products ingredients.
+  * Query for adding products ingredients.
    *
    * @param productId product ID
    * @param ingredients ingredients of the product
@@ -195,25 +201,44 @@ public class SqlQueries {
        throws SQLException {
     String sql = "INSERT INTO productingredients (product_id, ingredient_id, ingredientCount) "
                 + "VALUES (?, (SELECT ingredient_id FROM ingredient WHERE ingredient_name = ?), ?)";
-        
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+    
+    Connection connection = null;
+    try {
+      connection = DatabaseManager.getConnection();
       connection.setAutoCommit(false);
-            
-      for (Map.Entry<String, Integer> entry : ingredients.entrySet()) {
-        stmt.setInt(1, productId);
-        stmt.setString(2, entry.getKey());
-        stmt.setInt(3, entry.getValue());
-        stmt.addBatch();
+
+      try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        for (Map.Entry<String, Integer> entry : ingredients.entrySet()) {
+          stmt.setInt(1, productId);
+          stmt.setString(2, entry.getKey());
+          stmt.setInt(3, entry.getValue());
+          stmt.addBatch();
+        }
+
+        stmt.executeBatch();
       }
-            
-      stmt.executeBatch();
+
       connection.commit();
     } catch (SQLException e) {
-      connection.rollback();
+      if (connection != null) {
+        try {
+          connection.rollback();
+        } catch (SQLException rollbackEx) {
+          // log rollback failure
+          rollbackEx.printStackTrace();
+        }
+      }
       throw e;
     } finally {
-      connection.setAutoCommit(true);
+      if (connection != null) {
+        try {
+          connection.setAutoCommit(true);
+          connection.close();
+        } catch (SQLException ex) {
+          // log closing failure
+          ex.printStackTrace();
+        }
+      }
     }
   }
 }
-

@@ -1,6 +1,7 @@
 package org.example.screens;
 
 import java.io.InputStream;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ import org.example.buttons.SquareButtonWithImg;
 import org.example.menu.Ingredient;
 import org.example.menu.Single;
 import org.example.orders.Cart;
+import org.example.sql.DatabaseManager;
 import org.example.sql.SqlQueries;
 
 /**
@@ -33,6 +35,7 @@ import org.example.sql.SqlQueries;
  */
 public class ItemDetails {
   SqlQueries queries = new SqlQueries();
+
   /**
    * Creating a scene for a specific item, displaying all item details.
    * Only for single items
@@ -46,7 +49,10 @@ public class ItemDetails {
 
   public Scene create(Stage primaryStage, Scene prevScene, Single item, Cart cart) 
       throws SQLException {
-    item.setIngredients(queries.getConnection());
+
+    try (Connection connection = DatabaseManager.getConnection()) {
+      item.setIngredients(connection);
+    }
     List<Ingredient> ingredients = item.ingredients;
     List<Integer> quantities = new ArrayList<>();
     /*

@@ -2,7 +2,6 @@ package org.example.screens;
 
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +35,7 @@ import org.example.menu.Product;
 import org.example.menu.Single;
 import org.example.menu.Type;
 import org.example.orders.Cart;
+import org.example.sql.DatabaseManager;
 
 /**
  * The main menu screen.
@@ -74,14 +74,8 @@ public class MainMenuScreen {
     this.primaryStage = primaryStage;
     this.mode = mode;
 
-    Connection conn = DriverManager.getConnection(
-        "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
-        + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
-        + "?user=u5urh19mtnnlgmog"
-        + "&password=zPgqf8o6na6pv8j8AX8r"
-        + "&useSSL=true"
-        + "&allowPublicKeyRetrieval=true");
-    this.conn = conn;
+    this.conn = DatabaseManager.getConnection();
+    
 
     ImageView modeIcon = new ImageView();
     Label modeLabel = new Label();
