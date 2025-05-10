@@ -12,6 +12,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import org.example.buttons.LangBtn;
 import org.example.buttons.MidButtonWithImage;
 import org.example.sql.SqlConnectionCheck;
 
@@ -124,11 +126,17 @@ public class WelcomeScreen {
     SqlConnectionCheck connectionCheck = new SqlConnectionCheck();
     Label mysql = connectionCheck.getMysqlLabel();
 
+    var langButton = new LangBtn();
+
+    // Position it in the bottom-left corner
+    StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
+    StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
+
     mainWindow.getChildren().addAll(
         welcome, companyTitle, rowOfBurgers, rowOfButtons, mysql);
 
     // Put everythng in a stackpane
-    StackPane mainPane = new StackPane(mainWindow);
+    StackPane mainPane = new StackPane(mainWindow, langButton);
     mainPane.setPrefSize(windowWidth, windowHeight);
 
     Scene scene = new Scene(mainPane, windowWidth, windowHeight);

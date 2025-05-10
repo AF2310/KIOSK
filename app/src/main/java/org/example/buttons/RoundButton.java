@@ -58,6 +58,7 @@ public class RoundButton extends Button {
 
       Files.walk(Paths.get(getClass().getClassLoader().getResource(directoryPath).toURI()))
           .filter(path -> path.toString().endsWith(".png"))
+          .sorted()
           .forEach(path -> imagePaths.add(path.toUri().toString()));
       
       // If no images are found, transparent PNG gets set as image
