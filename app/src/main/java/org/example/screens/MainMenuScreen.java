@@ -75,8 +75,8 @@ public class MainMenuScreen {
     this.mode = mode;
 
     Connection conn = DriverManager.getConnection(
-        "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
-        + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
+        "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+        + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
         + "?user=u5urh19mtnnlgmog"
         + "&password=zPgqf8o6na6pv8j8AX8r"
         + "&useSSL=true"
@@ -278,7 +278,7 @@ public class MainMenuScreen {
       this.primaryStage.setScene(checkoutScene);
     });
 
-    // Create actual language button - putting it all together
+    // Create language button
     var langButton = new LangBtn();
 
     // Added all components for the bottom part

@@ -24,8 +24,8 @@ public class SqlConnectionCheck {
     try {
       // Establish connection
       connection = DriverManager.getConnection(
-          "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
-              + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
+          "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+              + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
               + "?user=u5urh19mtnnlgmog"
               + "&password=zPgqf8o6na6pv8j8AX8r"
               + "&useSSL=true"
