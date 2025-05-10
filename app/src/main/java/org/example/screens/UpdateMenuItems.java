@@ -681,16 +681,41 @@ public class UpdateMenuItems {
               "Product '" + productName + "' should be deleted?"
           );
           // action box now visible (replacement for popup)
+          buttonBox.setVisible(true);
           actionBox.setVisible(true);
+
 
           // Confirm deletion
           confirmButton.setOnAction(e -> {
+
+            try {
+              // TODO: This will be moved later
+              Connection conn = DriverManager.getConnection(
+                  "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
+                  + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
+                  + "?user=u5urh19mtnnlgmog"
+                  + "&password=zPgqf8o6na6pv8j8AX8r"
+                  + "&useSSL=true"
+                  + "&allowPublicKeyRetrieval=true"
+              );
+
+              // delete product in database
+              deleteProduct(clickedProduct.getId(), conn);
+
+              // Update table by removing deleted product
+              productTable.getItems().remove(clickedProduct);
+
+            // Database error
+            } catch (SQLException er) {    
+              er.printStackTrace();
+            }
             systemMessageLabel.setText(
                 "Product '" + productName + "' successfully deleted!"
             );
             // Buttond disappear after clicking one to prevent unwanted double actions
-            buttonBox.setVisible(true);
+            buttonBox.setVisible(false);
           });
+
 
           // Cancel deletion
           abbruchButton.setOnAction(e -> {
@@ -698,15 +723,15 @@ public class UpdateMenuItems {
                 "Product '" + productName + "' deletion cancelled!"
             );
             // Buttond disappear after clicking one to prevent unwanted double actions
-            buttonBox.setVisible(true);
+            buttonBox.setVisible(false);
+
           });
         }
       });
+
       return row;
     });
 
-    // TODO: visible again after table update -> deletion
-    //buttonBox.setVisible(true);
 
     // VBox for the table
     VBox productListings = new VBox(productTable);
@@ -761,5 +786,23 @@ public class UpdateMenuItems {
     layout.setBottom(bottomContainer);
 
     return new Scene(layout, 1920, 1080);
+  }
+
+  
+  /**
+   * Method to delete a product from the database.
+   * Used for admin menu in product deletion section.
+   *
+   * @param productId int Id of the product that should be deleted
+   * @param connection Connection to the database
+   * @throws SQLException Database error
+   */
+  private void deleteProduct(int productId, Connection connection) throws SQLException {
+    String s = "DELETE FROM product WHERE product_id = ?";
+
+    try (PreparedStatement stmt = connection.prepareStatement(s)) {
+      stmt.setInt(1, productId);
+      stmt.executeUpdate();
+    }
   }
 }
