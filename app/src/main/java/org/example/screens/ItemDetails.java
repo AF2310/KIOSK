@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -242,6 +243,31 @@ public class ItemDetails {
     var langButton = new LangBtn();
     HBox bottomLeftBox = new HBox(langButton);
     bottomLeftBox.setAlignment(Pos.BOTTOM_LEFT);
+
+    // Pass in the Labeled components to translate
+    langButton.addAction(event -> {
+      List<Labeled> translatableLabeledControls = new ArrayList<>(List.of(
+          backButton.getButtonLabel(),
+          addToCartButton.getButtonLabel(),
+          nameLabel,
+          descriptionLabel
+      ));
+
+      // Collect ingredient labels
+      for (javafx.scene.Node node : ingredientBox.getChildren()) {
+        if (node instanceof HBox hbox) {
+          for (javafx.scene.Node subNode : hbox.getChildren()) {
+            if (subNode instanceof Label label) {
+              translatableLabeledControls.add(label);
+            }
+          }
+        }
+      }
+
+      // Now call the method with one combined list
+      langButton.updateLanguage(translatableLabeledControls);
+    });
+
     
     // Spacer for bottom part of the Screen
     Region spacerBottom = new Region();

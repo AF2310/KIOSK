@@ -26,6 +26,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+
+import org.checkerframework.checker.units.qual.s;
 import org.example.buttons.ArrowButton;
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.LangBtn;
@@ -234,15 +236,6 @@ public class MainMenuScreen {
 
     HBox bottomButtons = new HBox();
     bottomButtons.setPadding(new Insets(10));
-    
-    // Swedish Flag - Language button
-    // Get image
-    ImageView sweFlag = new ImageView(new Image(getClass().getResourceAsStream("/swe.png")));
-
-    // Set sizes
-    sweFlag.setFitWidth(30);
-    sweFlag.setFitHeight(30);
-    sweFlag.setPreserveRatio(true);
 
     // Spacer to push right buttons
     Region spacer = new Region();
@@ -280,6 +273,13 @@ public class MainMenuScreen {
 
     // Create language button
     var langButton = new LangBtn();
+
+    // Just pass in the Labeled components to translate
+    langButton.addAction(event -> {
+      langButton.updateLanguage(List.of(
+          cancelButton.getButtonLabel()
+      ));
+    });
 
     // Added all components for the bottom part
     bottomButtons.getChildren().addAll(langButton, spacer, cartButton, cancelButton);
