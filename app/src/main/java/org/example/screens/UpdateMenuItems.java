@@ -424,15 +424,14 @@ public class UpdateMenuItems {
         product.setPrice(newPrice);
   
         // TODO: This will be moved later
-        Connection conn;
         try {
-          conn = DriverManager.getConnection(
-              "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
-              + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
-              + "?user=u5urh19mtnnlgmog"
-              + "&password=zPgqf8o6na6pv8j8AX8r"
-              + "&useSSL=true"
-              + "&allowPublicKeyRetrieval=true"
+          Connection conn = DriverManager.getConnection(
+                  "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+                  + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+                  + "?user=u5urh19mtnnlgmog"
+                  + "&password=zPgqf8o6na6pv8j8AX8r"
+                  + "&useSSL=true"
+                  + "&allowPublicKeyRetrieval=true"
           );
   
           // update the newly inserted price in database
@@ -463,12 +462,12 @@ public class UpdateMenuItems {
     try {
       // TODO: This will be moved later
       Connection conn = DriverManager.getConnection(
-          "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
-          + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
-          + "?user=u5urh19mtnnlgmog"
-          + "&password=zPgqf8o6na6pv8j8AX8r"
-          + "&useSSL=true"
-          + "&allowPublicKeyRetrieval=true"
+                  "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+                  + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+                  + "?user=u5urh19mtnnlgmog"
+                  + "&password=zPgqf8o6na6pv8j8AX8r"
+                  + "&useSSL=true"
+                  + "&allowPublicKeyRetrieval=true"
       );
       
       // Gets products with needed data
@@ -691,8 +690,8 @@ public class UpdateMenuItems {
             try {
               // TODO: This will be moved later
               Connection conn = DriverManager.getConnection(
-                  "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
-                  + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
+                  "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+                  + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
                   + "?user=u5urh19mtnnlgmog"
                   + "&password=zPgqf8o6na6pv8j8AX8r"
                   + "&useSSL=true"
