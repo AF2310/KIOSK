@@ -105,6 +105,8 @@ public class AdminLoginScreen {
       AdminAuth adminauth = new AdminAuth(connection.getConnection());
       Boolean checkLogin = adminauth.verifyAdmin(username, password);
       if (checkLogin) {
+        errorLabel.setVisible(false);
+        passwordField.clear();
         AdminMenuScreen adminMenuScreen = new AdminMenuScreen();
         Scene adminMenuScene = adminMenuScreen.createAdminMenuScreen(primaryStage,
                       windowWidth, windowHeight, welcomeScrScene);
@@ -145,6 +147,7 @@ public class AdminLoginScreen {
         errorLabel
     );
 
+    // Add the language button
     var langButton = new LangBtn();
 
     // Just pass in the Labeled components to translate
