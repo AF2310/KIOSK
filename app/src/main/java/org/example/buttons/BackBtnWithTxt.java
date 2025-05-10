@@ -1,5 +1,8 @@
 package org.example.buttons;
 
+/**
+ * The BackBtnWithTxt class represents a button with a back icon and text.
+ */
 public class BackBtnWithTxt extends SqrBtnWithOutline {
 
   /**

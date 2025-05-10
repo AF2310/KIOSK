@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,9 +18,11 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.buttons.DropBoxWithLabel;
+import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
 import org.example.buttons.RectangleTextFieldWithLabel;
 import org.example.buttons.SqrBtnWithOutline;
@@ -43,9 +46,9 @@ public class UpdateMenuItems {
     this.primaryStage = primaryStage;
 
     // All the buttons for updating menu items
-    MidButton addProductButton = new MidButton("Add product to menu", "rgb(255, 255, 255)", 30);
-    MidButton changePriceButton = new MidButton("Change prices", "rgb(255, 255, 255)", 30);
-    MidButton removeProductButton = new MidButton("Remove product from menu", 
+    MidButton addProductButton = new MidButton("Add Product to Menu", "rgb(255, 255, 255)", 30);
+    MidButton changePriceButton = new MidButton("Change Prices", "rgb(255, 255, 255)", 30);
+    MidButton removeProductButton = new MidButton("Remove Product from Menu", 
                                                   "rgb(255, 255, 255)", 30);
 
 
@@ -74,15 +77,34 @@ public class UpdateMenuItems {
     gridPane.add(changePriceButton, 0, 1);
     gridPane.add(removeProductButton, 0, 2);
 
+    // Create language button
+    var langButton = new LangBtn();
+
+    // Pass in the Labeled components to translate
+    langButton.addAction(event -> {
+      langButton.updateLanguage(List.of(
+          addProductButton.getButtonLabel(),
+          changePriceButton.getButtonLabel(),
+          removeProductButton.getButtonLabel()
+      ));
+    });
+
+    // Position the language button in the bottom-left corner
+    StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
+    StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
+
                                 
     BorderPane layout = new BorderPane();
     layout.setCenter(gridPane);
 
-    Scene updateItemScene = new Scene(layout, 1920, 1080);
-;
-    return updateItemScene;
+    //put everything into a stackpane
+    StackPane layoutWithLangButton = new StackPane(layout, langButton);
 
+    Scene updateItemScene = new Scene(layoutWithLangButton, 1920, 1080);
+
+    return updateItemScene;
   }
+
   /**
    * Scene for adding a product to the menu.
    *
@@ -90,7 +112,6 @@ public class UpdateMenuItems {
    * @param prevScene previous scene to return to.
    * @return The add product scene.
    */
-
   public Scene addProductScene(Stage primaryStage, Scene prevScene) {
 
     // List view box for showing all the ingredients upon category selection
