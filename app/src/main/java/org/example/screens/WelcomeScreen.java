@@ -1,6 +1,7 @@
 package org.example.screens;
 
 import java.sql.SQLException;
+import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,6 +14,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import org.checkerframework.checker.units.qual.m;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButtonWithImage;
 import org.example.sql.SqlConnectionCheck;
@@ -30,9 +32,8 @@ public class WelcomeScreen {
   public Scene createWelcomeScreen(
       Stage primaryStage,
       double windowWidth,
-      double windowHeight
-  ) throws SQLException {
-    
+      double windowHeight) throws SQLException {
+
     // Initialize the welcome screen elements
     var mainWindow = new VBox();
     mainWindow.setAlignment(Pos.CENTER);
@@ -48,17 +49,17 @@ public class WelcomeScreen {
     // Customize labels
     welcome.setStyle(
         "-fx-background-color: transparent;"
-        + "-fx-text-fill: black;"
-        + "-fx-font-weight: lighter;"
-        + "-fx-font-size: 100;"
-        + "-fx-background-radius: 10;");
+            + "-fx-text-fill: black;"
+            + "-fx-font-weight: lighter;"
+            + "-fx-font-size: 100;"
+            + "-fx-background-radius: 10;");
 
     companyTitle.setStyle(
         "-fx-background-color: transparent;"
-        + "-fx-text-fill: black;"
-        + "-fx-font-weight: bolder;"
-        + "-fx-font-size: 160;"
-        + "-fx-background-radius: 10;");
+            + "-fx-text-fill: black;"
+            + "-fx-font-weight: bolder;"
+            + "-fx-font-size: 160;"
+            + "-fx-background-radius: 10;");
 
     // HBox for Burger images
     var rowOfBurgers = new HBox(300);
@@ -66,7 +67,7 @@ public class WelcomeScreen {
 
     // Setup side images
     // Image burger3 = new Image(getClass().getResourceAsStream("/burger3.png"));
-    
+
     // Create a button with the burger image as its graphic
     Button burgerButton = new Button();
     Image burger3 = new Image(getClass().getResourceAsStream("/burger3.png"));
@@ -75,9 +76,9 @@ public class WelcomeScreen {
     burgerView3.setScaleY(0.5);
     burgerButton.setGraphic(burgerView3);
     burgerButton.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
-    
+
     Image burger1 = new Image(getClass().getResourceAsStream("/burger1.png"));
-    
+
     // Set the button action
     burgerButton.setOnAction(e -> {
       System.out.println("Right burger clicked!");
@@ -121,12 +122,23 @@ public class WelcomeScreen {
     Image burger2 = new Image(getClass().getResourceAsStream("/burger2.png"));
     ImageView burgerView2 = new ImageView(burger2);
     rowOfBurgers.getChildren().addAll(burgerView1, burgerView2, burgerButton);
-
+    
     // Test sql connection
     SqlConnectionCheck connectionCheck = new SqlConnectionCheck();
     Label mysql = connectionCheck.getMysqlLabel();
 
     var langButton = new LangBtn();
+
+    // Just pass in the Labeled components to translate
+    langButton.addAction(event -> {
+      langButton.updateLanguage(List.of(
+          welcome,
+          companyTitle,
+          eatHereBtn.getButtonLabel(),
+          takeAwayBtn.getButtonLabel(),
+          mysql
+      ));
+    });
 
     // Position it in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
@@ -140,7 +152,7 @@ public class WelcomeScreen {
     mainPane.setPrefSize(windowWidth, windowHeight);
 
     Scene scene = new Scene(mainPane, windowWidth, windowHeight);
-    
+
     // Set up action for eat here
     eatHereBtn.setOnAction(e -> {
       try {
@@ -151,8 +163,7 @@ public class WelcomeScreen {
             windowHeight,
             scene,
             0,
-            "eatHere"
-        );
+            "eatHere");
         primaryStage.setScene(mainMenuScene);
       } catch (SQLException ex) {
         ex.printStackTrace();
@@ -170,8 +181,7 @@ public class WelcomeScreen {
             windowHeight,
             scene,
             0,
-            "takeaway"
-        );
+            "takeaway");
         primaryStage.setScene(mainMenuScene);
       } catch (SQLException ex) {
         ex.printStackTrace();
@@ -179,10 +189,10 @@ public class WelcomeScreen {
     });
 
     AdminLoginScreen adminLoginScreen = new AdminLoginScreen();
-    Scene adminMenuScene = adminLoginScreen.createAdminLoginScreen(primaryStage, 
-          windowWidth, windowHeight, scene);
+    Scene adminMenuScene = adminLoginScreen.createAdminLoginScreen(primaryStage,
+        windowWidth, windowHeight, scene);
 
-    //Temporary Button to get to the admin menu
+    // Temporary Button to get to the admin menu
     burgerButton.setOnAction(e -> {
       primaryStage.setScene(adminMenuScene);
     });
