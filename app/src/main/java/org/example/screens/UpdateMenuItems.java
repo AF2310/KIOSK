@@ -669,8 +669,8 @@ public class UpdateMenuItems {
 
       // Admin clicks on a row (product)
       row.setOnMouseClicked(event -> {
-        // Row needs to be double-clicked
-        if (!row.isEmpty() && event.getClickCount() == 2) {
+        // Row only requires one click to get picked
+        if (!row.isEmpty() && event.getClickCount() == 1) {
 
           // Get clicked product as object and its' name
           Product clickedProduct = row.getItem();
@@ -788,7 +788,7 @@ public class UpdateMenuItems {
     return new Scene(layout, 1920, 1080);
   }
 
-  
+
   /**
    * Method to delete a product from the database.
    * Used for admin menu in product deletion section.
