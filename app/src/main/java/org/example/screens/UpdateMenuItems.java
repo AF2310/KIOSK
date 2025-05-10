@@ -14,10 +14,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -79,8 +81,10 @@ public class UpdateMenuItems {
     });
 
     removeProductButton.setOnAction(e -> {
-      // TODO: remove product button.
-
+      Scene productDeletionScene = new UpdateMenuItems().deleteProduct(
+            this.primaryStage,
+            prevScene);
+      primaryStage.setScene(productDeletionScene);
     });
 
     // Layout for arranging buttons in a grid
@@ -619,5 +623,75 @@ public class UpdateMenuItems {
     }
   }
 
-  //private Scene deleteProduct() {}
+  /**
+   * This is the method to create the scene for deleting
+   * products in the admin menu.
+   *
+   * @param primaryStage the primary stage for the scenes
+   * @param prevScene the scene you were previously in
+   * @return product deletion menu scene
+   */
+  private Scene deleteProduct(Stage primaryStage, Scene prevScene) {
+    // Label for screen
+    Label productDeletionLabel = new Label("Product Deletion:");
+    productDeletionLabel.setStyle(
+        "-fx-font-size: 45px;"
+        + "-fx-font-weight: bold;"
+    );
+
+    // Table for item lisitngs
+    TableView<Product> productTable = getProductTable(false);
+
+    // VBox for the table
+    VBox productListings = new VBox(productTable);
+    VBox.setVgrow(productListings, Priority.ALWAYS);
+    productTable.prefWidthProperty().bind(productListings.widthProperty());
+    productListings.setPadding(new Insets(20, 0, 0, 0));
+
+    // VBox to align screen label and table
+    VBox topBox = new VBox();
+    topBox.setMaxWidth(Double.MAX_VALUE);
+    topBox.setAlignment(Pos.TOP_CENTER);
+    // TODO optimize code to make shorter/less lines !ALL!
+    topBox.setSpacing(40);
+    topBox.getChildren().addAll(
+        productDeletionLabel,
+        productListings
+    );
+
+    // Upper part of the screen
+    HBox topContainer = new HBox();
+    topContainer.setMaxWidth(Double.MAX_VALUE);
+    HBox.setHgrow(topBox, Priority.ALWAYS);
+    topContainer.setAlignment(Pos.CENTER);
+    topContainer.getChildren().addAll(topBox);
+
+    // Back button
+    // Clicking button means user goes to previous screen
+    var backButton = new BackBtnWithTxt();
+    backButton.setOnAction(e -> {
+      primaryStage.setScene(prevScene);
+    });
+
+    // Language Button
+    // cycles images on click
+    var langButton = new LangBtn();
+
+    // Spacer for Bottom Row
+    Region spacerBottom = new Region();
+    HBox.setHgrow(spacerBottom, Priority.ALWAYS);
+    
+    // Bottom row of the screen
+    HBox bottomContainer = new HBox();
+    bottomContainer.setAlignment(Pos.BOTTOM_LEFT);
+    bottomContainer.getChildren().addAll(langButton, spacerBottom, backButton);
+
+    // Setting positioning of all the elements
+    BorderPane layout = new BorderPane();
+    layout.setPadding(new Insets(50));
+    layout.setTop(topContainer);
+    layout.setBottom(bottomContainer);
+
+    return new Scene(layout, 1920, 1080);
+  }
 }
