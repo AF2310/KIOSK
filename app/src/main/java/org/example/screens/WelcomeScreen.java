@@ -138,7 +138,7 @@ public class WelcomeScreen {
       ));
     });
 
-    // Position it in the bottom-left corner
+    // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
     StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
 
