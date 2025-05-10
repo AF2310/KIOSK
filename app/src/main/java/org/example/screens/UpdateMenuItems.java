@@ -366,7 +366,34 @@ public class UpdateMenuItems {
 
     layout.setPadding(new Insets(0, 0, 50, 0));
 
-    Scene addProductScene = new Scene(layout, 1920, 1080);
+    // Create language button
+    var langButton = new LangBtn();
+
+    // Pass in the Labeled components to translate
+    langButton.addAction(event -> {
+      langButton.updateLanguage(List.of(
+          menuLabel,
+          productName.getLabel(),
+          productDescription.getLabel(),
+          productPrice.getLabel(),
+          productCategoryDropBox.getLabel(),
+          productIsActive.getLabel(),
+          productIsLimited.getLabel(),
+          ingredientListLabel,
+          confirmButton.getButtonLabel(),
+          backButton.getButtonLabel()
+          // TODO: Translate the alert
+      ));
+    });
+
+    // Position the language button in the bottom-left corner
+    StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
+    StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
+
+    //put everything into a stackpane
+    StackPane layoutWithLangButton = new StackPane(layout, langButton);
+
+    Scene addProductScene = new Scene(layoutWithLangButton, 1920, 1080);
     return addProductScene;
   }
 

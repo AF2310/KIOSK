@@ -53,6 +53,17 @@ public class Dictionary {
     addTranslation("Add Product to Menu", "Lägg till produkten");
     addTranslation("Change Prices", "Ändra priser");
     addTranslation("Remove Product from Menu", "Ta bort produkten");
+
+    addTranslation("Add A Product to the Menu", "Lägg till en Produkt i Menyn");
+    addTranslation("Product Name:", "Produktnamn:");
+    addTranslation("Product Description:", "Produktbeskrivning:");
+    addTranslation("Product Price:", "Produktpris:");
+    addTranslation("Is active?", "Är aktiv?");
+    addTranslation("Is limited?", "Begränsad?");
+    addTranslation("Product Category:", "Produktkategori:");
+    addTranslation("Ingredient List", "Ingredienslista");
+    addTranslation("Confirm", "Bekräfta");
+    addTranslation("Cancel", "Avbryt");
   }
 
   private void addTranslation(String english, String swedish) {
