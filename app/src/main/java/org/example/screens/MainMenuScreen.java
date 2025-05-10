@@ -26,8 +26,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-
-import org.checkerframework.checker.units.qual.s;
 import org.example.buttons.ArrowButton;
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.LangBtn;
