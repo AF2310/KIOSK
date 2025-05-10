@@ -44,6 +44,19 @@ public class Dictionary {
     english.put("Desserter", "Desserts");
     english.put("Specialerbjudanden", "Special Offers");
     english.put("Avbryt", "Cancel");
+
+    // Admin login vocabulary
+    swedish.put("Admin Menu", "Adminmeny");
+    swedish.put("Login", "Logga in");
+    swedish.put("Back to Menu", "Tillbaka till menyn");
+    swedish.put("Password", "Lösenord");
+    swedish.put("Username", "Användarnamn");
+
+    english.put("Adminmeny", "Admin Menu");
+    english.put("Logga in", "Login");
+    english.put("Tillbaka till menyn", "Back to Menu");
+    english.put("Lösenord", "Password");
+    english.put("Användarnamn", "Username");
   }
 
   /**

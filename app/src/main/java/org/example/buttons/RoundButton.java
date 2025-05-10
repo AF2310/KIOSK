@@ -4,7 +4,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -63,8 +62,8 @@ public class RoundButton extends Button {
     setOnAction(event -> {
       if (existing != null) {
         existing.handle(event);
-      newHandler.handle(event);
       }
+      newHandler.handle(event);
     });
   }
 
