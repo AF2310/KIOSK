@@ -19,6 +19,7 @@ public class Dictionary {
     this.toEnglish = startInEnglish;
 
     // Translations, will move to a separate file later
+    // Welcome screen vocabulary
     swedish.put("Welcome to", "Välkommen till");
     swedish.put("Eat Here", "Ät här");
     swedish.put("Takeaway", "Ta med");
@@ -28,6 +29,21 @@ public class Dictionary {
     english.put("Ät här", "Eat Here");
     english.put("Ta med", "Takeaway");
     english.put("Drivrutin hittad och ansluten", "Driver found and connected");
+
+    // Main menu vocabulary
+    swedish.put("Burgers", "Burgare");
+    swedish.put("Sides", "Tillbehör");
+    swedish.put("Drinks", "Drycker");
+    swedish.put("Desserts", "Desserter");
+    swedish.put("Special Offers", "Specialerbjudanden");
+    swedish.put("Cancel", "Avbryt");
+
+    english.put("Burgare", "Burgers");
+    english.put("Tillbehör", "Sides");
+    english.put("Drycker", "Drinks");
+    english.put("Desserter", "Desserts");
+    english.put("Specialerbjudanden", "Special Offers");
+    english.put("Avbryt", "Cancel");
   }
 
   /**
@@ -36,10 +52,18 @@ public class Dictionary {
   public String translate(String text) {
     if (toEnglish) {
       // Try to get the English translation, if not found, return the original text
-      return english.containsKey(text) ? english.get(text) : text;
+      if (english.containsKey(text)) {
+        return english.get(text);
+      } else {
+        return text;
+      }
     } else {
       // Try to get the Swedish translation, if not found, return the original text
-      return swedish.containsKey(text) ? swedish.get(text) : text;
+      if (swedish.containsKey(text)) {
+        return swedish.get(text);
+      } else {
+        return text;
+      }
     }
   }
 
