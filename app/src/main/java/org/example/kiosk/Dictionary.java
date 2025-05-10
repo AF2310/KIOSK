@@ -48,15 +48,32 @@ public class Dictionary {
     // Admin login vocabulary
     swedish.put("Admin Menu", "Adminmeny");
     swedish.put("Login", "Logga in");
-    swedish.put("Back to Menu", "Tillbaka till menyn");
+    swedish.put("Back to Menu", "Gå tillbaks");
     swedish.put("Password", "Lösenord");
     swedish.put("Username", "Användarnamn");
 
     english.put("Adminmeny", "Admin Menu");
     english.put("Logga in", "Login");
-    english.put("Tillbaka till menyn", "Back to Menu");
+    english.put("Gå tillbaks", "Back to Menu");
     english.put("Lösenord", "Password");
     english.put("Användarnamn", "Username");
+
+    // Admin Main Menu vocabulary
+    swedish.put("Welcome, Admin!", "Välkommen, Admin!");
+    swedish.put("Update Menu Items", "Uppdatera menyartiklar");
+    swedish.put("Order History", "Beställningshistorik");
+    swedish.put("Change Timer Setting", "Ändra Timerinställningar");
+    swedish.put("See Sales Summary", "Försäljningsöversikt");
+    swedish.put("Set Special Offers", "Sätt Specialerbjudanden");
+    swedish.put("Cancel", "Avbryt");
+
+    english.put("Välkommen, Admin!", "Welcome, Admin!");
+    english.put("Uppdatera menyartiklar", "Update Menu Items");
+    english.put("Beställningshistorik", "Order History");
+    english.put("Ändra Timerinställningar", "Change Timer Setting");
+    english.put("Försäljningsöversikt", "See Sales Summary");
+    english.put("Sätt Specialerbjudanden", "Set Special Offers");
+    english.put("Avbryt", "Cancel");
   }
 
   /**

@@ -11,6 +11,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.util.List;
+
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
@@ -29,15 +32,15 @@ public class AdminMenuScreen {
       double windowHeight,
       Scene welcomeScrScene) {
 
-    //the mainlayout
+    // the mainlayout
     VBox adminMenuLayout = new VBox(20);
     adminMenuLayout.setAlignment(Pos.TOP_CENTER);
     adminMenuLayout.setPadding(new Insets(10));
     // Making the title on top of the admin menu screen
-    Label adminMenuText = new Label("Welcome, admin!");
+    Label adminMenuText = new Label("Welcome, Admin!");
     adminMenuText.setStyle(
         "-fx-font-size: 100px;"
-        + "-fx-font-weight: bold;");
+            + "-fx-font-weight: bold;");
 
     adminMenuLayout.getChildren().addAll(adminMenuText);
 
@@ -50,19 +53,18 @@ public class AdminMenuScreen {
 
     // All the same instances of the MidButton
     MidButton updateMenuBtn = new MidButton("Update Menu Items", "rgb(255, 255, 255)", 30);
-    MidButton changeTimerBtn = new MidButton("Change timer setting", "rgb(255, 255, 255)", 30);
+    MidButton changeTimerBtn = new MidButton("Change Timer Setting", "rgb(255, 255, 255)", 30);
 
     MidButton orderHistoryBtn = new MidButton("Order History", "rgb(255, 255, 255)", 30);
     orderHistoryBtn.setOnAction(e -> {
       Scene historyScene = new AdminOrdHistoryScreen().showHistoryScene(
-          primaryStage, 
+          primaryStage,
           adminMenuLayout.getScene());
       primaryStage.setScene(historyScene);
     });
 
-    MidButton specialOffersBtn = new MidButton("Set special offers", "rgb(255, 255, 255)", 30);
-    MidButton salesSummaryBtn = new MidButton("See sales summary", "rgb(255, 255, 255)", 30);
-
+    MidButton specialOffersBtn = new MidButton("Set Special Offers", "rgb(255, 255, 255)", 30);
+    MidButton salesSummaryBtn = new MidButton("See Sales Summary", "rgb(255, 255, 255)", 30);
 
     centerGrid.add(updateMenuBtn, 0, 0);
     centerGrid.add(changeTimerBtn, 0, 1);
@@ -87,7 +89,7 @@ public class AdminMenuScreen {
 
     updateMenuBtn.setOnAction(e -> {
       Scene updateMenuScene = new UpdateMenuItems().adminUpdateMenuItems(
-          primaryStage, 
+          primaryStage,
           adminMenuLayout.getScene());
       primaryStage.setScene(updateMenuScene);
     });
@@ -97,10 +99,23 @@ public class AdminMenuScreen {
       primaryStage.setScene(welcomeScrScene);
     });
 
+    // Pass in the Labeled components to translate
+    langButton.addAction(event -> {
+      langButton.updateLanguage(List.of(
+          adminMenuText,
+          updateMenuBtn.getButtonLabel(),
+          changeTimerBtn.getButtonLabel(),
+          orderHistoryBtn.getButtonLabel(),
+          specialOffersBtn.getButtonLabel(),
+          salesSummaryBtn.getButtonLabel(),
+          cancelButton.getButtonLabel()
+      ));
+    });
+
     HBox bottomLayout = new HBox();
     bottomLayout.setPadding(new Insets(0, 0, 0, 0));
     bottomLayout.getChildren().addAll(bottomLeftBox, spacerBottom, bottomRightBox);
-    
+
     // Assigning the positions of elements for the Admin menu screen
     BorderPane mainBorderPane = new BorderPane();
     mainBorderPane.setPadding(new Insets(50));
@@ -113,4 +128,3 @@ public class AdminMenuScreen {
     return adminMenuScene;
   }
 }
-
