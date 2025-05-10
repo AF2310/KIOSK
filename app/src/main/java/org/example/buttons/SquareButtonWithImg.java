@@ -28,7 +28,7 @@ public class SquareButtonWithImg extends Button {
     buttonImage.setFitHeight(60);
 
     // Label setup
-    Label buttonLabel = new Label(buttonText);
+    buttonLabel = new Label(buttonText);
     buttonLabel.setStyle("-fx-background-color: transparent;"
         + "-fx-font-size: 18;"
         + "-fx-font-weight: normal;"
@@ -61,5 +61,20 @@ public class SquareButtonWithImg extends Button {
 
     // Set button's graphic (stacked layout)
     this.setGraphic(stack);
+  }
+
+  private Label buttonLabel;
+
+  public Label getButtonLabel() {
+    return buttonLabel;
+  }
+
+  /**
+   * Sets the text of the button's label.
+   */
+  public void setButtonText(String text) {
+    if (buttonLabel != null) {
+      buttonLabel.setText(text);
+    }
   }
 }

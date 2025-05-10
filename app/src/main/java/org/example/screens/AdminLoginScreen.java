@@ -149,14 +149,16 @@ public class AdminLoginScreen {
 
     // Just pass in the Labeled components to translate
     langButton.addAction(event -> {
-      // Update both labels and text input controls (prompt texts)
+      // Update both labels and text input controls
       langButton.updateLanguage(
+          // Labels
           List.of(
             adminMenuTitle,
             loginButton.getButtonLabel(),
             backButton.getButtonLabel(),
             errorLabel
           ),
+          // Text input fields
           List.of(
             usernameField,
             passwordField
