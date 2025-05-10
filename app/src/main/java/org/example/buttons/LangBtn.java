@@ -2,6 +2,7 @@ package org.example.buttons;
 
 import java.util.List;
 import javafx.scene.control.Labeled;
+import javafx.scene.control.TextInputControl;
 import org.example.kiosk.Dictionary;
 
 /**
@@ -32,6 +33,27 @@ public class LangBtn extends RoundButton {
       String currentText = component.getText();
       String translated = dictionary.translate(currentText);
       component.setText(translated);
+    }
+  }
+
+  /**
+   * Updates the language of both labeled components and text input prompts.
+   */
+  public void updateLanguage(List<Labeled> labels, List<TextInputControl> inputs) {
+    dictionary.toggleLanguage();
+
+    // Update labels
+    for (Labeled component : labels) {
+      String currentText = component.getText();
+      String translated = dictionary.translate(currentText);
+      component.setText(translated);
+    }
+
+    // Update text field prompt texts
+    for (TextInputControl input : inputs) {
+      String prompt = input.getPromptText();
+      String translated = dictionary.translate(prompt);
+      input.setPromptText(translated);
     }
   }
 }

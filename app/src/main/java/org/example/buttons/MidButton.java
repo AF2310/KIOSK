@@ -19,7 +19,7 @@ public class MidButton extends Button {
     this.setPrefSize(460, 140);
 
     // Label setup
-    Label buttonLabel = new Label(buttonText);
+    buttonLabel = new Label(buttonText);
     buttonLabel.setStyle("-fx-background-color: transparent;"
         + "-fx-font-weight: normal;"
         + "-fx-font-size: " + fontSize + "px;"
@@ -53,5 +53,20 @@ public class MidButton extends Button {
 
     // Set the button graphic to the centered HBox
     this.setGraphic(centeredContent);
+  }
+
+  private Label buttonLabel;
+
+  public Label getButtonLabel() {
+    return buttonLabel;
+  }
+
+  /**
+   * Sets the text of the button's label.
+   */
+  public void setButtonText(String text) {
+    if (buttonLabel != null) {
+      buttonLabel.setText(text);
+    }
   }
 }

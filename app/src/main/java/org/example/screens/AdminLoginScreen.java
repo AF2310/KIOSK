@@ -1,5 +1,7 @@
 package org.example.screens;
 
+import java.util.List;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -11,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
 import org.example.buttons.MidButtonWithImage;
 import org.example.sql.SqlConnectionCheck;
@@ -142,9 +145,31 @@ public class AdminLoginScreen {
         errorLabel
     );
 
+    var langButton = new LangBtn();
+
+    // Just pass in the Labeled components to translate
+    langButton.addAction(event -> {
+      // Update both labels and text input controls (prompt texts)
+      langButton.updateLanguage(
+          List.of(
+            adminMenuTitle,
+            loginButton.getButtonLabel(),
+            backButton.getButtonLabel(),
+            errorLabel
+          ),
+          List.of(
+            usernameField,
+            passwordField
+          )
+      );
+    });
+
+    // Position the language button in the bottom-left corner
+    StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
+    StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
 
     //put everything into a stackpane
-    StackPane mainPane = new StackPane(adminMenuLayout);
+    StackPane mainPane = new StackPane(adminMenuLayout, langButton);
     mainPane.setPrefSize(windowWidth, windowHeight);
     
 
