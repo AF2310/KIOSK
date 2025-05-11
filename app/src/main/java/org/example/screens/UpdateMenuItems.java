@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
@@ -14,10 +16,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
+
+import org.example.buttons.BackBtnWithTxt;
+import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
 import org.example.menu.Product;
 import org.example.menu.Type;
@@ -83,6 +90,23 @@ public class UpdateMenuItems {
 
     });
 
+    // Back button -> user goes to previous screen
+    var backButton = new BackBtnWithTxt();
+    backButton.setOnAction(e -> {
+      primaryStage.setScene(prevScene);
+    });
+
+    // Language Button -> cycles images on click
+    var langButton = new LangBtn();
+
+    // Spacer for Bottom Row
+    Region spacerBottom = new Region();
+    HBox.setHgrow(spacerBottom, Priority.ALWAYS);
+
+    // Bottom row of the screen
+    HBox bottomContainer = new HBox(langButton, spacerBottom, backButton);
+    bottomContainer.setAlignment(Pos.BOTTOM_LEFT);
+
     // Layout for arranging buttons in a grid
     GridPane gridPane = new GridPane();
     gridPane.setAlignment(Pos.CENTER);
@@ -94,7 +118,9 @@ public class UpdateMenuItems {
 
     // Layout borders
     BorderPane layout = new BorderPane();
+    layout.setPadding(new Insets(50));
     layout.setCenter(gridPane);
+    layout.setBottom(bottomContainer);
 
     // Final scene design
     Scene updateItemScene = new Scene(layout, 1920, 1080);
