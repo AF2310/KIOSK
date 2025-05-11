@@ -569,6 +569,16 @@ public class UpdateMenuItems {
     return productTable;
   }
 
+  // TODO: will be moved later
+  /**
+   * Query method to change the name of a product.
+   * Used in product table getter method.
+   *
+   * @param newName String new name of product
+   * @param productId int product id that gets name-change
+   * @param connection Database connection
+   * @throws SQLException Database error
+   */
   private void updateProductName(
       String newName,
       int productId,
@@ -586,6 +596,16 @@ public class UpdateMenuItems {
     }
   }
 
+  // TODO: will be moved later
+  /**
+   * Query method to update is_active value of a product.
+   * Used in product table getter method.
+   *
+   * @param newActivityValue int new is_active value (1 or 0)
+   * @param productId int id of product that will be changed
+   * @param connection Connection to database
+   * @throws SQLException Database error
+   */
   private void updateActivityValue(
       int newActivityValue,
       int productId,
@@ -603,6 +623,15 @@ public class UpdateMenuItems {
     }
   }
 
+  /**
+   * Method containing product editor screen.
+   * Used in admin menu to edit name, is_active and price of 
+   * a product.
+   *
+   * @param primaryStage the primary stage of the scene
+   * @param prevScene the previous scene
+   * @return product editor scene
+   */
   private Scene editProductsScene(Stage primaryStage, Scene prevScene) {
 
     // Label for screen
