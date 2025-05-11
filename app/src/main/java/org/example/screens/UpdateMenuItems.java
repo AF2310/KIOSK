@@ -76,10 +76,15 @@ public class UpdateMenuItems {
 
     // Action: editing product
     editProductButton.setOnAction(e -> {
-      Scene productScene = new UpdateMenuItems().editProductsScene(
-            this.primaryStage,
-            prevScene);
-      primaryStage.setScene(productScene);
+
+      // Get product editor scene
+      ProductEditorScene productEditor = new ProductEditorScene(
+          primaryStage,
+          prevScene,
+          getProductTable(true, true, true)
+      );
+
+      primaryStage.setScene(productEditor.getProductEditorScene());
     });
 
     // Action: deleting product
@@ -107,7 +112,6 @@ public class UpdateMenuItems {
     Scene updateItemScene = new Scene(layout, 1920, 1080);
 
     return updateItemScene;
-
   }
 
   /**
@@ -167,12 +171,14 @@ public class UpdateMenuItems {
         categoryMap.put(name, id);
         productCategoryDropBox.getComboBox().getItems().add(name);
       }
+
       // This is an event handler when a category is selected
       // When users selects a category, the ingredient list is updated
       productCategoryDropBox.getComboBox().setOnAction(e -> {
         // Gets selected category
         String selectedCategory = productCategoryDropBox.getSelectedItem();
         if (selectedCategory != null) {
+
           try {
             // Joins category onto ingredients so we have ingredient_name + ingredient_id
             String categoryOnIngredientsql = 
@@ -189,14 +195,16 @@ public class UpdateMenuItems {
             ResultSet resultSet = statement.executeQuery();
 
             ObservableList<String> ingredients = FXCollections.observableArrayList();
+
             // Here we populate the ingredient list view with the results
             while (resultSet.next()) {
               // Only shows the ingredients for the selected category
               String ingredientName = resultSet.getString("ingredient_name");
               ingredients.add(ingredientName);
-
             }
+
             ingredientListView.setItems(ingredients);
+
           } catch (SQLException ex) {
             ex.printStackTrace();
             showAlert("Database error", "Failed to load categories", Alert.AlertType.ERROR);
@@ -265,6 +273,7 @@ public class UpdateMenuItems {
             .prepareStatement(sqlProduct, PreparedStatement.RETURN_GENERATED_KEYS);
 
         String imageFileName;
+        
         // And constructs the image file path based on the selected category
         if (selectedCategory.equalsIgnoreCase("burgesr")) {
           imageFileName = "default_burger.png";
@@ -601,77 +610,6 @@ public class UpdateMenuItems {
 
     return productTable;
   }
-
-  /**
-   * Method containing product editor screen.
-   * Used in admin menu to edit name, is_active and price of 
-   * a product.
-   *
-   * @param primaryStage the primary stage of the scene
-   * @param prevScene the previous scene
-   * @return product editor scene
-   */
-  private Scene editProductsScene(Stage primaryStage, Scene prevScene) {
-
-    // Label for screen
-    Label historyLabel = new Label("Price Editor:");
-    historyLabel.setStyle(
-        "-fx-font-size: 45px;"
-        + "-fx-font-weight: bold;"
-    );
-
-    // Table for item lisitngs
-    TableView<Product> productTable = getProductTable(true, true, true);
-
-    // VBox for the table
-    VBox productListings = new VBox(productTable);
-    VBox.setVgrow(productListings, Priority.ALWAYS);
-    productTable.prefWidthProperty().bind(productListings.widthProperty());
-    productListings.setPadding(new Insets(20, 0, 0, 0));
-
-    // VBox to align screen label and table
-    VBox topBox = new VBox();
-    topBox.setMaxWidth(Double.MAX_VALUE);
-    topBox.setAlignment(Pos.TOP_CENTER);
-    topBox.setSpacing(40);
-    topBox.getChildren().addAll(historyLabel, productListings);
-
-    // Upper part of the screen
-    HBox topContainer = new HBox();
-    topContainer.setMaxWidth(Double.MAX_VALUE);
-    HBox.setHgrow(topBox, Priority.ALWAYS);
-    topContainer.setAlignment(Pos.CENTER);
-    topContainer.getChildren().addAll(topBox);
-
-    // Back button
-    // Clicking button means user goes to previous screen
-    var backButton = new BackBtnWithTxt();
-    backButton.setOnAction(e -> {
-      primaryStage.setScene(prevScene);
-    });
-
-    // Language Button
-    // cycles images on click
-    var langButton = new LangBtn();
-
-    // Spacer for Bottom Row
-    Region spacerBottom = new Region();
-    HBox.setHgrow(spacerBottom, Priority.ALWAYS);
-    
-    // Bottom row of the screen
-    HBox bottomContainer = new HBox();
-    bottomContainer.setAlignment(Pos.BOTTOM_LEFT);
-    bottomContainer.getChildren().addAll(langButton, spacerBottom, backButton);
-
-    // Setting positioning of all the elements
-    BorderPane layout = new BorderPane();
-    layout.setPadding(new Insets(50));
-    layout.setTop(topContainer);
-    layout.setBottom(bottomContainer);
-
-    return new Scene(layout, 1920, 1080);
-  }
-
   
   /**
    * This is the method to create the scene for deleting
