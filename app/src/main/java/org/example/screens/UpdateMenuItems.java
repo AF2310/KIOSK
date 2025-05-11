@@ -423,36 +423,38 @@ public class UpdateMenuItems {
     activityColumn.setCellValueFactory(new PropertyValueFactory<>("activity"));
     // If activity value is editable
     activityColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-    activityColumn.setOnEditCommit(event -> {
-      Product product = event.getRowValue();
-      int newActivityValue = event.getNewValue();
-
-      // NO invalid int value was entered
-      if (newActivityValue == 1 || newActivityValue == 0) {
-        
-        int productId = product.getId();
-        product.setActivity(newActivityValue);
-        
-        // TODO: This will be moved later
-        try {
-          Connection conn = DriverManager.getConnection(
-              "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-              + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-              + "?user=u5urh19mtnnlgmog"
-              + "&password=zPgqf8o6na6pv8j8AX8r"
-              + "&useSSL=true"
-              + "&allowPublicKeyRetrieval=true"
-            );
+    if (activityEditable) {
+      activityColumn.setOnEditCommit(event -> {
+        Product product = event.getRowValue();
+        int newActivityValue = event.getNewValue();
+  
+        // NO invalid int value was entered
+        if (newActivityValue == 1 || newActivityValue == 0) {
           
-          // Update newly inserted activity value in database
-          upadateActivityValue(newActivityValue, productId, conn);
+          int productId = product.getId();
+          product.setActivity(newActivityValue);
           
-        } catch (SQLException e) {
-          e.printStackTrace();
+          // TODO: This will be moved later
+          try {
+            Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+                + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+                + "?user=u5urh19mtnnlgmog"
+                + "&password=zPgqf8o6na6pv8j8AX8r"
+                + "&useSSL=true"
+                + "&allowPublicKeyRetrieval=true"
+              );
+            
+            // Update newly inserted activity value in database
+            upadateActivityValue(newActivityValue, productId, conn);
+            
+          } catch (SQLException e) {
+            e.printStackTrace();
+          }
         }
-      }
-      // ELSE: invalid value was entered -> do nothing
-    });
+        // ELSE: invalid value was entered -> do nothing
+      });
+    }
     activityColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
 
     // Product price column
