@@ -5,6 +5,7 @@ package org.example.menu;
  */
 public abstract class Product {
   private String name;
+  private String description;
   private double price;
   private int id;
   private Type type;
@@ -17,6 +18,14 @@ public abstract class Product {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public double getPrice() {

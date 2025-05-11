@@ -63,7 +63,7 @@ public class UpdateMenuItems {
       ProductEditorScene productEditor = new ProductEditorScene(
           primaryStage,
           prevScene,
-          getProductTable(true, true, true));
+          getProductTable(true, true, true, true));
 
       // Set the new (current) scene
       primaryStage.setScene(productEditor.getProductEditorScene());
@@ -76,7 +76,7 @@ public class UpdateMenuItems {
       DeleteProductScene productDeletionScene = new DeleteProductScene(
           primaryStage,
           prevScene,
-          getProductTable(false, false, false));
+          getProductTable(false, false, false, false));
 
       // Set the new (current) scene
       primaryStage.setScene(productDeletionScene.getProductDeletionScene());
@@ -129,6 +129,7 @@ public class UpdateMenuItems {
    */
   private TableView<Product> getProductTable(
       boolean priceEditable,
+      boolean descriptionEditable,
       boolean activityEditable,
       boolean nameEditable) {
 
@@ -150,7 +151,7 @@ public class UpdateMenuItems {
 
         // Get current value of clicked field and get newly entered value
         Product product = event.getRowValue();
-        String newName = event.getNewValue();
+        String newName = event.getNewValue().strip();
 
         // NO empty string was entered
         if (!(newName.strip().isEmpty())) {
@@ -179,6 +180,46 @@ public class UpdateMenuItems {
           }
         }
         // ELSE: empty string was entered -> do nothing
+      });
+    }
+
+    // Product description column
+    TableColumn<Product, String> descriptionColumn = new TableColumn<>("Description");
+    descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+    
+    // If product description is editable
+    if (descriptionEditable) {
+      descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+
+      // Description column of a product is clicked
+      descriptionColumn.setOnEditCommit(event -> {
+
+        // Get current value of clicked field and get newly entered value
+        Product product = event.getRowValue();
+        String newDescription = event.getNewValue().strip();
+
+        // Get id of local product
+        int productId = product.getId();
+
+        // Update product name locally
+        product.setDescription(newDescription);
+
+        // TODO: This will be moved later
+        try {
+          Connection conn = DriverManager.getConnection(
+              "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+                  + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+                  + "?user=u5urh19mtnnlgmog"
+                  + "&password=zPgqf8o6na6pv8j8AX8r"
+                  + "&useSSL=true"
+                  + "&allowPublicKeyRetrieval=true");
+
+          // Update newly inserted activity value of product in database
+          updateProductDescription(newDescription, productId, conn);
+
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
       });
     }
 
@@ -271,6 +312,7 @@ public class UpdateMenuItems {
     // Combining columns in table
     productTable.getColumns().add(idColumn);
     productTable.getColumns().add(nameColumn);
+    productTable.getColumns().add(descriptionColumn);
     productTable.getColumns().add(categoryColumn);
     productTable.getColumns().add(activityColumn);
     productTable.getColumns().add(priceColumn);
@@ -326,6 +368,31 @@ public class UpdateMenuItems {
     }
   }
 
+    /**
+   * Query method to change the description of a product.
+   * Used in product table getter method.
+   *
+   * @param newDescription   String new description of product
+   * @param productId  int product id that gets new description
+   * @param connection Database connection
+   * @throws SQLException Database error
+   */
+  private void updateProductDescription(
+      String newDescription,
+      int productId,
+      Connection connection) throws SQLException {
+
+    String sql = "UPDATE product "
+        + "SET description = ? "
+        + "WHERE product_id = ?";
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+      stmt.setString(1, newDescription);
+      stmt.setInt(2, productId);
+      stmt.executeUpdate();
+    }
+  }
+
   /**
    * Query method to update is_active value of a product.
    * Used in product table getter method.
@@ -367,7 +434,7 @@ public class UpdateMenuItems {
     ArrayList<Product> products = new ArrayList<>();
 
     // SQL query to fetch needed data from database
-    String sql = "SELECT p.product_id, p.`name`, c.`name` AS type, p.is_active, p.price "
+    String sql = "SELECT p.product_id, p.`name`, p.description, c.`name` AS type, p.is_active, p.price "
         + "FROM product p "
         + "JOIN category c ON p.category_id = c.category_id";
 
@@ -379,6 +446,7 @@ public class UpdateMenuItems {
         // Fetch all product data from database
         int productId = rs.getInt("product_id");
         String name = rs.getString("name");
+        String description = rs.getString("description");
         Type type = Type.valueOf(rs.getString("type").toUpperCase());
         int isActive = rs.getInt("is_active");
         double price = rs.getDouble("price");
@@ -388,6 +456,7 @@ public class UpdateMenuItems {
         product.setId(productId);
         product.setName(name);
         product.setType(type);
+        product.setDescription(description);
         product.setActivity(isActive);
         product.setPrice(price);
 
