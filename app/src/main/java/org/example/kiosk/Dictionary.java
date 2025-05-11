@@ -109,6 +109,13 @@ public class Dictionary {
     addTranslation("Tomato", "Tomat");
     addTranslation("Cheddar Cheese", "Cheddarost");
     addTranslation("Mayonnaise", "Majonnäs");
+
+    // Checkout screen vocabulary
+    addTranslation("Checkout", "Kassan");
+    addTranslation("Confirm", "Bekräfta");
+    addTranslation("Confirm Order", "Bekräfta beställning");
+    addTranslation("Total", "Totalt");
+    addTranslation("Enter Promo Code", "Ange kampanjkod");
   }
 
   private void addTranslation(String english, String swedish) {

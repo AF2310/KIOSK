@@ -47,7 +47,7 @@ public class ConfirmOrderButton extends Button {
     );
       
     // Create Order confirmation label
-    Label confirmLabel = new Label("Confirm Order");
+    confirmLabel = new Label("Confirm Order");
     // Label should be white, normal, and large font
     confirmLabel.setStyle(
         "-fx-text-fill: white;"
@@ -85,5 +85,20 @@ public class ConfirmOrderButton extends Button {
     priceLabel.setText(
         "Total: " + String.format("%.2f", order.calculatePrice()) + "kr"
     );
+  }
+
+  private Label confirmLabel;
+
+  public Label getConfirmLabel() {
+    return confirmLabel;
+  }
+
+  /**
+   * Sets the text of the button's label.
+   */
+  public void setButtonText(String text) {
+    if (confirmLabel != null) {
+      confirmLabel.setText(text);
+    }
   }
 }

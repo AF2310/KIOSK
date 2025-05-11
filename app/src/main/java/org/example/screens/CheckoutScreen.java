@@ -2,6 +2,7 @@ package org.example.screens;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -243,12 +244,32 @@ public class CheckoutScreen {
         quantitys,
         6);
 
+    
+
     layout.setAlignment(Pos.CENTER);
     layout.setPadding(new Insets(20));
     layout.getChildren().addAll(
         topBox,
         checkoutGrid,
         bottomPart);
+
+    // Pass in the Labeled components to translate
+    langButton.addAction(event -> {
+      // Update both labels and text input controls
+      langButton.updateLanguage(
+          // Labels
+          List.of(
+            cancelButton.getButtonLabel(),
+            backButton.getButtonLabel(),
+            checkoutLabel,
+            confirmOrderButton.getConfirmLabel()
+          ),
+          // Text input fields
+          List.of(
+            promoField
+          )
+      );
+    });
 
     // Create final scene result
     return new Scene(layout, windowWidth, windowHeight);
