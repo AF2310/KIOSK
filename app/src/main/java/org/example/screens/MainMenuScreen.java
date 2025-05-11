@@ -345,18 +345,21 @@ public class MainMenuScreen {
     String category = categories[currentCategoryIndex];
     List<Product> items = categoryItems.get(category);
     if ("Meals".equals(category)) {
+      System.out.println("Loading Meals category");
+
       items = new ArrayList<>();
       try {
         String sql = """
-            SELECT m.meal_id, m.name, m.description, m.price, m.image_url, m.product_id
-            FROM meal m
-            JOIN product p ON m.product_id = p.product_id
+            SELECT meal_id, name, description, price, image_url
+            FROM meal
             """;
 
         PreparedStatement ps = conn.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
+        boolean found = false;
 
         while (rs.next()) {
+          found = true;
           Meal meal = new Meal(rs.getString("name"));
           meal.setId(rs.getInt("meal_id"));
           meal.setName(rs.getString("name"));
@@ -368,6 +371,9 @@ public class MainMenuScreen {
           items.add(meal);
         }
 
+        if (!found) {
+          System.out.println("No meals returned");
+        }
         rs.close();
         ps.close();
       } catch (SQLException e) {
@@ -450,13 +456,23 @@ public class MainMenuScreen {
         // Get item details when clicking on item
         imageSlot.setOnMouseClicked(e -> {
           try {
-            Scene detailScene = detailScreen.create(
-                this.primaryStage,
-                this.primaryStage.getScene(),
-                (Single) item,
-                cart
+            if (item instanceof Meal) {
+              Meal meal = (Meal) item;
+              MealCustomizationScreen mealScreen = new MealCustomizationScreen();
+              Scene sideScene = mealScreen.createSideSelectionScene(
+                  this.primaryStage,
+                  this.primaryStage.getScene(),
+                  meal);
+              this.primaryStage.setScene(sideScene);
+            } else if (item instanceof Single) {
+              Scene detailScene = detailScreen.create(
+                  this.primaryStage,
+                  this.primaryStage.getScene(),
+                  (Single) item,
+                  cart
               );
-            this.primaryStage.setScene(detailScene);
+              this.primaryStage.setScene(detailScene);
+            }
           } catch (SQLException ex) {
             ex.printStackTrace();
           }
