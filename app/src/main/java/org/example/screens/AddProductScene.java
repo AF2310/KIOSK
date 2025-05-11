@@ -37,7 +37,7 @@ public class AddProductScene {
    * ONLY used in the admin menu in 'UpdateMenuItems.java'.
    *
    * @param primaryStage Primary stage for the scenes (stage itself)
-   * @param prevScene Previous scene to return to
+   * @param prevScene    Previous scene to return to
    */
   public AddProductScene(Stage primaryStage, Scene prevScene) {
     this.primaryStage = primaryStage;
@@ -68,7 +68,7 @@ public class AddProductScene {
     // Creates a dropdown for selecting a product category
     DropBoxWithLabel productCategoryDropBox = new DropBoxWithLabel("Product Category:");
 
-    //Map to store category name and its corresponding ID from the database.
+    // Map to store category name and its corresponding ID from the database.
     Map<String, Integer> categoryMap = new HashMap<>();
 
     // This is a query to fetch all the categories from the database
@@ -94,15 +94,14 @@ public class AddProductScene {
 
           try {
             // Joins category onto ingredients so we have ingredient_name + ingredient_id
-            String categoryOnIngredientsql = 
-                 "SELECT i.ingredient_id, i.ingredient_name " 
+            String categoryOnIngredientsql = "SELECT i.ingredient_id, i.ingredient_name "
                 + "FROM ingredient i "
-                + "JOIN categoryingredients ci ON i.ingredient_id = ci.ingredient_id " 
-                + "JOIN category c ON ci.category_id = c.category_id " 
+                + "JOIN categoryingredients ci ON i.ingredient_id = ci.ingredient_id "
+                + "JOIN category c ON ci.category_id = c.category_id "
                 + "WHERE c.name = ?";
 
             PreparedStatement statement = connection.getConnection().prepareStatement(
-                    categoryOnIngredientsql);
+                categoryOnIngredientsql);
             // Selects the category ingredients
             statement.setString(1, selectedCategory);
             ResultSet resultSet = statement.executeQuery();
@@ -128,7 +127,8 @@ public class AddProductScene {
     } catch (SQLException ex) {
       ex.printStackTrace();
       showAlert("Database error", "Failed to load categories", Alert.AlertType.ERROR);
-    } // TODO: Make connection to sql a singleton so we don't create new connections each time.
+    }
+    // TODO: Make connection to sql a singleton so we don't create new connections each time.
 
     // Maps categories to default image paths for now
     // TODO: Make an implementation for putting in new images for products
@@ -164,29 +164,28 @@ public class AddProductScene {
 
         // Validating user inputs first before attempting to add the product
         if (productName.getText().isEmpty()
-            || productPrice.getText().isEmpty() 
-            || selectedCategory == null
-        ) {
+            || productPrice.getText().isEmpty()
+            || selectedCategory == null) {
 
           showAlert("Error", "All fields are required!", Alert.AlertType.ERROR);
           return;
 
-        } 
+        }
         if (selectedItems.isEmpty()) {
           showAlert("Info", "No ingredients selected!", Alert.AlertType.INFORMATION);
-        }     
-        
-        // Build an SQL query to insert a new product into the 'product table' 
+        }
+
+        // Build an SQL query to insert a new product into the 'product table'
         String sqlProduct = "INSERT INTO"
-                   + " product (name, description, price, category_id,"
-                   + " is_active, is_limited, image_url)"
-                   + " VALUES (?, ?, ?, ?, ?, ?, ?)";
+            + " product (name, description, price, category_id,"
+            + " is_active, is_limited, image_url)"
+            + " VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement stmtProduct = connection.getConnection()
             .prepareStatement(sqlProduct, PreparedStatement.RETURN_GENERATED_KEYS);
 
         String imageFileName;
-        
+
         // And constructs the image file path based on the selected category
         if (selectedCategory.equalsIgnoreCase("burgesr")) {
           imageFileName = "default_burger.png";
@@ -234,12 +233,12 @@ public class AddProductScene {
 
         // Inserting selected ingredients into the linking table with the new product ID
         String sqlIngredients = "INSERT INTO productingredients (product_id, "
-                                + "ingredient_id, ingredientCount) "
-                                + "VALUES (?, (SELECT ingredient_id FROM "
-                                + "ingredient WHERE ingredient_name = ?), ?)";
+            + "ingredient_id, ingredientCount) "
+            + "VALUES (?, (SELECT ingredient_id FROM "
+            + "ingredient WHERE ingredient_name = ?), ?)";
 
         PreparedStatement stmtIngredients = connection.getConnection()
-              .prepareStatement(sqlIngredients);
+            .prepareStatement(sqlIngredients);
 
         int ingredientCount = 1;
         for (String ingredientName : selectedItems) {
@@ -252,28 +251,25 @@ public class AddProductScene {
 
         stmtIngredients.executeBatch();
         connection.getConnection().commit();
-                
+
       } catch (NumberFormatException ex) {
         showAlert(
-            "Input error", 
+            "Input error",
             "Enter valid numbers for price and category ID",
-            Alert.AlertType.ERROR
-        );
+            Alert.AlertType.ERROR);
 
       } catch (SQLException ex) {
         // Full error for debugging
         ex.printStackTrace();
         showAlert(
-            "Database Error", 
-            "Failed to save product", 
-            Alert.AlertType.ERROR
-        );
+            "Database Error",
+            "Failed to save product",
+            Alert.AlertType.ERROR);
       }
     });
 
     SqrBtnWithOutline backButton = new SqrBtnWithOutline(
-        "Cancel", "cancel.png", "rgb(255, 0, 0)"
-      );   
+        "Cancel", "cancel.png", "rgb(255, 0, 0)");
 
     backButton.setOnAction(e -> {
       primaryStage.setScene(prevScene);
@@ -282,7 +278,7 @@ public class AddProductScene {
     // The top part of the scene, the label name
     var menuLabel = new Label("Add A Product to the Menu");
     menuLabel.setStyle("-fx-font-size: 40; -fx-font-weight: bold;");
-    
+
     HBox menuTitle = new HBox(menuLabel);
     menuTitle.setAlignment(Pos.CENTER);
     menuTitle.setPadding(new Insets(70, 0, 20, 0));
@@ -290,26 +286,26 @@ public class AddProductScene {
     // Setting the name, description and price to left of the screen
     VBox menuLayoutLeft = new VBox(20, productName, productDescription, productPrice);
     menuLayoutLeft.setAlignment(Pos.BASELINE_LEFT);
-    
+
     // Active and limited tick boxes are center but to the left and
     // category drop box is center to the right
     VBox activeLimitedBox = new VBox(20);
     activeLimitedBox.getChildren().addAll(productIsActive, productIsLimited);
     activeLimitedBox.setAlignment(Pos.CENTER_LEFT);
-    
+
     VBox categoryIdBox = new VBox(productCategoryDropBox);
     categoryIdBox.setAlignment(Pos.CENTER_RIGHT);
     categoryIdBox.setPadding(new Insets(0, 0, 160, 0));
-    
+
     // Adding them together and setting them to center of the border pane
     HBox menuLayoutCenter = new HBox(activeLimitedBox, categoryIdBox);
     menuLayoutCenter.setPadding(new Insets(0, 10, 280, 30));
-    
+
     // Bottom container for add and back button
     HBox bottomContainer = new HBox(20, confirmButton, backButton);
     bottomContainer.setAlignment(Pos.BOTTOM_CENTER);
     productName.setPrefWidth(300);
-    
+
     // Final layout
     BorderPane layout = new BorderPane();
     layout.setTop(menuTitle);
@@ -326,9 +322,9 @@ public class AddProductScene {
   /**
    * Helper method for showing alerts on incorrect input.
    *
-   * @param title String title of the alert
+   * @param title   String title of the alert
    * @param message String message of the alert
-   * @param type what type of alert it is
+   * @param type    what type of alert it is
    */
   private void showAlert(String title, String message, Alert.AlertType type) {
     Alert alert = new Alert(type);

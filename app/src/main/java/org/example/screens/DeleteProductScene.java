@@ -36,7 +36,7 @@ public class DeleteProductScene {
    * ONLY used in the admin menu in 'UpdateMenuItems.java'.
    *
    * @param primaryStage Primary stage for the scenes (stage itself)
-   * @param prevScene Previous scene to return to
+   * @param prevScene    Previous scene to return to
    * @param productTable product table listing all needed
    *                     product data fetched from database
    */

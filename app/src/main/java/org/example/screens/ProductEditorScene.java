@@ -30,7 +30,7 @@ public class ProductEditorScene {
    * ONLY used in the admin menu in 'UpdateMenuItems.java'.
    *
    * @param primaryStage the primary stage for the scenes
-   * @param prevScene the scene you were previously in
+   * @param prevScene    the scene you were previously in
    */
   public ProductEditorScene(
       Stage primaryStage,
@@ -54,8 +54,7 @@ public class ProductEditorScene {
     Label historyLabel = new Label("Price Editor:");
     historyLabel.setStyle(
         "-fx-font-size: 45px;"
-        + "-fx-font-weight: bold;"
-    );
+            + "-fx-font-weight: bold;");
 
     // VBox for the table
     VBox productListings = new VBox(productTable);
@@ -91,7 +90,7 @@ public class ProductEditorScene {
     // Spacer for Bottom Row
     Region spacerBottom = new Region();
     HBox.setHgrow(spacerBottom, Priority.ALWAYS);
-    
+
     // Bottom row of the screen
     HBox bottomContainer = new HBox();
     bottomContainer.setAlignment(Pos.BOTTOM_LEFT);

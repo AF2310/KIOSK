@@ -31,7 +31,7 @@ public class UpdateMenuItems {
    * Scene for adding/removing items on the menu.
    *
    * @param primaryStage Window itself.
-   * @param prevScene Previous scene to return to.
+   * @param prevScene    Previous scene to return to.
    * @return The scene itself.
    */
 
@@ -50,9 +50,9 @@ public class UpdateMenuItems {
       // Get add product scene
       AddProductScene addProductScene = new AddProductScene(
           primaryStage,
-          prevScene
-        );
+          prevScene);
 
+      // Set the new (current) scene
       primaryStage.setScene(addProductScene.getProductScene());
     });
 
@@ -63,9 +63,9 @@ public class UpdateMenuItems {
       ProductEditorScene productEditor = new ProductEditorScene(
           primaryStage,
           prevScene,
-          getProductTable(true, true, true)
-      );
+          getProductTable(true, true, true));
 
+      // Set the new (current) scene
       primaryStage.setScene(productEditor.getProductEditorScene());
     });
 
@@ -76,8 +76,7 @@ public class UpdateMenuItems {
       DeleteProductScene productDeletionScene = new DeleteProductScene(
           primaryStage,
           prevScene,
-          getProductTable(false, false, false)
-      );
+          getProductTable(false, false, false));
 
       // Set the new (current) scene
       primaryStage.setScene(productDeletionScene.getProductDeletionScene());
@@ -93,7 +92,7 @@ public class UpdateMenuItems {
     gridPane.add(editProductButton, 0, 1);
     gridPane.add(removeProductButton, 0, 2);
 
-    // Layout borders            
+    // Layout borders
     BorderPane layout = new BorderPane();
     layout.setCenter(gridPane);
 
@@ -112,10 +111,9 @@ public class UpdateMenuItems {
    */
   private MidButton makeMidButton(String labelName) {
     MidButton thisMidButton = new MidButton(
-        labelName,                                             
-        "rgb(255, 255, 255)", 
-        30
-    );
+        labelName,
+        "rgb(255, 255, 255)",
+        30);
     return thisMidButton;
   }
 
@@ -130,8 +128,8 @@ public class UpdateMenuItems {
    *         product id, name, type, activity and price
    */
   private TableView<Product> getProductTable(
-      boolean priceEditable, 
-      boolean activityEditable, 
+      boolean priceEditable,
+      boolean activityEditable,
       boolean nameEditable) {
 
     // Product ID column
@@ -156,27 +154,26 @@ public class UpdateMenuItems {
 
         // NO empty string was entered
         if (!(newName.strip().isEmpty())) {
-          
+
           // Get id of local product
           int productId = product.getId();
 
           // Update product name locally
           product.setName(newName);
-          
+
           // TODO: This will be moved later
           try {
             Connection conn = DriverManager.getConnection(
                 "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-                + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-                + "?user=u5urh19mtnnlgmog"
-                + "&password=zPgqf8o6na6pv8j8AX8r"
-                + "&useSSL=true"
-                + "&allowPublicKeyRetrieval=true"
-              );
-            
+                    + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+                    + "?user=u5urh19mtnnlgmog"
+                    + "&password=zPgqf8o6na6pv8j8AX8r"
+                    + "&useSSL=true"
+                    + "&allowPublicKeyRetrieval=true");
+
             // Update newly inserted activity value of product in database
             updateProductName(newName, productId, conn);
-            
+
           } catch (SQLException e) {
             e.printStackTrace();
           }
@@ -193,36 +190,35 @@ public class UpdateMenuItems {
     TableColumn<Product, Integer> activityColumn = new TableColumn<>("Product Active");
     activityColumn.setCellValueFactory(new PropertyValueFactory<>("activity"));
     activityColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-    
+
     // If activity value is editable
     if (activityEditable) {
       activityColumn.setOnEditCommit(event -> {
         Product product = event.getRowValue();
         int newActivityValue = event.getNewValue();
-  
+
         // NO invalid int value was entered
         if (newActivityValue == 1 || newActivityValue == 0) {
-          
+
           // getting local product id
           int productId = product.getId();
 
           // Updating value locally
           product.setActivity(newActivityValue);
-          
+
           // TODO: This will be moved later
           try {
             Connection conn = DriverManager.getConnection(
                 "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-                + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-                + "?user=u5urh19mtnnlgmog"
-                + "&password=zPgqf8o6na6pv8j8AX8r"
-                + "&useSSL=true"
-                + "&allowPublicKeyRetrieval=true"
-              );
-            
+                    + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+                    + "?user=u5urh19mtnnlgmog"
+                    + "&password=zPgqf8o6na6pv8j8AX8r"
+                    + "&useSSL=true"
+                    + "&allowPublicKeyRetrieval=true");
+
             // Update newly inserted activity value in database
             updateActivityValue(newActivityValue, productId, conn);
-            
+
           } catch (SQLException e) {
             e.printStackTrace();
           }
@@ -235,7 +231,7 @@ public class UpdateMenuItems {
     // Product price column
     TableColumn<Product, Double> priceColumn = new TableColumn<>("Product Price");
     priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-    
+
     // If product price is editable
     if (priceEditable) {
       priceColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
@@ -244,21 +240,20 @@ public class UpdateMenuItems {
         Double newPrice = event.getNewValue();
         int productId = product.getId();
         product.setPrice(newPrice);
-  
+
         // TODO: This will be moved later
         try {
           Connection conn = DriverManager.getConnection(
-                  "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+              "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
                   + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
                   + "?user=u5urh19mtnnlgmog"
                   + "&password=zPgqf8o6na6pv8j8AX8r"
                   + "&useSSL=true"
-                  + "&allowPublicKeyRetrieval=true"
-          );
-  
+                  + "&allowPublicKeyRetrieval=true");
+
           // update the newly inserted price in database
           updateProductPrice(newPrice, productId, conn);
-  
+
         } catch (SQLException e) {
           e.printStackTrace();
         }
@@ -272,7 +267,7 @@ public class UpdateMenuItems {
     productTable.setMaxWidth(Double.MAX_VALUE);
     productTable.setPrefWidth(Region.USE_COMPUTED_SIZE);
     productTable.setEditable(true);
-    
+
     // Combining columns in table
     productTable.getColumns().add(idColumn);
     productTable.getColumns().add(nameColumn);
@@ -284,50 +279,46 @@ public class UpdateMenuItems {
     try {
       // TODO: This will be moved later
       Connection conn = DriverManager.getConnection(
-                  "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-                  + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-                  + "?user=u5urh19mtnnlgmog"
-                  + "&password=zPgqf8o6na6pv8j8AX8r"
-                  + "&useSSL=true"
-                  + "&allowPublicKeyRetrieval=true"
-      );
-      
+          "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+              + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+              + "?user=u5urh19mtnnlgmog"
+              + "&password=zPgqf8o6na6pv8j8AX8r"
+              + "&useSSL=true"
+              + "&allowPublicKeyRetrieval=true");
+
       // Gets products with needed data
       ArrayList<Product> products = fetchAllProductData(conn);
 
       // Insert fetched data in table
       productTable.getItems().addAll(products);
-      
-    } catch (SQLException e) {    
+
+    } catch (SQLException e) {
       e.printStackTrace();
     }
 
     return productTable;
   }
-  
 
   // TODO DATABASE/QUERY METHODS BELOW
-
 
   /**
    * Query method to change the name of a product.
    * Used in product table getter method.
    *
-   * @param newName String new name of product
-   * @param productId int product id that gets name-change
+   * @param newName    String new name of product
+   * @param productId  int product id that gets name-change
    * @param connection Database connection
    * @throws SQLException Database error
    */
   private void updateProductName(
       String newName,
       int productId,
-      Connection connection
-  ) throws SQLException {
+      Connection connection) throws SQLException {
 
     String sql = "UPDATE product "
         + "SET name = ? "
         + "WHERE product_id = ?";
-    
+
     try (PreparedStatement stmt = connection.prepareStatement(sql)) {
       stmt.setString(1, newName);
       stmt.setInt(2, productId);
@@ -340,20 +331,19 @@ public class UpdateMenuItems {
    * Used in product table getter method.
    *
    * @param newActivityValue int new is_active value (1 or 0)
-   * @param productId int id of product that will be changed
-   * @param connection Connection to database
+   * @param productId        int id of product that will be changed
+   * @param connection       Connection to database
    * @throws SQLException Database error
    */
   private void updateActivityValue(
       int newActivityValue,
       int productId,
-      Connection connection
-  ) throws SQLException {
+      Connection connection) throws SQLException {
 
     String sql = "UPDATE product "
         + "SET is_active = ? "
         + "WHERE product_id = ?";
-    
+
     try (PreparedStatement stmt = connection.prepareStatement(sql)) {
       stmt.setInt(1, newActivityValue);
       stmt.setInt(2, productId);
@@ -383,8 +373,7 @@ public class UpdateMenuItems {
 
     try (
         PreparedStatement stmt = connection.prepareStatement(sql);
-        ResultSet rs = stmt.executeQuery();
-    ) {
+        ResultSet rs = stmt.executeQuery();) {
       while (rs.next()) {
 
         // Fetch all product data from database
@@ -393,7 +382,7 @@ public class UpdateMenuItems {
         Type type = Type.valueOf(rs.getString("type").toUpperCase());
         int isActive = rs.getInt("is_active");
         double price = rs.getDouble("price");
-        
+
         // Make new product with all fetched database data
         Product product = new Product() {};
         product.setId(productId);
@@ -415,16 +404,15 @@ public class UpdateMenuItems {
    * the database.
    * This method is used in the update price section of the admin menu.
    *
-   * @param newPrice int new price of the product
-   * @param productId int product id of product that will be updated
+   * @param newPrice   int new price of the product
+   * @param productId  int product id of product that will be updated
    * @param connection database connection
    * @throws SQLException database error
    */
   private void updateProductPrice(
-        double newPrice,
-        int productId,
-        Connection connection
-  ) throws SQLException {
+      double newPrice,
+      int productId,
+      Connection connection) throws SQLException {
 
     String sql = "UPDATE product "
         + "SET price = ? "
