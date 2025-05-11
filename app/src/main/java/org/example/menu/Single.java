@@ -124,28 +124,28 @@ public class Single extends Product {
     return list;
   }
 
-/**
- * Inserts this product into the database and sets the generated product ID.
- * Assumes category name maps to valid category in DB.
- */
-public void saveToDb(Connection conn) throws SQLException {
+  /**
+   * Inserts this product into the database and sets the generated product ID.
+   * Assumes category name maps to valid category in DB.
+   */
+  public void saveToDb(Connection conn) throws SQLException {
     // Get the category_id from the category name (enum)
     String categoryQuery = "SELECT category_id FROM category WHERE name = ?";
     int categoryId;
 
     try (PreparedStatement categoryStmt = conn.prepareStatement(categoryQuery)) {
-        // assumes enum name matches DB name
-        categoryStmt.setString(1, getType().name()); 
+      // assumes enum name matches DB name
+      categoryStmt.setString(1, getType().name());
 
-        try (ResultSet rs = categoryStmt.executeQuery()) {
-            if (rs.next()) {
-                categoryId = rs.getInt("category_id");
-            
-            // For debugging
-            } else {
-                throw new SQLException("ERROR no type in DB found named: " + getType().name());
-            }
+      try (ResultSet rs = categoryStmt.executeQuery()) {
+        if (rs.next()) {
+          categoryId = rs.getInt("category_id");
+
+          // For debugging
+        } else {
+          throw new SQLException("ERROR no type in DB found named: " + getType().name());
         }
+      }
     }
 
     // Insert product in database with query and needed data
@@ -154,21 +154,20 @@ public void saveToDb(Connection conn) throws SQLException {
         "VALUES (?, ?, ?, ?, ?)";
 
     try (PreparedStatement stmt = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS)) {
-        stmt.setString(1, getName());
-        stmt.setString(2, getDescription());
-        stmt.setDouble(3, getPrice());
-        stmt.setInt(4, categoryId);
-        stmt.setInt(5, getActivity());  // stored as Tinyint (1 or 0)
-        stmt.executeUpdate();
+      stmt.setString(1, getName());
+      stmt.setString(2, getDescription());
+      stmt.setDouble(3, getPrice());
+      stmt.setInt(4, categoryId);
+      stmt.setInt(5, getActivity()); // stored as Tinyint (1 or 0)
+      stmt.executeUpdate();
 
-        try (ResultSet rs = stmt.getGeneratedKeys()) {
-            if (rs.next()) {
-                setId(rs.getInt(1));
-            }
+      try (ResultSet rs = stmt.getGeneratedKeys()) {
+        if (rs.next()) {
+          setId(rs.getInt(1));
         }
+      }
     }
-}
-
+  }
 
   /**
    * Retrieving all options by type.
@@ -297,7 +296,7 @@ public void saveToDb(Connection conn) throws SQLException {
    * @throws SQLException if server issues arise
    */
   public void reduceProductQuantity(Connection conn, int id, int amount) throws SQLException {
-    
+
     String sql = "UPDATE product SET quantity"
         + "= quantity - ? WHERE product_id = ? AND quantity >= ?";
 
@@ -340,8 +339,7 @@ public void saveToDb(Connection conn) throws SQLException {
             rs.getString("name"),
             rs.getDouble("price"),
             Type.valueOf(rs.getString("type").toUpperCase()),
-            rs.getString("image_url")
-        ));
+            rs.getString("image_url")));
       }
       // Close result set
       rs.close();

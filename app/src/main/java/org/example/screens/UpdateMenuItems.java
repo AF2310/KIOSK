@@ -210,7 +210,7 @@ public class UpdateMenuItems {
     // Product description column
     TableColumn<Product, String> descriptionColumn = new TableColumn<>("Description");
     descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-    
+
     // If product description is editable
     if (descriptionEditable) {
       descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -396,9 +396,9 @@ public class UpdateMenuItems {
    * Query method to change the description of a product.
    * Used in product table getter method.
    *
-   * @param newDescription   String new description of product
-   * @param productId  int product id that gets new description
-   * @param connection Database connection
+   * @param newDescription String new description of product
+   * @param productId      int product id that gets new description
+   * @param connection     Database connection
    * @throws SQLException Database error
    */
   private void updateProductDescription(
@@ -477,7 +477,8 @@ public class UpdateMenuItems {
         double price = rs.getDouble("price");
 
         // Make new product with all fetched database data
-        Product product = new Product() {};
+        Product product = new Product() {
+        };
         product.setId(productId);
         product.setName(name);
         product.setType(type);
