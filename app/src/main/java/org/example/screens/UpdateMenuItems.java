@@ -459,8 +459,9 @@ public class UpdateMenuItems {
     // Product activity column
     TableColumn<Product, Integer> activityColumn = new TableColumn<>("Product Active");
     activityColumn.setCellValueFactory(new PropertyValueFactory<>("activity"));
-    // If activity value is editable
     activityColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+    
+    // If activity value is editable
     if (activityEditable) {
       activityColumn.setOnEditCommit(event -> {
         Product product = event.getRowValue();
