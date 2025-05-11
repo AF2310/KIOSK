@@ -252,16 +252,15 @@ public class Single extends Product {
 
       // Execute query to retrieve wanted singles
       try (ResultSet rs = ps.executeQuery()) {
+
         // Iterate over result set and construct Single objects from each row
         while (rs.next()) {
           list.add(new Single(
               rs.getInt("id"),
               rs.getString("name"),
               rs.getFloat("price"),
-              // Just to be sure, use uppercase since enum uses uppercase
-              Type.valueOf(rs.getString("type").toLowerCase()),
+              Type.valueOf(rs.getString("type").toUpperCase()),
               rs.getString("image_url")));
-
         }
       }
     }
@@ -297,8 +296,8 @@ public class Single extends Product {
    */
   public void reduceProductQuantity(Connection conn, int id, int amount) throws SQLException {
 
-    String sql = "UPDATE product SET quantity"
-        + "= quantity - ? WHERE product_id = ? AND quantity >= ?";
+    String sql = "UPDATE product SET quantity = quantity - ? "
+        + "WHERE product_id = ? AND quantity >= ?";
 
     try (PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setInt(1, amount);
