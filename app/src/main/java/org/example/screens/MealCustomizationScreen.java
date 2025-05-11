@@ -284,8 +284,15 @@ public class MealCustomizationScreen {
     drinkOptionsGrid.setVgap(20);
     drinkOptionsGrid.setAlignment(Pos.CENTER_LEFT);
     drinkOptionsGrid.setPadding(new Insets(10));
+    
+    DropShadow glowEffect = new DropShadow();
+    glowEffect.setColor(Color.CORNFLOWERBLUE);
+    glowEffect.setRadius(20);
+    glowEffect.setSpread(0.6);
 
     List<Product> drinkOptions = getDrinkOptionsForMeal(meal.getId());
+    final ImageView[] selectedImage = {null};
+
     for (int i = 0; i < drinkOptions.size(); i++) {
       Product drink = drinkOptions.get(i);
       
@@ -308,7 +315,13 @@ public class MealCustomizationScreen {
       drinkLabel.setStyle("-fx-font-size: 14px;");
 
       drinkBox.getChildren().addAll(drinkImage, drinkLabel);
-
+      drinkBox.setOnMouseClicked(e -> {
+        if (selectedImage[0] != null) {
+          selectedImage[0].setEffect(null);
+        }
+        drinkImage.setEffect(glowEffect);
+        selectedImage[0] = drinkImage;
+      });
       drinkOptionsGrid.add(drinkBox, i % 2, i / 2);
     }
     VBox mealDisplay = new VBox(10);
@@ -317,6 +330,8 @@ public class MealCustomizationScreen {
     ImageView mealImage;
 
     mealImage = new ImageView(new Image(imageStream));
+    mealImage.setFitHeight(300);
+    mealImage.setPreserveRatio(true);
 
     Label mealLabel = new Label(meal.getName());
     mealLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
