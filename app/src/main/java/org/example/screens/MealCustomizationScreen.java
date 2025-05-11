@@ -118,13 +118,31 @@ public class MealCustomizationScreen {
     sideOptionsGrid.setPadding(new Insets(10));
     
     List<Product> sideOptions = getSideOptionsForMeal(meal.getId());
-    //for now they are normal buttons,
-    // i decided the 2x3 grid looks fine for this
+    
     for (int i = 0; i < sideOptions.size(); i++) {
       Product side = sideOptions.get(i);
-      Button sideBtn = new Button(side.getName());
-      sideBtn.setPrefSize(150, 100);
-      sideOptionsGrid.add(sideBtn, i % 2, i / 2);
+      
+      VBox sideBox = new VBox(5);
+      sideBox.setAlignment(Pos.CENTER);
+
+      ImageView sideImage;
+      InputStream imgStream = getClass().getResourceAsStream(side.getImagePath());
+
+      if (imgStream != null) {
+        sideImage = new ImageView(new Image(imgStream));
+      } else {
+        System.err.println("Could not load image; " + side.getImagePath());
+        sideImage = new ImageView();
+      }
+      sideImage.setFitHeight(100);
+      sideImage.setPreserveRatio(true);
+
+      Label sideLabel = new Label(side.getName());
+      sideLabel.setStyle("-fx-font-size: 14px;");
+
+      sideBox.getChildren().addAll(sideImage, sideLabel);
+
+      sideOptionsGrid.add(sideBox, i % 2, i / 2);
     }
     // Inputing the image of the selected meal and the name so
     // the user is aware what burger/meal they picked
