@@ -60,25 +60,13 @@ public class UpdateMenuItems {
     this.primaryStage = primaryStage;
 
     // All the buttons for updating menu items
-    MidButton addProductButton = new MidButton(
-        "Add Product to Menu", 
-        "rgb(255, 255, 255)", 
-        30
-    );
+    MidButton addProductButton = makeMidButton("Add Product to Menu");
+    MidButton editProductButton = makeMidButton("Edit Product Data");
+    MidButton removeProductButton = makeMidButton("Remove Product from Menu");
 
-    MidButton changePriceButton = new MidButton(
-        "Edit Product Data", 
-        "rgb(255, 255, 255)", 
-        30
-    );
+    // Actions for all mid buttons
 
-    MidButton removeProductButton = new MidButton(
-        "Remove Product from Menu",                                             
-        "rgb(255, 255, 255)", 
-        30
-    );
-
-    // Action for clicking on adding a product
+    // Action: Adding product
     addProductButton.setOnAction(e -> {
       Scene productScene = new UpdateMenuItems().addProductScene(
             this.primaryStage,
@@ -86,15 +74,17 @@ public class UpdateMenuItems {
       primaryStage.setScene(productScene);
     });
 
-    changePriceButton.setOnAction(e -> {
+    // Action: editing product
+    editProductButton.setOnAction(e -> {
       Scene productScene = new UpdateMenuItems().editProductsScene(
             this.primaryStage,
             prevScene);
       primaryStage.setScene(productScene);
     });
 
+    // Action: deleting product
     removeProductButton.setOnAction(e -> {
-      Scene productDeletionScene = new UpdateMenuItems().deleteProduct(
+      Scene productDeletionScene = new UpdateMenuItems().deleteProductScene(
             this.primaryStage,
             prevScene);
       primaryStage.setScene(productDeletionScene);
@@ -106,18 +96,35 @@ public class UpdateMenuItems {
     gridPane.setHgap(20);
     gridPane.setVgap(20);
     gridPane.add(addProductButton, 0, 0);
-    gridPane.add(changePriceButton, 0, 1);
+    gridPane.add(editProductButton, 0, 1);
     gridPane.add(removeProductButton, 0, 2);
 
-                                
+    // Layout borders            
     BorderPane layout = new BorderPane();
     layout.setCenter(gridPane);
 
+    // Final scene design
     Scene updateItemScene = new Scene(layout, 1920, 1080);
 
     return updateItemScene;
 
   }
+
+  /**
+   * Method to make the 3 update menu items scene buttons.
+   *
+   * @param labelName label name of mid button
+   * @return mid button
+   */
+  private MidButton makeMidButton(String labelName) {
+    MidButton thisMidButton = new MidButton(
+        labelName,                                             
+        "rgb(255, 255, 255)", 
+        30
+    );
+    return thisMidButton;
+  }
+
   /**
    * Scene for adding a product to the menu.
    *
@@ -131,17 +138,19 @@ public class UpdateMenuItems {
     // List view box for showing all the ingredients upon category selection
     ListView<String> ingredientListView = new ListView<>();
     ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
     ingredientListView.setPrefSize(300, 400);
+
     Label ingredientListLabel = new Label("Ingredient List");
     ingredientListLabel.setAlignment(Pos.CENTER);
     ingredientListLabel.setStyle("-fx-font-size: 30");
+
     VBox ingredientBox = new VBox(10, ingredientListLabel, ingredientListView);
     ingredientBox.setAlignment(Pos.CENTER_LEFT);
     ingredientBox.setPadding(new Insets(0, 150, 50, 0));
 
     // Creates a dropdown for selecting a product category
     DropBoxWithLabel productCategoryDropBox = new DropBoxWithLabel("Product Category:");
+
     //Map to store category name and its corresponding ID from the database.
     Map<String, Integer> categoryMap = new HashMap<>();
 
@@ -194,6 +203,7 @@ public class UpdateMenuItems {
           }
         }
       });
+
     } catch (SQLException ex) {
       ex.printStackTrace();
       showAlert("Database error", "Failed to load categories", Alert.AlertType.ERROR);
@@ -226,17 +236,20 @@ public class UpdateMenuItems {
         SqlConnectionCheck connection = new SqlConnectionCheck();
         connection.getConnection().setAutoCommit(false);
 
-
-
         ObservableList<String> selectedItems = ingredientListView
             .getSelectionModel().getSelectedItems();
 
         String selectedCategory = productCategoryDropBox.getSelectedItem();
+
         // Validating user inputs first before attempting to add the product
-        if (productName.getText().isEmpty() || productPrice.getText().isEmpty() 
-            || selectedCategory == null) {
+        if (productName.getText().isEmpty()
+            || productPrice.getText().isEmpty() 
+            || selectedCategory == null
+        ) {
+
           showAlert("Error", "All fields are required!", Alert.AlertType.ERROR);
           return;
+
         } 
         if (selectedItems.isEmpty()) {
           showAlert("Info", "No ingredients selected!", Alert.AlertType.INFORMATION);
@@ -250,7 +263,6 @@ public class UpdateMenuItems {
 
         PreparedStatement stmtProduct = connection.getConnection()
             .prepareStatement(sqlProduct, PreparedStatement.RETURN_GENERATED_KEYS);
-
 
         String imageFileName;
         // And constructs the image file path based on the selected category
@@ -273,6 +285,7 @@ public class UpdateMenuItems {
 
         stmtProduct.setString(1, productName.getText());
         stmtProduct.setString(2, productDescription.getText());
+
         // Must parse the string as a double
         stmtProduct.setDouble(3, Double.parseDouble(productPrice.getText()));
         stmtProduct.setInt(4, categoryMap.get(selectedCategory));
@@ -296,6 +309,7 @@ public class UpdateMenuItems {
             throw new SQLException("Creating producted failed, no ID obtained");
           }
         }
+
         // Inserting selected ingredients into the linking table with the new product ID
         String sqlIngredients = "INSERT INTO productingredients (product_id, "
                                 + "ingredient_id, ingredientCount) "
@@ -318,17 +332,26 @@ public class UpdateMenuItems {
         connection.getConnection().commit();
                 
       } catch (NumberFormatException ex) {
-        showAlert("Input error", "Enter valid numbers for price and category ID",
-                  Alert.AlertType.ERROR);
+        showAlert(
+            "Input error", 
+            "Enter valid numbers for price and category ID",
+            Alert.AlertType.ERROR
+        );
+
       } catch (SQLException ex) {
         // Full error for debugging
         ex.printStackTrace();
-        showAlert("Database Error", "Failed to save product", Alert.AlertType.ERROR);
+        showAlert(
+            "Database Error", 
+            "Failed to save product", 
+            Alert.AlertType.ERROR
+        );
       }
     });
 
-    SqrBtnWithOutline backButton = new SqrBtnWithOutline("Cancel",
-        "cancel.png", "rgb(255, 0, 0)");   
+    SqrBtnWithOutline backButton = new SqrBtnWithOutline(
+        "Cancel", "cancel.png", "rgb(255, 0, 0)"
+      );   
 
     backButton.setOnAction(e -> {
       primaryStage.setScene(prevScene);
@@ -337,54 +360,54 @@ public class UpdateMenuItems {
     // The top part of the scene, the label name
     var menuLabel = new Label("Add A Product to the Menu");
     menuLabel.setStyle("-fx-font-size: 40; -fx-font-weight: bold;");
+    
     HBox menuTitle = new HBox(menuLabel);
     menuTitle.setAlignment(Pos.CENTER);
     menuTitle.setPadding(new Insets(70, 0, 20, 0));
 
-    BorderPane layout = new BorderPane();
-
-    layout.setTop(menuTitle);
-
-    VBox menuLayoutLeft = new VBox(20);
     // Setting the name, description and price to left of the screen
-    menuLayoutLeft.getChildren().addAll(productName,
-                                    productDescription, 
-                                    productPrice);
+    VBox menuLayoutLeft = new VBox(20, productName, productDescription, productPrice);
     menuLayoutLeft.setAlignment(Pos.BASELINE_LEFT);
-    layout.setLeft(menuLayoutLeft);
+    
     // Active and limited tick boxes are center but to the left and
     // category drop box is center to the right
     VBox activeLimitedBox = new VBox(20);
     activeLimitedBox.getChildren().addAll(productIsActive, productIsLimited);
-
     activeLimitedBox.setAlignment(Pos.CENTER_LEFT);
-
+    
     VBox categoryIdBox = new VBox(productCategoryDropBox);
     categoryIdBox.setAlignment(Pos.CENTER_RIGHT);
     categoryIdBox.setPadding(new Insets(0, 0, 160, 0));
+    
     // Adding them together and setting them to center of the border pane
-    HBox menuLayoutCenter = new HBox();
-    menuLayoutCenter.getChildren().addAll(activeLimitedBox, categoryIdBox);
+    HBox menuLayoutCenter = new HBox(activeLimitedBox, categoryIdBox);
     menuLayoutCenter.setPadding(new Insets(0, 10, 280, 30));
-    layout.setCenter(menuLayoutCenter);
-
-    layout.setRight(ingredientBox);
-
+    
     // Bottom container for add and back button
-    HBox bottomContainer = new HBox(20);
+    HBox bottomContainer = new HBox(20, confirmButton, backButton);
     bottomContainer.setAlignment(Pos.BOTTOM_CENTER);
-    bottomContainer.getChildren().addAll(confirmButton, backButton);
     productName.setPrefWidth(300);
-
+    
+    // Final layout
+    BorderPane layout = new BorderPane();
+    layout.setTop(menuTitle);
+    layout.setLeft(menuLayoutLeft);
+    layout.setCenter(menuLayoutCenter);
+    layout.setRight(ingredientBox);
     layout.setBottom(bottomContainer);
-
     layout.setPadding(new Insets(0, 0, 50, 0));
 
     Scene addProductScene = new Scene(layout, 1920, 1080);
     return addProductScene;
   }
 
-  // Helper method for showing alerts on incorrect input
+  /**
+   * Helper method for showing alerts on incorrect input.
+   *
+   * @param title String title of the alert
+   * @param message String message of the alert
+   * @param type what type of alert it is
+   */
   private void showAlert(String title, String message, Alert.AlertType type) {
     Alert alert = new Alert(type);
     alert.setTitle(title);
@@ -420,14 +443,21 @@ public class UpdateMenuItems {
     // If product name is editable
     if (nameEditable) {
       nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+
+      // Name column of a product is clicked
       nameColumn.setOnEditCommit(event -> {
+
+        // Get current value of clicked field and get newly entered value
         Product product = event.getRowValue();
         String newName = event.getNewValue();
 
         // NO empty string was entered
         if (!(newName.strip().isEmpty())) {
           
+          // Get id of local product
           int productId = product.getId();
+
+          // Update product name locally
           product.setName(newName);
           
           // TODO: This will be moved later
@@ -441,7 +471,7 @@ public class UpdateMenuItems {
                 + "&allowPublicKeyRetrieval=true"
               );
             
-            // Update newly inserted activity value in database
+            // Update newly inserted activity value of product in database
             updateProductName(newName, productId, conn);
             
           } catch (SQLException e) {
@@ -470,7 +500,10 @@ public class UpdateMenuItems {
         // NO invalid int value was entered
         if (newActivityValue == 1 || newActivityValue == 0) {
           
+          // getting local product id
           int productId = product.getId();
+
+          // Updating value locally
           product.setActivity(newActivityValue);
           
           // TODO: This will be moved later
@@ -569,60 +602,6 @@ public class UpdateMenuItems {
     return productTable;
   }
 
-  // TODO: will be moved later
-  /**
-   * Query method to change the name of a product.
-   * Used in product table getter method.
-   *
-   * @param newName String new name of product
-   * @param productId int product id that gets name-change
-   * @param connection Database connection
-   * @throws SQLException Database error
-   */
-  private void updateProductName(
-      String newName,
-      int productId,
-      Connection connection
-  ) throws SQLException {
-
-    String sql = "UPDATE product "
-        + "SET name = ? "
-        + "WHERE product_id = ?";
-    
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-      stmt.setString(1, newName);
-      stmt.setInt(2, productId);
-      stmt.executeUpdate();
-    }
-  }
-
-  // TODO: will be moved later
-  /**
-   * Query method to update is_active value of a product.
-   * Used in product table getter method.
-   *
-   * @param newActivityValue int new is_active value (1 or 0)
-   * @param productId int id of product that will be changed
-   * @param connection Connection to database
-   * @throws SQLException Database error
-   */
-  private void updateActivityValue(
-      int newActivityValue,
-      int productId,
-      Connection connection
-  ) throws SQLException {
-
-    String sql = "UPDATE product "
-        + "SET is_active = ? "
-        + "WHERE product_id = ?";
-    
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-      stmt.setInt(1, newActivityValue);
-      stmt.setInt(2, productId);
-      stmt.executeUpdate();
-    }
-  }
-
   /**
    * Method containing product editor screen.
    * Used in admin menu to edit name, is_active and price of 
@@ -693,7 +672,224 @@ public class UpdateMenuItems {
     return new Scene(layout, 1920, 1080);
   }
 
-  // TODO: will be moved later
+  
+  /**
+   * This is the method to create the scene for deleting
+   * products in the admin menu.
+   *
+   * @param primaryStage the primary stage for the scenes
+   * @param prevScene the scene you were previously in
+   * @return product deletion menu scene
+   */
+  private Scene deleteProductScene(Stage primaryStage, Scene prevScene) {
+    // Label for screen
+    Label productDeletionLabel = new Label("Product Deletion:");
+    productDeletionLabel.setStyle(
+        "-fx-font-size: 45px;"
+        + "-fx-font-weight: bold;"
+    );
+
+    // Label for system messages
+    Label systemMessageLabel = new Label();
+
+    // Button for deletion confirmation
+    Button confirmButton = new Button("Yes");
+
+    // Button for deletion cancellation
+    Button abbruchButton = new Button("No");
+
+    // Adding buttons in separate box
+    HBox buttonBox = new HBox(10, confirmButton, abbruchButton);
+    buttonBox.setVisible(false);
+    buttonBox.setAlignment(Pos.CENTER);
+
+    // Adding all deletion related action elements in Box
+    HBox actionBox = new HBox(10, systemMessageLabel, buttonBox);
+    actionBox.setVisible(false);
+    actionBox.setAlignment(Pos.CENTER);
+
+    // Table for item lisitngs
+    TableView<Product> productTable = getProductTable(false, false, false);
+
+    // Set action for each row in table
+    productTable.setRowFactory(tv -> {
+      // Create instance of row
+      TableRow<Product> row = new TableRow<>();
+
+      // Admin clicks on a row (product)
+      row.setOnMouseClicked(event -> {
+
+        // Row only requires one click to get picked
+        if (!row.isEmpty() && event.getClickCount() == 1) {
+
+          // Get clicked product as object and its' name
+          Product clickedProduct = row.getItem();
+          String productName = clickedProduct.getName();
+
+          // System message printed in the label below table
+          systemMessageLabel.setText(
+              "Product '" + productName + "' should be deleted?"
+          );
+          // action box now visible (replacement for popup)
+          buttonBox.setVisible(true);
+          actionBox.setVisible(true);
+
+          // Confirm deletion
+          confirmButton.setOnAction(e -> {
+
+            try {
+              // TODO: This will be moved later
+              Connection conn = DriverManager.getConnection(
+                  "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+                  + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+                  + "?user=u5urh19mtnnlgmog"
+                  + "&password=zPgqf8o6na6pv8j8AX8r"
+                  + "&useSSL=true"
+                  + "&allowPublicKeyRetrieval=true"
+              );
+
+              // delete product in database
+              removeProductFromDb(clickedProduct.getId(), conn);
+
+              // Update table by removing deleted product
+              productTable.getItems().remove(clickedProduct);
+
+            // Database error
+            } catch (SQLException er) {    
+              er.printStackTrace();
+            }
+
+            systemMessageLabel.setText(
+                "Product '" + productName + "' successfully deleted!"
+            );
+
+            // Buttond disappear after clicking one to prevent unwanted double actions
+            buttonBox.setVisible(false);
+          });
+
+          // Cancel deletion
+          abbruchButton.setOnAction(e -> {
+            systemMessageLabel.setText(
+                "Product '" + productName + "' deletion cancelled!"
+            );
+
+            // Buttond disappear after clicking one to prevent unwanted double actions
+            buttonBox.setVisible(false);
+
+          });
+        }
+      });
+
+      return row;
+    });
+
+
+    // VBox for the table
+    VBox productListings = new VBox(productTable);
+    VBox.setVgrow(productListings, Priority.ALWAYS);
+    productTable.prefWidthProperty().bind(productListings.widthProperty());
+    productListings.setPadding(new Insets(20, 0, 0, 0));
+
+    // VBox to align screen label and table
+    VBox topBox = new VBox(
+        40,
+        productDeletionLabel,
+        productListings,
+        systemMessageLabel,
+        actionBox
+    );
+    topBox.setMaxWidth(Double.MAX_VALUE);
+    topBox.setAlignment(Pos.TOP_CENTER);
+
+    // Upper part of the screen
+    HBox topContainer = new HBox();
+    topContainer.setMaxWidth(Double.MAX_VALUE);
+    HBox.setHgrow(topBox, Priority.ALWAYS);
+    topContainer.setAlignment(Pos.CENTER);
+    topContainer.getChildren().addAll(topBox);
+
+    // Back button -> user goes to previous screen
+    var backButton = new BackBtnWithTxt();
+    backButton.setOnAction(e -> {
+      primaryStage.setScene(prevScene);
+    });
+
+    // Language Button -> cycles images on click
+    var langButton = new LangBtn();
+
+    // Spacer for Bottom Row
+    Region spacerBottom = new Region();
+    HBox.setHgrow(spacerBottom, Priority.ALWAYS);
+    
+    // Bottom row of the screen
+    HBox bottomContainer = new HBox(langButton, spacerBottom, backButton);
+    bottomContainer.setAlignment(Pos.BOTTOM_LEFT);
+
+    // Setting positioning of all the elements
+    BorderPane layout = new BorderPane();
+    layout.setPadding(new Insets(50));
+    layout.setTop(topContainer);
+    layout.setBottom(bottomContainer);
+
+    return new Scene(layout, 1920, 1080);
+  }
+
+
+  // TODO DATABASE/QUERY METHODS BELOW
+
+
+  /**
+   * Query method to change the name of a product.
+   * Used in product table getter method.
+   *
+   * @param newName String new name of product
+   * @param productId int product id that gets name-change
+   * @param connection Database connection
+   * @throws SQLException Database error
+   */
+  private void updateProductName(
+      String newName,
+      int productId,
+      Connection connection
+  ) throws SQLException {
+
+    String sql = "UPDATE product "
+        + "SET name = ? "
+        + "WHERE product_id = ?";
+    
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+      stmt.setString(1, newName);
+      stmt.setInt(2, productId);
+      stmt.executeUpdate();
+    }
+  }
+
+  /**
+   * Query method to update is_active value of a product.
+   * Used in product table getter method.
+   *
+   * @param newActivityValue int new is_active value (1 or 0)
+   * @param productId int id of product that will be changed
+   * @param connection Connection to database
+   * @throws SQLException Database error
+   */
+  private void updateActivityValue(
+      int newActivityValue,
+      int productId,
+      Connection connection
+  ) throws SQLException {
+
+    String sql = "UPDATE product "
+        + "SET is_active = ? "
+        + "WHERE product_id = ?";
+    
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+      stmt.setInt(1, newActivityValue);
+      stmt.setInt(2, productId);
+      stmt.executeUpdate();
+    }
+  }
+
   /**
    * This method fetches all necessary product data from the
    * database and returns an array of products that contain
@@ -743,7 +939,6 @@ public class UpdateMenuItems {
     return products;
   }
 
-  // TODO: will be moved later
   /**
    * This method updates the price of a specific product in
    * the database.
@@ -772,172 +967,6 @@ public class UpdateMenuItems {
   }
 
   /**
-   * This is the method to create the scene for deleting
-   * products in the admin menu.
-   *
-   * @param primaryStage the primary stage for the scenes
-   * @param prevScene the scene you were previously in
-   * @return product deletion menu scene
-   */
-  private Scene deleteProduct(Stage primaryStage, Scene prevScene) {
-    // Label for screen
-    Label productDeletionLabel = new Label("Product Deletion:");
-    productDeletionLabel.setStyle(
-        "-fx-font-size: 45px;"
-        + "-fx-font-weight: bold;"
-    );
-
-
-    // Label for system messages
-    Label systemMessageLabel = new Label();
-
-    // Button for deletion confirmation
-    Button confirmButton = new Button("Yes");
-
-    // Button for deletion cancellation
-    Button abbruchButton = new Button("No");
-
-    // Adding buttons in separate box
-    HBox buttonBox = new HBox(10, confirmButton, abbruchButton);
-    buttonBox.setVisible(false);
-    buttonBox.setAlignment(Pos.CENTER);
-
-    // Adding all deletion related action elements in Box
-    HBox actionBox = new HBox(10, systemMessageLabel, buttonBox);
-    actionBox.setVisible(false);
-    actionBox.setAlignment(Pos.CENTER);
-
-    // Table for item lisitngs
-    TableView<Product> productTable = getProductTable(false, false, false);
-
-    // Set action for each row in table
-    productTable.setRowFactory(tv -> {
-      // Create instance of row
-      TableRow<Product> row = new TableRow<>();
-
-      // Admin clicks on a row (product)
-      row.setOnMouseClicked(event -> {
-        // Row only requires one click to get picked
-        if (!row.isEmpty() && event.getClickCount() == 1) {
-
-          // Get clicked product as object and its' name
-          Product clickedProduct = row.getItem();
-          String productName = clickedProduct.getName();
-
-          // System message printed in the label below table
-          systemMessageLabel.setText(
-              "Product '" + productName + "' should be deleted?"
-          );
-          // action box now visible (replacement for popup)
-          buttonBox.setVisible(true);
-          actionBox.setVisible(true);
-
-
-          // Confirm deletion
-          confirmButton.setOnAction(e -> {
-
-            try {
-              // TODO: This will be moved later
-              Connection conn = DriverManager.getConnection(
-                  "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-                  + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-                  + "?user=u5urh19mtnnlgmog"
-                  + "&password=zPgqf8o6na6pv8j8AX8r"
-                  + "&useSSL=true"
-                  + "&allowPublicKeyRetrieval=true"
-              );
-
-              // delete product in database
-              deleteProduct(clickedProduct.getId(), conn);
-
-              // Update table by removing deleted product
-              productTable.getItems().remove(clickedProduct);
-
-            // Database error
-            } catch (SQLException er) {    
-              er.printStackTrace();
-            }
-            systemMessageLabel.setText(
-                "Product '" + productName + "' successfully deleted!"
-            );
-            // Buttond disappear after clicking one to prevent unwanted double actions
-            buttonBox.setVisible(false);
-          });
-
-
-          // Cancel deletion
-          abbruchButton.setOnAction(e -> {
-            systemMessageLabel.setText(
-                "Product '" + productName + "' deletion cancelled!"
-            );
-            // Buttond disappear after clicking one to prevent unwanted double actions
-            buttonBox.setVisible(false);
-
-          });
-        }
-      });
-
-      return row;
-    });
-
-
-    // VBox for the table
-    VBox productListings = new VBox(productTable);
-    VBox.setVgrow(productListings, Priority.ALWAYS);
-    productTable.prefWidthProperty().bind(productListings.widthProperty());
-    productListings.setPadding(new Insets(20, 0, 0, 0));
-
-    // VBox to align screen label and table
-    VBox topBox = new VBox();
-    topBox.setMaxWidth(Double.MAX_VALUE);
-    topBox.setAlignment(Pos.TOP_CENTER);
-    // TODO optimize code to make shorter/less lines !ALL!
-    topBox.setSpacing(40);
-    topBox.getChildren().addAll(
-        productDeletionLabel,
-        productListings,
-        systemMessageLabel,
-        actionBox
-    );
-
-    // Upper part of the screen
-    HBox topContainer = new HBox();
-    topContainer.setMaxWidth(Double.MAX_VALUE);
-    HBox.setHgrow(topBox, Priority.ALWAYS);
-    topContainer.setAlignment(Pos.CENTER);
-    topContainer.getChildren().addAll(topBox);
-
-    // Back button
-    // Clicking button means user goes to previous screen
-    var backButton = new BackBtnWithTxt();
-    backButton.setOnAction(e -> {
-      primaryStage.setScene(prevScene);
-    });
-
-    // Language Button
-    // cycles images on click
-    var langButton = new LangBtn();
-
-    // Spacer for Bottom Row
-    Region spacerBottom = new Region();
-    HBox.setHgrow(spacerBottom, Priority.ALWAYS);
-    
-    // Bottom row of the screen
-    HBox bottomContainer = new HBox();
-    bottomContainer.setAlignment(Pos.BOTTOM_LEFT);
-    bottomContainer.getChildren().addAll(langButton, spacerBottom, backButton);
-
-    // Setting positioning of all the elements
-    BorderPane layout = new BorderPane();
-    layout.setPadding(new Insets(50));
-    layout.setTop(topContainer);
-    layout.setBottom(bottomContainer);
-
-    return new Scene(layout, 1920, 1080);
-  }
-
-
-  /**
    * Method to delete a product from the database.
    * Used for admin menu in product deletion section.
    *
@@ -945,7 +974,7 @@ public class UpdateMenuItems {
    * @param connection Connection to the database
    * @throws SQLException Database error
    */
-  private void deleteProduct(int productId, Connection connection) throws SQLException {
+  private void removeProductFromDb(int productId, Connection connection) throws SQLException {
     String s = "DELETE FROM product WHERE product_id = ?";
 
     try (PreparedStatement stmt = connection.prepareStatement(s)) {
