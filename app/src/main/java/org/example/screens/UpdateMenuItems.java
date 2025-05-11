@@ -405,10 +405,6 @@ public class UpdateMenuItems {
    */
   private TableView<Product> getProductTable(boolean priceEditable, boolean activityEditable) {
 
-    // Label for system messages
-    // TODO test later
-    // Label systemMessageLabel = new Label();
-
     // Product ID column
     TableColumn<Product, Integer> idColumn = new TableColumn<>("Product ID");
     idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -431,34 +427,31 @@ public class UpdateMenuItems {
       Product product = event.getRowValue();
       int newActivityValue = event.getNewValue();
 
-      // Invalid int value was entered
-      while (newActivityValue != 1 && newActivityValue != 0) {
-        // TODO test later
-        //systemMessageLabel.setText("Invalid input! Activity Value can only be 1 or 0!");
-        //systemMessageLabel.setVisible(true);
-        //newActivityValue = event.getNewValue();
+      // NO invalid int value was entered
+      if (newActivityValue == 1 || newActivityValue == 0) {
+        
+        int productId = product.getId();
+        product.setActivity(newActivityValue);
+        
+        // TODO: This will be moved later
+        try {
+          Connection conn = DriverManager.getConnection(
+              "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+              + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+              + "?user=u5urh19mtnnlgmog"
+              + "&password=zPgqf8o6na6pv8j8AX8r"
+              + "&useSSL=true"
+              + "&allowPublicKeyRetrieval=true"
+            );
+          
+          // Update newly inserted activity value in database
+          upadateActivityValue(newActivityValue, productId, conn);
+          
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
       }
-
-      int productId = product.getId();
-      product.setActivity(newActivityValue);
-
-      // TODO: This will be moved later
-      try {
-        Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-                + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-                + "?user=u5urh19mtnnlgmog"
-                + "&password=zPgqf8o6na6pv8j8AX8r"
-                + "&useSSL=true"
-                + "&allowPublicKeyRetrieval=true"
-        );
-
-        // Update newly inserted activity value in database
-        upadateActivityValue(newActivityValue, productId, conn);
-
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+      // ELSE: invalid value was entered -> do nothing
     });
     activityColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
 
