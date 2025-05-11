@@ -11,8 +11,8 @@ import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -21,6 +21,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.CancelButtonWithText;
@@ -118,13 +119,20 @@ public class MealCustomizationScreen {
     sideOptionsGrid.setAlignment(Pos.CENTER_LEFT);
     sideOptionsGrid.setPadding(new Insets(10));
     
-    List<Product> sideOptions = getSideOptionsForMeal(meal.getId());
+    DropShadow glowEffect = new DropShadow();
+    glowEffect.setColor(Color.CORNFLOWERBLUE);
+    glowEffect.setRadius(20);
+    glowEffect.setSpread(0.6);
     
+    List<Product> sideOptions = getSideOptionsForMeal(meal.getId());
+    final ImageView[] selectedImage = {null};
+
     for (int i = 0; i < sideOptions.size(); i++) {
       Product side = sideOptions.get(i);
       
       VBox sideBox = new VBox(5);
       sideBox.setAlignment(Pos.CENTER);
+      sideBox.setPadding(new Insets(10));
 
       ImageView sideImage;
       InputStream imgStream = getClass().getResourceAsStream(side.getImagePath());
@@ -143,6 +151,14 @@ public class MealCustomizationScreen {
 
       sideBox.getChildren().addAll(sideImage, sideLabel);
 
+      sideBox.setOnMouseClicked(e -> {
+        if (selectedImage[0] != null) {
+          selectedImage[0].setEffect(null);
+        }
+        sideImage.setEffect(glowEffect);
+        selectedImage[0] = sideImage;
+      });
+
       sideOptionsGrid.add(sideBox, i % 2, i / 2);
     }
     // Inputing the image of the selected meal and the name so
@@ -153,10 +169,13 @@ public class MealCustomizationScreen {
     InputStream imageStream = getClass().getResourceAsStream(meal.getImagePath());
     if (imageStream != null) {
       mealImage = new ImageView(new Image(imageStream));
+      
     } else {
       System.err.println("Could not load image: " + meal.getImagePath());
       mealImage = new ImageView();
     }
+    mealImage.setFitHeight(300);
+    mealImage.setPreserveRatio(true);
 
     Label mealLabel = new Label(meal.getName());
     mealLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
