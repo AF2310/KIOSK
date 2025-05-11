@@ -6,8 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,6 +19,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -48,7 +52,15 @@ public class SalesStatsScreen {
     VBox topRight = new VBox();
     topRight.setPadding(new Insets(10));
     topRight.setPrefWidth(1280);
+    topRight.setAlignment(Pos.CENTER);
     HBox.setHgrow(topRight, Priority.ALWAYS);
+
+    // So the admin doesnt forget where he is lol
+    Label pageLabel = new Label("Sales Statistics:");
+    pageLabel.setStyle(
+        "-fx-font-size: 45px;"
+        + "-fx-font-weight: bold;"
+    );
 
     final OrderListWrapper wrapper = new OrderListWrapper();
 
@@ -68,20 +80,31 @@ public class SalesStatsScreen {
 
       topRight.getChildren().clear();
       Map<String, Integer> salesData = countProductSales(wrapper.orders);
-      BarChart<String, Number> chart = createProductSalesChart(salesData);
+      BarChart<String, Number> chart = createProductSales(salesData);
+      topRight.getChildren().add(chart);
+
+    });
+
+    MidButton ordersPerDayBtn = new MidButton("Orders per Day", "rgb(255, 255, 255)", 30);
+    ordersPerDayBtn.setOnAction(e -> {
+
+      topRight.getChildren().clear();
+      Map<DayOfWeek, Integer> weekdayCounts = countOrdersPerWeekday(wrapper.orders);
+      BarChart<String, Number> chart = createOrdersPerWeekday(weekdayCounts);
       topRight.getChildren().add(chart);
 
     });
 
     VBox topLeft = new VBox();
     topLeft.setPadding(new Insets(10));
-    topLeft.setSpacing(10);
+    topLeft.setSpacing(25);
     topLeft.setPrefWidth(640);
+    topLeft.setAlignment(Pos.TOP_LEFT);
     HBox.setHgrow(topLeft, Priority.NEVER);
-    topLeft.getChildren().addAll(productSalesBtn);
+    topLeft.getChildren().addAll(pageLabel, productSalesBtn, ordersPerDayBtn);
 
     HBox topContainer = new HBox();
-    topContainer.setPrefHeight(720);
+    topContainer.setPrefHeight(695);
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
     topContainer.getChildren().addAll(topLeft, topRight);
@@ -105,15 +128,14 @@ public class SalesStatsScreen {
     
     // Bottom row of the screen
     HBox bottomContainer = new HBox();
-    bottomContainer.setPrefHeight(360);
+    bottomContainer.setPrefHeight(335);
     bottomContainer.setAlignment(Pos.BOTTOM_LEFT);
     bottomContainer.getChildren().addAll(langButton, spacerBottom, backButton);
 
     // Setting positioning of all the elements
-    BorderPane layout = new BorderPane();
+    VBox layout = new VBox();
     layout.setPadding(new Insets(50));
-    layout.setTop(topContainer);
-    layout.setBottom(bottomContainer);
+    layout.getChildren().addAll(topContainer, bottomContainer);
 
     return new Scene(layout, 1920, 1080);
 
@@ -241,7 +263,7 @@ public class SalesStatsScreen {
 
   }
 
-  private BarChart<String, Number> createProductSalesChart(Map<String, Integer> productSales) {
+  private BarChart<String, Number> createProductSales(Map<String, Integer> productSales) {
 
     CategoryAxis xxAxis = new CategoryAxis();
     xxAxis.setLabel("Product");
@@ -268,6 +290,50 @@ public class SalesStatsScreen {
     barChart.getData().add(series);
     
     return barChart;
+  }
+
+  private Map<DayOfWeek, Integer> countOrdersPerWeekday(ArrayList<Order> orders) {
+
+    Map<DayOfWeek, Integer> weekdayCounts = new LinkedHashMap<>();
+
+    for (Order order : orders) {
+
+      LocalDateTime dateTime = order.getOrderDate().toLocalDateTime();
+      DayOfWeek day = dateTime.getDayOfWeek();
+      weekdayCounts.put(day, weekdayCounts.getOrDefault(day, 0) + 1);
+
+    }
+
+    return weekdayCounts;
+
+  }
+
+  private BarChart<String, Number> createOrdersPerWeekday(Map<DayOfWeek, Integer> weekdayCounts) {
+
+    CategoryAxis xxAxis = new CategoryAxis();
+    xxAxis.setLabel("Weekday");
+
+    NumberAxis yyAxis = new NumberAxis();
+    yyAxis.setLabel("Number of Orders");
+
+    BarChart<String, Number> barChart = new BarChart<>(xxAxis, yyAxis);
+    barChart.setTitle("Orders per Weekday");
+
+    XYChart.Series<String, Number> series = new XYChart.Series<>();
+    series.setName("Orders");
+
+    for (DayOfWeek day : DayOfWeek.values()) {
+
+      String dayName = day.toString().substring(0, 1) + day.toString().substring(1).toLowerCase();
+      int count = weekdayCounts.getOrDefault(day, 0);
+      series.getData().add(new XYChart.Data<>(dayName, count));
+
+    }
+
+    barChart.getData().add(series);
+
+    return barChart;
+
   }
 
 }
