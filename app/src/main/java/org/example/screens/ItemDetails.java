@@ -96,8 +96,8 @@ public class ItemDetails {
     // Scroll button (initially facing down)
     ArrowButton scrollButton = new ArrowButton(true, false);
     scrollButton.setRotate(-90);
-    scrollButton.setMaxHeight(200);
-    scrollButton.setMinHeight(200);
+    scrollButton.setMaxHeight(160);
+    scrollButton.setMinHeight(160);
 
     if (ingredients.size() <= visibleCount) {
       // If there are not enough ingredients, diactivate the scroll button
