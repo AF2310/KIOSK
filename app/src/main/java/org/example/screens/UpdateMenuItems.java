@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -22,7 +21,6 @@ import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
-
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
@@ -394,7 +392,7 @@ public class UpdateMenuItems {
     }
   }
 
-    /**
+  /**
    * Query method to change the description of a product.
    * Used in product table getter method.
    *
@@ -460,7 +458,8 @@ public class UpdateMenuItems {
     ArrayList<Product> products = new ArrayList<>();
 
     // SQL query to fetch needed data from database
-    String sql = "SELECT p.product_id, p.`name`, p.description, c.`name` AS type, p.is_active, p.price "
+    String sql = "SELECT p.product_id, p.`name`, "
+        + "p.description, c.`name` AS type, p.is_active, p.price "
         + "FROM product p "
         + "JOIN category c ON p.category_id = c.category_id";
 
