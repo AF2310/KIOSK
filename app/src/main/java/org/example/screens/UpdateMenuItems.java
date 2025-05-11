@@ -485,7 +485,7 @@ public class UpdateMenuItems {
               );
             
             // Update newly inserted activity value in database
-            upadateActivityValue(newActivityValue, productId, conn);
+            updateActivityValue(newActivityValue, productId, conn);
             
           } catch (SQLException e) {
             e.printStackTrace();
@@ -586,7 +586,7 @@ public class UpdateMenuItems {
     }
   }
 
-  private void upadateActivityValue(
+  private void updateActivityValue(
       int newActivityValue,
       int productId,
       Connection connection
