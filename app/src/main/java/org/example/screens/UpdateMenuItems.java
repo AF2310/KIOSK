@@ -63,9 +63,7 @@ public class UpdateMenuItems {
           prevScene
         );
 
-      primaryStage.setScene(
-          addProductScene.getProductScene()
-      );
+      primaryStage.setScene(addProductScene.getProductScene());
     });
 
     // Action: editing product
@@ -109,7 +107,8 @@ public class UpdateMenuItems {
   }
 
   /**
-   * Method to make the 3 update menu items scene buttons.
+   * Helper method to make the 3 update menu items
+   * scene buttons.
    *
    * @param labelName label name of mid button
    * @return mid button
