@@ -51,7 +51,7 @@ public class ItemDetails {
       throws SQLException {
 
     try (Connection connection = DatabaseManager.getConnection()) {
-      item.setIngredients(connection);
+      queries.setIngredientsForSingle(connection, item);
     }
     List<Ingredient> ingredients = item.ingredients;
     List<Integer> quantities = new ArrayList<>();

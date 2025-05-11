@@ -9,9 +9,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.example.menu.Ingredient;
 import org.example.menu.OrderItem;
 import org.example.menu.Product;
+import org.example.menu.Single;
+import org.example.menu.Type;
 import org.example.orders.Order;
+
 
 /**
  * Class for all queries related to the DB.
@@ -241,4 +245,248 @@ public class SqlQueries {
       }
     }
   }
-}
+  /**
+   * Retrieves all Single products from the database.
+   *
+   * @param conn database connection
+   * @return list of Single products
+   * @throws SQLException if database access error occurs
+   */
+
+  public List<Single> getAllSingles(Connection conn) throws SQLException {
+    List<Single> list = new ArrayList<>();
+    String sql = "SELECT product_id, name, price, image_url FROM product";
+
+    try (PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+
+      while (rs.next()) {
+        list.add(new Single(
+            rs.getInt("product_id"),
+            rs.getString("name"),
+            rs.getDouble("price"),
+            Type.EXTRA, // Default type, can be modified as needed
+            rs.getString("image_url")
+        ));
+      }
+    }
+    return list;
+  }
+
+  /**
+   * Saves a Single product to the database.
+   *
+   * @param conn database connection
+   * @param single the Single product to save
+   * @throws SQLException if database access error occurs
+   */
+  public void saveSingleToDb(Connection conn, Single single) throws SQLException {
+    String sql = "INSERT INTO product "
+        + "(name, price, category_id, image_url) VALUES (?, ?, ?, ?)";
+
+    try (PreparedStatement stmt = conn.prepareStatement(sql,
+         PreparedStatement.RETURN_GENERATED_KEYS)) {
+      stmt.setString(1, single.getName());
+      stmt.setDouble(2, single.getPrice());
+      stmt.setInt(3, getCategoryIdForType(single.getType())); // Helper method needed
+      stmt.setString(4, single.getImagePath());
+      stmt.executeUpdate();
+
+      try (ResultSet rs = stmt.getGeneratedKeys()) {
+        if (rs.next()) {
+          single.setId(rs.getInt(1));
+        }
+      }
+    }
+  }
+
+  /**
+   * Retrieves Single products by their type.
+   *
+   * @param conn database connection
+   * @param type the type of Single products to retrieve
+   * @return list of Single products matching the type
+   * @throws SQLException if database access error occurs
+   */
+  public List<Single> getOptionsByType(Connection conn, Type type) throws SQLException {
+    List<Single> options = new ArrayList<>();
+    String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type "
+        + "FROM product p "
+        + "JOIN category c ON p.category_id = c.category_id "
+        + "WHERE c.name = ?";
+
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setString(1, type.name());
+      try (ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+          options.add(new Single(
+              rs.getInt("id"),
+              rs.getString("name"),
+              rs.getDouble("price"),
+              Type.valueOf(rs.getString("type").toUpperCase()),
+              rs.getString("image_url")
+          ));
+        }
+      }
+    }
+    return options;
+  }
+
+  /**
+   * Retrieves Single products by type name.
+   *
+   * @param conn database connection
+   * @param typeName the name of the type
+   * @return list of Single products matching the type
+   * @throws SQLException if database access error occurs
+   */
+  public List<Single> getOptionsByTypeName(Connection conn, String typeName) throws SQLException {
+    return getOptionsByType(conn, Type.valueOf(typeName.toUpperCase()));
+  }
+
+  /**
+   * Retrieves Single products under a specified price.
+   *
+   * @param priceLimit the maximum price
+   * @param conn database connection
+   * @return list of Single products under the price limit
+   * @throws SQLException if database access error occurs
+   */
+  public List<Single> getSinglesUnder(double priceLimit, Connection conn) throws SQLException {
+    List<Single> list = new ArrayList<>();
+    String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type "
+        + "FROM product p "
+        + "JOIN category c ON p.category_id = c.category_id "
+        + "WHERE price < ?";
+
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+      ps.setDouble(1, priceLimit);
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          list.add(new Single(
+              rs.getInt("id"),
+              rs.getString("name"),
+              rs.getDouble("price"),
+              Type.valueOf(rs.getString("type").toUpperCase()),
+              rs.getString("image_url")
+          ));
+        }
+      }
+    }
+    return list;
+  }
+
+  /**
+   * Deletes a Single product by its ID.
+   *
+   * @param conn database connection
+   * @param id the ID of the product to delete
+   * @throws SQLException if database access error occurs
+   */
+  public void deleteSingleById(Connection conn, int id) throws SQLException {
+    String sql = "DELETE FROM product WHERE product_id = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, id);
+      stmt.executeUpdate();
+    }
+  }
+
+  /**
+   * Reduces the quantity of a product.
+   *
+   * @param conn database connection
+   * @param id the product ID
+   * @param amount the amount to reduce
+   * @throws SQLException if database access error occurs
+   */
+  public void reduceProductQuantity(Connection conn, int id, int amount) throws SQLException {
+    String sql = "UPDATE product SET quantity = quantity - ? "
+        + "WHERE product_id = ? AND quantity >= ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, amount);
+      stmt.setInt(2, id);
+      stmt.setInt(3, amount);
+      stmt.executeUpdate();
+    }
+  }
+
+  /**
+   * Retrieves Single products by category ID.
+   *
+   * @param conn database connection
+   * @param categoryId the category ID
+   * @return list of Single products in the category
+   * @throws SQLException if database access error occurs
+   */
+  public List<Single> getOptionsByCategoryId(Connection conn, int categoryId) throws SQLException {
+    List<Single> options = new ArrayList<>();
+    String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type "
+        + "FROM product p "
+        + "JOIN category c ON p.category_id = c.category_id "
+        + "WHERE p.category_id = ?";
+
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, categoryId);
+      try (ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+          options.add(new Single(
+              rs.getInt("id"),
+              rs.getString("name"),
+              rs.getDouble("price"),
+              Type.valueOf(rs.getString("type").toUpperCase()),
+              rs.getString("image_url")
+          ));
+        }
+      }
+    }
+    return options;
+  }
+
+  /**
+   * Sets the ingredients for a Single product.
+   *
+   * @param conn database connection
+   * @param single the Single product to set ingredients for
+   * @throws SQLException if database access error occurs
+   */
+  public void setIngredientsForSingle(Connection conn, Single single) throws SQLException {
+    String sql = "SELECT pi.ingredient_id, pi.ingredientCount, i.ingredient_name "
+        + "FROM productingredients pi "
+        + "JOIN ingredient i ON pi.ingredient_id = i.ingredient_id "
+        + "WHERE product_id = ?";
+
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, single.getId());
+      try (ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+          single.addIngredient(new Ingredient(
+              rs.getInt("ingredient_id"), 
+              rs.getString("ingredient_name")));
+          single.quantity.add(rs.getInt("ingredientCount"));
+        }
+      }
+    }
+  }
+
+  /**
+   * Helper method to get category ID for a given type.
+   *
+   * @param type the product type
+   * @return the category ID
+   * @throws SQLException if database access error occurs
+   */
+  private int getCategoryIdForType(Type type) throws SQLException {
+    String sql = "SELECT category_id FROM category WHERE name = ?";
+    try (Connection conn = DatabaseManager.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setString(1, type.name());
+      try (ResultSet rs = stmt.executeQuery()) {
+        if (rs.next()) {
+          return rs.getInt(1);
+        }
+      }
+    }
+    return -1; // or throw an exception if not found
+  }
+} 
+

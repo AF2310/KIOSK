@@ -19,7 +19,7 @@ public class DatabaseManager {
     dataSource.setMinIdle(5);
     dataSource.setMaxIdle(5);
     dataSource.setMaxTotal(5);
-    dataSource.setMaxWaitMillis(10000);
+    dataSource.setMaxWaitMillis(-1);
     dataSource.setTestOnBorrow(true);
     dataSource.setValidationQuery("SELECT 1");
     
