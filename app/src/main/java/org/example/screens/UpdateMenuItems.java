@@ -403,7 +403,10 @@ public class UpdateMenuItems {
    * @return a table filled with products and data about them, like
    *         product id, name, type, activity and price
    */
-  private TableView<Product> getProductTable(boolean priceEditable, boolean activityEditable) {
+  private TableView<Product> getProductTable(
+      boolean priceEditable, 
+      boolean activityEditable, 
+      boolean nameEditable) {
 
     // Product ID column
     TableColumn<Product, Integer> idColumn = new TableColumn<>("Product ID");
@@ -413,6 +416,41 @@ public class UpdateMenuItems {
     // Product name column
     TableColumn<Product, String> nameColumn = new TableColumn<>("Product Name");
     nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+    // If product name is editable
+    if (nameEditable) {
+      nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+      nameColumn.setOnEditCommit(event -> {
+        Product product = event.getRowValue();
+        String newName = event.getNewValue();
+
+        // NO empty string was entered
+        if (!(newName.strip().isEmpty())) {
+          
+          int productId = product.getId();
+          product.setName(newName);
+          
+          // TODO: This will be moved later
+          try {
+            Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+                + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+                + "?user=u5urh19mtnnlgmog"
+                + "&password=zPgqf8o6na6pv8j8AX8r"
+                + "&useSSL=true"
+                + "&allowPublicKeyRetrieval=true"
+              );
+            
+            // Update newly inserted activity value in database
+            updateProductName(newName, productId, conn);
+            
+          } catch (SQLException e) {
+            e.printStackTrace();
+          }
+        }
+        // ELSE: empty string was entered -> do nothing
+      });
+    }
 
     // Product category column
     TableColumn<Product, String> categoryColumn = new TableColumn<>("Product Category");
@@ -530,6 +568,23 @@ public class UpdateMenuItems {
     return productTable;
   }
 
+  private void updateProductName(
+      String newName,
+      int productId,
+      Connection connection
+  ) throws SQLException {
+
+    String sql = "UPDATE product "
+        + "SET name = ? "
+        + "WHERE product_id = ?";
+    
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+      stmt.setString(1, newName);
+      stmt.setInt(2, productId);
+      stmt.executeUpdate();
+    }
+  }
+
   private void upadateActivityValue(
       int newActivityValue,
       int productId,
@@ -557,7 +612,7 @@ public class UpdateMenuItems {
     );
 
     // Table for item lisitngs
-    TableView<Product> productTable = getProductTable(true, true);
+    TableView<Product> productTable = getProductTable(true, true, true);
 
     // VBox for the table
     VBox productListings = new VBox(productTable);
@@ -723,7 +778,7 @@ public class UpdateMenuItems {
     actionBox.setAlignment(Pos.CENTER);
 
     // Table for item lisitngs
-    TableView<Product> productTable = getProductTable(false, false);
+    TableView<Product> productTable = getProductTable(false, false, false);
 
     // Set action for each row in table
     productTable.setRowFactory(tv -> {
