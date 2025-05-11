@@ -112,7 +112,7 @@ public class Dictionary {
 
     // Checkout screen vocabulary
     addTranslation("Checkout", "Kassan");
-    addTranslation("Confirm Order", "Bekräfta");
+    addTranslation("Confirm Order", "Bekräfta ");
     addTranslation("Total", "Totalt");
     addTranslation("Enter Promo Code", "Ange Kampanjkod");
   }
