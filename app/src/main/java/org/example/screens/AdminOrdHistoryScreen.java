@@ -51,10 +51,12 @@ public class AdminOrdHistoryScreen {
     // Setting up the table
     TableColumn<Order, Integer> idColumn = new TableColumn<>("Order ID");
     idColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
-    idColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+    idColumn.setPrefWidth(150);
+    idColumn.setStyle("-fx-alignment: CENTER;");
     TableColumn<Order, Integer> kioskColumn = new TableColumn<>("Kiosk ID");
     kioskColumn.setCellValueFactory(new PropertyValueFactory<>("kioskId"));
-    kioskColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+    kioskColumn.setPrefWidth(150);
+    kioskColumn.setStyle("-fx-alignment: CENTER;");
     TableColumn<Order, String> productsColumn = new TableColumn<>("Products");
     productsColumn.setCellValueFactory(new PropertyValueFactory<>("productSummary"));
 
@@ -67,7 +69,12 @@ public class AdminOrdHistoryScreen {
         {
 
           label.setWrapText(true);
-          label.setStyle("-fx-padding: 5px;");
+          label.setStyle(
+              "-fx-padding: 5px;"
+              + "-fx-alignment: Center;"
+          );
+          label.maxWidthProperty().bind(this.widthProperty().subtract(10));
+          label.setMinHeight(Region.USE_PREF_SIZE);
           setGraphic(label);
 
         }
@@ -96,20 +103,23 @@ public class AdminOrdHistoryScreen {
       };
 
     });
-    productsColumn.setMaxWidth(1f * Integer.MAX_VALUE * 40);
+    productsColumn.setPrefWidth(800);
     TableColumn<Order, Double> amountColumn = new TableColumn<>("Amount Total");
     amountColumn.setCellValueFactory(new PropertyValueFactory<>("amountTotal"));
-    amountColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+    amountColumn.setPrefWidth(250);
+    amountColumn.setStyle("-fx-alignment: CENTER;");
     TableColumn<Order, String> statusColumn = new TableColumn<>("Status");
     statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-    statusColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+    statusColumn.setPrefWidth(200);
+    statusColumn.setStyle("-fx-alignment: CENTER;");
     TableColumn<Order, Timestamp> dateColumn = new TableColumn<>("Order Date");
     dateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
-    dateColumn.setMaxWidth(1f * Integer.MAX_VALUE * 20);
+    dateColumn.setPrefWidth(250);
+    dateColumn.setStyle("-fx-alignment: CENTER;");
     
     // Displaying the fetched data in a neat table
     TableView<Order> historyTable = new TableView<>();
-    historyTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+    historyTable.setFixedCellSize(-1);
     historyTable.setMaxWidth(Double.MAX_VALUE);
     historyTable.setPrefWidth(Region.USE_COMPUTED_SIZE);
     
@@ -139,23 +149,17 @@ public class AdminOrdHistoryScreen {
     
     // VBox for the table
     VBox orderHistory = new VBox(historyTable);
-    VBox.setVgrow(orderHistory, Priority.ALWAYS);
+    VBox.setVgrow(historyTable, Priority.ALWAYS);
     historyTable.prefWidthProperty().bind(orderHistory.widthProperty());
     orderHistory.setPadding(new Insets(20, 0, 0, 0));
-    
-    // VBox to align screen label and table
-    VBox topBox = new VBox();
-    topBox.setMaxWidth(Double.MAX_VALUE);
-    topBox.setAlignment(Pos.TOP_CENTER);
-    topBox.setSpacing(40);
-    topBox.getChildren().addAll(historyLabel, orderHistory);
 
     // Upper part of the screen
-    HBox topContainer = new HBox();
+    VBox topContainer = new VBox();
     topContainer.setMaxWidth(Double.MAX_VALUE);
-    HBox.setHgrow(topBox, Priority.ALWAYS);
-    topContainer.setAlignment(Pos.CENTER);
-    topContainer.getChildren().addAll(topBox);
+    topContainer.setAlignment(Pos.TOP_CENTER);
+    topContainer.setSpacing(40);
+    VBox.setVgrow(orderHistory, Priority.ALWAYS);
+    topContainer.getChildren().addAll(historyLabel, orderHistory);
 
     // Back button
     // Clicking button means user goes to previous screen
@@ -165,14 +169,14 @@ public class AdminOrdHistoryScreen {
       primaryStage.setScene(prevScene);
 
     });
-
-    // Language Button
-    // cycles images on click
-    var langButton = new LangBtn();
     
     // Spacer for Bottom Row
     Region spacerBottom = new Region();
     HBox.setHgrow(spacerBottom, Priority.ALWAYS);
+
+    // Language Button
+    // cycles images on click
+    var langButton = new LangBtn();
     
     // Bottom row of the screen
     HBox bottomContainer = new HBox();
@@ -182,8 +186,9 @@ public class AdminOrdHistoryScreen {
     // Setting positioning of all the elements
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(50));
-    layout.setTop(topContainer);
+    layout.setCenter(topContainer);
     layout.setBottom(bottomContainer);
+    BorderPane.setMargin(bottomContainer, new Insets(40, 0, 0, 0));
 
     return new Scene(layout, 1920, 1080);
 

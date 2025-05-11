@@ -68,7 +68,7 @@ public class OrderItem {
    */
   public String getSummary() {
 
-    return quantity + "x " + product.getName() + " @ " + unitPrice + " = " + totalPrice;
+    return quantity + "x " + product.getName() + " @ " + unitPrice + " = " + totalPrice + " SEK";
   }
   
 }
