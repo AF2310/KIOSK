@@ -3,6 +3,8 @@ package org.example.screens;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +33,7 @@ import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SqrBtnImgOnly;
 import org.example.menu.Imenu;
+import org.example.menu.Meal;
 import org.example.menu.Menu;
 import org.example.menu.Product;
 import org.example.menu.Single;
@@ -342,8 +345,34 @@ public class MainMenuScreen {
     String category = categories[currentCategoryIndex];
     List<Product> items = categoryItems.get(category);
     if ("Meals".equals(category)) {
-      showDummyMeals();
-      return;
+      items = new ArrayList<>();
+      try {
+        String sql = """
+            SELECT m.meal_id, m.name, m.description, m.price, m.image_url, m.product_id
+            FROM meal m
+            JOIN product p ON m.product_id = p.product_id
+            """;
+
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+          Meal meal = new Meal(rs.getString("name"));
+          meal.setId(rs.getInt("meal_id"));
+          meal.setName(rs.getString("name"));
+          meal.setPrice(rs.getFloat("price"));
+          meal.setImagePath(rs.getString("image_url"));
+          System.out.println("Meal image path: " + meal.getImagePath());
+          meal.setType(Type.MEAL);
+
+          items.add(meal);
+        }
+
+        rs.close();
+        ps.close();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
     }
     // Max item slots in rows and pages
     int maxItemsPerRow = 3;
@@ -515,82 +544,5 @@ public class MainMenuScreen {
     }
   }
 
-  // a method to show the meals before connecting the database for it
-  // basically I copied all the same settings from updateGrid for the middle grid
-  private void showDummyMeals() {
-    itemGrid.getChildren().clear();
-    itemGrid.setHgap(20);
-    itemGrid.setVgap(20);
-    itemGrid.setPadding(new Insets(10));
-    itemGrid.setAlignment(Pos.CENTER);
-
-    int maxItemsPerRow = 3;
-
-    // Just instead putting in hardcoded items for now
-    // the name, image and price same as other products
-    String[][] dummyMeals = {
-      {"Standard Meal", "/food/standard_burger.png", "34"},
-      {"All American Meal", "/food/all_american_burger.png", "38"},
-      {"Chicken Burger Meal", "/food/chicken_burger.png", "33"},
-      {"Double Burger Meal", "/food/double_burger.png", "41"}
-    };
-    for (int i = 0; i < dummyMeals.length; i++) {
-      VBox itemBox = new VBox(10);
-      itemBox.setAlignment(Pos.CENTER);
-
-      // Looking at updateGrid and adding the same values for sizes
-      StackPane imageSlot = new StackPane();
-      imageSlot.setPrefSize(200, 200);
-      imageSlot.setMaxSize(200, 200);
-      imageSlot.setMinSize(200, 200);
-
-      String imagePath = dummyMeals[i][1];
-      
-      InputStream inputStream = getClass().getResourceAsStream(imagePath);
-      ImageView imageView;
-      if (inputStream == null) {
-        imageView = new ImageView(new Image(
-          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABC"
-          + "AQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/hd5JnkAAAAASUVORK5CYII="));
-      } else {
-        imageView = new ImageView(new Image(inputStream));
-      }
-        
-      // Everything is same for the scene,
-      // its just that its not the same logic fully because of dummy code
-      imageView.setFitHeight(150);
-      imageView.setPreserveRatio(true);
-      imageSlot.getChildren().add(imageView);
-      imageSlot.setAlignment(Pos.CENTER);
-
-      String nameStr = dummyMeals[i][0];
-      String priceStr = dummyMeals[i][2];
-      
-      Label name = new Label(nameStr);
-      name.setStyle("-fx-font-size: 16px;");
-
-      Label price = new Label(priceStr + " :-");
-      price.setStyle("-fx-font-weight: bold; -fx-font-size: 18px;");
-      HBox priceBox = new HBox(price);
-      priceBox.setAlignment(Pos.BASELINE_RIGHT);
-
-      // Clicking the image we go to the side options screen first then drinks option
-      imageSlot.setOnMouseClicked(e -> {
-        MealCustomizationScreen customizationScreen = new MealCustomizationScreen();
-        Scene sideSelectionScene = customizationScreen.createSideSelectionScene(
-            primaryStage,
-            primaryStage.getScene(),
-            nameStr,
-            imagePath
-        );
-        primaryStage.setScene(sideSelectionScene);
-      });
-
-      itemBox.getChildren().addAll(imageSlot, name, priceBox);
-      itemGrid.add(itemBox, i % maxItemsPerRow, i / maxItemsPerRow);
-    }
-
-    updateCategoryButtonStyles();
-  }
 }
 

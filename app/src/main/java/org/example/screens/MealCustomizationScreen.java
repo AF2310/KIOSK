@@ -1,6 +1,14 @@
 package org.example.screens;
 
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,12 +27,59 @@ import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SqrBtnWithOutline;
-
+import org.example.menu.Meal;
+import org.example.menu.Product;
+import org.example.menu.Side;
+import org.example.menu.Type;
 /**
  * A Class for picking side and drink option for the meal.
  */
 public class MealCustomizationScreen {
 
+  private Connection conn;
+
+  public MealCustomizationScreen() {
+    try {
+      this.conn = DriverManager.getConnection(
+          "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services.clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+              + "?user=u5urh19mtnnlgmog"
+              + "&password=zPgqf8o6na6pv8j8AX8r"
+              + "&useSSL=true"
+              + "&allowPublicKeyRetrieval=true");
+    } catch (SQLException e) {
+      e.printStackTrace();
+      System.err.println("Failed to establish DB connection.");
+    }
+  }
+
+  private List<Product> getSideOptionsForMeal(int mealId) {
+    List<Product> sideOptions = new ArrayList<>();
+    String sql = """
+      SELECT p.product_id, p.name, p.price, p.image_url
+      FROM meal_sideoptions mso
+      JOIN product p ON mso.product_id = p.product_id
+      WHERE mso.meal_id = ?
+    """;
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, mealId);
+      try (ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+          Side side = new Side(
+            rs.getInt("product_id"),
+            rs.getString("name"),
+            rs.getFloat("price"),
+            Type.SIDES,
+            rs.getString("image_url")
+          );
+          sideOptions.add(side);
+        }
+      }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return sideOptions;
+}
 
   /**
    * Constructor for selecting the side option for a meal.
@@ -36,7 +91,7 @@ public class MealCustomizationScreen {
    * @return returns a scene for side options.
    */
   public Scene createSideSelectionScene(Stage stage, Scene returnScene,
-      String mealName, String imagePath) {
+      Meal meal) {
     // Creating the title for the scene
     Label title = new Label("Pick a Side for your Meal");
     title.setStyle("-fx-font-size: 40px;"
@@ -58,11 +113,13 @@ public class MealCustomizationScreen {
     sideOptionsGrid.setVgap(20);
     sideOptionsGrid.setAlignment(Pos.CENTER_LEFT);
     sideOptionsGrid.setPadding(new Insets(10));
-
+    
+    List<Product> sideOptions = getSideOptionsForMeal(meal.getId());
     //for now they are normal buttons,
     // i decided the 2x3 grid looks fine for this
-    for (int i = 0; i < 6; i++) {
-      Button sideBtn = new Button("Side " + (i + 1));
+    for (int i = 0; i < sideOptions.size(); i++) {
+      Product side = sideOptions.get(i);
+      Button sideBtn = new Button(side.getName());
       sideBtn.setPrefSize(150, 100);
       sideOptionsGrid.add(sideBtn, i % 2, i / 2);
     }
@@ -70,12 +127,16 @@ public class MealCustomizationScreen {
     // the user is aware what burger/meal they picked
     VBox mealDisplay = new VBox(10);
     mealDisplay.setAlignment(Pos.CENTER);
-    InputStream imageStream = getClass().getResourceAsStream(imagePath);
     ImageView mealImage;
+    InputStream imageStream = getClass().getResourceAsStream(meal.getImagePath());
+    if (imageStream != null) {
+      mealImage = new ImageView(new Image(imageStream));
+    } else {
+      System.err.println("Could not load image: " + meal.getImagePath());
+      mealImage = new ImageView(); // Optionally set a default image
+    }
 
-    mealImage = new ImageView(new Image(imageStream));
-
-    Label mealLabel = new Label(mealName);
+    Label mealLabel = new Label(meal.getName());
     mealLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
     mealDisplay.getChildren().addAll(mealImage, mealLabel);
     centerBox.getChildren().addAll(sideOptionsGrid, mealDisplay);
@@ -111,7 +172,7 @@ public class MealCustomizationScreen {
 
     // Goes to the next scene which is the drink options scene
     confirmButton.setOnMouseClicked(e -> {
-      Scene drinkScene = createDrinkSelectionScene(stage, returnScene, mealName, imagePath,
+      Scene drinkScene = createDrinkSelectionScene(stage, returnScene, meal,
           stage.getScene());
       stage.setScene(drinkScene);
     });
@@ -130,7 +191,7 @@ public class MealCustomizationScreen {
    * @return it returns the scene for drink options.
    */
   public Scene createDrinkSelectionScene(Stage stage, Scene mainScene,
-      String mealName, String imagePath, Scene sideScene) {
+      Meal meal, Scene sideScene) {
 
     Label title = new Label("Pick a Drink for your Meal");
     title.setStyle("-fx-font-size: 40px;"
@@ -163,12 +224,12 @@ public class MealCustomizationScreen {
     }
     VBox mealDisplay = new VBox(10);
     mealDisplay.setAlignment(Pos.CENTER);
-    InputStream imageStream = getClass().getResourceAsStream(imagePath);
+    InputStream imageStream = getClass().getResourceAsStream(meal.getImagePath());
     ImageView mealImage;
 
     mealImage = new ImageView(new Image(imageStream));
 
-    Label mealLabel = new Label(mealName);
+    Label mealLabel = new Label(meal.getName());
     mealLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
     mealDisplay.getChildren().addAll(mealImage, mealLabel);
     centerBox.getChildren().addAll(sideOptionsGrid, mealDisplay);
