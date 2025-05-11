@@ -26,6 +26,7 @@ import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SqrBtnWithOutline;
+import org.example.menu.Drink;
 import org.example.menu.Meal;
 import org.example.menu.Product;
 import org.example.menu.Side;
@@ -107,7 +108,7 @@ public class MealCustomizationScreen {
     layout.setTop(titleBox);
     // Making an hbox to separate two things in the center
     HBox centerBox = new HBox(50);
-    centerBox.setPadding(new Insets(20));
+    centerBox.setPadding(new Insets(40));
     centerBox.setAlignment(Pos.CENTER);
 
     // gridpane is used here for the side options
@@ -154,7 +155,7 @@ public class MealCustomizationScreen {
       mealImage = new ImageView(new Image(imageStream));
     } else {
       System.err.println("Could not load image: " + meal.getImagePath());
-      mealImage = new ImageView(); // Optionally set a default image
+      mealImage = new ImageView();
     }
 
     Label mealLabel = new Label(meal.getName());
@@ -201,6 +202,35 @@ public class MealCustomizationScreen {
     return new Scene(layout, 1920, 1080);
   }
 
+  private List<Product> getDrinkOptionsForMeal(int mealId) {
+    List<Product> drinkOptions = new ArrayList<>();
+    String sql = """
+        SELECT p.product_id, p.name, p.price, p.image_url
+        FROM meal_drinkoptions mdo
+        JOIN product p ON mdo.product_id = p.product_id
+        WHERE mdo.meal_id = ?
+        """;
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, mealId);
+      try (ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+          Drink drink = new Drink(
+              rs.getInt("product_id"),
+              rs.getString("name"),
+              rs.getFloat("price"),
+              Type.DRINKS,
+              rs.getString("image_url")
+          );
+          drinkOptions.add(drink);
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    return drinkOptions;
+  }
+
   /**
    * This constructor creates the scene for selecting a drink for a meal.
    *
@@ -227,20 +257,40 @@ public class MealCustomizationScreen {
     layout.setTop(titleBox);
 
     HBox centerBox = new HBox(50);
-    centerBox.setPadding(new Insets(20));
+    centerBox.setPadding(new Insets(40));
     centerBox.setAlignment(Pos.CENTER);
 
-    GridPane sideOptionsGrid = new GridPane();
-    sideOptionsGrid.setHgap(20);
-    sideOptionsGrid.setVgap(20);
-    sideOptionsGrid.setAlignment(Pos.CENTER_LEFT);
-    sideOptionsGrid.setPadding(new Insets(10));
+    GridPane drinkOptionsGrid = new GridPane();
+    drinkOptionsGrid.setHgap(20);
+    drinkOptionsGrid.setVgap(20);
+    drinkOptionsGrid.setAlignment(Pos.CENTER_LEFT);
+    drinkOptionsGrid.setPadding(new Insets(10));
 
+    List<Product> drinkOptions = getDrinkOptionsForMeal(meal.getId());
+    for (int i = 0; i < drinkOptions.size(); i++) {
+      Product drink = drinkOptions.get(i);
+      
+      VBox drinkBox = new VBox(5);
+      drinkBox.setAlignment(Pos.CENTER);
 
-    for (int i = 0; i < 6; i++) {
-      Button sideBtn = new Button("Side " + (i + 1));
-      sideBtn.setPrefSize(150, 100);
-      sideOptionsGrid.add(sideBtn, i % 2, i / 2);
+      ImageView drinkImage;
+      InputStream imgStream = getClass().getResourceAsStream(drink.getImagePath());
+
+      if (imgStream != null) {
+        drinkImage = new ImageView(new Image(imgStream));
+      } else {
+        System.err.println("Could not load image; " + drink.getImagePath());
+        drinkImage = new ImageView();
+      }
+      drinkImage.setFitHeight(100);
+      drinkImage.setPreserveRatio(true);
+
+      Label drinkLabel = new Label(drink.getName());
+      drinkLabel.setStyle("-fx-font-size: 14px;");
+
+      drinkBox.getChildren().addAll(drinkImage, drinkLabel);
+
+      drinkOptionsGrid.add(drinkBox, i % 2, i / 2);
     }
     VBox mealDisplay = new VBox(10);
     mealDisplay.setAlignment(Pos.CENTER);
@@ -252,7 +302,7 @@ public class MealCustomizationScreen {
     Label mealLabel = new Label(meal.getName());
     mealLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
     mealDisplay.getChildren().addAll(mealImage, mealLabel);
-    centerBox.getChildren().addAll(sideOptionsGrid, mealDisplay);
+    centerBox.getChildren().addAll(drinkOptionsGrid, mealDisplay);
     layout.setCenter(centerBox);
 
 
