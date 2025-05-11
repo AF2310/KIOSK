@@ -31,6 +31,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.IntegerStringConverter;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.DropBoxWithLabel;
 import org.example.buttons.LangBtn;
@@ -59,11 +60,23 @@ public class UpdateMenuItems {
     this.primaryStage = primaryStage;
 
     // All the buttons for updating menu items
-    MidButton addProductButton = new MidButton("Add product to menu", "rgb(255, 255, 255)", 30);
-    MidButton changePriceButton = new MidButton("Change prices", "rgb(255, 255, 255)", 30);
-    MidButton removeProductButton = new MidButton("Remove product from menu", 
-                                                  "rgb(255, 255, 255)", 30);
+    MidButton addProductButton = new MidButton(
+        "Add Product to Menu", 
+        "rgb(255, 255, 255)", 
+        30
+    );
 
+    MidButton changePriceButton = new MidButton(
+        "Edit Product Data", 
+        "rgb(255, 255, 255)", 
+        30
+    );
+
+    MidButton removeProductButton = new MidButton(
+        "Remove Product from Menu",                                             
+        "rgb(255, 255, 255)", 
+        30
+    );
 
     // Action for clicking on adding a product
     addProductButton.setOnAction(e -> {
@@ -74,7 +87,7 @@ public class UpdateMenuItems {
     });
 
     changePriceButton.setOnAction(e -> {
-      Scene productScene = new UpdateMenuItems().changePriceScene(
+      Scene productScene = new UpdateMenuItems().editProductsScene(
             this.primaryStage,
             prevScene);
       primaryStage.setScene(productScene);
@@ -101,7 +114,7 @@ public class UpdateMenuItems {
     layout.setCenter(gridPane);
 
     Scene updateItemScene = new Scene(layout, 1920, 1080);
-;
+
     return updateItemScene;
 
   }
@@ -390,7 +403,11 @@ public class UpdateMenuItems {
    * @return a table filled with products and data about them, like
    *         product id, name, type, activity and price
    */
-  private TableView<Product> getProductTable(boolean priceEditable) {
+  private TableView<Product> getProductTable(boolean priceEditable, boolean activityEditable) {
+
+    // Label for system messages
+    // TODO test later
+    // Label systemMessageLabel = new Label();
 
     // Product ID column
     TableColumn<Product, Integer> idColumn = new TableColumn<>("Product ID");
@@ -408,6 +425,41 @@ public class UpdateMenuItems {
     // Product activity column
     TableColumn<Product, Integer> activityColumn = new TableColumn<>("Product Active");
     activityColumn.setCellValueFactory(new PropertyValueFactory<>("activity"));
+    // If activity value is editable
+    activityColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+    activityColumn.setOnEditCommit(event -> {
+      Product product = event.getRowValue();
+      int newActivityValue = event.getNewValue();
+
+      // Invalid int value was entered
+      while (newActivityValue != 1 && newActivityValue != 0) {
+        // TODO test later
+        //systemMessageLabel.setText("Invalid input! Activity Value can only be 1 or 0!");
+        //systemMessageLabel.setVisible(true);
+        //newActivityValue = event.getNewValue();
+      }
+
+      int productId = product.getId();
+      product.setActivity(newActivityValue);
+
+      // TODO: This will be moved later
+      try {
+        Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+                + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+                + "?user=u5urh19mtnnlgmog"
+                + "&password=zPgqf8o6na6pv8j8AX8r"
+                + "&useSSL=true"
+                + "&allowPublicKeyRetrieval=true"
+        );
+
+        // Update newly inserted activity value in database
+        upadateActivityValue(newActivityValue, productId, conn);
+
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    });
     activityColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
 
     // Product price column
@@ -483,7 +535,24 @@ public class UpdateMenuItems {
     return productTable;
   }
 
-  private Scene changePriceScene(Stage primaryStage, Scene prevScene) {
+  private void upadateActivityValue(
+      int newActivityValue,
+      int productId,
+      Connection connection
+  ) throws SQLException {
+
+    String sql = "UPDATE product "
+        + "SET is_active = ? "
+        + "WHERE product_id = ?";
+    
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+      stmt.setInt(1, newActivityValue);
+      stmt.setInt(2, productId);
+      stmt.executeUpdate();
+    }
+  }
+
+  private Scene editProductsScene(Stage primaryStage, Scene prevScene) {
 
     // Label for screen
     Label historyLabel = new Label("Price Editor:");
@@ -493,7 +562,7 @@ public class UpdateMenuItems {
     );
 
     // Table for item lisitngs
-    TableView<Product> productTable = getProductTable(true);
+    TableView<Product> productTable = getProductTable(true, true);
 
     // VBox for the table
     VBox productListings = new VBox(productTable);
@@ -659,7 +728,7 @@ public class UpdateMenuItems {
     actionBox.setAlignment(Pos.CENTER);
 
     // Table for item lisitngs
-    TableView<Product> productTable = getProductTable(false);
+    TableView<Product> productTable = getProductTable(false, false);
 
     // Set action for each row in table
     productTable.setRowFactory(tv -> {
