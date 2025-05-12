@@ -281,8 +281,6 @@ public class MainMenuScreen {
           languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en"
       );
       languageSetting.updateAllLabels(layout);
-      // langButton.updateLanguage(List.of(
-      //     cancelButton.getButtonLabel()));
     });
 
     // Added all components for the bottom part

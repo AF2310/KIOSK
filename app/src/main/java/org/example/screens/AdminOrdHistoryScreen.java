@@ -193,15 +193,15 @@ public class AdminOrdHistoryScreen {
     layout.setBottom(bottomContainer);
     BorderPane.setMargin(bottomContainer, new Insets(40, 0, 0, 0));
 
-    // // Just pass in the Labeled components to translate
-    // langButton.addAction(event -> {
-    //   // Toggle the language in LanguageSetting
-    //   languageSetting.changeLanguage(
-    //       languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en"
-    //   );
-    //   languageSetting.updateAllLabels(layout);
-    //   historyTable.refresh();
-    // });
+    // Just pass in the Labeled components to translate
+    langButton.addAction(event -> {
+      // Toggle the language in LanguageSetting
+      languageSetting.changeLanguage(
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en"
+      );
+      languageSetting.updateAllLabels(layout);
+      // historyTable.refresh();
+    });
 
     return new Scene(layout, 1920, 1080);
 

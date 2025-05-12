@@ -28,8 +28,10 @@ public class Dictionary {
     addTranslation("Sides", "Tillbehör");
     addTranslation("Drinks", "Drycker");
     addTranslation("Desserts", "Desserter");
+    addTranslation("Meals", "Kombomenyer");
     addTranslation("Special Offers", "Specialerbjudanden");
     addTranslation("Cancel", "Avbryt");
+
 
     // Admin login vocabulary
     addTranslation("Admin Menu", "Adminmeny");
@@ -79,6 +81,11 @@ public class Dictionary {
     addTranslation("This is a yummy onion rings", "Det här är goda lökringar");
     addTranslation("This is a yummy fries", "Det här är goda pommes frites");
     addTranslation("This is a yummy ice cream", "Det här är en god glass");
+    addTranslation("This is tasty fanta", "Det här är en god fanta");
+    addTranslation("This is tasty sprite", "Det här är en god sprite");
+    addTranslation("This is tasty coke zero", "Det här är en god coke zero");
+    addTranslation("This is tasty pepsi", "Det här är en god pepsi");
+    addTranslation("This is tasty dr pepper", "Det här är en god Dr pepper");
 
     // Ingredients
     addTranslation("Beef Patty", "Nötköttspuck");
@@ -110,8 +117,35 @@ public class Dictionary {
     addTranslation("Total", "Totalt");
     addTranslation("Enter Promo Code", "Ange Kampanjkod");
     addTranslation("Total", "Totalt");
-    addTranslation("Page", "Sida");
+    // TODO: Fix the page counter label
+    addTranslation("Page 0 of 0", "Sida 0 av 0");
+    addTranslation("Page 1 of 1", "Sida 1 av 1");
+    addTranslation("Page 1 of 2", "Sida 1 av 2");
+    addTranslation("Page 2 of 2", "Sida 2 av 2");
 
+    // Sales statistics vocabulary
+    addTranslation("Sales Statistics:", "Försäljningsstatistik:");
+    addTranslation("Sold Products", "Sålda Produkter");
+    addTranslation("Orders per Day", "Beställningar per dag");
+    addTranslation("Product Sales", "Produktsförsäljning");
+    addTranslation("Sales Data", "Försäljningsdata");
+    addTranslation("Product", "Produkt");
+    addTranslation("Quantity Sold", "Antal sålda");
+
+    addTranslation("Orders per Weekday", "Beställningar per veckodag");
+    addTranslation("Orders", "Beställningar");
+    addTranslation("Number of Orders", "Antal beställningar");
+    addTranslation("Weekday", "Veckodag");
+
+    // Order history vocabulary
+    addTranslation("Order History:", "Beställningshistorik:");
+    addTranslation("Order ID", "Beställnings-ID");
+    addTranslation("Kiosk ID", "Kiosk-ID");
+    addTranslation("Products", "Produkter");
+    addTranslation("Amount Total", "Totalt belopp");
+    addTranslation("Order Date", "Beställningsdatum");
+    addTranslation("pending", "väntande");
+    addTranslation("PAID", "Betald");
   }
 
   // Adds translations to both the English to Swedish and Swedish to English maps
