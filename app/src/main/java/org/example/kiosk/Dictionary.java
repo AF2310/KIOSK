@@ -81,11 +81,11 @@ public class Dictionary {
     addTranslation("This is a yummy onion rings", "Det här är goda lökringar");
     addTranslation("This is a yummy fries", "Det här är goda pommes frites");
     addTranslation("This is a yummy ice cream", "Det här är en god glass");
-    addTranslation("This is tasty fanta", "Det här är en god fanta");
-    addTranslation("This is tasty sprite", "Det här är en god sprite");
-    addTranslation("This is tasty coke zero", "Det här är en god coke zero");
-    addTranslation("This is tasty pepsi", "Det här är en god pepsi");
-    addTranslation("This is tasty dr pepper", "Det här är en god Dr pepper");
+    addTranslation("This is a yummy fanta", "Det här är en god fanta");
+    addTranslation("This is a yummy sprite", "Det här är en god sprite");
+    addTranslation("This is a yummy coke zero", "Det här är en god coke zero");
+    addTranslation("This is a yummy pepsi", "Det här är en god pepsi");
+    addTranslation("This is a yummy dr pepper", "Det här är en god Dr pepper");
 
     // Ingredients
     addTranslation("Beef Patty", "Nötköttspuck");
