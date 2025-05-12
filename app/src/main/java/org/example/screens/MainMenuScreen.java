@@ -360,7 +360,7 @@ public class MainMenuScreen {
 
         while (rs.next()) {
           found = true;
-          Meal meal = new Meal(rs.getString("name"));
+          Meal meal = new Meal(rs.getString("name"), conn);
           meal.setId(rs.getInt("meal_id"));
           meal.setName(rs.getString("name"));
           meal.setPrice(rs.getFloat("price"));

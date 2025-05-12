@@ -32,6 +32,7 @@ import org.example.menu.Meal;
 import org.example.menu.Product;
 import org.example.menu.Side;
 import org.example.menu.Type;
+import org.example.orders.Cart;
 
 /**
  * A Class for picking side and drink option for the meal.
@@ -97,6 +98,12 @@ public class MealCustomizationScreen {
    */
   public Scene createSideSelectionScene(Stage stage, Scene returnScene,
       Meal meal) {
+    try {
+        meal.setMain(conn);
+    } catch (SQLException e) {
+        e.printStackTrace();
+        System.err.println("Failed to set main for the meal.");
+    }
     // Creating the title for the scene
     Label title = new Label("Pick a Side for your Meal");
     title.setStyle("-fx-font-size: 40px;"
@@ -157,6 +164,7 @@ public class MealCustomizationScreen {
         }
         sideImage.setEffect(glowEffect);
         selectedImage[0] = sideImage;
+        meal.setSide(side);
       });
 
       sideOptionsGrid.add(sideBox, i % 2, i / 2);
@@ -321,9 +329,11 @@ public class MealCustomizationScreen {
         }
         drinkImage.setEffect(glowEffect);
         selectedImage[0] = drinkImage;
+        meal.setDrink(drink);
       });
       drinkOptionsGrid.add(drinkBox, i % 2, i / 2);
     }
+    
     VBox mealDisplay = new VBox(10);
     mealDisplay.setAlignment(Pos.CENTER);
     InputStream imageStream = getClass().getResourceAsStream(meal.getImagePath());
@@ -367,13 +377,15 @@ public class MealCustomizationScreen {
 
     //Onclick for the confirm button (loading meal confirmation scene)
     confirmBtn.setOnMouseClicked(e -> {
-      Scene mealConfirmationScene = createMealConfirmationScene(stage, stage.getScene());
-      stage.setScene(mealConfirmationScene);
+      Cart cart = Cart.getInstance();
+      cart.addProduct(meal);
+      stage.setScene(mainScene);
     });
 
     return new Scene(layout, 1920, 1080);
   }
 
+  // TODO create this screen and link it after the drink selection.
   public Scene createMealConfirmationScene(Stage stage, Scene drinkSelectionScene) {
     BorderPane layout = new BorderPane();
     return new Scene(layout, 1920, 1080);
