@@ -2,7 +2,6 @@ package org.example.screens;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
