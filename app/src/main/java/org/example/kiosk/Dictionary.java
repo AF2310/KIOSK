@@ -7,17 +7,16 @@ import java.util.Map;
  * This class represents a Dictionary.
  */
 public class Dictionary {
-  private Map<String, Map<String, String>> dictionary = new HashMap<>();
+  private Map<String, String> englishToSwedish = new HashMap<>();
+  private Map<String, String> swedishToEnglish = new HashMap<>();
   private boolean toEnglish;
 
   /**
    * Constructs a Dictionary object.
    */
-  public Dictionary(boolean startInEnglish) {
-    this.toEnglish = startInEnglish;
+  public Dictionary() {
 
-    // TODO: Move the translations to a separate file
-    // Translations, will move to a separate file later
+    // Translations (these can be moved to a file later)
     // Welcome screen vocabulary
     addTranslation("Welcome to", "Välkommen till");
     addTranslation("Eat Here", "Ät här");
@@ -25,7 +24,6 @@ public class Dictionary {
     addTranslation("Driver found and connected", "Drivrutin hittad och ansluten");
 
     // Main menu vocabulary
-    // Didn't implement the translation for it yet
     addTranslation("Burgers", "Burgare");
     addTranslation("Sides", "Tillbehör");
     addTranslation("Drinks", "Drycker");
@@ -48,7 +46,6 @@ public class Dictionary {
     addTranslation("Change Timer Setting", "Ändra Timerinställningar");
     addTranslation("See Sales Summary", "Försäljningsöversikt");
     addTranslation("Set Special Offers", "Sätt Specialerbjudanden");
-    // addTranslation("Cancel", "Avbryt");
 
     // Admin Item Screen vocabulary
     addTranslation("Add Product to Menu", "Lägg till produkten");
@@ -64,7 +61,6 @@ public class Dictionary {
     addTranslation("Product Category:", "Produktkategori:");
     addTranslation("Ingredient List", "Ingredienslista");
     addTranslation("Confirm", "Bekräfta");
-    // addTranslation("Cancel", "Avbryt");
 
     // Item Details vocabulary
     addTranslation("Add To Cart", "Lägg till");
@@ -83,14 +79,13 @@ public class Dictionary {
     addTranslation("This is a yummy onion rings", "Det här är goda lökringar");
     addTranslation("This is a yummy fries", "Det här är goda pommes frites");
     addTranslation("This is a yummy ice cream", "Det här är en god glass");
-    
+
     // Ingredients
     addTranslation("Beef Patty", "Nötköttspuck");
     addTranslation("Bun", "Bröd");
     addTranslation("Swiss Cheese", "Schweizerost");
     addTranslation("Pickles", "Picklad gurka");
     addTranslation("Onion", "Lök");
-    // addTranslation("Ketchup", "Ketchup");
     addTranslation("Mustard", "Senap");
     addTranslation("Cream", "Grädde");
     addTranslation("Chocolate Bits", "Chokladbitar");
@@ -98,7 +93,6 @@ public class Dictionary {
     addTranslation("Whipped Cream", "Vispad grädde");
     addTranslation("Sugar", "Socker");
     addTranslation("Lemon", "Citron");
-    // addTranslation("Lime", "Lime");
     addTranslation("Mint Leaves", "Myntablad");
     addTranslation("Ice", "Is");
     addTranslation("Chili Flakes", "Chiliflakes");
@@ -117,11 +111,13 @@ public class Dictionary {
     addTranslation("Enter Promo Code", "Ange Kampanjkod");
   }
 
+  // Adds translations to both the English to Swedish and Swedish to English maps
   private void addTranslation(String english, String swedish) {
-    dictionary.put(english, Map.of("sv", swedish));
-    dictionary.put(swedish, Map.of("en", english));
+    englishToSwedish.put(english, swedish);
+    swedishToEnglish.put(swedish, english);
   }
 
+  // Toggle between English and Swedish
   public void toggleLanguage() {
     toEnglish = !toEnglish;
   }
@@ -131,11 +127,9 @@ public class Dictionary {
    */
   public String translate(String word) {
     if (toEnglish) {
-      Map<String, String> result = dictionary.get(word);
-      return result != null ? result.get("en") : word;
+      return englishToSwedish.getOrDefault(word, word);
     } else {
-      Map<String, String> result = dictionary.get(word);
-      return result != null ? result.get("sv") : word;
+      return swedishToEnglish.getOrDefault(word, word);
     }
   }
 }
