@@ -131,8 +131,7 @@ public class ItemDetails {
 
       // Clear and refill VBox with updated ingredients
       ingredientBox.getChildren().clear();
-      for (
-          int i = currentStartIndex[0];
+      for (int i = currentStartIndex[0];
           i < Math.min(currentStartIndex[0] + visibleCount,
           ingredients.size()); i++
       ) {
