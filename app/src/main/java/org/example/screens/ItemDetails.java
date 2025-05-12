@@ -23,6 +23,7 @@ import org.example.buttons.ArrowButton;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButtonWithImage;
 import org.example.buttons.SquareButtonWithImg;
+import org.example.kiosk.LanguageSetting;
 import org.example.menu.Ingredient;
 import org.example.menu.Single;
 import org.example.orders.Cart;
@@ -33,6 +34,8 @@ import org.example.orders.Cart;
  * (add, remove ingredients and such).
  */
 public class ItemDetails {
+
+  private LanguageSetting languageSetting = new LanguageSetting();
 
   /**
    * Creating a scene for a specific item, displaying all item details.

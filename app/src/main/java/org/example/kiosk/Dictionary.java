@@ -109,6 +109,9 @@ public class Dictionary {
     addTranslation("Confirm Order", "Bekräfta ");
     addTranslation("Total", "Totalt");
     addTranslation("Enter Promo Code", "Ange Kampanjkod");
+    addTranslation("Total", "Totalt");
+    addTranslation("Page", "Sida");
+
   }
 
   // Adds translations to both the English to Swedish and Swedish to English maps
