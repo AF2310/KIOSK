@@ -2,7 +2,6 @@ package org.example.screens;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -21,6 +20,7 @@ import org.example.buttons.ConfirmOrderButton;
 import org.example.buttons.EatHereButton;
 import org.example.buttons.LangBtn;
 import org.example.buttons.TakeAwayButton;
+import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
 import org.example.orders.Cart;
 import org.example.users.Customer;
@@ -34,6 +34,7 @@ import org.example.users.Customer;
 public class CheckoutScreen {
 
   private Stage primaryStage;
+  private LanguageSetting languageSetting = new LanguageSetting();
   // private Connection conn;
   // private float totalPrice = 0.0f;
   // private Label totalLabel;
@@ -244,8 +245,6 @@ public class CheckoutScreen {
         quantitys,
         6);
 
-    
-
     layout.setAlignment(Pos.CENTER);
     layout.setPadding(new Insets(20));
     layout.getChildren().addAll(
@@ -253,22 +252,13 @@ public class CheckoutScreen {
         checkoutGrid,
         bottomPart);
 
-    // Pass in the Labeled components to translate
+    // Just pass in the Labeled components to translate
     langButton.addAction(event -> {
-      // Update both labels and text input controls
-      langButton.updateLanguage(
-          // Labels
-          List.of(
-            cancelButton.getButtonLabel(),
-            backButton.getButtonLabel(),
-            checkoutLabel,
-            confirmOrderButton.getConfirmLabel()
-          ),
-          // Text input fields
-          List.of(
-            promoField
-          )
+      // Toggle the language in LanguageSetting
+      languageSetting.changeLanguage(
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en"
       );
+      languageSetting.updateAllLabels(layout);
     });
 
     // Create final scene result

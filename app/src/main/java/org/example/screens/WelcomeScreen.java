@@ -1,7 +1,6 @@
 package org.example.screens;
 
 import java.sql.SQLException;
-import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,12 +14,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButtonWithImage;
+import org.example.kiosk.LanguageSetting;
 import org.example.sql.SqlConnectionCheck;
 
 /**
  * The welcome screen class.
  */
 public class WelcomeScreen {
+
+  private LanguageSetting languageSetting = new LanguageSetting();
 
   /**
    * The welcome class scene.
@@ -120,27 +122,24 @@ public class WelcomeScreen {
     Image burger2 = new Image(getClass().getResourceAsStream("/burger2.png"));
     ImageView burgerView2 = new ImageView(burger2);
     rowOfBurgers.getChildren().addAll(burgerView1, burgerView2, burgerButton);
-    
-    // Test sql connection
-    SqlConnectionCheck connectionCheck = new SqlConnectionCheck();
-    Label mysql = connectionCheck.getMysqlLabel();
 
     var langButton = new LangBtn();
 
-    // Just pass in the Labeled components to translate
+    // Translate all the text
     langButton.addAction(event -> {
-      langButton.updateLanguage(List.of(
-          welcome,
-          companyTitle,
-          eatHereBtn.getButtonLabel(),
-          takeAwayBtn.getButtonLabel(),
-          mysql
-      ));
+      // Toggle the language in LanguageSetting
+      languageSetting.changeLanguage(
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
+      languageSetting.updateAllLabels(mainWindow);
     });
 
     // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
     StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
+
+    // Test sql connection
+    SqlConnectionCheck connectionCheck = new SqlConnectionCheck();
+    Label mysql = connectionCheck.getMysqlLabel();
 
     mainWindow.getChildren().addAll(
         welcome, companyTitle, rowOfBurgers, rowOfButtons, mysql);

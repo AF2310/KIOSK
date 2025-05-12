@@ -23,6 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.LangBtn;
+import org.example.kiosk.LanguageSetting;
 import org.example.menu.OrderItem;
 import org.example.menu.Product;
 import org.example.orders.Order;
@@ -31,6 +32,8 @@ import org.example.orders.Order;
  * Order History class.
  */
 public class AdminOrdHistoryScreen {
+
+  private LanguageSetting languageSetting = new LanguageSetting();
 
   /**
    * Scene to display the order history.
@@ -189,6 +192,16 @@ public class AdminOrdHistoryScreen {
     layout.setCenter(topContainer);
     layout.setBottom(bottomContainer);
     BorderPane.setMargin(bottomContainer, new Insets(40, 0, 0, 0));
+
+    // Just pass in the Labeled components to translate
+    langButton.addAction(event -> {
+      // Toggle the language in LanguageSetting
+      languageSetting.changeLanguage(
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en"
+      );
+      languageSetting.updateAllLabels(layout);
+      // historyTable.refresh();
+    });
 
     return new Scene(layout, 1920, 1080);
 

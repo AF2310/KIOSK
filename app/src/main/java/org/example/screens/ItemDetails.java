@@ -9,7 +9,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -23,6 +22,7 @@ import org.example.buttons.ArrowButton;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButtonWithImage;
 import org.example.buttons.SquareButtonWithImg;
+import org.example.kiosk.LanguageSetting;
 import org.example.menu.Ingredient;
 import org.example.menu.Single;
 import org.example.orders.Cart;
@@ -34,25 +34,27 @@ import org.example.orders.Cart;
  */
 public class ItemDetails {
 
+  private LanguageSetting languageSetting = new LanguageSetting();
+
   /**
    * Creating a scene for a specific item, displaying all item details.
    * Only for single items
    *
    * @param primaryStage what is the primary stage
-   * @param prevScene what was the previous stage
-   * @param item the item object itself
-   * @param cart the cart where all items are
+   * @param prevScene    what was the previous stage
+   * @param item         the item object itself
+   * @param cart         the cart where all items are
    * @return scene containing all item details
    */
-  public Scene create(Stage primaryStage, Scene prevScene, Single item, Cart cart) 
+  public Scene create(Stage primaryStage, Scene prevScene, Single item, Cart cart)
       throws SQLException {
     item.setIngredients(DriverManager.getConnection(
         "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-        + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-        + "?user=u5urh19mtnnlgmog"
-        + "&password=zPgqf8o6na6pv8j8AX8r"
-        + "&useSSL=true"
-        + "&allowPublicKeyRetrieval=true"));
+            + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+            + "?user=u5urh19mtnnlgmog"
+            + "&password=zPgqf8o6na6pv8j8AX8r"
+            + "&useSSL=true"
+            + "&allowPublicKeyRetrieval=true"));
     List<Ingredient> ingredients = item.ingredients;
     List<Integer> quantities = new ArrayList<>();
     /*
@@ -67,7 +69,7 @@ public class ItemDetails {
 
     int visibleCount = 7;
     // Wraps the index in an array
-    final int[] currentStartIndex = {0};
+    final int[] currentStartIndex = { 0 };
 
     // Storing our AddRemoveBlocks to store quantities
     List<AddRemoveBlock> blocks = new ArrayList<>();
@@ -113,7 +115,8 @@ public class ItemDetails {
     scrollButton.setOnAction(e -> {
       // Logic to handle scrolling
       if (currentStartIndex[0] + visibleCount >= ingredients.size()) {
-        // If we are at the bottom, this resets the index to 0 and scrolls back to the top
+        // If we are at the bottom, this resets the index to 0 and scrolls back to the
+        // top
         currentStartIndex[0] = 0;
         // And sets arrow to face down
         scrollButton.setRotate(-90);
@@ -129,8 +132,9 @@ public class ItemDetails {
       // Clear and refill VBox with updated ingredients
       ingredientBox.getChildren().clear();
       for (int i = currentStartIndex[0];
-          i < Math.min(currentStartIndex[0] + visibleCount, ingredients.size());
-          i++) {
+          i < Math.min(currentStartIndex[0] + visibleCount,
+          ingredients.size()); i++
+      ) {
 
         Label ingrLabel = new Label(ingredients.get(i).getName());
         ingrLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: normal;");
@@ -152,15 +156,13 @@ public class ItemDetails {
     Label nameLabel = new Label(item.getName());
     nameLabel.setStyle(
         "-fx-font-size: 65px;"
-        + "-fx-font-weight: bold;"
-    );
+            + "-fx-font-weight: bold;");
 
     // TODO: Add description to the item once it has one. This is dummy text
     var descriptionLabel = new Label("This is a yummy " + item.getName().toLowerCase());
     descriptionLabel.setStyle(
         "-fx-font-size: 20px;"
-        + "-fx-font-weight: normal;"
-    );
+            + "-fx-font-weight: normal;");
 
     // Left side of the top part of the screen
     VBox nameAndDescriptionBox = new VBox(20);
@@ -185,13 +187,12 @@ public class ItemDetails {
       // This prevents fetching some empty image from the database.
       Image emptyImage = new Image(
           "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABC"
-          + "AQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/hd5JnkAAAAASUVORK5CYII="
-        );
+              + "AQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/hd5JnkAAAAASUVORK5CYII=");
 
       // Add empty generated image to View
       imageView = new ImageView(emptyImage);
 
-    // Image found (input stream not empty)
+      // Image found (input stream not empty)
     } else {
       imageView = new ImageView(new Image(inputStream));
     }
@@ -203,9 +204,8 @@ public class ItemDetails {
     Label priceLabel = new Label(String.format("%.0f :-", item.getPrice()));
     priceLabel.setStyle(
         "-fx-font-size: 35px;"
-        + "-fx-font-weight: bold;"
-    );
-        
+            + "-fx-font-weight: bold;");
+
     // Wrapper to align the Label in its VBox
     HBox priceWrapper = new HBox(priceLabel);
     priceWrapper.setAlignment(Pos.BOTTOM_RIGHT);
@@ -219,21 +219,21 @@ public class ItemDetails {
     SquareButtonWithImg backButton = new SquareButtonWithImg("Back",
         "back.png",
         "rgb(255, 255, 255)");
-    
+
     backButton.setOnAction(e -> {
       primaryStage.setScene(prevScene);
     });
-    
+
     // HBox for the upper part of the screen
     HBox topContainer = new HBox();
     topContainer.setPadding(new Insets(20));
     topContainer.setAlignment(Pos.CENTER);
     topContainer.getChildren().addAll(leftSide, rightSide);
-    
+
     MidButtonWithImage addToCartButton = new MidButtonWithImage("Add To Cart",
-        "cart_wh.png", 
+        "cart_wh.png",
         "rgb(81, 173, 86)");
-    
+
     addToCartButton.setOnAction(e -> {
       // Making a new product with the modified ingredients.
       Single newProduct = new Single(item.getId(), item.getName(), item.getPrice(),
@@ -248,39 +248,14 @@ public class ItemDetails {
     HBox bottomRightBox = new HBox(30);
     bottomRightBox.setAlignment(Pos.CENTER_RIGHT);
     bottomRightBox.getChildren().addAll(addToCartButton, backButton);
-    
+
     // Language Button
     // cycles images on click
-    //Language button
+    // Language button
     var langButton = new LangBtn();
     HBox bottomLeftBox = new HBox(langButton);
     bottomLeftBox.setAlignment(Pos.BOTTOM_LEFT);
 
-    // Pass in the Labeled components to translate
-    langButton.addAction(event -> {
-      List<Labeled> translatableLabeledControls = new ArrayList<>(List.of(
-          backButton.getButtonLabel(),
-          addToCartButton.getButtonLabel(),
-          nameLabel,
-          descriptionLabel
-      ));
-
-      // Collect ingredient labels
-      for (javafx.scene.Node node : ingredientBox.getChildren()) {
-        if (node instanceof HBox hbox) {
-          for (javafx.scene.Node subNode : hbox.getChildren()) {
-            if (subNode instanceof Label label) {
-              translatableLabeledControls.add(label);
-            }
-          }
-        }
-      }
-
-      // Now call the method with one combined list
-      langButton.updateLanguage(translatableLabeledControls);
-    });
-
-    
     // Spacer for bottom part of the Screen
     Region spacerBottom = new Region();
     HBox.setHgrow(spacerBottom, Priority.ALWAYS);
@@ -288,9 +263,9 @@ public class ItemDetails {
     // Bottom part of the screen
     HBox bottomContainer = new HBox();
     bottomContainer.setPadding(new Insets(0, 0, 0, 0));
-    bottomContainer.getChildren().addAll(bottomLeftBox, spacerBottom,  bottomRightBox);
+    bottomContainer.getChildren().addAll(bottomLeftBox, spacerBottom, bottomRightBox);
     bottomContainer.setAlignment(Pos.CENTER);
-  
+
     // Setting positioning of all the elements
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(50));
@@ -299,6 +274,14 @@ public class ItemDetails {
     layout.setRight(rightSide);
     layout.setBottom(bottomContainer);
 
+    // Translate all the text
+    langButton.addAction(event -> {
+      // Toggle the language in LanguageSetting
+      languageSetting.changeLanguage(
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
+      languageSetting.updateAllLabels(layout);
+    });
+
     return new Scene(layout, 1920, 1080);
 
   }
@@ -306,12 +289,12 @@ public class ItemDetails {
   /**
    * Method to save the quantites.
    *
-   * @param blocks the list of add and remove blocks
+   * @param blocks    the list of add and remove blocks
    * @param quantitys the list of quantites
-   * @param item the item
+   * @param item      the item
    */
-  private void save(List<AddRemoveBlock> blocks, List<Integer> quantitys, 
-        Single item, List<Integer> basequant) {
+  private void save(List<AddRemoveBlock> blocks, List<Integer> quantitys,
+      Single item, List<Integer> basequant) {
     for (int i = 0; i < quantitys.size(); i++) {
       quantitys.set(i, blocks.get(i).getQuantity());
       // setting the variable display to the base again.
@@ -319,11 +302,12 @@ public class ItemDetails {
     }
     item.quantity = quantitys;
 
-
-    /* int itemId = item.getId();
-
-    String s = "INSERT INTO order_item "
-        + "(order_item_id, order_id, order_date, amount_total, status)"
-        + "VALUES (123, 1, NOW(), ?, 'pending')"; */
+    /*
+     * int itemId = item.getId();
+     * 
+     * String s = "INSERT INTO order_item "
+     * + "(order_item_id, order_id, order_date, amount_total, status)"
+     * + "VALUES (123, 1, NOW(), ?, 'pending')";
+     */
   }
 }
