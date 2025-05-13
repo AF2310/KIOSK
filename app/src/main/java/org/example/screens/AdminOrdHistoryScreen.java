@@ -176,7 +176,6 @@ public class AdminOrdHistoryScreen {
     HBox.setHgrow(spacerBottom, Priority.ALWAYS);
 
     // Language Button
-    // cycles images on click
     var langButton = new LangBtn();
 
     // Bottom row of the screen
@@ -191,7 +190,7 @@ public class AdminOrdHistoryScreen {
     layout.setBottom(bottomContainer);
     BorderPane.setMargin(bottomContainer, new Insets(40, 0, 0, 0));
 
-    // Just pass in the Labeled components to translate
+    // Translate all the text
     langButton.addAction(event -> {
       // Toggle the language in LanguageSetting
       languageSetting.changeLanguage(
@@ -290,7 +289,7 @@ public class AdminOrdHistoryScreen {
 
             OrderItem orderItem = new OrderItem(product, quantity, price);
 
-              order.getProducts().add(orderItem);
+            order.getProducts().add(orderItem);
 
             break;
 
