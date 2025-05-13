@@ -99,10 +99,10 @@ public class MealCustomizationScreen {
   public Scene createSideSelectionScene(Stage stage, Scene returnScene,
       Meal meal) {
     try {
-        meal.setMain(conn);
+      meal.setMain(conn);
     } catch (SQLException e) {
-        e.printStackTrace();
-        System.err.println("Failed to set main for the meal.");
+      e.printStackTrace();
+      System.err.println("Failed to set main for the meal.");
     }
     // Creating the title for the scene
     Label title = new Label("Pick a Side for your Meal");

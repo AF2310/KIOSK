@@ -1,5 +1,6 @@
 package org.example.screens;
 
+import java.sql.Connection;
 import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -107,12 +108,13 @@ public class AdminLoginScreen {
       SqlConnectionCheck connection = new SqlConnectionCheck();
       AdminAuth adminauth = new AdminAuth(connection.getConnection());
       Boolean checkLogin = adminauth.verifyAdmin(username, password);
+      Connection conn = connection.getConnection();
       if (checkLogin) {
         errorLabel.setVisible(false);
         passwordField.clear();
         AdminMenuScreen adminMenuScreen = new AdminMenuScreen();
         Scene adminMenuScene = adminMenuScreen.createAdminMenuScreen(primaryStage,
-                      windowWidth, windowHeight, welcomeScrScene);
+                      windowWidth, windowHeight, welcomeScrScene, conn);
         primaryStage.setScene(adminMenuScene);
       } else {
         if (langButton.isEnglish()) {

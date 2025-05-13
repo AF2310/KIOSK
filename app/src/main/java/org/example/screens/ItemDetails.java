@@ -18,14 +18,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.boxes.AddRemoveBlock;
 import org.example.buttons.ArrowButton;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButtonWithImage;
-import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.SquareButtonWithImg;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Ingredient;
@@ -33,6 +31,7 @@ import org.example.menu.Meal;
 import org.example.menu.Single;
 import org.example.menu.Type;
 import org.example.orders.Cart;
+
 
 /**
  * Screen for the details of an Item.
