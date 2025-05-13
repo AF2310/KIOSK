@@ -1,5 +1,6 @@
 package org.example.screens;
 
+import java.sql.Connection;
 import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -28,12 +29,14 @@ public class AdminMenuScreen {
       Stage primaryStage,
       double windowWidth,
       double windowHeight,
-      Scene welcomeScrScene) {
+      Scene welcomeScrScene,
+      Connection conn) {
 
     // the mainlayout
     VBox adminMenuLayout = new VBox(20);
     adminMenuLayout.setAlignment(Pos.TOP_CENTER);
     adminMenuLayout.setPadding(new Insets(10));
+    
     // Making the title on top of the admin menu screen
     Label adminMenuText = new Label("Welcome, Admin!");
     adminMenuText.setStyle(
@@ -76,6 +79,17 @@ public class AdminMenuScreen {
     centerGrid.add(specialOffersBtn, 0, 2);
     centerGrid.add(orderHistoryBtn, 1, 0);
     centerGrid.add(salesSummaryBtn, 1, 1);
+
+    MidButton searchBarBtn = new MidButton("Search", "rgb(255, 255, 255)", 30);
+
+    searchBarBtn.setOnAction(e -> {
+      Scene searchBarScreen = new SeachBarScreen().showSearchScene(
+          primaryStage, 
+          adminMenuLayout.getScene());
+      primaryStage.setScene(searchBarScreen);
+    });
+
+    centerGrid.add(searchBarBtn, 1, 2);
 
     // Adding the language button which already has the functionality of
     // changing the logo of the language

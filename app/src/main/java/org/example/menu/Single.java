@@ -225,10 +225,10 @@ public class Single extends Product {
     List<Single> list = new ArrayList<>();
 
     // SQL query to select all specified singles
-    String sql = "SELECT p.id, p.name, p.price, p.image_url, c.name AS type"
-        + "FROM products"
-        + "JOIN category c ON p.category_id = c.category_id"
-        + "WHERE price < ?";
+    String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type " +
+            "FROM product p " +
+            "JOIN category c ON p.category_id = c.category_id " +
+            "WHERE p.price < ? AND p.is_active = 1";
 
     // Prepare SQL statement with current connection
     // Try with this statement ensures the statement is closed automatically
@@ -431,4 +431,6 @@ public class Single extends Product {
       }
       return options;
     }*/
+
+    
 }
