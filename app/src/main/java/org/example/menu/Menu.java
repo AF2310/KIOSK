@@ -13,6 +13,7 @@ public class Menu implements Imenu {
   private final List<Single> drinks;
   private final List<Single> extras;
   private final List<Single> desserts;
+  
   // TODO: needs fixing do add actual image path
   Single singleHelper = new Single(0, "", 0.0f, Type.EXTRA, "dummy_path");
   

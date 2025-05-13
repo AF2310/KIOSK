@@ -14,6 +14,10 @@ public class LangBtn extends RoundButton {
   private boolean isEnglish = true;
   private Dictionary dictionary;
 
+  /**
+   * LangBtn is a button that represents a language selection option.
+   * It extends the RoundButton class and initializes with specific parameters.
+   */
   public LangBtn() {
     super("languages", 140);
     this.dictionary = new Dictionary();

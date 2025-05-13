@@ -162,7 +162,6 @@ public class CheckoutScreen {
       try {
         Cart.getInstance().saveQuantityToDb(conn, orderId);
       } catch (SQLException e1) {
-        // TODO Auto-generated catch block
         e1.printStackTrace();
       }
 
@@ -174,7 +173,7 @@ public class CheckoutScreen {
           windowWidth,
           windowHeight,
           welcomeScrScene,
-          orderId // TODO: fix the order id fetching
+          orderId
       );
       this.primaryStage.setScene(ordConfirmScene);
 

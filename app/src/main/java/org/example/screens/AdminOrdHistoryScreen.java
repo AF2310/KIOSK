@@ -39,17 +39,16 @@ public class AdminOrdHistoryScreen {
    * Scene to display the order history.
    *
    * @param primaryStage this window
-   * @param prevScene pevious scene to go back to
+   * @param prevScene    pevious scene to go back to
    * @return the scene itself
    */
   public Scene showHistoryScene(Stage primaryStage, Scene prevScene) {
-    
+
     // So the admin doesnt forget where he is lol
     Label historyLabel = new Label("Order History:");
     historyLabel.setStyle(
         "-fx-font-size: 45px;"
-        + "-fx-font-weight: bold;"
-    );
+            + "-fx-font-weight: bold;");
 
     // Setting up the table
     TableColumn<Order, Integer> idColumn = new TableColumn<>("Order ID");
@@ -74,14 +73,13 @@ public class AdminOrdHistoryScreen {
           label.setWrapText(true);
           label.setStyle(
               "-fx-padding: 5px;"
-              + "-fx-alignment: Center;"
-          );
+                  + "-fx-alignment: Center;");
           label.maxWidthProperty().bind(this.widthProperty().subtract(10));
           label.setMinHeight(Region.USE_PREF_SIZE);
           setGraphic(label);
 
         }
-        
+
         // Overrides default cell update behaviour of javafx
 
         @Override
@@ -119,13 +117,13 @@ public class AdminOrdHistoryScreen {
     dateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
     dateColumn.setPrefWidth(250);
     dateColumn.setStyle("-fx-alignment: CENTER;");
-    
+
     // Displaying the fetched data in a neat table
     TableView<Order> historyTable = new TableView<>();
     historyTable.setFixedCellSize(-1);
     historyTable.setMaxWidth(Double.MAX_VALUE);
     historyTable.setPrefWidth(Region.USE_COMPUTED_SIZE);
-    
+
     // Puts the table together
     historyTable.getColumns().add(idColumn);
     historyTable.getColumns().add(kioskColumn);
@@ -133,23 +131,23 @@ public class AdminOrdHistoryScreen {
     historyTable.getColumns().add(amountColumn);
     historyTable.getColumns().add(statusColumn);
     historyTable.getColumns().add(dateColumn);
-    
+
     // Querys data into the table
     try {
-      
+
       // Gets orders
       ArrayList<Order> orders = queryOrders();
       // Gets Products for each order
       queryOrderItemsFor(orders);
       // Inputs it into the table
       historyTable.getItems().addAll(orders);
-      
+
     } catch (SQLException e) {
-      
+
       e.printStackTrace();
-      
+
     }
-    
+
     // VBox for the table
     VBox orderHistory = new VBox(historyTable);
     VBox.setVgrow(historyTable, Priority.ALWAYS);
@@ -172,7 +170,7 @@ public class AdminOrdHistoryScreen {
       primaryStage.setScene(prevScene);
 
     });
-    
+
     // Spacer for Bottom Row
     Region spacerBottom = new Region();
     HBox.setHgrow(spacerBottom, Priority.ALWAYS);
@@ -180,7 +178,7 @@ public class AdminOrdHistoryScreen {
     // Language Button
     // cycles images on click
     var langButton = new LangBtn();
-    
+
     // Bottom row of the screen
     HBox bottomContainer = new HBox();
     bottomContainer.setAlignment(Pos.BOTTOM_LEFT);
@@ -197,8 +195,7 @@ public class AdminOrdHistoryScreen {
     langButton.addAction(event -> {
       // Toggle the language in LanguageSetting
       languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en"
-      );
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
       languageSetting.updateAllLabels(layout);
       // historyTable.refresh();
     });
@@ -219,13 +216,12 @@ public class AdminOrdHistoryScreen {
     try (
 
         Connection conn = DriverManager.getConnection(
-          "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-          + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-          + "?user=u5urh19mtnnlgmog"
-          + "&password=zPgqf8o6na6pv8j8AX8r"
-          + "&useSSL=true"
-          + "&allowPublicKeyRetrieval=true"
-        );
+            "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+                + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+                + "?user=u5urh19mtnnlgmog"
+                + "&password=zPgqf8o6na6pv8j8AX8r"
+                + "&useSSL=true"
+                + "&allowPublicKeyRetrieval=true");
 
         PreparedStatement stmt = conn.prepareStatement(querySql);
         ResultSet results = stmt.executeQuery()
@@ -256,19 +252,18 @@ public class AdminOrdHistoryScreen {
   private void queryOrderItemsFor(ArrayList<Order> orders) throws SQLException {
 
     String itemQuery = "SELECT oi.order_id, oi.product_id, p.name, p.price, oi.quantity "
-          + "FROM order_item oi "
-          + "JOIN product p ON oi.product_id = p.product_id";
+        + "FROM order_item oi "
+        + "JOIN product p ON oi.product_id = p.product_id";
 
     try (
 
         Connection conn = DriverManager.getConnection(
             "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-            + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-            + "?user=u5urh19mtnnlgmog"
-            + "&password=zPgqf8o6na6pv8j8AX8r"
-            + "&useSSL=true"
-            + "&allowPublicKeyRetrieval=true"
-        );
+                + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+                + "?user=u5urh19mtnnlgmog"
+                + "&password=zPgqf8o6na6pv8j8AX8r"
+                + "&useSSL=true"
+                + "&allowPublicKeyRetrieval=true");
 
         PreparedStatement stmt = conn.prepareStatement(itemQuery);
         ResultSet rs = stmt.executeQuery()
@@ -287,14 +282,15 @@ public class AdminOrdHistoryScreen {
 
           if (order.getOrderId() == orderId) {
 
-            Product product = new Product() {};
+            Product product = new Product() {
+            };
             product.setId(productId);
             product.setName(name);
             product.setPrice(price);
 
             OrderItem orderItem = new OrderItem(product, quantity, price);
 
-            order.getProducts().add(orderItem);
+              order.getProducts().add(orderItem);
 
             break;
 
@@ -306,6 +302,6 @@ public class AdminOrdHistoryScreen {
 
     }
 
-  } 
+  }
 
 }

@@ -66,6 +66,7 @@ public class WelcomeScreen {
     rowOfBurgers.setAlignment(Pos.CENTER);
 
     // Setup side images
+    
     // Image burger3 = new Image(getClass().getResourceAsStream("/burger3.png"));
 
     // Create a button with the burger image as its graphic
@@ -86,12 +87,10 @@ public class WelcomeScreen {
     });
 
     // Add the button to the HBox
-    // rowOfBurgers.getChildren().addAll(burgerView1, burgerView2, burgerButton);
 
     ImageView burgerView1 = new ImageView(burger1);
     var burgerContainer1 = new HBox(burgerView1);
     burgerContainer1.setAlignment(Pos.BASELINE_LEFT);
-    // ImageView burgerView3 = new ImageView(burger3);
     var burgerContainer3 = new HBox(burgerView3);
     burgerContainer3.setAlignment(Pos.BASELINE_RIGHT);
 
