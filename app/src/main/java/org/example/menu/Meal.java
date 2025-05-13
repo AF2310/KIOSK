@@ -43,6 +43,10 @@ public class Meal extends Product {
   public Product getDrink() {
     return drink;
   }
+
+  public Single getMain() {
+    return main;
+  }
     
   /**
    * The method is responsible for retrieving all meals from a database.
