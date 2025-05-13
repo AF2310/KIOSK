@@ -5,9 +5,11 @@ package org.example.menu;
  */
 public abstract class Product {
   private String name;
+  private String description;
   private double price;
   private int id;
   private Type type;
+  private int isActive;
   private String imagePath;
 
   public String getName() {
@@ -16,6 +18,14 @@ public abstract class Product {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public double getPrice() {
@@ -40,6 +50,14 @@ public abstract class Product {
 
   public void setType(Type type) {
     this.type = type;
+  }
+
+  public int getActivity() {
+    return isActive;
+  }
+
+  public void setActivity(int isActive) {
+    this.isActive = isActive;
   }
 
   public String getImagePath() {

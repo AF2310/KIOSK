@@ -34,9 +34,10 @@ public class Order {
 
   }
 
-  public Order() {
-    // Empty constr
-  }
+  /**
+   * Empty constructor.
+   */
+  public Order() {}
 
   /**
    * Will calculate the overall cost of the order

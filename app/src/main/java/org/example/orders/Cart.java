@@ -13,10 +13,11 @@ import org.example.menu.Single;
 
 /**
  * The cart class implemented as a singleton.
+ * That it can be accessed anywhere without
+ * making multiple instances.
  */
 public class Cart {
-  // Changed the cart into a singleton so
-  // that it can be accessed anywhere easier
+  
   private static Cart instance;
   private ArrayList<Product> items;
   private ArrayList<Integer> quantity;
@@ -134,10 +135,12 @@ public class Cart {
       int orderItemid = receiveOrderId(conn);
 
       if (items.get(i) instanceof Single) {
-        System.out.println("Hallo");
+        // System.out.println("DEBUG: items:" + items.get(i));
         List<Ingredient> ingrediets = ((Single) items.get(i)).ingredients;
         List<Integer> quantitys = ((Single) items.get(i)).quantity;
+
         for (int j = 0; j < ingrediets.size(); j++) {
+          // System.out.println("DEBUG: ingrediets:" + ingrediets.get(j));
           String query = "INSERT INTO orderitemingredients "
                 + "(order_item_id, ingredient_id, ingredientCount)"
                 + "VALUES (?, ?, ?)";
@@ -145,7 +148,8 @@ public class Cart {
           PreparedStatement ps2 = conn.prepareStatement(query);
           ps2.setInt(1, orderItemid);
           ps2.setInt(2, ingrediets.get(j).getId());
-          ps2.setInt(3, quantitys.get(j));
+          ps2.setInt(3, quantitys.get(j));     // TODO: error index out of bounds
+          // Error cause if 2 same burgers with different ingredients
             
           ps2.executeUpdate();
         }

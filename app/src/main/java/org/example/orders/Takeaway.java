@@ -2,10 +2,6 @@ package org.example.orders;
 
 import java.sql.Timestamp;
 
-// import java.util.ArrayList;
-// import org.example.menu.Meal;
-// import org.example.menu.Single;
-
 /**
  * Will handle Takeaway orders.
  */
