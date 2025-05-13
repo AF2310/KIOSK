@@ -3,6 +3,8 @@ package org.example.screens;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +34,7 @@ import org.example.buttons.LangBtn;
 import org.example.buttons.SqrBtnImgOnly;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Imenu;
+import org.example.menu.Meal;
 import org.example.menu.Menu;
 import org.example.menu.Product;
 import org.example.menu.Single;
@@ -45,7 +48,8 @@ public class MainMenuScreen {
 
   private Stage primaryStage;
 
-  private String[] categories = { "Burgers", "Sides", "Drinks", "Desserts", "Special Offers" };
+  private String[] categories = {"Burgers", "Sides", "Drinks",
+    "Desserts", "Meals", "Special Offers"};
   private Map<String, List<Product>> categoryItems = new HashMap<>();
   private int currentCategoryIndex = 0;
   private GridPane itemGrid = new GridPane();
@@ -78,12 +82,12 @@ public class MainMenuScreen {
     this.mode = mode;
 
     Connection conn = DriverManager.getConnection(
-        "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-            + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-            + "?user=u5urh19mtnnlgmog"
-            + "&password=zPgqf8o6na6pv8j8AX8r"
-            + "&useSSL=true"
-            + "&allowPublicKeyRetrieval=true");
+          "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+          + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+          + "?user=u5urh19mtnnlgmog"
+          + "&password=zPgqf8o6na6pv8j8AX8r"
+          + "&useSSL=true"
+          + "&allowPublicKeyRetrieval=true");
     this.conn = conn;
 
     ImageView modeIcon = new ImageView();
@@ -322,6 +326,9 @@ public class MainMenuScreen {
     categoryItems.put("Drinks", convert(conn, menu.getDrinks()));
     categoryItems.put("Desserts", convert(conn, menu.getDesserts()));
     categoryItems.put("Special Offers", List.of());
+    categoryItems.put("Meals", null);
+
+  
   }
 
   /**
@@ -338,7 +345,42 @@ public class MainMenuScreen {
     // Fetch data
     String category = categories[currentCategoryIndex];
     List<Product> items = categoryItems.get(category);
+    if ("Meals".equals(category)) {
+      System.out.println("Loading Meals category");
 
+      items = new ArrayList<>();
+      try {
+        String sql = """
+            SELECT meal_id, name, description, price, image_url
+            FROM meal
+            """;
+
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        boolean found = false;
+
+        while (rs.next()) {
+          found = true;
+          Meal meal = new Meal(rs.getString("name"), conn);
+          meal.setId(rs.getInt("meal_id"));
+          meal.setName(rs.getString("name"));
+          meal.setPrice(rs.getFloat("price"));
+          meal.setImagePath(rs.getString("image_url"));
+          System.out.println("Meal image path: " + meal.getImagePath());
+          meal.setType(Type.MEAL);
+
+          items.add(meal);
+        }
+
+        if (!found) {
+          System.out.println("No meals returned");
+        }
+        rs.close();
+        ps.close();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
     // Max item slots in rows and pages
     int maxItemsPerRow = 3;
     int totalItemsPerPage = 6;
@@ -414,12 +456,23 @@ public class MainMenuScreen {
         // Get item details when clicking on item
         imageSlot.setOnMouseClicked(e -> {
           try {
-            Scene detailScene = detailScreen.create(
-                this.primaryStage,
-                this.primaryStage.getScene(),
-                (Single) item,
-                cart);
-            this.primaryStage.setScene(detailScene);
+            if (item instanceof Meal) {
+              Meal meal = (Meal) item;
+              MealCustomizationScreen mealScreen = new MealCustomizationScreen();
+              Scene sideScene = mealScreen.createSideSelectionScene(
+                  this.primaryStage,
+                  this.primaryStage.getScene(),
+                  meal);
+              this.primaryStage.setScene(sideScene);
+            } else if (item instanceof Single) {
+              Scene detailScene = detailScreen.create(
+                  this.primaryStage,
+                  this.primaryStage.getScene(),
+                  (Single) item,
+                  cart
+              );
+              this.primaryStage.setScene(detailScene);
+            }
           } catch (SQLException ex) {
             ex.printStackTrace();
           }
@@ -502,4 +555,5 @@ public class MainMenuScreen {
       styleCategoryButton(categoryButtons.get(i), i == currentCategoryIndex, i);
     }
   }
+
 }

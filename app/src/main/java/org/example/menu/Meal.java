@@ -13,133 +13,35 @@ import java.util.List;
  *  calculate total price, and retrieve contents.
  */
 public class Meal extends Product {
-  private List<Single> contents;
+  private Single main;
+  private Product side;
+  private Product drink;
+  private Connection connection;
 
   /**
    * Constructs a meal with a given name.
    *
    * @param name the name of the meal
    */
-  public Meal(String name) {
+  public Meal(String name, Connection conn) {
     setName(name);
-    this.contents = new ArrayList<>();
+    this.connection = conn;
   }
 
-  /**
-   * Adds an item to the meal.
-   *
-   * @param item the item to add
-   */
-  public void addItem(Single item) {
-    contents.add(item);
+  public void setSide(Product side) {
+    this.side = side;
   }
 
-  /**
-   * Returns the list of items in the meal.
-   *
-   * @return list of items
-   */
-  public List<Single> getContents() {
-    return contents;
+  public Product getSide() {
+    return side;
   }
 
-  /**
-   * Calculates total price of all items in the meal.
-   *
-   * @return total price
-   */
-  public float getTotalPrice() {
-    float total = 0;
-    for (Single item : contents) {
-      total += item.recalc();
-    }
-    return total;
+  public void setDrink(Product drink) {
+    this.drink = drink;
   }
 
-  /**
-   * Adds a main dish to the meal if the item type is main.
-   *
-   * @param main the main dish to add
-   */
-  public void chooseMain(Single main) {
-    if (main != null && main.getType().name().equalsIgnoreCase("main")) {
-      contents.add(main);
-    } else {
-      System.out.println("Invalid main dish item.");
-    }
-    
-  }
-
-  /**
-   * Adds a side dish to the meal if the item type is side.
-   *
-   * @param side the side dish to add
-   */
-  public void chooseSide(Single side) {
-    if (side != null && side.getType().name().equalsIgnoreCase("side")) {
-      contents.add(side);
-    } else {
-      System.out.println("Invalid side item.");
-    }
-    
-  }
-
-  /**
-   * Adds a drink to the meal if the item type is drink.
-   *
-   * @param drink the drink item to add
-   */
-  public void chooseDrink(Single drink) {
-    if (drink != null && drink.getType().name().equalsIgnoreCase("drink")) {
-      contents.add(drink);
-    } else {
-      System.out.println("Invalid drink item.");
-    }
-  }
-
-  /**
-   * Adds a dessert to the meal if the item type is dessert.
-   *
-   * @param dessert the dessert item to add
-   */
-  public void chooseDessert(Single dessert) {
-    if (dessert != null && dessert.getType().name().equalsIgnoreCase("Dessert")) {
-      contents.add(dessert);
-    } else {
-      System.out.println("Invalid drink item.");
-    }
-  }
-
-  /**
-   * Adds an extra item to the meal if the item type is extra.
-   *
-   * @param extra the extra item to add
-   */
-  public void addExtra(Single extra) {
-    if (extra != null && extra.getType().name().equalsIgnoreCase("extra")) {
-      contents.add(extra);
-    } else {
-      System.out.println("Invalid side item.");
-    }
-  }
-
-
-  /**
-   * The  method  is responsible for saving the meal data to a database.
-   */
-  public void saveToDb(Connection conn) throws SQLException {
-    String sql = "INSERT INTO meals (name, total_price) VALUES (?, ?)";
-
-    PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-    pstmt.setString(1, getName());
-    pstmt.setFloat(2, getTotalPrice());
-    pstmt.executeUpdate();
-
-    try (ResultSet rs = pstmt.getGeneratedKeys()) {
-      if (rs.next()) {
-        setId(rs.getInt(1));
-      }
-    }
+  public Product getDrink() {
+    return drink;
   }
     
   /**
@@ -155,7 +57,7 @@ public class Meal extends Product {
     ResultSet rs = stmt.executeQuery(sql);
 
     while (rs.next()) {
-      Meal meal = new Meal(rs.getString("name"));
+      Meal meal = new Meal(rs.getString("name"), connection);
       meal.setId(rs.getInt("id"));
       list.add(meal);
     }
@@ -168,13 +70,42 @@ public class Meal extends Product {
   }
 
   /**
-   * Adds a selected item to the meal based on its' type.
+   * Method to set the main of the Meal.
    *
-   * @param type type of the item
-   * @param selected selected item to add
+   * @param conn the connection
+   * @throws SQLException if database fails
    */
-  public void addItemFromOptions(String type, Single selected) {
-    contents.add(selected);
+  public void setMain(Connection conn) throws SQLException {
+    String sql = "SELECT product_id FROM meal WHERE meal_id = ?";
+    PreparedStatement ps = conn.prepareStatement(sql);
+    ps.setInt(1, getId());
+    ResultSet rs = ps.executeQuery();
+    int productId = 0;
+    while (rs.next()) {
+      productId = rs.getInt("product_id");
+    }
+    ps.close();
+    rs.close();
+
+    String sql2 = "SELECT name, price, image_url FROM product WHERE product_id = ?";
+
+    PreparedStatement stmt = conn.prepareStatement(sql2);
+    stmt.setInt(1, productId);
+    ResultSet rs2 = stmt.executeQuery();
+
+    while (rs2.next()) {
+      this.main = new Single(
+          productId,
+          rs2.getString("name"),
+          rs2.getFloat("price"),
+          Type.valueOf("MEAL"),
+          rs2.getString("image_url")
+      );
+    }
+    rs2.close();
+    stmt.close();
+    main.setIngredients(conn);
+    System.out.println(this.main);
   }
 
   /**
@@ -193,7 +124,7 @@ public class Meal extends Product {
     ps.setFloat(1, priceLimit);
     ResultSet rs = ps.executeQuery();
     while (rs.next()) {
-      Meal m = new Meal(rs.getString("name"));
+      Meal m = new Meal(rs.getString("name"), connection);
       m.setId(rs.getInt("id"));
       list.add(m);
     }
@@ -230,7 +161,7 @@ public class Meal extends Product {
 
     // Iterate over result set and construct Meal objects from each row
     while (rs.next()) {
-      Meal m = new Meal(rs.getString("name"));
+      Meal m = new Meal(rs.getString("name"), connection);
       m.setId(rs.getInt("id"));
       list.add(m);
     }
@@ -239,20 +170,5 @@ public class Meal extends Product {
     ps.close();
     rs.close();
     return list;
-  }
-
-  
-  /**
-   * Prints a summary of the meal including the item's name, type, price,
-   * and total price.
-   */
-  public void printSummary() {
-    System.out.println("Meal: " + getName());
-
-    for (Single s : contents) {
-      System.out.printf(" - %s (%s): $%.2f\n", s.getName(), s.getType(), s.getPrice());
-    }
-    System.out.printf("Total: $%.2f\n", getTotalPrice());
-
   }
 }
