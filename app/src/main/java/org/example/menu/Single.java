@@ -16,6 +16,7 @@ public class Single extends Product {
   public List<Ingredient> ingredients;
   public List<Integer> quantity;
   private boolean modified;
+  private boolean inMeal;
 
   /**
    * This constructor is used to create instances of the Single class with the specified name,
@@ -374,6 +375,30 @@ public class Single extends Product {
       return true;
     } else {
       return false;
+    }
+  }
+
+  /**
+   * Method that checks if the product is in a meal.
+   *
+   * @param conn the connection to the databse
+   * @return if the product is in the meal
+   * @throws SQLException if databse error
+   */
+  public boolean isInMeal(Connection conn) throws SQLException {
+    String sql = "SELECT meal_id FROM meal WHERE product_id = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, getId());
+
+      try (ResultSet rs = stmt.executeQuery()) {
+        if (rs.next()) {
+          this.inMeal = true;
+          return this.inMeal;
+        } else {
+          this.inMeal = false;
+          return this.inMeal;
+        }
+      }
     }
   }
 

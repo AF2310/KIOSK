@@ -15,12 +15,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.boxes.AddRemoveBlock;
 import org.example.buttons.ArrowButton;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButtonWithImage;
+import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.SquareButtonWithImg;
 import org.example.menu.Ingredient;
 import org.example.menu.Single;
@@ -222,13 +224,28 @@ public class ItemDetails {
         "rgb(81, 173, 86)");
     
     addToCartButton.setOnAction(e -> {
-      // Making a new product with the modified ingredients.
-      Single newProduct = new Single(item.getId(), item.getName(), item.getPrice(),
-          item.getType(), item.getImagePath(), item.ingredients);
-      newProduct.setModefied(true);
-      save(blocks, quantities, newProduct, item.quantity);
-      cart.addProduct(newProduct);
-      primaryStage.setScene(prevScene);
+      try {
+        if (item.isInMeal(DriverManager.getConnection(
+            "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+            + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+            + "?user=u5urh19mtnnlgmog"
+            + "&password=zPgqf8o6na6pv8j8AX8r"
+            + "&useSSL=true"
+            + "&allowPublicKeyRetrieval=true"))) {
+          primaryStage.setScene(createMealUpsell(primaryStage, prevScene, item,
+              blocks, quantities));
+        } else {
+          // Making a new product with the modified ingredients.
+          Single newProduct = new Single(item.getId(), item.getName(), item.getPrice(),
+              item.getType(), item.getImagePath(), item.ingredients);
+          newProduct.setModefied(true);
+          save(blocks, quantities, newProduct, item.quantity);
+          cart.addProduct(newProduct);
+          primaryStage.setScene(prevScene);
+        }
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
     });
 
     // Box for add to cart and back
@@ -287,5 +304,45 @@ public class ItemDetails {
     String s = "INSERT INTO order_item "
         + "(order_item_id, order_id, order_date, amount_total, status)"
         + "VALUES (123, 1, NOW(), ?, 'pending')"; */
+  }
+
+  /**
+   * The Meal upsell scene.
+   *
+   * @param primaryStage the stage
+   * @param item the item
+   * @return the scene
+   */
+  public Scene createMealUpsell(Stage primaryStage, Scene mainMenu, Single item,
+      List<AddRemoveBlock> blocks, List<Integer> quantities) {
+    Label mainText = new Label("Do you want to make it a meal?");
+    mainText.setStyle(
+        "-fx-font-size: 65px;"
+        + "-fx-font-weight: bold;"
+    );
+
+    MidButtonWithImage yesButton = new MidButtonWithImage("Yes", "/green_tick.png", "rgb(0, 0, 0)");
+    MidButtonWithImage noButton = new MidButtonWithImage("No", "/cancel.png", "rgb(255, 255, 255)");
+
+    HBox buttonBox = new HBox(20);
+    buttonBox.setPadding(new Insets(50));
+    buttonBox.setAlignment(Pos.CENTER);
+    buttonBox.getChildren().addAll(yesButton, noButton);
+
+    noButton.setOnMouseClicked(e -> {
+      // Making a new product with the modified ingredients.
+      Single newProduct = new Single(item.getId(), item.getName(), item.getPrice(),
+          item.getType(), item.getImagePath(), item.ingredients);
+      newProduct.setModefied(true);
+      save(blocks, quantities, newProduct, item.quantity);
+      Cart.getInstance().addProduct(newProduct);
+      primaryStage.setScene(mainMenu);
+    });
+
+    VBox layout = new VBox();
+    layout.setAlignment(Pos.CENTER);
+    layout.getChildren().addAll(mainText, buttonBox);
+
+    return new Scene(layout, 1920, 1080);
   }
 }
