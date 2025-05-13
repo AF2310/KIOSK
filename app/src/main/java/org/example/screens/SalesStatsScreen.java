@@ -12,12 +12,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -50,7 +53,7 @@ public class SalesStatsScreen {
    */
   public Scene showStatsScene(Stage primaryStage, Scene prevScene) {
 
-    
+    // VBox for the charts
     VBox topRight = new VBox();
     topRight.setPadding(new Insets(10));
     topRight.setPrefWidth(1280);
@@ -64,10 +67,12 @@ public class SalesStatsScreen {
         + "-fx-font-weight: bold;"
     );
 
+    // Had to somehow make List final, so a wrapper class is being used
     final OrderListWrapper wrapper = new OrderListWrapper();
 
     try {
 
+      // Populates the list wrapper
       wrapper.orders = queryOrders();
       queryOrderItemsFor(wrapper.orders);
 
@@ -77,9 +82,11 @@ public class SalesStatsScreen {
 
     }
     
+    // Button for Product vs Quantity ordered - BarChart
     MidButton productSalesBtn = new MidButton("Sold Products", "rgb(255, 255, 255)", 30);
     productSalesBtn.setOnAction(e -> {
 
+      // Clears out the right side VBox for the new chart
       topRight.getChildren().clear();
       Map<String, Integer> salesData = countProductSales(wrapper.orders);
       BarChart<String, Number> chart = createProductSales(salesData);
@@ -87,9 +94,11 @@ public class SalesStatsScreen {
 
     });
 
+    // Button for Orders vs Weekdays -- BarChart
     MidButton ordersPerDayBtn = new MidButton("Orders per Day", "rgb(255, 255, 255)", 30);
     ordersPerDayBtn.setOnAction(e -> {
 
+      // Clears out the right side VBox for the new chart
       topRight.getChildren().clear();
       Map<DayOfWeek, Integer> weekdayCounts = countOrdersPerWeekday(wrapper.orders);
       BarChart<String, Number> chart = createOrdersPerWeekday(weekdayCounts);
@@ -97,19 +106,47 @@ public class SalesStatsScreen {
 
     });
 
+    // Button for Orders vs Hours -- Graph/LineChart
+    MidButton ordersByHourBtn = new MidButton("Orders by Hour", "rgb(255, 255, 255)", 30);
+    ordersByHourBtn.setOnAction(e -> {
+
+      // Clears out the right side VBox for the new chart
+      topRight.getChildren().clear();
+      Map<Double, Integer> hourCounts = countOrdersByHour(wrapper.orders);
+      LineChart<Number, Number> chart = createOrdersByHour(hourCounts);
+      topRight.getChildren().add(chart);
+
+    });
+
+    // Button for Revenue Share of Products -- PieChart
+    MidButton productRevenuesBtn = new MidButton("Revenue by Products", "rgb(255, 255, 255)", 30);
+    productRevenuesBtn.setOnAction(e -> {
+
+      // Clears out the right side VBox for the new chart
+      topRight.getChildren().clear();
+      Map<String, Double> revenueData = calculateProductRevenue(wrapper.orders);
+      PieChart pieChart = createProductRevenue(revenueData);
+      topRight.getChildren().add(pieChart);
+
+    });
+
+    // VBox for the Buttons
     VBox topLeft = new VBox();
+    topLeft.getChildren().addAll(
+        pageLabel, productSalesBtn, ordersPerDayBtn, ordersByHourBtn, productRevenuesBtn);
     topLeft.setPadding(new Insets(10));
     topLeft.setSpacing(25);
     topLeft.setPrefWidth(640);
     topLeft.setAlignment(Pos.TOP_LEFT);
     HBox.setHgrow(topLeft, Priority.NEVER);
-    topLeft.getChildren().addAll(pageLabel, productSalesBtn, ordersPerDayBtn);
 
+    // Wrapping the two top side VBoxes
+    // Fixed size
     HBox topContainer = new HBox();
+    topContainer.getChildren().addAll(topLeft, topRight);
     topContainer.setPrefHeight(695);
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
-    topContainer.getChildren().addAll(topLeft, topRight);
 
     // Back button
     // Clicking button means user goes to previous screen
@@ -125,7 +162,7 @@ public class SalesStatsScreen {
     HBox.setHgrow(spacerBottom, Priority.ALWAYS);
 
     // Language Button
-    // cycles images on click
+    // Functionality below VBox Layout
     var langButton = new LangBtn();
     
     // Bottom row of the screen
@@ -252,6 +289,7 @@ public class SalesStatsScreen {
 
   }
   
+  // Data collection for the Products vs Quantity ordered chart
   private Map<String, Integer> countProductSales(ArrayList<Order> orders) {
 
     Map<String, Integer> productSales = new HashMap<>();
@@ -273,11 +311,14 @@ public class SalesStatsScreen {
 
   }
 
+  // Rendering the Products vs Quantity ordered chart
   private BarChart<String, Number> createProductSales(Map<String, Integer> productSales) {
 
+    // Parameter is named xxAxis because of checkstyle naming conventions
     CategoryAxis xxAxis = new CategoryAxis();
     xxAxis.setLabel("Product");
     
+    //Parameter is named yyAxis because of checkstyle naming conventions
     NumberAxis yyAxis = new NumberAxis();
     yyAxis.setLabel("Quantity Sold");
 
@@ -302,6 +343,7 @@ public class SalesStatsScreen {
     return barChart;
   }
 
+  // Data collection for Orders vs Weekdays chart
   private Map<DayOfWeek, Integer> countOrdersPerWeekday(ArrayList<Order> orders) {
 
     Map<DayOfWeek, Integer> weekdayCounts = new LinkedHashMap<>();
@@ -318,11 +360,14 @@ public class SalesStatsScreen {
 
   }
 
+  // Rendering Orders vs Weekdays chart
   private BarChart<String, Number> createOrdersPerWeekday(Map<DayOfWeek, Integer> weekdayCounts) {
 
+    // Parameter is named xxAxis because of checkstyle naming conventions
     CategoryAxis xxAxis = new CategoryAxis();
     xxAxis.setLabel("Weekday");
-
+    
+    //Parameter is named yyAxis because of checkstyle naming conventions
     NumberAxis yyAxis = new NumberAxis();
     yyAxis.setLabel("Number of Orders");
 
@@ -343,6 +388,104 @@ public class SalesStatsScreen {
     barChart.getData().add(series);
 
     return barChart;
+
+  }
+
+  // Data collection for Orders by Hours graph
+  private Map<Double, Integer> countOrdersByHour(ArrayList<Order> orders) {
+
+    Map<Double, Integer> hourCounts = new TreeMap<>();
+
+    for (Order order : orders) {
+
+      LocalDateTime dateTime = order.getOrderDate().toLocalDateTime();
+
+      double hour = dateTime.getHour()
+          + (dateTime.getMinute() / 60.0) + (dateTime.getSecond() / 3600.0);
+
+      double roundedHour = Math.round(hour * 4) / 4.0;
+
+      hourCounts.put(roundedHour, hourCounts.getOrDefault(roundedHour, 0) + 1);
+
+    }
+
+    return hourCounts;
+
+  }
+
+  // Rendering Orders by Hours graph
+  private LineChart<Number, Number> createOrdersByHour(Map<Double, Integer> hourCount) {
+
+    // Parameter is named xxAxis because of checkstyle naming conventions
+    NumberAxis xxAxis = new NumberAxis(0, 24, 0.25);
+    xxAxis.setLabel("Hour of Day");
+
+    //Parameter is named yyAxis because of checkstyle naming conventions
+    NumberAxis yyAxis = new NumberAxis();
+    yyAxis.setLabel("Numbers of Orders");
+
+    LineChart<Number, Number> lineChart = new LineChart<>(xxAxis, yyAxis);
+    lineChart.setTitle("Orders by Hour");
+
+    // Without this line, very order would create a dot on the graph
+    lineChart.setCreateSymbols(false);
+
+    XYChart.Series<Number, Number> series = new XYChart.Series<>();
+    series.setName("Volume of Orders");
+
+    hourCount.entrySet().stream()
+        .sorted(Map.Entry.comparingByKey())
+        .forEach(entry -> {
+          double hour = entry.getKey();
+          int count = entry.getValue();
+          series.getData().add(new XYChart.Data<>(hour, count));
+
+        });
+
+    lineChart.getData().add(series);
+
+    return lineChart;
+
+  }
+
+  // Data collection for revenue share of products chart
+  private Map<String, Double> calculateProductRevenue(ArrayList<Order> orders) {
+
+    Map<String, Double> revenueMap = new HashMap<>();
+
+    for (Order order : orders) {
+
+      for (OrderItem item : order.getProducts()) {
+
+        String productName = item.getProduct().getName();
+        double revenue = item.getQuantity() * item.getUnitPrice();
+        revenueMap.put(productName, revenueMap.getOrDefault(productName, 0.0) + revenue);
+
+      }
+
+    }
+
+    return revenueMap;
+
+  }
+
+  // Rendering revenue share of products chart
+  private PieChart createProductRevenue(Map<String, Double> revenueMap) {
+
+    PieChart pieChart = new PieChart();
+    pieChart.setTitle("Product Revenue Share");
+
+    for (Map.Entry<String, Double> entry : revenueMap.entrySet()) {
+
+      if (entry.getValue() > 0) {
+
+        pieChart.getData().add(new PieChart.Data(entry.getKey(), entry.getValue()));
+
+      }
+
+    }
+
+    return pieChart;
 
   }
 
