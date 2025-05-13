@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.example.menu.Ingredient;
+import org.example.menu.Meal;
 import org.example.menu.Product;
 import org.example.menu.Single;
 
@@ -223,5 +224,25 @@ public class Cart {
     }
 
     return id;
+  }
+
+  /**
+   * Converting meals into singles for storing them in the database.
+   */
+  public void convertMealsIntoSingles() {
+    for (int i = 0; i < items.size(); i++) {
+      if (items.get(i) instanceof Meal) {
+        Meal item = (Meal) items.get(i);
+        int quant = quantity.get(i);
+        items.remove(i);
+        quantity.remove(i);
+        items.add(item.getMain());
+        quantity.add(quant);
+        items.add(item.getSide());
+        quantity.add(quant);
+        items.add(item.getDrink());
+        quantity.add(quant);
+      }
+    }
   }
 }

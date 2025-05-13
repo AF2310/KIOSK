@@ -27,6 +27,7 @@ import org.example.buttons.MidButton;
 import org.example.buttons.RectangleTextFieldWithLabel;
 import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.TickBoxWithLabel;
+import org.example.kiosk.LanguageSetting;
 import org.example.sql.SqlConnectionCheck;
 
 /**
@@ -34,6 +35,7 @@ import org.example.sql.SqlConnectionCheck;
  */
 public class UpdateMenuItems {
   private Stage primaryStage;
+  private LanguageSetting languageSetting = new LanguageSetting();
   /**
    * Scene for adding/removing items on the menu.
    *
@@ -369,29 +371,20 @@ public class UpdateMenuItems {
     // Create language button
     var langButton = new LangBtn();
 
-    // Pass in the Labeled components to translate
-    langButton.addAction(event -> {
-      langButton.updateLanguage(List.of(
-          menuLabel,
-          productName.getLabel(),
-          productDescription.getLabel(),
-          productPrice.getLabel(),
-          productCategoryDropBox.getLabel(),
-          productIsActive.getLabel(),
-          productIsLimited.getLabel(),
-          ingredientListLabel,
-          confirmButton.getButtonLabel(),
-          backButton.getButtonLabel()
-          // TODO: Translate the alert
-      ));
-    });
-
     // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
     StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
 
     //put everything into a stackpane
     StackPane layoutWithLangButton = new StackPane(layout, langButton);
+
+    // Translate all the text
+    langButton.addAction(event -> {
+      // Toggle the language in LanguageSetting
+      languageSetting.changeLanguage(
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
+      languageSetting.updateAllLabels(layoutWithLangButton);
+    });
 
     Scene addProductScene = new Scene(layoutWithLangButton, 1920, 1080);
     return addProductScene;

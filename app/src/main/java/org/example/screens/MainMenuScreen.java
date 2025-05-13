@@ -3,6 +3,8 @@ package org.example.screens;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +32,9 @@ import org.example.buttons.ArrowButton;
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SqrBtnImgOnly;
+import org.example.kiosk.LanguageSetting;
 import org.example.menu.Imenu;
+import org.example.menu.Meal;
 import org.example.menu.Menu;
 import org.example.menu.Product;
 import org.example.menu.Single;
@@ -44,7 +48,8 @@ public class MainMenuScreen {
 
   private Stage primaryStage;
 
-  private String[] categories = {"Burgers", "Sides", "Drinks", "Desserts", "Special Offers"};
+  private String[] categories = {"Burgers", "Sides", "Drinks",
+    "Desserts", "Meals", "Special Offers"};
   private Map<String, List<Product>> categoryItems = new HashMap<>();
   private int currentCategoryIndex = 0;
   private GridPane itemGrid = new GridPane();
@@ -53,12 +58,14 @@ public class MainMenuScreen {
   private String mode;
   private Connection conn;
 
+  private LanguageSetting languageSetting = new LanguageSetting();
+
   /**
    * Creates the main menu scene.
    *
-   * @param primaryStage the stage
-   * @param windowWidth the width of the window
-   * @param windowHeight the height of the window
+   * @param primaryStage    the stage
+   * @param windowWidth     the width of the window
+   * @param windowHeight    the height of the window
    * @param welcomeScrScene the scene to return to on cancel
    * @return the created scene
    * @throws SQLException error server quick fix
@@ -75,12 +82,12 @@ public class MainMenuScreen {
     this.mode = mode;
 
     Connection conn = DriverManager.getConnection(
-        "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-        + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-        + "?user=u5urh19mtnnlgmog"
-        + "&password=zPgqf8o6na6pv8j8AX8r"
-        + "&useSSL=true"
-        + "&allowPublicKeyRetrieval=true");
+          "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+          + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+          + "?user=u5urh19mtnnlgmog"
+          + "&password=zPgqf8o6na6pv8j8AX8r"
+          + "&useSSL=true"
+          + "&allowPublicKeyRetrieval=true");
     this.conn = conn;
 
     ImageView modeIcon = new ImageView();
@@ -121,7 +128,7 @@ public class MainMenuScreen {
 
       // Making a button for each category
       Button btn = new Button(cat);
-      
+
       // Special offers needs special handling for asthetics of button
       if (cat.equalsIgnoreCase("Special Offers")) {
         // 2-lined text needs centering
@@ -134,8 +141,7 @@ public class MainMenuScreen {
         // Transparent to make circle behind button visible instead
         btn.setStyle(
             "-fx-background-color: transparent;"
-            + "-fx-padding: 0px;"
-        );
+                + "-fx-padding: 0px;");
 
         // Make circle with noticible color
         Circle specialsCircle = new Circle(100);
@@ -149,12 +155,12 @@ public class MainMenuScreen {
 
         categoryBar.getChildren().add(specialsStack);
 
-      // Any other category that is not special offers
+        // Any other category that is not special offers
       } else {
 
         categoryBar.getChildren().add(btn);
       }
-      
+
       // Button asthetics -> Label highlighting
       styleCategoryButton(btn, i == currentCategoryIndex, i);
 
@@ -167,10 +173,10 @@ public class MainMenuScreen {
       });
 
       // Add final button to horizontal category bar
-      //categoryBar.getChildren().add(btn);
+      // categoryBar.getChildren().add(btn);
       categoryButtons.add(btn);
     }
-    
+
     // Adding it all together
     top.getChildren().add(categoryBar);
 
@@ -220,7 +226,8 @@ public class MainMenuScreen {
     VBox rightArrowVcentered = new VBox(rightArrowButton);
     rightArrowVcentered.setAlignment(Pos.CENTER);
 
-    // Add all Menu items and left right buttons in center of menu in the right order
+    // Add all Menu items and left right buttons in center of menu in the right
+    // order
     // Locking arrows left and right and locking menu items in middle
     BorderPane centerMenuLayout = new BorderPane();
     centerMenuLayout.setLeft(leftArrowVcentered);
@@ -243,7 +250,7 @@ public class MainMenuScreen {
     var cancelButton = new CancelButtonWithText();
 
     cancelButton.setOnAction(e -> {
-      Cart.getInstance().clearCart();    
+      Cart.getInstance().clearCart();
       System.out.println("Order canceled!");
       primaryStage.setScene(welcomeScrScene);
     });
@@ -264,8 +271,7 @@ public class MainMenuScreen {
           welcomeScrScene,
           this.mode,
           cart,
-          conn
-        );
+          conn);
       this.primaryStage.setScene(checkoutScene);
     });
 
@@ -274,19 +280,20 @@ public class MainMenuScreen {
 
     // Just pass in the Labeled components to translate
     langButton.addAction(event -> {
-      langButton.updateLanguage(List.of(
-          cancelButton.getButtonLabel()
-      ));
+      // Toggle the language in LanguageSetting
+      languageSetting.changeLanguage(
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en"
+      );
+      languageSetting.updateAllLabels(layout);
     });
 
     // Added all components for the bottom part
     bottomButtons.getChildren().addAll(langButton, spacer, cartButton, cancelButton);
     layout.setBottom(new VBox(bottomButtons));
-  
+
     // Add layout to Stack Pane for dynamic sizing
     StackPane mainPane = new StackPane(layout);
     mainPane.setPrefSize(windowWidth, windowHeight);
-
 
     // Create final scene result
     return new Scene(mainPane, windowWidth, windowHeight);
@@ -301,7 +308,7 @@ public class MainMenuScreen {
       double price = item.getPrice();
       Type type = item.getType();
       String imagePath = item.getImagePath();
-      
+
       result.add(new Single(id, name, price, type, imagePath));
     }
     return result;
@@ -319,6 +326,9 @@ public class MainMenuScreen {
     categoryItems.put("Drinks", convert(conn, menu.getDrinks()));
     categoryItems.put("Desserts", convert(conn, menu.getDesserts()));
     categoryItems.put("Special Offers", List.of());
+    categoryItems.put("Meals", null);
+
+  
   }
 
   /**
@@ -335,7 +345,42 @@ public class MainMenuScreen {
     // Fetch data
     String category = categories[currentCategoryIndex];
     List<Product> items = categoryItems.get(category);
+    if ("Meals".equals(category)) {
+      System.out.println("Loading Meals category");
 
+      items = new ArrayList<>();
+      try {
+        String sql = """
+            SELECT meal_id, name, description, price, image_url
+            FROM meal
+            """;
+
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        boolean found = false;
+
+        while (rs.next()) {
+          found = true;
+          Meal meal = new Meal(rs.getString("name"), conn);
+          meal.setId(rs.getInt("meal_id"));
+          meal.setName(rs.getString("name"));
+          meal.setPrice(rs.getFloat("price"));
+          meal.setImagePath(rs.getString("image_url"));
+          System.out.println("Meal image path: " + meal.getImagePath());
+          meal.setType(Type.MEAL);
+
+          items.add(meal);
+        }
+
+        if (!found) {
+          System.out.println("No meals returned");
+        }
+        rs.close();
+        ps.close();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
     // Max item slots in rows and pages
     int maxItemsPerRow = 3;
     int totalItemsPerPage = 6;
@@ -375,18 +420,17 @@ public class MainMenuScreen {
           // This prevents fetching some empty image from the database.
           Image emptyImage = new Image(
               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABC"
-              + "AQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/hd5JnkAAAAASUVORK5CYII="
-            );
+                  + "AQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/hd5JnkAAAAASUVORK5CYII=");
 
-          // Add empty generated image to View 
+          // Add empty generated image to View
           imageView = new ImageView(emptyImage);
 
-        // Image found (input stream not empty)
+          // Image found (input stream not empty)
         } else {
           // Add image to View
           imageView = new ImageView(new Image(inputStream));
         }
-    
+
         // Adjust image size but not make it blurry
         imageView.setFitHeight(150);
         imageView.setPreserveRatio(true);
@@ -412,13 +456,23 @@ public class MainMenuScreen {
         // Get item details when clicking on item
         imageSlot.setOnMouseClicked(e -> {
           try {
-            Scene detailScene = detailScreen.create(
-                this.primaryStage,
-                this.primaryStage.getScene(),
-                (Single) item,
-                cart
+            if (item instanceof Meal) {
+              Meal meal = (Meal) item;
+              MealCustomizationScreen mealScreen = new MealCustomizationScreen();
+              Scene sideScene = mealScreen.createSideSelectionScene(
+                  this.primaryStage,
+                  this.primaryStage.getScene(),
+                  meal);
+              this.primaryStage.setScene(sideScene);
+            } else if (item instanceof Single) {
+              Scene detailScene = detailScreen.create(
+                  this.primaryStage,
+                  this.primaryStage.getScene(),
+                  (Single) item,
+                  cart
               );
-            this.primaryStage.setScene(detailScene);
+              this.primaryStage.setScene(detailScene);
+            }
           } catch (SQLException ex) {
             ex.printStackTrace();
           }
@@ -427,8 +481,8 @@ public class MainMenuScreen {
         // Connect it all and add to item grid
         itemBox.getChildren().addAll(imageSlot, name, priceBox);
 
-      // No more items exist -> Item list empty
-      // Fill the rest up with empty slots until we reach 6 slots per page
+        // No more items exist -> Item list empty
+        // Fill the rest up with empty slots until we reach 6 slots per page
       } else {
         itemBox.getChildren().addAll(imageSlot, new Label(""));
       }
@@ -442,7 +496,7 @@ public class MainMenuScreen {
   /**
    * helper method for dynamic category button highlighting.
    *
-   * @param button any given (category) button
+   * @param button  any given (category) button
    * @param current to check if currently selected
    */
   private void styleCategoryButton(Button button, boolean current, int currentIndex) {
@@ -455,22 +509,20 @@ public class MainMenuScreen {
         button.setText("Special\nOffers");
         button.setStyle(
             "-fx-background-color: transparent;"
-            + "-fx-font-size: 42px;"
-            + "-fx-text-fill: rgb(153, 36, 36);"
-            + "-fx-font-weight: bold;"
-        );
+                + "-fx-font-size: 42px;"
+                + "-fx-text-fill: rgb(153, 36, 36);"
+                + "-fx-font-weight: bold;");
 
-      // Any other category except specials
+        // Any other category except specials
       } else {
         button.setStyle(
             "-fx-background-color: transparent;"
-            + "-fx-font-size: 50px;"
-            + "-fx-text-fill: black;"
-            + "-fx-font-weight: bold;"
-        );
+                + "-fx-font-size: 50px;"
+                + "-fx-text-fill: black;"
+                + "-fx-font-weight: bold;");
       }
-  
-    // Other categories the user isn't currently in
+
+      // Other categories the user isn't currently in
     } else {
 
       // Special offers category has different asthetics
@@ -478,19 +530,17 @@ public class MainMenuScreen {
         button.setText("Special\nOffers");
         button.setStyle(
             "-fx-background-color: transparent;"
-            + "-fx-font-size: 34px;"
-            + "-fx-text-fill: rgb(153, 36, 36);"
-            + "-fx-font-weight: bold;"
-        );
+                + "-fx-font-size: 34px;"
+                + "-fx-text-fill: rgb(153, 36, 36);"
+                + "-fx-font-weight: bold;");
 
-      // Any other category except specials
+        // Any other category except specials
       } else {
         button.setStyle(
             "-fx-background-color: transparent;"
-            + "-fx-font-size: 40px;"
-            + "-fx-text-fill: rgba(0, 0, 0, 0.33);"
-            + "-fx-font-weight: bold;"
-        );
+                + "-fx-font-size: 40px;"
+                + "-fx-text-fill: rgba(0, 0, 0, 0.33);"
+                + "-fx-font-weight: bold;");
       }
     }
   }
@@ -505,5 +555,5 @@ public class MainMenuScreen {
       styleCategoryButton(categoryButtons.get(i), i == currentCategoryIndex, i);
     }
   }
-}
 
+}

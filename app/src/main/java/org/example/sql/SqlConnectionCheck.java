@@ -29,8 +29,7 @@ public class SqlConnectionCheck {
           + "?user=u5urh19mtnnlgmog"
           + "&password=zPgqf8o6na6pv8j8AX8r"
           + "&useSSL=true"
-          + "&allowPublicKeyRetrieval=true"
-      );
+          + "&allowPublicKeyRetrieval=true");
       
       mysql.setText("Driver found and connected");
 

@@ -16,7 +16,7 @@ public class LangBtn extends RoundButton {
 
   public LangBtn() {
     super("languages", 140);
-    this.dictionary = new Dictionary(true);
+    this.dictionary = new Dictionary();
   }
 
   public boolean isEnglish() {

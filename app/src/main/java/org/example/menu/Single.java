@@ -68,15 +68,6 @@ public class Single extends Product {
   }
 
   /**
-   * The method adds the current item to a specified object.
-   *
-   * @param meal Meal object that the current item will be add
-   */
-  public void convertToMeal(Meal meal) {
-    meal.addItem(this);
-  }
-
-  /**
    * adds an Ingredient to a list of ingredients.
    */
   public void addIngredient(Ingredient ingredient) {

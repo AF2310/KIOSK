@@ -20,7 +20,6 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -29,6 +28,7 @@ import javafx.stage.Stage;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
+import org.example.kiosk.LanguageSetting;
 import org.example.menu.OrderItem;
 import org.example.menu.Product;
 import org.example.orders.Order;
@@ -38,6 +38,8 @@ import org.example.orders.OrderListWrapper;
  * Admin screen for sales stats.
  */
 public class SalesStatsScreen {
+
+  private LanguageSetting languageSetting = new LanguageSetting();
     
   /**
    * Scene to display the order history.
@@ -136,6 +138,14 @@ public class SalesStatsScreen {
     VBox layout = new VBox();
     layout.setPadding(new Insets(50));
     layout.getChildren().addAll(topContainer, bottomContainer);
+
+    // Translate all the text
+    langButton.addAction(event -> {
+      // Toggle the language in LanguageSetting
+      languageSetting.changeLanguage(
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
+      languageSetting.updateAllLabels(layout);
+    });
 
     return new Scene(layout, 1920, 1080);
 
