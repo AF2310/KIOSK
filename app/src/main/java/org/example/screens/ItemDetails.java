@@ -1,7 +1,10 @@
 package org.example.screens;
 
 import java.io.InputStream;
+import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +28,9 @@ import org.example.buttons.MidButtonWithImage;
 import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.SquareButtonWithImg;
 import org.example.menu.Ingredient;
+import org.example.menu.Meal;
 import org.example.menu.Single;
+import org.example.menu.Type;
 import org.example.orders.Cart;
 
 /**
@@ -233,7 +238,13 @@ public class ItemDetails {
             + "&useSSL=true"
             + "&allowPublicKeyRetrieval=true"))) {
           primaryStage.setScene(createMealUpsell(primaryStage, prevScene, item,
-              blocks, quantities));
+              blocks, quantities, DriverManager.getConnection(
+              "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+              + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+              + "?user=u5urh19mtnnlgmog"
+              + "&password=zPgqf8o6na6pv8j8AX8r"
+              + "&useSSL=true"
+              + "&allowPublicKeyRetrieval=true")));
         } else {
           // Making a new product with the modified ingredients.
           Single newProduct = new Single(item.getId(), item.getName(), item.getPrice(),
@@ -307,14 +318,18 @@ public class ItemDetails {
   }
 
   /**
-   * The Meal upsell scene.
+   * The Meal upsell screen.
    *
-   * @param primaryStage the stage
-   * @param item the item
+   * @param primaryStage the primarystage
+   * @param mainMenu the main menu stage
+   * @param item the product
+   * @param blocks the list of quantity change blocks
+   * @param quantities the base quantities
+   * @param conn the connection to the database
    * @return the scene
    */
   public Scene createMealUpsell(Stage primaryStage, Scene mainMenu, Single item,
-      List<AddRemoveBlock> blocks, List<Integer> quantities) {
+      List<AddRemoveBlock> blocks, List<Integer> quantities, Connection conn) {
     Label mainText = new Label("Do you want to make it a meal?");
     mainText.setStyle(
         "-fx-font-size: 65px;"
@@ -328,6 +343,32 @@ public class ItemDetails {
     buttonBox.setPadding(new Insets(50));
     buttonBox.setAlignment(Pos.CENTER);
     buttonBox.getChildren().addAll(yesButton, noButton);
+
+    yesButton.setOnMouseClicked(e -> {
+      String sql = "SELECT meal_id, name, price, image_url FROM meal WHERE product_id = ?";
+      
+      try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, item.getId());
+        try (ResultSet rs = ps.executeQuery()) {
+          while (rs.next()) {
+            Meal meal = new Meal(rs.getString("name"), conn);
+            meal.setId(rs.getInt("meal_id"));
+            meal.setName(rs.getString("name"));
+            meal.setPrice(rs.getFloat("price"));
+            meal.setImagePath(rs.getString("image_url"));
+            meal.setType(Type.MEAL);
+            MealCustomizationScreen mealScreen = new MealCustomizationScreen();
+            Scene sideScene = mealScreen.createSideSelectionScene(
+                  primaryStage,
+                  mainMenu,
+                  meal);
+            primaryStage.setScene(sideScene);
+          }
+        }
+      } catch (SQLException ex) {
+        ex.printStackTrace(); // Handle the exception (e.g., log it or show an error message)
+      }
+    });
 
     noButton.setOnMouseClicked(e -> {
       // Making a new product with the modified ingredients.

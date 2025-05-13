@@ -365,7 +365,6 @@ public class MainMenuScreen {
           meal.setName(rs.getString("name"));
           meal.setPrice(rs.getFloat("price"));
           meal.setImagePath(rs.getString("image_url"));
-          System.out.println("Meal image path: " + meal.getImagePath());
           meal.setType(Type.MEAL);
 
           items.add(meal);
