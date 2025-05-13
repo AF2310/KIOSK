@@ -236,7 +236,11 @@ public class Cart {
         int quant = quantity.get(i);
         items.remove(i);
         quantity.remove(i);
+        items.add(item.getMain());
+        quantity.add(quant);
         items.add(item.getSide());
+        quantity.add(quant);
+        items.add(item.getDrink());
         quantity.add(quant);
       }
     }

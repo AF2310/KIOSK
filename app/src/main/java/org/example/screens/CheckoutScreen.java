@@ -156,7 +156,7 @@ public class CheckoutScreen {
         // TODO Auto-generated catch block
         err.printStackTrace();
       }
-
+      Cart.getInstance().convertMealsIntoSingles();
       try {
         Cart.getInstance().saveQuantityToDb(conn, orderId);
       } catch (SQLException e1) {
