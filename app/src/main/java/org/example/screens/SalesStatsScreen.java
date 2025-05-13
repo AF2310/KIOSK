@@ -12,11 +12,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
@@ -97,19 +99,29 @@ public class SalesStatsScreen {
 
     });
 
+    MidButton ordersByHourBtn = new MidButton("Orders by Hour", "rgb(255, 255, 255)", 30);
+    ordersByHourBtn.setOnAction(e -> {
+
+      topRight.getChildren().clear();
+      Map<Double, Integer> hourCounts = countOrdersByHour(wrapper.orders);
+      LineChart<Number, Number> chart = createOrdersByHour(hourCounts);
+      topRight.getChildren().add(chart);
+
+    });
+
     VBox topLeft = new VBox();
+    topLeft.getChildren().addAll(pageLabel, productSalesBtn, ordersPerDayBtn, ordersByHourBtn);
     topLeft.setPadding(new Insets(10));
     topLeft.setSpacing(25);
     topLeft.setPrefWidth(640);
     topLeft.setAlignment(Pos.TOP_LEFT);
     HBox.setHgrow(topLeft, Priority.NEVER);
-    topLeft.getChildren().addAll(pageLabel, productSalesBtn, ordersPerDayBtn);
 
     HBox topContainer = new HBox();
+    topContainer.getChildren().addAll(topLeft, topRight);
     topContainer.setPrefHeight(695);
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
-    topContainer.getChildren().addAll(topLeft, topRight);
 
     // Back button
     // Clicking button means user goes to previous screen
@@ -343,6 +355,57 @@ public class SalesStatsScreen {
     barChart.getData().add(series);
 
     return barChart;
+
+  }
+
+  private Map<Double, Integer> countOrdersByHour(ArrayList<Order> orders) {
+
+    Map<Double, Integer> hourCounts = new TreeMap<>();
+
+    for (Order order : orders) {
+
+      LocalDateTime dateTime = order.getOrderDate().toLocalDateTime();
+
+      double hour = dateTime.getHour()
+          + (dateTime.getMinute() / 60.0) + (dateTime.getSecond() / 3600.0);
+
+      double roundedHour = Math.round(hour * 4) / 4.0;
+
+      hourCounts.put(roundedHour, hourCounts.getOrDefault(roundedHour, 0) + 1);
+
+    }
+
+    return hourCounts;
+
+  }
+
+  private LineChart<Number, Number> createOrdersByHour(Map<Double, Integer> hourCount) {
+
+    NumberAxis xxAxis = new NumberAxis(0, 24, 0.25);
+    xxAxis.setLabel("Hour of Day");
+
+    NumberAxis yyAxis = new NumberAxis();
+    yyAxis.setLabel("Numbers of Orders");
+
+    LineChart<Number, Number> lineChart = new LineChart<>(xxAxis, yyAxis);
+    lineChart.setTitle("Orders by Hour");
+    lineChart.setCreateSymbols(false);
+
+    XYChart.Series<Number, Number> series = new XYChart.Series<>();
+    series.setName("Volume of Orders");
+
+    hourCount.entrySet().stream()
+        .sorted(Map.Entry.comparingByKey())
+        .forEach(entry -> {
+          double hour = entry.getKey();
+          int count = entry.getValue();
+          series.getData().add(new XYChart.Data<>(hour, count));
+
+        });
+
+    lineChart.getData().add(series);
+
+    return lineChart;
 
   }
 
