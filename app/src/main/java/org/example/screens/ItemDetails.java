@@ -1,7 +1,10 @@
 package org.example.screens;
 
 import java.io.InputStream;
+import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,16 +18,20 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.boxes.AddRemoveBlock;
 import org.example.buttons.ArrowButton;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButtonWithImage;
+import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.SquareButtonWithImg;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Ingredient;
+import org.example.menu.Meal;
 import org.example.menu.Single;
+import org.example.menu.Type;
 import org.example.orders.Cart;
 
 /**
@@ -235,13 +242,34 @@ public class ItemDetails {
         "rgb(81, 173, 86)");
 
     addToCartButton.setOnAction(e -> {
-      // Making a new product with the modified ingredients.
-      Single newProduct = new Single(item.getId(), item.getName(), item.getPrice(),
-          item.getType(), item.getImagePath(), item.ingredients);
-      newProduct.setModefied(true);
-      save(blocks, quantities, newProduct, item.quantity);
-      cart.addProduct(newProduct);
-      primaryStage.setScene(prevScene);
+      try {
+        if (item.isInMeal(DriverManager.getConnection(
+            "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+            + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+            + "?user=u5urh19mtnnlgmog"
+            + "&password=zPgqf8o6na6pv8j8AX8r"
+            + "&useSSL=true"
+            + "&allowPublicKeyRetrieval=true"))) {
+          primaryStage.setScene(createMealUpsell(primaryStage, prevScene, item,
+              blocks, quantities, DriverManager.getConnection(
+              "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+              + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+              + "?user=u5urh19mtnnlgmog"
+              + "&password=zPgqf8o6na6pv8j8AX8r"
+              + "&useSSL=true"
+              + "&allowPublicKeyRetrieval=true")));
+        } else {
+          // Making a new product with the modified ingredients.
+          Single newProduct = new Single(item.getId(), item.getName(), item.getPrice(),
+              item.getType(), item.getImagePath(), item.ingredients);
+          newProduct.setModefied(true);
+          save(blocks, quantities, newProduct, item.quantity);
+          cart.addProduct(newProduct);
+          primaryStage.setScene(prevScene);
+        }
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
     });
 
     // Box for add to cart and back
@@ -301,5 +329,75 @@ public class ItemDetails {
       blocks.get(i).setQuantity(basequant.get(i));
     }
     item.quantity = quantitys;
+  }
+
+  /**
+   * The Meal upsell screen.
+   *
+   * @param primaryStage the primarystage
+   * @param mainMenu the main menu stage
+   * @param item the product
+   * @param blocks the list of quantity change blocks
+   * @param quantities the base quantities
+   * @param conn the connection to the database
+   * @return the scene
+   */
+  public Scene createMealUpsell(Stage primaryStage, Scene mainMenu, Single item,
+      List<AddRemoveBlock> blocks, List<Integer> quantities, Connection conn) {
+    Label mainText = new Label("Do you want to make it a meal?");
+    mainText.setStyle(
+        "-fx-font-size: 65px;"
+        + "-fx-font-weight: bold;"
+    );
+
+    MidButtonWithImage yesButton = new MidButtonWithImage("Yes", "/green_tick.png", "rgb(0, 0, 0)");
+    MidButtonWithImage noButton = new MidButtonWithImage("No", "/cancel.png", "rgb(255, 255, 255)");
+
+    HBox buttonBox = new HBox(20);
+    buttonBox.setPadding(new Insets(50));
+    buttonBox.setAlignment(Pos.CENTER);
+    buttonBox.getChildren().addAll(yesButton, noButton);
+
+    yesButton.setOnMouseClicked(e -> {
+      String sql = "SELECT meal_id, name, price, image_url FROM meal WHERE product_id = ?";
+      
+      try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, item.getId());
+        try (ResultSet rs = ps.executeQuery()) {
+          while (rs.next()) {
+            Meal meal = new Meal(rs.getString("name"), conn);
+            meal.setId(rs.getInt("meal_id"));
+            meal.setName(rs.getString("name"));
+            meal.setPrice(rs.getFloat("price"));
+            meal.setImagePath(rs.getString("image_url"));
+            meal.setType(Type.MEAL);
+            MealCustomizationScreen mealScreen = new MealCustomizationScreen();
+            Scene sideScene = mealScreen.createSideSelectionScene(
+                  primaryStage,
+                  mainMenu,
+                  meal);
+            primaryStage.setScene(sideScene);
+          }
+        }
+      } catch (SQLException ex) {
+        ex.printStackTrace(); // Handle the exception (e.g., log it or show an error message)
+      }
+    });
+
+    noButton.setOnMouseClicked(e -> {
+      // Making a new product with the modified ingredients.
+      Single newProduct = new Single(item.getId(), item.getName(), item.getPrice(),
+          item.getType(), item.getImagePath(), item.ingredients);
+      newProduct.setModefied(true);
+      save(blocks, quantities, newProduct, item.quantity);
+      Cart.getInstance().addProduct(newProduct);
+      primaryStage.setScene(mainMenu);
+    });
+
+    VBox layout = new VBox();
+    layout.setAlignment(Pos.CENTER);
+    layout.getChildren().addAll(mainText, buttonBox);
+
+    return new Scene(layout, 1920, 1080);
   }
 }
