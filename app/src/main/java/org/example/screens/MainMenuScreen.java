@@ -10,11 +10,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -31,6 +34,7 @@ import javafx.stage.Stage;
 import org.example.buttons.ArrowButton;
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.LangBtn;
+import org.example.buttons.SearchBar;
 import org.example.buttons.SqrBtnImgOnly;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Imenu;
@@ -48,8 +52,14 @@ public class MainMenuScreen {
 
   private Stage primaryStage;
 
-  private String[] categories = {"Burgers", "Sides", "Drinks",
-    "Desserts", "Meals", "Special Offers"};
+  // SEARCH BAR STUFF START
+  private String currentSearchName = "";
+  private String currentSearchCategory = "";
+  private double currentSearchPrice = -1;
+  // SEARCH BAR STUFF END
+
+  private String[] categories = { "Burgers", "Sides", "Drinks",
+      "Desserts", "Meals", "Special Offers" };
   private Map<String, List<Product>> categoryItems = new HashMap<>();
   private int currentCategoryIndex = 0;
   private GridPane itemGrid = new GridPane();
@@ -82,12 +92,12 @@ public class MainMenuScreen {
     this.mode = mode;
 
     Connection conn = DriverManager.getConnection(
-          "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-          + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-          + "?user=u5urh19mtnnlgmog"
-          + "&password=zPgqf8o6na6pv8j8AX8r"
-          + "&useSSL=true"
-          + "&allowPublicKeyRetrieval=true");
+        "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+            + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+            + "?user=u5urh19mtnnlgmog"
+            + "&password=zPgqf8o6na6pv8j8AX8r"
+            + "&useSSL=true"
+            + "&allowPublicKeyRetrieval=true");
     this.conn = conn;
 
     ImageView modeIcon = new ImageView();
@@ -114,6 +124,132 @@ public class MainMenuScreen {
     // Top area layout
     VBox top = new VBox(10);
     top.setAlignment(Pos.CENTER);
+
+    // SEARCH BAR STUFF START
+    SearchBar mainSearch = new SearchBar(this.conn);
+    mainSearch.setMaxWidth(1000);
+    mainSearch.setMinWidth(600);
+
+    Button searchButton = new Button("Search");
+    searchButton.setStyle("-fx-font-size: 16px; -fx-padding: 8px 15px;");
+
+    TextField gridSearchField = new TextField();
+    gridSearchField.setPromptText("Quick filter items...");
+
+    gridSearchField.setStyle("-fx-font-size: 14px; -fx-pref-width: 250px;");
+    Button gridSearchButton = new Button("Filter");
+    gridSearchButton.setStyle("-fx-font-size: 14px; -fx-padding: 6px 12px;");
+
+    TextField priceFilterField = new TextField();
+    priceFilterField.setPromptText("Max price");
+    priceFilterField.setStyle("-fx-font-size: 14px; -fx-pref-width: 100px;");
+
+    ComboBox<String> gridCategoryBox = new ComboBox<>();
+    gridCategoryBox.getItems().addAll(
+        "-- Any Category --", "Burgers", "Sides", "Drinks", "Desserts");
+    gridCategoryBox.setPromptText("Select Category...");
+    gridCategoryBox.setStyle("-fx-font-size: 14px; -fx-pref-width: 150px;");
+
+    gridSearchButton.setOnAction(e -> {
+      currentSearchName = gridSearchField.getText().trim();
+
+      currentSearchCategory = "";
+
+      try {
+        currentSearchPrice = Double.parseDouble(priceFilterField.getText().trim());
+      } catch (NumberFormatException ex) {
+        currentSearchPrice = -1;
+      }
+      String selectedCategory = gridCategoryBox.getValue();
+      if (selectedCategory != null && !selectedCategory.isEmpty()) {
+        for (int i = 0; i < categories.length; i++) {
+          if (categories[i].equalsIgnoreCase(selectedCategory)) {
+            currentCategoryIndex = i;
+            break;
+          }
+
+        }
+        currentSearchCategory = selectedCategory;
+      } else {
+        currentSearchCategory = "";
+      }
+
+      updateGrid();
+
+    });
+
+    HBox gridSearchBox = new HBox(
+        30,
+        gridSearchField,
+        priceFilterField,
+        gridCategoryBox,
+        gridSearchButton);
+    gridSearchBox.setAlignment(Pos.CENTER);
+
+    Button showSearchBtn = new Button();
+
+    showSearchBtn.setMinSize(80, 80);
+    showSearchBtn.setMaxSize(80, 80);
+
+    Circle searchCircle = new Circle(50);
+    searchCircle.setFill(Color.GOLD);
+    searchCircle.setStroke(Color.RED);
+
+    Label searchLabel = new Label("FILTER\nITEMS");
+    searchLabel.setTextAlignment(TextAlignment.CENTER);
+    searchLabel.setStyle("-fx-font-size: 20px; "
+        + "-fx-font-weight: bold; "
+        + "-fx-text-fill: gold; "
+        + "-fx-underline: true;");
+
+    searchLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+    StackPane searchGraphic = new StackPane(searchCircle, searchLabel);
+
+    showSearchBtn.setGraphic(searchGraphic);
+    final boolean[] isSearchVisible = { false };
+    VBox.setMargin(gridSearchBox, new Insets(5));
+    showSearchBtn.setOnAction(e -> {
+      isSearchVisible[0] = !isSearchVisible[0];
+      if (isSearchVisible[0]) {
+        if (!top.getChildren().contains(gridSearchBox)) {
+          top.getChildren().add(gridSearchBox);
+          searchCircle.setFill(Color.GOLD);
+
+        } else {
+          top.getChildren().remove(gridSearchBox);
+          searchCircle.setFill(Color.RED);
+
+          currentSearchName = "";
+          currentSearchCategory = "";
+          currentSearchPrice = -1;
+
+          gridSearchField.clear();
+          priceFilterField.clear();
+          gridCategoryBox.getSelectionModel().clearSelection();
+          updateGrid();
+        }
+      }
+    });
+    showSearchBtn.setStyle(
+        "-fx-background-color: transparent;"
+        + "-fx-padding: 0;"
+        + "-fx-border-width: 0;"
+        + "-fx-content-display: GRAPHIC_ONLY;");
+
+    gridSearchBox.setStyle(
+        "-fx-background-color: rgba(255, 255, 255, 0.9);"
+        + "-fx-border-color: gold;"
+        + "-fx-border-width: 2px;"
+        + "-fx-border-radius: 20px;"
+        + "-fx-background-radius: 20px;"
+        + "-fx-padding: 10px;");
+
+    // Align the search button to top-right
+    StackPane.setAlignment(showSearchBtn, Pos.TOP_RIGHT);
+    // Add margin: 20 pixels from top and right
+    StackPane.setMargin(showSearchBtn, new Insets(20, 20, 0, 0));
+
+    // SEARCH BAR STUFF ENDS
 
     // Category bar
 
@@ -282,8 +418,7 @@ public class MainMenuScreen {
     langButton.addAction(event -> {
       // Toggle the language in LanguageSetting
       languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en"
-      );
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
       languageSetting.updateAllLabels(layout);
     });
 
@@ -292,7 +427,7 @@ public class MainMenuScreen {
     layout.setBottom(new VBox(bottomButtons));
 
     // Add layout to Stack Pane for dynamic sizing
-    StackPane mainPane = new StackPane(layout);
+    StackPane mainPane = new StackPane(layout, showSearchBtn);
     mainPane.setPrefSize(windowWidth, windowHeight);
 
     // Create final scene result
@@ -328,27 +463,22 @@ public class MainMenuScreen {
     categoryItems.put("Special Offers", List.of());
     categoryItems.put("Meals", null);
 
-  
   }
 
   /**
    * Loading all items into the menu's item grid.
    */
   private void updateGrid() {
-    // Empty grid and create new layout
     itemGrid.getChildren().clear();
     itemGrid.setHgap(20);
     itemGrid.setVgap(20);
     itemGrid.setPadding(new Insets(10));
     itemGrid.setAlignment(Pos.CENTER);
 
-    // Fetch data
-    String category = categories[currentCategoryIndex];
-    List<Product> items = categoryItems.get(category);
-    if ("Meals".equals(category)) {
-      System.out.println("Loading Meals category");
+    // Load items depending on category
+    List<Product> items = new ArrayList<>();
 
-      items = new ArrayList<>();
+    if ("Meals".equals(categories[currentCategoryIndex])) {
       try {
         String sql = """
             SELECT meal_id, name, description, price, image_url
@@ -357,10 +487,8 @@ public class MainMenuScreen {
 
         PreparedStatement ps = conn.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
-        boolean found = false;
 
         while (rs.next()) {
-          found = true;
           Meal meal = new Meal(rs.getString("name"), conn);
           meal.setId(rs.getInt("meal_id"));
           meal.setName(rs.getString("name"));
@@ -371,105 +499,127 @@ public class MainMenuScreen {
           items.add(meal);
         }
 
-        if (!found) {
-          System.out.println("No meals returned");
-        }
         rs.close();
         ps.close();
       } catch (SQLException e) {
         e.printStackTrace();
       }
+    } else {
+      // Get from preloaded categories
+      String category = categories[currentCategoryIndex];
+      List<Product> categoryList = categoryItems.getOrDefault(category, new ArrayList<>());
+      items.addAll(categoryList);
     }
-    // Max item slots in rows and pages
+
+    // FILTERS: Apply name, price, and category filter
+    List<Product> filteredProducts = new ArrayList<>(items);
+
+    if (!currentSearchName.isEmpty()) {
+      String searchTerm = currentSearchName.toLowerCase();
+      filteredProducts = filteredProducts.stream()
+          .filter(p -> p.getName().toLowerCase().contains(searchTerm))
+          .collect(Collectors.toList());
+    }
+
+    if (currentSearchPrice >= 0) {
+      final double priceLimit = currentSearchPrice;
+      filteredProducts = filteredProducts.stream()
+          .filter(p -> p.getPrice() <= priceLimit)
+          .collect(Collectors.toList());
+    }
+
+    if (!currentSearchCategory.isEmpty()
+        && !currentSearchCategory.equalsIgnoreCase("-- Any Category --")) {
+      String targetCategory = currentSearchCategory.toLowerCase();
+      filteredProducts = filteredProducts.stream()
+          .filter(p -> {
+            if (p instanceof Single single) {
+              return single.getType().toString().toLowerCase().equals(targetCategory);
+            }
+            return false;
+          })
+          .collect(Collectors.toList());
+    }
+
+    // Adjust layout if filters are used
     int maxItemsPerRow = 3;
     int totalItemsPerPage = 6;
 
-    // Populate the grid with item and corresponding image one by one
+    boolean filtersActive = !currentSearchName.isEmpty() || currentSearchPrice >= 0
+        || (!currentSearchCategory.isEmpty()
+        && !currentSearchCategory.equalsIgnoreCase("-- Any Category --"));
+
+    if (filtersActive) {
+      totalItemsPerPage = filteredProducts.size();
+      maxItemsPerRow = 8;
+    }
+
+    // Create the empty image to fill the grid slots
+    Image emptyImage = new Image(
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABC"
+            + "AQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/hd5JnkAAAAASUVORK5CYII=");
+
+    // Populate grid with items or empty image
     for (int i = 0; i < totalItemsPerPage; i++) {
 
-      // Create fresh item Slot
       VBox itemBox = new VBox(10);
       itemBox.setAlignment(Pos.CENTER);
 
-      // Make slot with fixed size
       StackPane imageSlot = new StackPane();
       imageSlot.setPrefSize(200, 200);
       imageSlot.setMaxSize(200, 200);
       imageSlot.setMinSize(200, 200);
 
-      // Item exists
-      if (i < items.size()) {
-        // Get current item
-        Product item = items.get(i);
+      Product item = (i < filteredProducts.size()) ? filteredProducts.get(i) : null;
 
-        // Get image path
+      // Load image or use empty image
+      ImageView imageView;
+      if (item != null) {
         String imagePath = item.getImagePath();
         InputStream inputStream = getClass().getResourceAsStream(imagePath);
 
-        // Initiating the image view
-        ImageView imageView;
-
-        // Errorhandling when no image found
         if (inputStream == null) {
           System.err.println("ERROR: Image not found - " + imagePath);
-
-          // using Base64-encoded string to generate 1x1 transparent PNG
-          // This Base64 string is decoded into a transparent image when
-          // the Image constructor is called.
-          // This prevents fetching some empty image from the database.
-          Image emptyImage = new Image(
-              "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABC"
-                  + "AQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/hd5JnkAAAAASUVORK5CYII=");
-
-          // Add empty generated image to View
           imageView = new ImageView(emptyImage);
-
-          // Image found (input stream not empty)
         } else {
-          // Add image to View
           imageView = new ImageView(new Image(inputStream));
         }
+      } else {
+        imageView = new ImageView(emptyImage);
+      }
 
-        // Adjust image size but not make it blurry
-        imageView.setFitHeight(150);
-        imageView.setPreserveRatio(true);
+      imageView.setFitHeight(150);
+      imageView.setPreserveRatio(true);
+      imageSlot.getChildren().add(imageView);
+      imageSlot.setAlignment(Pos.CENTER);
 
-        // Move image into image slot and center image
-        imageSlot.getChildren().add(imageView);
-        imageSlot.setAlignment(Pos.CENTER);
-
-        // Give item a name
+      // If an item exists, add its name and price
+      if (item != null) {
         Label name = new Label(item.getName());
         name.setStyle("-fx-font-size: 16px;");
 
-        // Format the price (with :-)
-        // Put the price in an Hbox to align it to the right
         Label price = new Label(String.format("%.0f :-", item.getPrice()));
         price.setStyle("-fx-font-weight: bold; -fx-font-size: 18px;");
         HBox priceBox = new HBox(price);
         priceBox.setAlignment(Pos.BASELINE_RIGHT);
 
-        // Item details
         ItemDetails detailScreen = new ItemDetails();
 
-        // Get item details when clicking on item
         imageSlot.setOnMouseClicked(e -> {
           try {
-            if (item instanceof Meal) {
-              Meal meal = (Meal) item;
+            if (item instanceof Meal meal) {
               MealCustomizationScreen mealScreen = new MealCustomizationScreen();
               Scene sideScene = mealScreen.createSideSelectionScene(
                   this.primaryStage,
                   this.primaryStage.getScene(),
                   meal);
               this.primaryStage.setScene(sideScene);
-            } else if (item instanceof Single) {
+            } else if (item instanceof Single single) {
               Scene detailScene = detailScreen.create(
                   this.primaryStage,
                   this.primaryStage.getScene(),
-                  (Single) item,
-                  cart
-              );
+                  single,
+                  cart);
               this.primaryStage.setScene(detailScene);
             }
           } catch (SQLException ex) {
@@ -477,18 +627,15 @@ public class MainMenuScreen {
           }
         });
 
-        // Connect it all and add to item grid
         itemBox.getChildren().addAll(imageSlot, name, priceBox);
-
-        // No more items exist -> Item list empty
-        // Fill the rest up with empty slots until we reach 6 slots per page
       } else {
-        itemBox.getChildren().addAll(imageSlot, new Label(""));
+        // For empty slots, just add the image slot with empty image
+        itemBox.getChildren().add(imageSlot);
       }
 
-      // Add new slot to final item grid
       itemGrid.add(itemBox, i % maxItemsPerRow, i / maxItemsPerRow);
     }
+
     updateCategoryButtonStyles();
   }
 
