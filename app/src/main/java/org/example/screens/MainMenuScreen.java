@@ -542,17 +542,17 @@ public class MainMenuScreen {
     }
 
     // Adjust layout if filters are used
-    int maxItemsPerRow = 3;
-    int totalItemsPerPage = 6;
+    int maxItemsPerRow = 4;
+    int totalItemsPerPage = 8;
 
-    boolean filtersActive = !currentSearchName.isEmpty() || currentSearchPrice >= 0
-        || (!currentSearchCategory.isEmpty()
-        && !currentSearchCategory.equalsIgnoreCase("-- Any Category --"));
+    // boolean filtersActive = !currentSearchName.isEmpty() || currentSearchPrice >= 0
+    //     || (!currentSearchCategory.isEmpty()
+    //     && !currentSearchCategory.equalsIgnoreCase("-- Any Category --"));
 
-    if (filtersActive) {
-      totalItemsPerPage = filteredProducts.size();
-      maxItemsPerRow = 8;
-    }
+    // // if (filtersActive) {
+    // //   totalItemsPerPage = filteredProducts.size();
+    // //   maxItemsPerRow = 4;
+    // // }
 
     // Create the empty image to fill the grid slots
     Image emptyImage = new Image(
