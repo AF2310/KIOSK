@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.LangBtn;
+import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
 
 /**
@@ -26,6 +27,8 @@ import org.example.menu.Product;
  * Used in the admin menu in 'UpdateMenuItems.java'.
  */
 public class DeleteProductScene {
+
+  private LanguageSetting languageSetting = new LanguageSetting();
 
   private Stage primaryStage;
   private Scene prevScene;
@@ -193,6 +196,14 @@ public class DeleteProductScene {
     layout.setPadding(new Insets(50));
     layout.setTop(topContainer);
     layout.setBottom(bottomContainer);
+    
+    // Translate all the text
+    langButton.addAction(event -> {
+      // Toggle the language in LanguageSetting
+      languageSetting.changeLanguage(
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
+      languageSetting.updateAllLabels(layout);
+    });
 
     return new Scene(layout, 1920, 1080);
   }

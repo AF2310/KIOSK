@@ -27,6 +27,7 @@ import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SqrBtnWithOutline;
+import org.example.kiosk.LanguageSetting;
 import org.example.menu.Drink;
 import org.example.menu.Meal;
 import org.example.menu.Product;
@@ -38,6 +39,8 @@ import org.example.orders.Cart;
  * A Class for picking side and drink option for the meal.
  */
 public class MealCustomizationScreen {
+
+  private LanguageSetting languageSetting = new LanguageSetting();
 
   private Connection conn;
 
@@ -351,7 +354,7 @@ public class MealCustomizationScreen {
 
 
 
-    var languageBtn = new LangBtn();
+    var langButton = new LangBtn();
     var confirmBtn = new SqrBtnWithOutline("Confirm", "green_tick.png", "rgb(81, 173, 86)");
     var cancelBtn = new CancelButtonWithText();
     var backButton = new BackBtnWithTxt();
@@ -361,7 +364,7 @@ public class MealCustomizationScreen {
     HBox.setHgrow(spacer1, Priority.ALWAYS);
     HBox.setHgrow(spacer2, Priority.ALWAYS);
 
-    HBox bottomBar = new HBox(20, languageBtn, spacer1, confirmBtn, spacer2, backButton, cancelBtn);
+    HBox bottomBar = new HBox(20, langButton, spacer1, confirmBtn, spacer2, backButton, cancelBtn);
     bottomBar.setPadding(new Insets(20));
     layout.setBottom(bottomBar);
 
@@ -380,6 +383,14 @@ public class MealCustomizationScreen {
       Cart cart = Cart.getInstance();
       cart.addProduct(meal);
       stage.setScene(mainScene);
+    });
+
+    // Translate all the text
+    langButton.addAction(event -> {
+      // Toggle the language in LanguageSetting
+      languageSetting.changeLanguage(
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
+      languageSetting.updateAllLabels(layout);
     });
 
     return new Scene(layout, 1920, 1080);

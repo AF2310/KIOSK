@@ -16,11 +16,14 @@ import javafx.stage.Stage;
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
+import org.example.kiosk.LanguageSetting;
 
 /**
  * Admin menu class.
  */
 public class AdminMenuScreen {
+
+  private LanguageSetting languageSetting = new LanguageSetting();
 
   /**
    * Admin menu screen.
@@ -141,6 +144,14 @@ public class AdminMenuScreen {
     mainBorderPane.setTop(adminMenuLayout);
     mainBorderPane.setCenter(centerGrid);
     mainBorderPane.setBottom(bottomLayout);
+
+    // Translate all the text
+    langButton.addAction(event -> {
+      // Toggle the language in LanguageSetting
+      languageSetting.changeLanguage(
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
+      languageSetting.updateAllLabels(mainBorderPane);
+    });
 
     Scene adminMenuScene = new Scene(mainBorderPane, windowWidth, windowHeight);
 

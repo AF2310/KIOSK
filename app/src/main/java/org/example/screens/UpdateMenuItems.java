@@ -33,16 +33,14 @@ import org.example.menu.Type;
  * Updating menu class.
  */
 public class UpdateMenuItems {
-  // private Stage primaryStage;
-  // private LanguageSetting languageSetting = new LanguageSetting();
-  /**
-   * Scene for adding/removing items on the menu.
-   *
-   * @param primaryStage Window itself.
-   * @param prevScene    Previous scene to return to.
-   * @return The scene itself.
-   */
 
+  /**
+   * Creates a scene for updating menu items in the admin interface.
+   *
+   * @param primaryStage The primary stage of the application.
+   * @param prevScene    The previous scene to return to.
+   * @return The scene for updating menu items.
+   */
   public Scene adminUpdateMenuItems(Stage primaryStage, Scene prevScene) {
 
     // All the buttons for updating menu items

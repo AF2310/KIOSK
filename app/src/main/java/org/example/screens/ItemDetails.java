@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -32,7 +34,6 @@ import org.example.menu.Single;
 import org.example.menu.Type;
 import org.example.orders.Cart;
 
-
 /**
  * Screen for the details of an Item.
  * Customer should be able to adjust an Item here
@@ -55,13 +56,25 @@ public class ItemDetails {
   public Scene create(Stage primaryStage, Scene prevScene, Single item, Cart cart)
       throws SQLException {
     item.setIngredients(DriverManager.getConnection(
-          "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-          + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-          + "?user=u5urh19mtnnlgmog"
-          + "&password=zPgqf8o6na6pv8j8AX8r"
-          + "&useSSL=true"
-          + "&allowPublicKeyRetrieval=true"));
+        "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+            + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+            + "?user=u5urh19mtnnlgmog"
+            + "&password=zPgqf8o6na6pv8j8AX8r"
+            + "&useSSL=true"
+            + "&allowPublicKeyRetrieval=true"));
     List<Ingredient> ingredients = item.ingredients;
+    // Make a deep copy of ingredients to avoid reusing the original list
+    // System.out.println("Original ingredients: " + item.ingredients);
+    // List<Ingredient> ingredients = new ArrayList<>(new LinkedHashSet<>(item.ingredients));
+    // System.out.println("Ingredients after HashSet conversion: " + ingredients);
+    // Original list
+    // System.out.println("Before modification: " + item.ingredients);
+    // Create a new list with no duplicates, using LinkedHashSet to preserve order
+    // List<Ingredient> ingredients = new ArrayList<>(new LinkedHashSet<>(item.ingredients));
+    // // Check after modification
+    // System.out.println("After manual duplicate removal: " + ingredients);
+
+
     List<Integer> quantities = new ArrayList<>();
     /*
      * Making a deep copy of item.quantity.
@@ -137,10 +150,8 @@ public class ItemDetails {
 
       // Clear and refill VBox with updated ingredients
       ingredientBox.getChildren().clear();
-      for (int i = currentStartIndex[0];
-          i < Math.min(currentStartIndex[0] + visibleCount,
-          ingredients.size()); i++
-      ) {
+      for (int i = currentStartIndex[0]; i < Math.min(currentStartIndex[0] + visibleCount,
+          ingredients.size()); i++) {
 
         Label ingrLabel = new Label(ingredients.get(i).getName());
         ingrLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: normal;");
@@ -244,19 +255,19 @@ public class ItemDetails {
       try {
         if (item.isInMeal(DriverManager.getConnection(
             "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-            + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-            + "?user=u5urh19mtnnlgmog"
-            + "&password=zPgqf8o6na6pv8j8AX8r"
-            + "&useSSL=true"
-            + "&allowPublicKeyRetrieval=true"))) {
+                + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+                + "?user=u5urh19mtnnlgmog"
+                + "&password=zPgqf8o6na6pv8j8AX8r"
+                + "&useSSL=true"
+                + "&allowPublicKeyRetrieval=true"))) {
           primaryStage.setScene(createMealUpsell(primaryStage, prevScene, item,
               blocks, quantities, DriverManager.getConnection(
-              "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-              + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-              + "?user=u5urh19mtnnlgmog"
-              + "&password=zPgqf8o6na6pv8j8AX8r"
-              + "&useSSL=true"
-              + "&allowPublicKeyRetrieval=true")));
+                  "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+                      + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+                      + "?user=u5urh19mtnnlgmog"
+                      + "&password=zPgqf8o6na6pv8j8AX8r"
+                      + "&useSSL=true"
+                      + "&allowPublicKeyRetrieval=true")));
         } else {
           // Making a new product with the modified ingredients.
           Single newProduct = new Single(item.getId(), item.getName(), item.getPrice(),
@@ -334,11 +345,11 @@ public class ItemDetails {
    * The Meal upsell screen.
    *
    * @param primaryStage the primarystage
-   * @param mainMenu the main menu stage
-   * @param item the product
-   * @param blocks the list of quantity change blocks
-   * @param quantities the base quantities
-   * @param conn the connection to the database
+   * @param mainMenu     the main menu stage
+   * @param item         the product
+   * @param blocks       the list of quantity change blocks
+   * @param quantities   the base quantities
+   * @param conn         the connection to the database
    * @return the scene
    */
   public Scene createMealUpsell(Stage primaryStage, Scene mainMenu, Single item,
@@ -346,8 +357,7 @@ public class ItemDetails {
     Label mainText = new Label("Do you want to make it a meal?");
     mainText.setStyle(
         "-fx-font-size: 65px;"
-        + "-fx-font-weight: bold;"
-    );
+            + "-fx-font-weight: bold;");
 
     MidButtonWithImage yesButton = new MidButtonWithImage("Yes", "/green_tick.png", "rgb(0, 0, 0)");
     MidButtonWithImage noButton = new MidButtonWithImage("No", "/cancel.png", "rgb(255, 255, 255)");
@@ -359,7 +369,7 @@ public class ItemDetails {
 
     yesButton.setOnMouseClicked(e -> {
       String sql = "SELECT meal_id, name, price, image_url FROM meal WHERE product_id = ?";
-      
+
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, item.getId());
         try (ResultSet rs = ps.executeQuery()) {
@@ -372,9 +382,9 @@ public class ItemDetails {
             meal.setType(Type.MEAL);
             MealCustomizationScreen mealScreen = new MealCustomizationScreen();
             Scene sideScene = mealScreen.createSideSelectionScene(
-                  primaryStage,
-                  mainMenu,
-                  meal);
+                primaryStage,
+                mainMenu,
+                meal);
             primaryStage.setScene(sideScene);
           }
         }
