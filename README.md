@@ -104,3 +104,25 @@ Arseny was fixing some bugs he didn’t deal with during the previous sprint: fi
 We had one 1-hour-long meeting on Discord on Monday to discuss our work and plan out the next sprint. Throughout the whole sprint, we were actively discussing the sprint and sharing the latest work.
 
 ![alt text](references/Class_Sp19.png)
+
+
+
+Sprint 4 (Week 20)
+
+This week we focused on implementing the meals functionality, improving database efficiency, expanding the admin menu, as well as adding search features and translating the ui into Swedish.
+
+Vuk added the meals category and created scenes for meal combos with their side and drink options. He also populated the meal, meal_sideoptions, and meal_drinkoptions tables in the database and fetched the data into the corresponding screens. He also worked on theoverall look of the new screens, added a glow effect to the selected item, and designed new meal pictures in Photoshop which were then integrated into the UI.
+
+Ignas reworked the database connection by adding a new dependency that allows for connection pooling. This prevents the creation of a new database connection for each query call improving performance. He also moved all the SQL queries from different classes into a single Query.java file, simplifying future maintenance and access.
+
+Michelle first did code cleanup. She also added getters and setters for is_active and description in the product class. In the admin menu, she implemented a price change section and a comprehensive product editor with editable columns for name, is_active status, description, and price. She also added functionality for product deletion and refactored the admin menu code by moving the product editor, product addition, and deletion scenes into separate classes, reducing file size. She also made helper methods to reduce code duplication.
+
+Jakob set up the database side for the meal functionality. He implemented adding meals to the cart and made sure this is stored in the database. He also worked on upselling regular products into meals wherever applicable. He also did all the organisational work and merging
+
+Achilleas added search bars for both the admin and customer menus. He also created a “Terms of Use” popup for the customer interface.
+
+Vince created the sales summary stats section, featuring four different graphs: sold products, orders per day, orders by hour, and revenue by product. He improved the visual appearance of the order history table and also contributed to merging and translating.
+
+Arseny translated both the admin and customer menus. He also moved the database to allow more simultanious connections. Also worked on merging.
+
+We had 2 meetings. One after the meeting with client in person, to discuss this sprints tasks in details and one in discord on monday to wrap up the sprint. Each meeting was an hour long.

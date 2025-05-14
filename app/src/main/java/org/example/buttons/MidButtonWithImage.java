@@ -15,8 +15,8 @@ import javafx.scene.layout.Region;
 public class MidButtonWithImage extends Button {
 
   /**
-  * Class' constructor.
-  */
+   * Class' constructor.
+   */
   public MidButtonWithImage(String buttonText, String imageName, String buttonColor) {
     // Set button size
     this.setPrefSize(460, 140);
@@ -28,7 +28,7 @@ public class MidButtonWithImage extends Button {
     buttonImage.setFitHeight(100);
 
     // Label setup
-    Label buttonLabel = new Label(buttonText);
+    buttonLabel = new Label(buttonText);
     buttonLabel.setStyle("-fx-background-color: transparent;"
         + "-fx-font-weight: normal;"
         + "-fx-font-size: 38;"
@@ -67,5 +67,20 @@ public class MidButtonWithImage extends Button {
 
     // Set button graphics
     this.setGraphic(contentRow);
+  }
+
+  private Label buttonLabel;
+
+  public Label getButtonLabel() {
+    return buttonLabel;
+  }
+
+  /**
+   * Sets the text of the button's label.
+   */
+  public void setButtonText(String text) {
+    if (buttonLabel != null) {
+      buttonLabel.setText(text);
+    }
   }
 }

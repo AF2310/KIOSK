@@ -9,7 +9,6 @@ import javafx.scene.layout.VBox;
  * A class for a drop box fow options with a label on top.
  */
 public class DropBoxWithLabel extends VBox {
-  private final Label label;
   private final ComboBox<String> comboBox;
 
   /**
@@ -36,5 +35,20 @@ public class DropBoxWithLabel extends VBox {
 
   public String getSelectedItem() {
     return comboBox.getSelectionModel().getSelectedItem();
+  }
+
+  private Label label;
+
+  public Label getLabel() {
+    return label;
+  }
+
+  /**
+   * Sets the text of the label.
+   */
+  public void setButtonText(String text) {
+    if (label != null) {
+      label.setText(text);
+    }
   }
 }

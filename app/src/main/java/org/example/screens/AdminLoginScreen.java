@@ -1,5 +1,8 @@
 package org.example.screens;
 
+import java.sql.Connection;
+import java.util.List;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -11,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
 import org.example.buttons.MidButtonWithImage;
 import org.example.sql.SqlConnectionCheck;
@@ -94,6 +98,9 @@ public class AdminLoginScreen {
         "rgb(0, 0, 0)",
         50);
     
+    // Add the language button
+    var langButton = new LangBtn();
+
     //login button functionality
     loginButton.setOnAction(e -> {
       String username = usernameField.getText();
@@ -101,14 +108,22 @@ public class AdminLoginScreen {
       SqlConnectionCheck connection = new SqlConnectionCheck();
       AdminAuth adminauth = new AdminAuth(connection.getConnection());
       Boolean checkLogin = adminauth.verifyAdmin(username, password);
+      Connection conn = connection.getConnection();
       if (checkLogin) {
+        errorLabel.setVisible(false);
+        passwordField.clear();
         AdminMenuScreen adminMenuScreen = new AdminMenuScreen();
         Scene adminMenuScene = adminMenuScreen.createAdminMenuScreen(primaryStage,
-                      windowWidth, windowHeight, welcomeScrScene);
+                      windowWidth, windowHeight, welcomeScrScene, conn);
         primaryStage.setScene(adminMenuScene);
       } else {
+        if (langButton.isEnglish()) {
+          errorLabel.setText("Invalid login details");
+        } else {
+          errorLabel.setText("Ogiltig inloggning");
+        }
         // Shows error if a wrong username or password is entered
-        errorLabel.setText("Invalid login details");
+        // errorLabel.setText("Invalid login details");
         errorLabel.setVisible(true);
         passwordField.clear();
 
@@ -142,9 +157,31 @@ public class AdminLoginScreen {
         errorLabel
     );
 
+    // Just pass in the Labeled components to translate
+    langButton.addAction(event -> {
+      // Update both labels and text input controls
+      langButton.updateLanguage(
+          // Labels
+          List.of(
+            adminMenuTitle,
+            loginButton.getButtonLabel(),
+            backButton.getButtonLabel(),
+            errorLabel
+          ),
+          // Text input fields
+          List.of(
+            usernameField,
+            passwordField
+          )
+      );
+    });
+
+    // Position the language button in the bottom-left corner
+    StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
+    StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
 
     //put everything into a stackpane
-    StackPane mainPane = new StackPane(adminMenuLayout);
+    StackPane mainPane = new StackPane(adminMenuLayout, langButton);
     mainPane.setPrefSize(windowWidth, windowHeight);
     
 

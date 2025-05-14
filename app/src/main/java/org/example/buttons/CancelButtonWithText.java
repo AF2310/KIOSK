@@ -5,6 +5,9 @@ package org.example.buttons;
  */
 public class CancelButtonWithText extends SqrBtnWithOutline {
 
+  /**
+   * Cancel button with text constructor.
+   */
   public CancelButtonWithText() {
     super("Cancel", "/cancel.png", "red");
   }

@@ -4,6 +4,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,16 +18,16 @@ public class RoundButton extends Button {
   // List to hold images to cycle through
   private List<String> imagePaths = new ArrayList<>();
   private int currentImageIndex = 0;
-  
+
   /**
    * Constructor for the button.
    * Using:
    *
    * @param directoryPath to scan for pictures to cycle through.
-   * @param size set the buttons size
+   * @param size          set the buttons size
    */
   public RoundButton(String directoryPath, int size) {
-    
+
     // First scanning for images in provided directory
     loadImagesFromDirectory(directoryPath, size);
 
@@ -34,21 +36,35 @@ public class RoundButton extends Button {
 
       setImage(imagePaths.get(currentImageIndex), size);
 
-    } 
+    }
 
     setStyle(
         "-fx-background-color: transparent;"
-        + "-fx-background-radius: 50%;"
-        + "-fx-padding: 0;"
-        + "-fx-shape: \"M 50,0 A 50,50 0 1, 0 50.0001,0 Z\";"
-    );
+            + "-fx-background-radius: 50%;"
+            + "-fx-padding: 0;"
+            + "-fx-shape: \"M 50,0 A 50,50 0 1, 0 50.0001,0 Z\";");
 
     setPrefSize(size, size);
     setMaxSize(size, size);
-    
+
     // calls on method to cycle the images on click
     setOnAction(event -> cycleImages(size));
 
+  }
+
+  /**
+   * Adds a new action handler to the button, chaining it with the existing one.
+   */
+  public void addAction(EventHandler<ActionEvent> newHandler) {
+    EventHandler<ActionEvent> existing = getOnAction();
+
+    // Chain the existing and new handlers
+    setOnAction(event -> {
+      if (existing != null) {
+        existing.handle(event);
+      }
+      newHandler.handle(event);
+    });
   }
 
   // Loads and scans directory for .png's
@@ -58,8 +74,9 @@ public class RoundButton extends Button {
 
       Files.walk(Paths.get(getClass().getClassLoader().getResource(directoryPath).toURI()))
           .filter(path -> path.toString().endsWith(".png"))
+          .sorted()
           .forEach(path -> imagePaths.add(path.toUri().toString()));
-      
+
       // If no images are found, transparent PNG gets set as image
       if (imagePaths.isEmpty()) {
 
@@ -112,8 +129,7 @@ public class RoundButton extends Button {
     // This prevents fetching some empty image from the database.
     Image emptyImage = new Image(
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABC"
-        + "AQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/hd5JnkAAAAASUVORK5CYII="
-      );
+            + "AQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/hd5JnkAAAAASUVORK5CYII=");
 
     ImageView imageView = new ImageView(emptyImage);
     imageView.setFitHeight(size);
@@ -122,5 +138,4 @@ public class RoundButton extends Button {
     setGraphic(imageView);
 
   }
-
 }

@@ -6,19 +6,25 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.buttons.LangBtn;
 import org.example.buttons.MidButtonWithImage;
+import org.example.kiosk.LanguageSetting;
 import org.example.sql.SqlConnectionCheck;
+
 
 /**
  * The welcome screen class.
  */
 public class WelcomeScreen {
+
+  private LanguageSetting languageSetting = new LanguageSetting();
 
   /**
    * The welcome class scene.
@@ -28,9 +34,8 @@ public class WelcomeScreen {
   public Scene createWelcomeScreen(
       Stage primaryStage,
       double windowWidth,
-      double windowHeight
-  ) throws SQLException {
-    
+      double windowHeight) throws SQLException {
+
     // Initialize the welcome screen elements
     var mainWindow = new VBox();
     mainWindow.setAlignment(Pos.CENTER);
@@ -46,25 +51,26 @@ public class WelcomeScreen {
     // Customize labels
     welcome.setStyle(
         "-fx-background-color: transparent;"
-        + "-fx-text-fill: black;"
-        + "-fx-font-weight: lighter;"
-        + "-fx-font-size: 100;"
-        + "-fx-background-radius: 10;");
+            + "-fx-text-fill: black;"
+            + "-fx-font-weight: lighter;"
+            + "-fx-font-size: 100;"
+            + "-fx-background-radius: 10;");
 
     companyTitle.setStyle(
         "-fx-background-color: transparent;"
-        + "-fx-text-fill: black;"
-        + "-fx-font-weight: bolder;"
-        + "-fx-font-size: 160;"
-        + "-fx-background-radius: 10;");
+            + "-fx-text-fill: black;"
+            + "-fx-font-weight: bolder;"
+            + "-fx-font-size: 160;"
+            + "-fx-background-radius: 10;");
 
     // HBox for Burger images
     var rowOfBurgers = new HBox(300);
     rowOfBurgers.setAlignment(Pos.CENTER);
 
     // Setup side images
-    // Image burger3 = new Image(getClass().getResourceAsStream("/burger3.png"));
     
+    // Image burger3 = new Image(getClass().getResourceAsStream("/burger3.png"));
+
     // Create a button with the burger image as its graphic
     Button burgerButton = new Button();
     Image burger3 = new Image(getClass().getResourceAsStream("/burger3.png"));
@@ -73,9 +79,9 @@ public class WelcomeScreen {
     burgerView3.setScaleY(0.5);
     burgerButton.setGraphic(burgerView3);
     burgerButton.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
-    
+
     Image burger1 = new Image(getClass().getResourceAsStream("/burger1.png"));
-    
+
     // Set the button action
     burgerButton.setOnAction(e -> {
       System.out.println("Right burger clicked!");
@@ -83,12 +89,10 @@ public class WelcomeScreen {
     });
 
     // Add the button to the HBox
-    // rowOfBurgers.getChildren().addAll(burgerView1, burgerView2, burgerButton);
 
     ImageView burgerView1 = new ImageView(burger1);
     var burgerContainer1 = new HBox(burgerView1);
     burgerContainer1.setAlignment(Pos.BASELINE_LEFT);
-    // ImageView burgerView3 = new ImageView(burger3);
     var burgerContainer3 = new HBox(burgerView3);
     burgerContainer3.setAlignment(Pos.BASELINE_RIGHT);
 
@@ -115,24 +119,46 @@ public class WelcomeScreen {
 
     rowOfButtons.getChildren().addAll(eatHereBtn, takeAwayBtn);
 
+    Button termsButton = new Button("Terms of Service");
+    termsButton.setStyle(
+        "-fx-text-fill: blue; -fx-underline: true; -fx-background-color: transparent;"
+    );
+    termsButton.setOnAction(e -> showTermsDialog(primaryStage));
+
+
+
     // Add centre image
     Image burger2 = new Image(getClass().getResourceAsStream("/burger2.png"));
     ImageView burgerView2 = new ImageView(burger2);
     rowOfBurgers.getChildren().addAll(burgerView1, burgerView2, burgerButton);
+
+    var langButton = new LangBtn();
+
+    // Translate all the text
+    langButton.addAction(event -> {
+      // Toggle the language in LanguageSetting
+      languageSetting.changeLanguage(
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
+      languageSetting.updateAllLabels(mainWindow);
+    });
+
+    // Position the language button in the bottom-left corner
+    StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
+    StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
 
     // Test sql connection
     SqlConnectionCheck connectionCheck = new SqlConnectionCheck();
     Label mysql = connectionCheck.getMysqlLabel();
 
     mainWindow.getChildren().addAll(
-        welcome, companyTitle, rowOfBurgers, rowOfButtons, mysql);
+        welcome, companyTitle, rowOfBurgers, rowOfButtons, mysql, termsButton);
 
     // Put everythng in a stackpane
-    StackPane mainPane = new StackPane(mainWindow);
+    StackPane mainPane = new StackPane(mainWindow, langButton);
     mainPane.setPrefSize(windowWidth, windowHeight);
 
     Scene scene = new Scene(mainPane, windowWidth, windowHeight);
-    
+
     // Set up action for eat here
     eatHereBtn.setOnAction(e -> {
       try {
@@ -143,8 +169,7 @@ public class WelcomeScreen {
             windowHeight,
             scene,
             0,
-            "eatHere"
-        );
+            "eatHere");
         primaryStage.setScene(mainMenuScene);
       } catch (SQLException ex) {
         ex.printStackTrace();
@@ -162,8 +187,7 @@ public class WelcomeScreen {
             windowHeight,
             scene,
             0,
-            "takeaway"
-        );
+            "takeaway");
         primaryStage.setScene(mainMenuScene);
       } catch (SQLException ex) {
         ex.printStackTrace();
@@ -171,14 +195,44 @@ public class WelcomeScreen {
     });
 
     AdminLoginScreen adminLoginScreen = new AdminLoginScreen();
-    Scene adminMenuScene = adminLoginScreen.createAdminLoginScreen(primaryStage, 
-          windowWidth, windowHeight, scene);
+    Scene adminMenuScene = adminLoginScreen.createAdminLoginScreen(primaryStage,
+        windowWidth, windowHeight, scene);
 
-    //Temporary Button to get to the admin menu
+    // Temporary Button to get to the admin menu
     burgerButton.setOnAction(e -> {
       primaryStage.setScene(adminMenuScene);
     });
 
     return scene;
+  }
+
+  private void showTermsDialog(Stage ownerStage) {
+    Stage dialog = new Stage();
+    dialog.initOwner(ownerStage);
+    dialog.setTitle("Terms of Service");
+    Label termsContent = new Label(
+        "1. Acceptance of Terms\n"
+        + "By using our services, you agree to these terms...\n\n"
+        + "2. Service Description\n"
+        + "We provide food ordering services...\n\n"
+        + "3. User Responsibilities\n"
+        + "You must provide accurate information...\n\n"
+        + "4. Limitation of Liability\n"
+        + "We are not responsible for...\n\n"
+        + "Last Updated: "
+    );
+    termsContent.setWrapText(true);
+    termsContent.setStyle("-fx-font-size: 14; -fx-padding: 10;");
+
+    ScrollPane scrollPane = new ScrollPane(termsContent);
+    scrollPane.setFitToWidth(true);
+    scrollPane.setPrefSize(400, 300);
+
+    VBox dialogLayout = new VBox(scrollPane);
+    dialogLayout.setPadding(new Insets(10));
+
+    Scene dialogScene = new Scene(dialogLayout, 500, 300);
+    dialog.setScene(dialogScene);
+    dialog.show();
   }
 }

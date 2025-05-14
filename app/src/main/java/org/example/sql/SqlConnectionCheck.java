@@ -24,12 +24,13 @@ public class SqlConnectionCheck {
     try {
       // Establish connection
       connection = DriverManager.getConnection(
-          "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
-              + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
-              + "?user=u5urh19mtnnlgmog"
-              + "&password=zPgqf8o6na6pv8j8AX8r"
-              + "&useSSL=true"
-              + "&allowPublicKeyRetrieval=true");
+          "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+          + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+          + "?user=u5urh19mtnnlgmog"
+          + "&password=zPgqf8o6na6pv8j8AX8r"
+          + "&useSSL=true"
+          + "&allowPublicKeyRetrieval=true"
+      );
       
       mysql.setText("Driver found and connected");
 
@@ -40,10 +41,10 @@ public class SqlConnectionCheck {
       mysql.setText("An error has occurred: " + e.getMessage());
       mysql.setStyle(
           "-fx-background-color: transparent;"
-              + "-fx-text-fill: black;"
-              + "-fx-font-size: 10;"
-              + "-fx-padding: 5 10;"
-              + "-fx-background-radius: 10;");
+          + "-fx-text-fill: black;"
+          + "-fx-font-size: 10;"
+          + "-fx-padding: 5 10;"
+          + "-fx-background-radius: 10;");
     }
     // End of SQL Section
   }

@@ -23,6 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.LangBtn;
+import org.example.kiosk.LanguageSetting;
 import org.example.menu.OrderItem;
 import org.example.menu.Product;
 import org.example.orders.Order;
@@ -32,29 +33,32 @@ import org.example.orders.Order;
  */
 public class AdminOrdHistoryScreen {
 
+  private LanguageSetting languageSetting = new LanguageSetting();
+
   /**
    * Scene to display the order history.
    *
    * @param primaryStage this window
-   * @param prevScene pevious scene to go back to
+   * @param prevScene    pevious scene to go back to
    * @return the scene itself
    */
   public Scene showHistoryScene(Stage primaryStage, Scene prevScene) {
-    
+
     // So the admin doesnt forget where he is lol
     Label historyLabel = new Label("Order History:");
     historyLabel.setStyle(
         "-fx-font-size: 45px;"
-        + "-fx-font-weight: bold;"
-    );
+            + "-fx-font-weight: bold;");
 
     // Setting up the table
     TableColumn<Order, Integer> idColumn = new TableColumn<>("Order ID");
     idColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
-    idColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+    idColumn.setPrefWidth(150);
+    idColumn.setStyle("-fx-alignment: CENTER;");
     TableColumn<Order, Integer> kioskColumn = new TableColumn<>("Kiosk ID");
     kioskColumn.setCellValueFactory(new PropertyValueFactory<>("kioskId"));
-    kioskColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+    kioskColumn.setPrefWidth(150);
+    kioskColumn.setStyle("-fx-alignment: CENTER;");
     TableColumn<Order, String> productsColumn = new TableColumn<>("Products");
     productsColumn.setCellValueFactory(new PropertyValueFactory<>("productSummary"));
 
@@ -67,11 +71,15 @@ public class AdminOrdHistoryScreen {
         {
 
           label.setWrapText(true);
-          label.setStyle("-fx-padding: 5px;");
+          label.setStyle(
+              "-fx-padding: 5px;"
+              + "-fx-alignment: Center;");
+          label.maxWidthProperty().bind(this.widthProperty().subtract(10));
+          label.setMinHeight(Region.USE_PREF_SIZE);
           setGraphic(label);
 
         }
-        
+
         // Overrides default cell update behaviour of javafx
 
         @Override
@@ -96,23 +104,26 @@ public class AdminOrdHistoryScreen {
       };
 
     });
-    productsColumn.setMaxWidth(1f * Integer.MAX_VALUE * 40);
+    productsColumn.setPrefWidth(800);
     TableColumn<Order, Double> amountColumn = new TableColumn<>("Amount Total");
     amountColumn.setCellValueFactory(new PropertyValueFactory<>("amountTotal"));
-    amountColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+    amountColumn.setPrefWidth(250);
+    amountColumn.setStyle("-fx-alignment: CENTER;");
     TableColumn<Order, String> statusColumn = new TableColumn<>("Status");
     statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-    statusColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+    statusColumn.setPrefWidth(200);
+    statusColumn.setStyle("-fx-alignment: CENTER;");
     TableColumn<Order, Timestamp> dateColumn = new TableColumn<>("Order Date");
     dateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
-    dateColumn.setMaxWidth(1f * Integer.MAX_VALUE * 20);
-    
+    dateColumn.setPrefWidth(250);
+    dateColumn.setStyle("-fx-alignment: CENTER;");
+
     // Displaying the fetched data in a neat table
     TableView<Order> historyTable = new TableView<>();
-    historyTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+    historyTable.setFixedCellSize(-1);
     historyTable.setMaxWidth(Double.MAX_VALUE);
     historyTable.setPrefWidth(Region.USE_COMPUTED_SIZE);
-    
+
     // Puts the table together
     historyTable.getColumns().add(idColumn);
     historyTable.getColumns().add(kioskColumn);
@@ -120,42 +131,36 @@ public class AdminOrdHistoryScreen {
     historyTable.getColumns().add(amountColumn);
     historyTable.getColumns().add(statusColumn);
     historyTable.getColumns().add(dateColumn);
-    
+
     // Querys data into the table
     try {
-      
+
       // Gets orders
       ArrayList<Order> orders = queryOrders();
       // Gets Products for each order
       queryOrderItemsFor(orders);
       // Inputs it into the table
       historyTable.getItems().addAll(orders);
-      
+
     } catch (SQLException e) {
-      
+
       e.printStackTrace();
-      
+
     }
-    
+
     // VBox for the table
     VBox orderHistory = new VBox(historyTable);
-    VBox.setVgrow(orderHistory, Priority.ALWAYS);
+    VBox.setVgrow(historyTable, Priority.ALWAYS);
     historyTable.prefWidthProperty().bind(orderHistory.widthProperty());
     orderHistory.setPadding(new Insets(20, 0, 0, 0));
-    
-    // VBox to align screen label and table
-    VBox topBox = new VBox();
-    topBox.setMaxWidth(Double.MAX_VALUE);
-    topBox.setAlignment(Pos.TOP_CENTER);
-    topBox.setSpacing(40);
-    topBox.getChildren().addAll(historyLabel, orderHistory);
 
     // Upper part of the screen
-    HBox topContainer = new HBox();
+    VBox topContainer = new VBox();
     topContainer.setMaxWidth(Double.MAX_VALUE);
-    HBox.setHgrow(topBox, Priority.ALWAYS);
-    topContainer.setAlignment(Pos.CENTER);
-    topContainer.getChildren().addAll(topBox);
+    topContainer.setAlignment(Pos.TOP_CENTER);
+    topContainer.setSpacing(40);
+    VBox.setVgrow(orderHistory, Priority.ALWAYS);
+    topContainer.getChildren().addAll(historyLabel, orderHistory);
 
     // Back button
     // Clicking button means user goes to previous screen
@@ -166,14 +171,13 @@ public class AdminOrdHistoryScreen {
 
     });
 
-    // Language Button
-    // cycles images on click
-    var langButton = new LangBtn();
-    
     // Spacer for Bottom Row
     Region spacerBottom = new Region();
     HBox.setHgrow(spacerBottom, Priority.ALWAYS);
-    
+
+    // Language Button
+    var langButton = new LangBtn();
+
     // Bottom row of the screen
     HBox bottomContainer = new HBox();
     bottomContainer.setAlignment(Pos.BOTTOM_LEFT);
@@ -182,8 +186,18 @@ public class AdminOrdHistoryScreen {
     // Setting positioning of all the elements
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(50));
-    layout.setTop(topContainer);
+    layout.setCenter(topContainer);
     layout.setBottom(bottomContainer);
+    BorderPane.setMargin(bottomContainer, new Insets(40, 0, 0, 0));
+
+    // Translate all the text
+    langButton.addAction(event -> {
+      // Toggle the language in LanguageSetting
+      languageSetting.changeLanguage(
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
+      languageSetting.updateAllLabels(layout);
+      // historyTable.refresh();
+    });
 
     return new Scene(layout, 1920, 1080);
 
@@ -201,12 +215,12 @@ public class AdminOrdHistoryScreen {
     try (
 
         Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
-            + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
-            + "?user=u5urh19mtnnlgmog"
-            + "&password=zPgqf8o6na6pv8j8AX8r"
-            + "&useSSL=true"
-            + "&allowPublicKeyRetrieval=true"
+              "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+              + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+              + "?user=u5urh19mtnnlgmog"
+              + "&password=zPgqf8o6na6pv8j8AX8r"
+              + "&useSSL=true"
+              + "&allowPublicKeyRetrieval=true"
         );
 
         PreparedStatement stmt = conn.prepareStatement(querySql);
@@ -238,19 +252,18 @@ public class AdminOrdHistoryScreen {
   private void queryOrderItemsFor(ArrayList<Order> orders) throws SQLException {
 
     String itemQuery = "SELECT oi.order_id, oi.product_id, p.name, p.price, oi.quantity "
-          + "FROM order_item oi "
-          + "JOIN product p ON oi.product_id = p.product_id";
+        + "FROM order_item oi "
+        + "JOIN product p ON oi.product_id = p.product_id";
 
     try (
 
         Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://bdzvjxbmj2y2atbkdo4j-mysql.services"
-            + ".clever-cloud.com:3306/bdzvjxbmj2y2atbkdo4j"
-            + "?user=u5urh19mtnnlgmog"
-            + "&password=zPgqf8o6na6pv8j8AX8r"
-            + "&useSSL=true"
-            + "&allowPublicKeyRetrieval=true"
-        );
+            "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+                + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+                + "?user=u5urh19mtnnlgmog"
+                + "&password=zPgqf8o6na6pv8j8AX8r"
+                + "&useSSL=true"
+                + "&allowPublicKeyRetrieval=true");
 
         PreparedStatement stmt = conn.prepareStatement(itemQuery);
         ResultSet rs = stmt.executeQuery()
@@ -269,7 +282,8 @@ public class AdminOrdHistoryScreen {
 
           if (order.getOrderId() == orderId) {
 
-            Product product = new Product() {};
+            Product product = new Product() {
+            };
             product.setId(productId);
             product.setName(name);
             product.setPrice(price);
@@ -288,6 +302,6 @@ public class AdminOrdHistoryScreen {
 
     }
 
-  } 
+  }
 
 }

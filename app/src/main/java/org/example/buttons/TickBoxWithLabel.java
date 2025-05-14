@@ -10,7 +10,6 @@ import javafx.scene.layout.VBox;
  */
 public class TickBoxWithLabel extends VBox {
   private final CheckBox checkBox;
-  private final Label label;
 
   /**
    * The constructor for a tick box with a label.
@@ -45,6 +44,21 @@ public class TickBoxWithLabel extends VBox {
 
   public CheckBox getCheckBox() {
     return checkBox;
+  }
+
+  private Label label;
+
+  public Label getLabel() {
+    return label;
+  }
+
+  /**
+   * Sets the text of the button's label.
+   */
+  public void setButtonText(String text) {
+    if (label != null) {
+      label.setText(text);
+    }
   }
 
 }

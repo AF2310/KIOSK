@@ -20,6 +20,7 @@ import org.example.buttons.ConfirmOrderButton;
 import org.example.buttons.EatHereButton;
 import org.example.buttons.LangBtn;
 import org.example.buttons.TakeAwayButton;
+import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
 import org.example.orders.Cart;
 import org.example.users.Customer;
@@ -33,6 +34,7 @@ import org.example.users.Customer;
 public class CheckoutScreen {
 
   private Stage primaryStage;
+  private LanguageSetting languageSetting = new LanguageSetting();
   // private Connection conn;
   // private float totalPrice = 0.0f;
   // private Label totalLabel;
@@ -156,11 +158,10 @@ public class CheckoutScreen {
         // TODO Auto-generated catch block
         err.printStackTrace();
       }
-
+      Cart.getInstance().convertMealsIntoSingles();
       try {
         Cart.getInstance().saveQuantityToDb(conn, orderId);
       } catch (SQLException e1) {
-        // TODO Auto-generated catch block
         e1.printStackTrace();
       }
 
@@ -172,7 +173,7 @@ public class CheckoutScreen {
           windowWidth,
           windowHeight,
           welcomeScrScene,
-          orderId // TODO: fix the order id fetching
+          orderId
       );
       this.primaryStage.setScene(ordConfirmScene);
 
@@ -249,6 +250,15 @@ public class CheckoutScreen {
         topBox,
         checkoutGrid,
         bottomPart);
+
+    // Just pass in the Labeled components to translate
+    langButton.addAction(event -> {
+      // Toggle the language in LanguageSetting
+      languageSetting.changeLanguage(
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en"
+      );
+      languageSetting.updateAllLabels(layout);
+    });
 
     // Create final scene result
     return new Scene(layout, windowWidth, windowHeight);

@@ -1,5 +1,7 @@
 package org.example.screens;
 
+import java.sql.Connection;
+import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,12 +16,14 @@ import javafx.stage.Stage;
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
-import org.example.buttons.RoundButton;
+import org.example.kiosk.LanguageSetting;
 
 /**
  * Admin menu class.
  */
 public class AdminMenuScreen {
+
+  private LanguageSetting languageSetting = new LanguageSetting();
 
   /**
    * Admin menu screen.
@@ -28,17 +32,19 @@ public class AdminMenuScreen {
       Stage primaryStage,
       double windowWidth,
       double windowHeight,
-      Scene welcomeScrScene) {
+      Scene welcomeScrScene,
+      Connection conn) {
 
-    //the mainlayout
+    // the mainlayout
     VBox adminMenuLayout = new VBox(20);
     adminMenuLayout.setAlignment(Pos.TOP_CENTER);
     adminMenuLayout.setPadding(new Insets(10));
+    
     // Making the title on top of the admin menu screen
-    Label adminMenuText = new Label("Welcome, admin!");
+    Label adminMenuText = new Label("Welcome, Admin!");
     adminMenuText.setStyle(
         "-fx-font-size: 100px;"
-        + "-fx-font-weight: bold;");
+            + "-fx-font-weight: bold;");
 
     adminMenuLayout.getChildren().addAll(adminMenuText);
 
@@ -51,25 +57,42 @@ public class AdminMenuScreen {
 
     // All the same instances of the MidButton
     MidButton updateMenuBtn = new MidButton("Update Menu Items", "rgb(255, 255, 255)", 30);
-    MidButton changeTimerBtn = new MidButton("Change timer setting", "rgb(255, 255, 255)", 30);
-
+    
     MidButton orderHistoryBtn = new MidButton("Order History", "rgb(255, 255, 255)", 30);
     orderHistoryBtn.setOnAction(e -> {
       Scene historyScene = new AdminOrdHistoryScreen().showHistoryScene(
-          primaryStage, 
+          primaryStage,
           adminMenuLayout.getScene());
       primaryStage.setScene(historyScene);
     });
+      
+    MidButton salesSummaryBtn = new MidButton("See Sales Summary", "rgb(255, 255, 255)", 30);
+    salesSummaryBtn.setOnAction(e -> {
+      Scene statsScene = new SalesStatsScreen().showStatsScene(
+          primaryStage,
+          adminMenuLayout.getScene());
+      primaryStage.setScene(statsScene);
+    });
 
-    MidButton specialOffersBtn = new MidButton("Set special offers", "rgb(255, 255, 255)", 30);
-    MidButton salesSummaryBtn = new MidButton("See sales summary", "rgb(255, 255, 255)", 30);
-
-
+    MidButton changeTimerBtn = new MidButton("Change Timer Setting", "rgb(255, 255, 255)", 30);
+    MidButton specialOffersBtn = new MidButton("Set Special Offers", "rgb(255, 255, 255)", 30);
+    
     centerGrid.add(updateMenuBtn, 0, 0);
     centerGrid.add(changeTimerBtn, 0, 1);
     centerGrid.add(specialOffersBtn, 0, 2);
     centerGrid.add(orderHistoryBtn, 1, 0);
     centerGrid.add(salesSummaryBtn, 1, 1);
+
+    MidButton searchBarBtn = new MidButton("Search", "rgb(255, 255, 255)", 30);
+
+    searchBarBtn.setOnAction(e -> {
+      Scene searchBarScreen = new SeachBarScreen().showSearchScene(
+          primaryStage, 
+          adminMenuLayout.getScene());
+      primaryStage.setScene(searchBarScreen);
+    });
+
+    centerGrid.add(searchBarBtn, 1, 2);
 
     // Adding the language button which already has the functionality of
     // changing the logo of the language
@@ -88,7 +111,7 @@ public class AdminMenuScreen {
 
     updateMenuBtn.setOnAction(e -> {
       Scene updateMenuScene = new UpdateMenuItems().adminUpdateMenuItems(
-          primaryStage, 
+          primaryStage,
           adminMenuLayout.getScene());
       primaryStage.setScene(updateMenuScene);
     });
@@ -98,10 +121,23 @@ public class AdminMenuScreen {
       primaryStage.setScene(welcomeScrScene);
     });
 
+    // Pass in the Labeled components to translate
+    langButton.addAction(event -> {
+      langButton.updateLanguage(List.of(
+          adminMenuText,
+          updateMenuBtn.getButtonLabel(),
+          changeTimerBtn.getButtonLabel(),
+          orderHistoryBtn.getButtonLabel(),
+          specialOffersBtn.getButtonLabel(),
+          salesSummaryBtn.getButtonLabel(),
+          cancelButton.getButtonLabel()
+      ));
+    });
+
     HBox bottomLayout = new HBox();
     bottomLayout.setPadding(new Insets(0, 0, 0, 0));
     bottomLayout.getChildren().addAll(bottomLeftBox, spacerBottom, bottomRightBox);
-    
+
     // Assigning the positions of elements for the Admin menu screen
     BorderPane mainBorderPane = new BorderPane();
     mainBorderPane.setPadding(new Insets(50));
@@ -109,9 +145,16 @@ public class AdminMenuScreen {
     mainBorderPane.setCenter(centerGrid);
     mainBorderPane.setBottom(bottomLayout);
 
+    // Translate all the text
+    langButton.addAction(event -> {
+      // Toggle the language in LanguageSetting
+      languageSetting.changeLanguage(
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
+      languageSetting.updateAllLabels(mainBorderPane);
+    });
+
     Scene adminMenuScene = new Scene(mainBorderPane, windowWidth, windowHeight);
 
     return adminMenuScene;
   }
 }
-

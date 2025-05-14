@@ -26,8 +26,8 @@ public class RectangleTextFieldWithLabel extends VBox {
     this.setMaxWidth(460);
 
     // Label setup
-    Label buttonLabel = new Label(labelText);
-    buttonLabel.setStyle("-fx-background-color: transparent;"
+    label = new Label(labelText);
+    label.setStyle("-fx-background-color: transparent;"
             + "-fx-font-weight: normal;"
             + "-fx-font-size: 38;"
             + "-fx-padding: 5 10;"
@@ -42,7 +42,7 @@ public class RectangleTextFieldWithLabel extends VBox {
 
     // Set the white button
     if (buttonColor.equals("rgb(255, 255, 255)")) {
-      buttonLabel.setStyle(buttonLabel.getStyle() + "-fx-text-fill: black;");
+      label.setStyle(label.getStyle() + "-fx-text-fill: black;");
       textField.setStyle(textField.getStyle()  
                 + "-fx-background-color: rgb(255, 255, 255);"
                 + "-fx-border-color: black;"
@@ -51,7 +51,7 @@ public class RectangleTextFieldWithLabel extends VBox {
                 + "-fx-background-radius: 30;");
     // Set the non-white button
     } else {
-      buttonLabel.setStyle(buttonLabel.getStyle() + "-fx-text-fill: white;");
+      label.setStyle(label.getStyle() + "-fx-text-fill: white;");
       textField.setStyle(textField.getStyle() 
                 + "-fx-background-color: " + buttonColor + ";"
                 + "-fx-border-radius: 30;"
@@ -61,11 +61,26 @@ public class RectangleTextFieldWithLabel extends VBox {
     HBox textFieldContainer = new HBox(textField);
     textFieldContainer.setAlignment(Pos.CENTER);
     textField.setPrefWidth(300);  
-    this.getChildren().addAll(buttonLabel, textField);
+    this.getChildren().addAll(label, textField);
   }
     
   public String getText() {
     return textField.getText();
+  }
+
+  private Label label;
+
+  public Label getLabel() {
+    return label;
+  }
+
+  /**
+   * Sets the text of the button's label.
+   */
+  public void setButtonText(String text) {
+    if (label != null) {
+      label.setText(text);
+    }
   }
     
 }
