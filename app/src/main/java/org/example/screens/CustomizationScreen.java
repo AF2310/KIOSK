@@ -52,10 +52,21 @@ public class CustomizationScreen {
     colorPicker.setPrefWidth(200);
     colorPicker.setPrefHeight(50);
 
+    // Color picker for scenes
+    ColorPicker sceneColorPicker = new ColorPicker(Color.BLACK);
+    sceneColorPicker.setOnAction(e -> {
+
+      Color selectedColor = sceneColorPicker.getValue();
+      BackgroundColorStore.setCurrentBackgroundColor(selectedColor);
+
+    });
+    sceneColorPicker.setPrefWidth(200);
+    sceneColorPicker.setPrefHeight(50);
+
     // Making the title on top of the admin menu screen
     Label adminMenuText = new TitleLabel("Set & Test Design");
 
-    adminMenuLayout.getChildren().addAll(adminMenuText, colorPicker);
+    adminMenuLayout.getChildren().addAll(adminMenuText, colorPicker, sceneColorPicker);
 
     // this gridpane is used for all the middle buttons in the admin menu,
     // to align tem properly in rows and columns.

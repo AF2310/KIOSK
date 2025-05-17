@@ -80,7 +80,7 @@ public class MainMenuScreen {
    * @return the created scene
    * @throws SQLException error server quick fix
    */
-  public Scene createMainMenuScreen(
+  public CustomScene createMainMenuScreen(
       Stage primaryStage,
       double windowWidth,
       double windowHeight,
@@ -431,7 +431,18 @@ public class MainMenuScreen {
     mainPane.setPrefSize(windowWidth, windowHeight);
 
     // Create final scene result
-    return new Scene(mainPane, windowWidth, windowHeight);
+    CustomScene scene = new CustomScene(mainPane, windowWidth, windowHeight);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
+
+    return scene;
   }
 
   private List<Product> convert(Connection conn, List<Single> items) throws SQLException {
