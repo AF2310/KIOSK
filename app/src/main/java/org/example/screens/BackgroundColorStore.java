@@ -1,6 +1,6 @@
 package org.example.screens;
 
-import javafx.scene.paint.Color;;
+import javafx.scene.paint.Color;
 
 /**
  * Class for storing customized background color.
