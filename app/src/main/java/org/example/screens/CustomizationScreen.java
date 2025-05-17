@@ -1,6 +1,7 @@
 package org.example.screens;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -43,6 +44,12 @@ public class CustomizationScreen {
     adminMenuLayout.setAlignment(Pos.TOP_CENTER);
     adminMenuLayout.setPadding(new Insets(10));
 
+    // Label for label color picker
+    Label labelPicker = new Label("Text color: ");
+    labelPicker.setStyle(
+        "-fx-font-size: 25px;"
+        + "-fx-font-weight: bold;");
+
     // Color picker
     ColorPicker colorPicker = new ColorPicker(Color.BLACK);
     colorPicker.setOnAction(e -> {
@@ -51,6 +58,12 @@ public class CustomizationScreen {
     });
     colorPicker.setPrefWidth(200);
     colorPicker.setPrefHeight(50);
+
+    // Label for label color picker
+    Label scenePicker = new Label("Background color: ");
+    scenePicker.setStyle(
+        "-fx-font-size: 25px;"
+        + "-fx-font-weight: bold;");
 
     // Color picker for scenes
     ColorPicker sceneColorPicker = new ColorPicker(Color.BLACK);
@@ -66,7 +79,8 @@ public class CustomizationScreen {
     // Making the title on top of the admin menu screen
     Label adminMenuText = new TitleLabel("Set & Test Design");
 
-    adminMenuLayout.getChildren().addAll(adminMenuText, colorPicker, sceneColorPicker);
+    adminMenuLayout.getChildren().addAll(adminMenuText, labelPicker, colorPicker,
+        scenePicker, sceneColorPicker);
 
     // this gridpane is used for all the middle buttons in the admin menu,
     // to align tem properly in rows and columns.
@@ -109,8 +123,21 @@ public class CustomizationScreen {
     });
 
     // go back to the main screen if clicked
+    // reinstantiates welcome screen, so the color change takes effect
     cancelButton.setOnAction(e -> {
-      primaryStage.setScene(welcomeScrScene);
+
+      try {
+
+        CustomScene welcomeScreen = new WelcomeScreen().createWelcomeScreen(primaryStage,
+            windowWidth, windowHeight);
+        primaryStage.setScene(welcomeScreen);
+
+      } catch (SQLException ex) {
+        
+        ex.printStackTrace();
+
+      }
+
     });
 
     HBox bottomLayout = new HBox();
