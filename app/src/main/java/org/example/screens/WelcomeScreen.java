@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButtonWithImage;
@@ -31,7 +32,7 @@ public class WelcomeScreen {
    *
    * @throws SQLException if the server has issues
    */
-  public Scene createWelcomeScreen(
+  public CustomScene createWelcomeScreen(
       Stage primaryStage,
       double windowWidth,
       double windowHeight) throws SQLException {
@@ -157,13 +158,22 @@ public class WelcomeScreen {
     StackPane mainPane = new StackPane(mainWindow, langButton);
     mainPane.setPrefSize(windowWidth, windowHeight);
 
-    Scene scene = new Scene(mainPane, windowWidth, windowHeight);
+    CustomScene scene = new CustomScene(mainPane, windowWidth, windowHeight);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
 
     // Set up action for eat here
     eatHereBtn.setOnAction(e -> {
       try {
         MainMenuScreen mainMenuScreen = new MainMenuScreen();
-        Scene mainMenuScene = mainMenuScreen.createMainMenuScreen(
+        CustomScene mainMenuScene = mainMenuScreen.createMainMenuScreen(
             primaryStage,
             windowWidth,
             windowHeight,
@@ -181,7 +191,7 @@ public class WelcomeScreen {
     takeAwayBtn.setOnAction(e -> {
       try {
         MainMenuScreen mainMenuScreen = new MainMenuScreen();
-        Scene mainMenuScene = mainMenuScreen.createMainMenuScreen(
+        CustomScene mainMenuScene = mainMenuScreen.createMainMenuScreen(
             primaryStage,
             windowWidth,
             windowHeight,

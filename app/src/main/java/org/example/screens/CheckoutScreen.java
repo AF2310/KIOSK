@@ -10,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.animations.FadingAnimation;
 import org.example.boxes.CheckoutGridWithButtons;
@@ -49,7 +50,7 @@ public class CheckoutScreen {
    * @param conn            the database connection
    * @return scene containing all the order details
    */
-  public Scene createCheckoutScreen(
+  public CustomScene createCheckoutScreen(
       Stage primaryStage,
       double windowWidth,
       double windowHeight,
@@ -237,6 +238,17 @@ public class CheckoutScreen {
     });
 
     // Create final scene result
-    return new Scene(layout, windowWidth, windowHeight);
+    CustomScene scene = new CustomScene(layout, windowWidth, windowHeight);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
+
+    return scene;
   }
 }

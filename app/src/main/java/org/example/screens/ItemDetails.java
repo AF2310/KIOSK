@@ -21,6 +21,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.boxes.AddRemoveBlock;
 import org.example.buttons.ArrowButton;
@@ -53,7 +54,7 @@ public class ItemDetails {
    * @param cart         the cart where all items are
    * @return scene containing all item details
    */
-  public Scene create(Stage primaryStage, Scene prevScene, Single item, Cart cart)
+  public CustomScene create(Stage primaryStage, Scene prevScene, Single item, Cart cart)
       throws SQLException {
     item.setIngredients(DriverManager.getConnection(
         "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
@@ -320,7 +321,19 @@ public class ItemDetails {
       languageSetting.updateAllLabels(layout);
     });
 
-    return new Scene(layout, 1920, 1080);
+    CustomScene scene = new CustomScene(layout, 1920, 1080);
+
+    
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
+
+    return scene;
 
   }
 
@@ -352,7 +365,7 @@ public class ItemDetails {
    * @param conn         the connection to the database
    * @return the scene
    */
-  public Scene createMealUpsell(Stage primaryStage, Scene mainMenu, Single item,
+  public CustomScene createMealUpsell(Stage primaryStage, Scene mainMenu, Single item,
       List<AddRemoveBlock> blocks, List<Integer> quantities, Connection conn) {
     Label mainText = new Label("Do you want to make it a meal?");
     mainText.setStyle(
@@ -407,6 +420,17 @@ public class ItemDetails {
     layout.setAlignment(Pos.CENTER);
     layout.getChildren().addAll(mainText, buttonBox);
 
-    return new Scene(layout, 1920, 1080);
+    CustomScene scene = new CustomScene(layout, 1920, 1080);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
+
+    return scene;
   }
 }

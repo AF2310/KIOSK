@@ -1,9 +1,11 @@
 package org.example.screens;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -11,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.LangBtn;
@@ -19,7 +22,6 @@ import org.example.buttons.MidButtonWithImage;
 import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.LanguageSetting;
-
 
 /**
  * Screen for customizing and testing the kiosk design.
@@ -42,10 +44,43 @@ public class CustomizationScreen {
     adminMenuLayout.setAlignment(Pos.TOP_CENTER);
     adminMenuLayout.setPadding(new Insets(10));
 
+    // Label for label color picker
+    Label labelPicker = new Label("Text color: ");
+    labelPicker.setStyle(
+        "-fx-font-size: 25px;"
+        + "-fx-font-weight: bold;");
+
+    // Color picker
+    ColorPicker colorPicker = new ColorPicker(Color.BLACK);
+    colorPicker.setOnAction(e -> {
+      Color selectedColor = colorPicker.getValue();
+      TitleLabel.setTextColor(selectedColor);
+    });
+    colorPicker.setPrefWidth(200);
+    colorPicker.setPrefHeight(50);
+
+    // Label for label color picker
+    Label scenePicker = new Label("Background color: ");
+    scenePicker.setStyle(
+        "-fx-font-size: 25px;"
+        + "-fx-font-weight: bold;");
+
+    // Color picker for scenes
+    ColorPicker sceneColorPicker = new ColorPicker(Color.BLACK);
+    sceneColorPicker.setOnAction(e -> {
+
+      Color selectedColor = sceneColorPicker.getValue();
+      BackgroundColorStore.setCurrentBackgroundColor(selectedColor);
+
+    });
+    sceneColorPicker.setPrefWidth(200);
+    sceneColorPicker.setPrefHeight(50);
+
     // Making the title on top of the admin menu screen
     Label adminMenuText = new TitleLabel("Set & Test Design");
 
-    adminMenuLayout.getChildren().addAll(adminMenuText);
+    adminMenuLayout.getChildren().addAll(adminMenuText, labelPicker, colorPicker,
+        scenePicker, sceneColorPicker);
 
     // this gridpane is used for all the middle buttons in the admin menu,
     // to align tem properly in rows and columns.
@@ -88,8 +123,21 @@ public class CustomizationScreen {
     });
 
     // go back to the main screen if clicked
+    // reinstantiates welcome screen, so the color change takes effect
     cancelButton.setOnAction(e -> {
-      primaryStage.setScene(welcomeScrScene);
+
+      try {
+
+        CustomScene welcomeScreen = new WelcomeScreen().createWelcomeScreen(primaryStage,
+            windowWidth, windowHeight);
+        primaryStage.setScene(welcomeScreen);
+
+      } catch (SQLException ex) {
+        
+        ex.printStackTrace();
+
+      }
+
     });
 
     HBox bottomLayout = new HBox();
