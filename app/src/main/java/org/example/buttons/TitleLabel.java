@@ -3,6 +3,7 @@ package org.example.buttons;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 
 /**
  * A custom Label for displaying titles with global style settings.
@@ -36,8 +37,6 @@ public class TitleLabel extends Label {
             + "-fx-text-fill: " + textColor + ";");
   }
 
-  // === Static Setters to change global style and update all instances ===
-
   public static void setFontFamily(String font) {
     fontFamily = font;
     updateAllStyles();
@@ -58,8 +57,8 @@ public class TitleLabel extends Label {
     updateAllStyles();
   }
 
-  public static void setTextColor(String color) {
-    textColor = color;
+  public static void setTextColor(Color color) {
+    textColor = toRgbString(color);
     updateAllStyles();
   }
 
@@ -79,5 +78,12 @@ public class TitleLabel extends Label {
   // + "-fx-text-fill:rgb(0, 0, 0);"
   // );
   // }
+
+  private static String toRgbString(Color color) {
+    int r = (int) (color.getRed() * 255);
+    int g = (int) (color.getGreen() * 255);
+    int b = (int) (color.getBlue() * 255);
+    return "rgb(" + r + ", " + g + ", " + b + ")";
+  }
 
 }
