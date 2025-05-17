@@ -139,7 +139,7 @@ public class AdminMenuScreen {
     // go back to the main screen if clicked
     customBtn.setOnAction(e -> {
       Scene statsScene = new CustomizationScreen().showCustomizationScreen(
-        primaryStage, windowWidth, windowHeight, welcomeScrScene, conn);
+          primaryStage, windowWidth, windowHeight, welcomeScrScene, conn);
       primaryStage.setScene(statsScene);
     });
 

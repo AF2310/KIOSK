@@ -27,7 +27,7 @@ public class ArrowButton extends Button {
    */
   public ArrowButton(boolean pointingLeft, boolean setGrey) {
     // Default button sizes
-    this.setPrefSize(60, 300);
+    this.setPrefSize(100, 500);
 
     // Border of button will be black if setGrey is false and 
     // gey if set grey is true
@@ -38,7 +38,7 @@ public class ArrowButton extends Button {
         "-fx-background-color: rgb(255, 255, 255);"
         + "-fx-border-color: " + borderColor + ";"
         + "-fx-border-width: 3px;"
-        + "-fx-border-radius: 9px;" // For round borders
+        + "-fx-border-radius: 12px;" // For round borders
         + "-fx-padding: 10px;"      // For wider clickable area
     );
 
