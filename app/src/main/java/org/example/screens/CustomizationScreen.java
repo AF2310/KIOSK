@@ -1,13 +1,6 @@
 package org.example.screens;
 
 import java.sql.Connection;
-
-import org.example.buttons.CancelButtonWithText;
-import org.example.buttons.LangBtn;
-import org.example.buttons.MidButton;
-import org.example.buttons.MidButtonWithImage;
-import org.example.buttons.SqrBtnWithOutline;
-import org.example.kiosk.LanguageSetting;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,7 +12,18 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.buttons.CancelButtonWithText;
+import org.example.buttons.LangBtn;
+import org.example.buttons.MidButton;
+import org.example.buttons.MidButtonWithImage;
+import org.example.buttons.SqrBtnWithOutline;
+import org.example.buttons.TitleLabel;
+import org.example.kiosk.LanguageSetting;
 
+
+/**
+ * Screen for customizing and testing the kiosk design.
+ */
 public class CustomizationScreen {
   private LanguageSetting languageSetting = new LanguageSetting();
 
@@ -37,12 +41,9 @@ public class CustomizationScreen {
     VBox adminMenuLayout = new VBox(20);
     adminMenuLayout.setAlignment(Pos.TOP_CENTER);
     adminMenuLayout.setPadding(new Insets(10));
-    
+
     // Making the title on top of the admin menu screen
-    Label adminMenuText = new Label("Set & Test Design Settings");
-    adminMenuText.setStyle(
-        "-fx-font-size: 100px;"
-            + "-fx-font-weight: bold;");
+    Label adminMenuText = new TitleLabel("Set & Test Design");
 
     adminMenuLayout.getChildren().addAll(adminMenuText);
 
@@ -58,7 +59,7 @@ public class CustomizationScreen {
     var testBtn2 = new MidButtonWithImage("With Image", "/eatHere.png", "rgb(0, 0, 0)");
     var testBtn3 = new MidButton("Outlined", "rgb(255, 255, 255)", 30);
     var testBtn4 = new SqrBtnWithOutline("With Image", "/cancel.png", "rgb(195, 4, 4)");
-    
+
     centerGrid.add(testBtn1, 0, 0);
     centerGrid.add(testBtn4, 0, 1);
     centerGrid.add(testBtn2, 1, 0);
