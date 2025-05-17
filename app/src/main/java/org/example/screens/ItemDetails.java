@@ -25,9 +25,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.boxes.AddRemoveBlock;
 import org.example.buttons.ArrowButton;
+import org.example.buttons.ColorButtonWithImage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButtonWithImage;
 import org.example.buttons.SquareButtonWithImg;
+import org.example.buttons.TitleLabel;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Ingredient;
 import org.example.menu.Meal;
@@ -171,10 +173,7 @@ public class ItemDetails {
     ingredientListBox.setAlignment(Pos.CENTER);
 
     // Item label
-    Label nameLabel = new Label(item.getName());
-    nameLabel.setStyle(
-        "-fx-font-size: 65px;"
-            + "-fx-font-weight: bold;");
+    var nameLabel = new TitleLabel(item.getName());
 
     // TODO: Add description to the item once it has one. This is dummy text
     var descriptionLabel = new Label("This is a yummy " + item.getName().toLowerCase());
@@ -248,9 +247,8 @@ public class ItemDetails {
     topContainer.setAlignment(Pos.CENTER);
     topContainer.getChildren().addAll(leftSide, rightSide);
 
-    MidButtonWithImage addToCartButton = new MidButtonWithImage("Add To Cart",
-        "cart_wh.png",
-        "rgb(81, 173, 86)");
+    var addToCartButton = new ColorButtonWithImage("Add To Cart",
+        "cart_wh.png");
 
     addToCartButton.setOnAction(e -> {
       try {
