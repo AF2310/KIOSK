@@ -99,7 +99,7 @@ public class MealCustomizationScreen {
    * @param meal the meal for which this side is picked
    * @return returns a scene for side options.
    */
-  public Scene createSideSelectionScene(Stage stage, Scene returnScene,
+  public CustomScene createSideSelectionScene(Stage stage, Scene returnScene,
       Meal meal) {
     try {
       meal.setMain(conn);
@@ -229,7 +229,18 @@ public class MealCustomizationScreen {
       stage.setScene(drinkScene);
     });
 
-    return new Scene(layout, 1920, 1080);
+    CustomScene scene = new CustomScene(layout, 1920, 1080);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
+
+    return scene;
   }
 
   private List<Product> getDrinkOptionsForMeal(int mealId) {
@@ -270,7 +281,7 @@ public class MealCustomizationScreen {
    * @param sideScene goesback to the side scene
    * @return it returns the scene for drink options.
    */
-  public Scene createDrinkSelectionScene(Stage stage, Scene mainScene,
+  public CustomScene createDrinkSelectionScene(Stage stage, Scene mainScene,
       Meal meal, Scene sideScene) {
 
     Label title = new Label("Pick a Drink for your Meal");
@@ -393,13 +404,36 @@ public class MealCustomizationScreen {
       languageSetting.updateAllLabels(layout);
     });
 
-    return new Scene(layout, 1920, 1080);
+    CustomScene scene = new CustomScene(layout, 1920, 1080);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
+
+    return scene;
   }
 
   // TODO create this screen and link it after the drink selection.
-  public Scene createMealConfirmationScene(Stage stage, Scene drinkSelectionScene) {
+  public CustomScene createMealConfirmationScene(Stage stage, Scene drinkSelectionScene) {
     BorderPane layout = new BorderPane();
-    return new Scene(layout, 1920, 1080);
+
+    CustomScene scene = new CustomScene(layout, 1920, 1080);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
+
+    return scene;
   }
 }
 

@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -30,7 +31,7 @@ public class OrderConfirmationScreen {
    * @param orderId the id of the order (database)
    * @return scene containing the order confirmation
    */
-  public Scene createOrderConfirmationScreen(
+  public CustomScene createOrderConfirmationScreen(
       Stage primaryStage,
       double windowWidth,
       double windowHeight,
@@ -65,6 +66,17 @@ public class OrderConfirmationScreen {
     oconfirmStack.getChildren().addAll(screenLabelBox);
     
     // Create final scene result
-    return new Scene(oconfirmStack, windowWidth, windowHeight);
+    CustomScene scene = new CustomScene(oconfirmStack, windowWidth, windowHeight);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
+
+    return scene;
   }
 }
