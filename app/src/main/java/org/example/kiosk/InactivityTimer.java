@@ -10,6 +10,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.example.buttons.MidButton;
+import org.example.orders.Cart;
 
 /**
  * This is the timer that starts counting after a
@@ -115,11 +116,18 @@ public class InactivityTimer {
       // Button for confirmation that user is still active
       MidButton button = new MidButton("Yes", "green", 40);
 
+      // Make timer for full reset if user doesn't respond to popup after 5 seconds
+      // User has 5 seconds to respond
+      Timer popupTimer = new Timer();
+      popupTimer.schedule(getFullResetTask(inactivityPopup, popupTimer), 5 * 1000);
+
       // User confirms he's still active
-      // -> popup gets removed and timer resets
+      // -> popup gets removed and all timers reset
       button.setOnAction(e -> {
         inactivityPopup.close();
+        popupTimer.cancel();
         resetTimer();
+        System.out.println("DEBUG: User confirmed activity.");
       });
 
       // Layout and style of popup elements
@@ -175,7 +183,7 @@ public class InactivityTimer {
     isActive = false;
   }
 
-  private TimerTask getFullResetTask(Stage inactivityPopup) {
+  private TimerTask getFullResetTask(Stage inactivityPopup, Timer popupTimer) {
     TimerTask resetTask = new TimerTask() {
       public void run() {
 
@@ -184,8 +192,10 @@ public class InactivityTimer {
           if (inactivityPopup.isShowing()) {
 
             inactivityPopup.close();
+            Cart.getInstance().clearCart();
             primaryStage.setScene(welcomeScene);
             stopTimer();
+            popupTimer.cancel();
             System.out.println("DEBUG_0: No response, return to welcome screen.");
           }
         });
