@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButtonWithImage;
+import org.example.kiosk.InactivityTimer;
 import org.example.kiosk.LanguageSetting;
 import org.example.sql.SqlConnectionCheck;
 
@@ -171,6 +172,11 @@ public class WelcomeScreen {
             0,
             "eatHere");
         primaryStage.setScene(mainMenuScene);
+
+        // TODO make inactivity timer
+        //InactivityTimer timer = new InactivityTimer(primaryStage);
+        //timer.startTimer();
+
       } catch (SQLException ex) {
         ex.printStackTrace();
       }
@@ -189,6 +195,11 @@ public class WelcomeScreen {
             0,
             "takeaway");
         primaryStage.setScene(mainMenuScene);
+
+        // TODO make inactivity timer
+        //InactivityTimer timer = new InactivityTimer(primaryStage);
+        //timer.startTimer();
+
       } catch (SQLException ex) {
         ex.printStackTrace();
       }
