@@ -74,17 +74,12 @@ public class InactivityTimer {
    * displayed (TimerTask).
    */
   public void startTimer() {
-    System.out.println("DEBUG_SCENE: " + primaryStage.getScene());
-    System.out.println("DEBUG_EQUALS: " + primaryStage.getScene().equals(welcomeScene));
     
     // Timer only active in Scenes that aren't the WelcomeScreen
     // and timer cannot be already active
     if (!isActive && !(primaryStage.getScene().equals(welcomeScene))) {
       timer = new Timer();
       timer.schedule(displayInactivityPopup(), 30 * 1000);
-
-      System.out.println("DEBUG_0: TIMER ACTIVE");
-      
       isActive = true;
     }
   }
@@ -142,7 +137,6 @@ public class InactivityTimer {
         inactivityPopup.close();
         popupTimer.cancel();
         resetTimer();
-        System.out.println("DEBUG: User confirmed activity.");
       });
 
       // Layout and style of popup elements
@@ -161,12 +155,9 @@ public class InactivityTimer {
    * the timer.
    */
   public void resetTimer() {
-    System.out.println("DEBUG_SCENE: " + primaryStage.getScene());
-    System.out.println("DEBUG_EQUALS: " + primaryStage.getScene().equals(welcomeScene));
 
     // Skip if timer wasn't even active to prevent unwanted timer start
     if (!isActive) {
-      System.out.println("DEBUG: Ignored reset, timer not active.");
       return;
     }
 
@@ -175,8 +166,7 @@ public class InactivityTimer {
       // Terminate the timer
       timer.cancel();
       isActive = false;
-      System.out.println("DEBUG_0: TIMER RESET");
-  
+
       // Make a new timer and start it
       startTimer();
     }
@@ -186,15 +176,11 @@ public class InactivityTimer {
    * Method to stop the inactivity timer completely.
    */
   public void stopTimer() {
-    System.out.println("TIMER STATUS BEFORE STOP: " + isActive);
-    System.out.println("Current Scene: " + primaryStage.getScene());
-
     // Execute only if timer already exists
     if (timer != null) {
       // Cancel timer completely and remove instance
       timer.cancel();
       timer = null;
-      System.out.println("DEBUG_0: TIMER STOP");
     }
 
     // Always reset activity status
@@ -229,7 +215,6 @@ public class InactivityTimer {
             primaryStage.setScene(welcomeScene);
             stopTimer();
             popupTimer.cancel();
-            System.out.println("DEBUG_0: No response, return to welcome screen.");
           }
         });
       }
