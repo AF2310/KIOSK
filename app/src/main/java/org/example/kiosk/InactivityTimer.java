@@ -45,10 +45,23 @@ public class InactivityTimer {
     return instance;
   }
 
+  /**
+   * Setter for the primary stage to compare if the current stage matches the
+   * welcome screen Scene or not.
+   *
+   * @param primaryStage current stage
+   */
   public void setPrimaryStage(Stage primaryStage) {
     this.primaryStage = primaryStage;
   }
 
+  /**
+   * Setter method for welcone scene. This scene will be used to fully 
+   * reset to the welcome screen if the inactivity of the user gets
+   * confirmed. It is also used to compare the current stage.
+   *
+   * @param welcomeScene Welcome screen of the kiosk
+   */
   public void setWelcomeScene(Scene welcomeScene) {
     this.welcomeScene = welcomeScene;
   }
@@ -61,15 +74,17 @@ public class InactivityTimer {
    * displayed (TimerTask).
    */
   public void startTimer() {
-    // Timer only active in Scenes that aren't the WelcomeScreen
-    // and timer cannot be already active
     System.out.println("DEBUG_SCENE: " + primaryStage.getScene());
     System.out.println("DEBUG_EQUALS: " + primaryStage.getScene().equals(welcomeScene));
-
+    
+    // Timer only active in Scenes that aren't the WelcomeScreen
+    // and timer cannot be already active
     if (!isActive && !(primaryStage.getScene().equals(welcomeScene))) {
       timer = new Timer();
       timer.schedule(displayInactivityPopup(), 30 * 1000);
+
       System.out.println("DEBUG_0: TIMER ACTIVE");
+      
       isActive = true;
     }
   }
@@ -174,21 +189,39 @@ public class InactivityTimer {
     System.out.println("TIMER STATUS BEFORE STOP: " + isActive);
     System.out.println("Current Scene: " + primaryStage.getScene());
 
+    // Execute only if timer already exists
     if (timer != null) {
+      // Cancel timer completely and remove instance
       timer.cancel();
       timer = null;
       System.out.println("DEBUG_0: TIMER STOP");
     }
-    
+
+    // Always reset activity status
     isActive = false;
   }
 
+  /**
+   * Helper method to the part of the reset to the main menu
+   * screen if the user is unresponsive in the popup.
+   * The method contains the TimerTask for the inactivity
+   * popup.
+   * If the timer for the popup runs out, the cart gets cleared, popup
+   * gets closed, all timers get reset and the scene will get set back to the
+   * welcome scene.
+   *
+   * @param inactivityPopup Popup confirming the user is still active
+   * @param popupTimer Timer for the popup and the full reset to the main menu screen
+   * @return TimerTask for the reset if user remains inactive during the popup and the timer ran out
+   */
   private TimerTask getFullResetTask(Stage inactivityPopup, Timer popupTimer) {
+
     TimerTask resetTask = new TimerTask() {
+
+      // What the task does upon executing
       public void run() {
-
         Platform.runLater(() -> {
-
+          // Execute only after inactivity popup is visible
           if (inactivityPopup.isShowing()) {
 
             inactivityPopup.close();
