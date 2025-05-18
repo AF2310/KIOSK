@@ -5,9 +5,12 @@ import java.util.TimerTask;
 
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -130,6 +133,10 @@ public class InactivityTimer {
 
       // Label of the popup
       Label label = new Label("Are you still there?");
+      label.setStyle(
+          "-fx-font-weight: bold;"
+          + "-fx-font-size: 25px;"
+      );    
 
       // Button for confirmation that user is still active
       MidButton button = new MidButton("Yes", "green", 40);
@@ -144,17 +151,32 @@ public class InactivityTimer {
       button.setOnAction(e -> {
         inactivityPopup.close();
         popupTimer.cancel();
-        // Fuck you, timer!
         popupTimer.purge();
         resetTimer();
       });
 
       // Layout and style of popup elements
       VBox layout = new VBox(20, label, button);
-      layout.setStyle("-fx-padding: 30; -fx-alignment: center; -fx-background-color: white;");
+      layout.setAlignment(Pos.CENTER);
+      layout.setStyle(
+          "-fx-background-color: white;"
+          + "-fx-border-color: black;"
+          + "-fx-border-width: 3px;"
+          + "-fx-border-radius: 20;"
+          + "-fx-background-radius: 20;"
+          + "-fx-padding: 30;"
+      );
+
+      // Outer part to center layout on screen and have round edges properly visible
+      StackPane finalLayout = new StackPane(layout);
+      finalLayout.setStyle("-fx-background-color: transparent;");
+      finalLayout.setPrefSize(400, 200);
 
       // Set finished scene in popup
-      Scene scene = new Scene(layout, 300, 150);
+      Scene scene = new Scene(finalLayout);
+      scene.setFill(Color.TRANSPARENT);
+
+      inactivityPopup.initStyle(StageStyle.TRANSPARENT);
       inactivityPopup.setScene(scene);
       inactivityPopup.show();
     });
@@ -226,7 +248,7 @@ public class InactivityTimer {
             primaryStage.setScene(welcomeScene);
             stopTimer();
             popupTimer.cancel();
-            popupTimer.purge(); // fu timer
+            popupTimer.purge();
           }
         });
       }
