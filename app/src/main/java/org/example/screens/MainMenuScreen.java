@@ -659,6 +659,8 @@ public class MainMenuScreen {
       itemGrid.add(itemBox, i % maxItemsPerRow, i / maxItemsPerRow);
     }
 
+    LanguageSetting.getInstance().updateAllLabels(itemGrid);
+
     updateCategoryButtonStyles();
   }
 

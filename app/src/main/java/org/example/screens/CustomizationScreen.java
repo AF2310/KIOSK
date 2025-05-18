@@ -87,13 +87,6 @@ public class CustomizationScreen {
     HBox bottomRightBox = new HBox(cancelButton);
     bottomRightBox.setAlignment(Pos.BOTTOM_RIGHT);
 
-    testBtn1.setOnAction(e -> {
-      Scene updateMenuScene = new UpdateMenuItems().adminUpdateMenuItems(
-          primaryStage,
-          adminMenuLayout.getScene());
-      primaryStage.setScene(updateMenuScene);
-    });
-
     // go back to the main screen if clicked
     // reinstantiates welcome screen, so the color change takes effect
     cancelButton.setOnAction(e -> {
