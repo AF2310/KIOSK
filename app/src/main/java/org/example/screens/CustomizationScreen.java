@@ -15,6 +15,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import org.example.buttons.ArrowButton;
 import org.example.buttons.BlackButtonWithImage;
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.CartSquareButton;
@@ -61,6 +63,7 @@ public class CustomizationScreen {
       TitleLabel.setTextColor(selectedColor);
       CartSquareButton.setButtonColor(selectedColor);
       ColorBtnOutlineImage.setButtonColor(selectedColor);
+      ArrowButton.setButtonColor(selectedColor);
     });
     primClrPicker.setPrefWidth(200);
     primClrPicker.setPrefHeight(50);
