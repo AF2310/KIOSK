@@ -3,6 +3,8 @@ package org.example;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import org.example.kiosk.InactivityTimer;
 import org.example.screens.WelcomeScreen;
 
 /**
@@ -30,6 +32,10 @@ public class App extends Application {
     primaryStage.setScene(welcomeScene);
     primaryStage.setTitle("Self Check Kiosk by Clarke");
     primaryStage.show();
+
+    // Stop timer when application is closed
+    // -> so application wont run even after closing the window
+    primaryStage.setOnCloseRequest(e -> InactivityTimer.getInstance().stopTimer());
   }
 
   /**
