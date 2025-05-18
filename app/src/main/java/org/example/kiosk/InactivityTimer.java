@@ -4,12 +4,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.example.buttons.MidButton;
 
 /**
  * This is the timer that starts counting after a
@@ -84,7 +84,7 @@ public class InactivityTimer {
       Label label = new Label("Are you still there?");
 
       // Button for confirmation that user is still active
-      Button button = new Button("Yes");
+      MidButton button = new MidButton("Yes", "green", 10);
 
       // User confirms he's still active
       // -> popup gets removed and timer resets
