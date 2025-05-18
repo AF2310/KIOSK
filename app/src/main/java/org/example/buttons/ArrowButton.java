@@ -79,7 +79,7 @@ public class ArrowButton extends Button {
   }
 
   /**
-   * Applies a color tint effect on the arrow image using CSS.
+   * Applies a color tint effect on the arrow image.
    */
   private void applyColorTint(Color color) {
     if (buttonImage != null) {

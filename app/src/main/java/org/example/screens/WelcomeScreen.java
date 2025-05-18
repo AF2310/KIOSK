@@ -17,7 +17,6 @@ import javafx.stage.Stage;
 import org.example.buttons.BlackButtonWithImage;
 import org.example.buttons.ColorBtnOutlineImage;
 import org.example.buttons.LangBtn;
-import org.example.buttons.MidButtonWithImage;
 import org.example.kiosk.LanguageSetting;
 import org.example.sql.SqlConnectionCheck;
 

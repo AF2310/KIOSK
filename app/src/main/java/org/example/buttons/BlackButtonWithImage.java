@@ -5,6 +5,8 @@ import java.util.List;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -26,7 +28,7 @@ public class BlackButtonWithImage extends Button {
    * Creates a new BlackButtonWithImage.
    *
    * @param buttonText the text to display on the button
-   * @param imageName the path to the image file
+   * @param imageName  the path to the image file
    */
   public BlackButtonWithImage(String buttonText, String imageName) {
     setPrefSize(460, 140);
@@ -46,8 +48,7 @@ public class BlackButtonWithImage extends Button {
             + "-fx-font-size: 38;"
             + "-fx-padding: 5 10;"
             + "-fx-background-radius: 10;"
-            + "-fx-text-fill: white;"
-    );
+            + "-fx-text-fill: white;");
 
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -86,8 +87,7 @@ public class BlackButtonWithImage extends Button {
         "-fx-background-color: " + buttonBackgroundColor + ";"
             + "-fx-border-radius: 30;"
             + "-fx-background-radius: 30;"
-            + "-fx-padding: 10 20;"
-    );
+            + "-fx-padding: 10 20;");
   }
 
   /** Updates the background style for all button instances. */
@@ -119,4 +119,5 @@ public class BlackButtonWithImage extends Button {
     int b = (int) (color.getBlue() * 255);
     return "rgb(" + r + ", " + g + ", " + b + ")";
   }
+
 }

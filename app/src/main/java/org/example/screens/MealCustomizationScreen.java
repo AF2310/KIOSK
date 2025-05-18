@@ -419,6 +419,13 @@ public class MealCustomizationScreen {
   }
 
   // TODO create this screen and link it after the drink selection.
+  /**
+   * Creates the meal confirmation scene after drink selection.
+   *
+   * @param stage the primary stage
+   * @param drinkSelectionScene the previous scene for drink selection
+   * @return the meal confirmation CustomScene
+   */
   public CustomScene createMealConfirmationScene(Stage stage, Scene drinkSelectionScene) {
     BorderPane layout = new BorderPane();
 

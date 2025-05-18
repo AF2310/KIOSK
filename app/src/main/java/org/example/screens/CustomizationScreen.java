@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -13,15 +12,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import org.example.buttons.ArrowButton;
 import org.example.buttons.BlackButtonWithImage;
 import org.example.buttons.CancelButtonWithText;
-import org.example.buttons.CartSquareButton;
 import org.example.buttons.ColorBtnOutlineImage;
 import org.example.buttons.ColorButtonWithImage;
+import org.example.buttons.ColorPickersPane;
 import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
@@ -49,70 +45,13 @@ public class CustomizationScreen {
     adminMenuLayout.setAlignment(Pos.TOP_CENTER);
     adminMenuLayout.setPadding(new Insets(10));
 
-    // Color picker for main color
-    Label primClrLabel = new Label("Prime color: ");
-    primClrLabel.setStyle(
-        "-fx-font-size: 25px;"
-            + "-fx-font-weight: bold;");
-
-    ColorPicker primClrPicker = new ColorPicker(Color.BLACK);
-    primClrPicker.setOnAction(e -> {
-      Color selectedColor = primClrPicker.getValue();
-      BlackButtonWithImage.setButtonBackgroundColor(selectedColor);
-      ColorSquareButtonWithImage.setButtonColor(selectedColor);
-      TitleLabel.setTextColor(selectedColor);
-      CartSquareButton.setButtonColor(selectedColor);
-      ColorBtnOutlineImage.setButtonColor(selectedColor);
-      ArrowButton.setButtonColor(selectedColor);
-    });
-    primClrPicker.setPrefWidth(200);
-    primClrPicker.setPrefHeight(50);
-    VBox primColorVbox = new VBox(5, primClrLabel, primClrPicker);
-    primColorVbox.setAlignment(Pos.CENTER);
-
-    // Color picker for compliment color
-    Label secPickerLbl = new Label("Secondary color: ");
-    secPickerLbl.setStyle(
-        "-fx-font-size: 25px;"
-            + "-fx-font-weight: bold;");
-
-    ColorPicker secClrPicker = new ColorPicker(Color.BLACK);
-    secClrPicker.setOnAction(e -> {
-      Color selectedColor = secClrPicker.getValue();
-      ColorButtonWithImage.setButtonBackgroundColor(selectedColor);
-    });
-    secClrPicker.setPrefWidth(200);
-    secClrPicker.setPrefHeight(50);
-    VBox secColorVbox = new VBox(5, secPickerLbl, secClrPicker);
-    secColorVbox.setAlignment(Pos.CENTER);
-
-    // Color picker for background
-    Label scenePicker = new Label("Background color: ");
-    scenePicker.setStyle(
-        "-fx-font-size: 25px;"
-            + "-fx-font-weight: bold;");
-
-    ColorPicker sceneColorPicker = new ColorPicker(Color.BLACK);
-    sceneColorPicker.setOnAction(e -> {
-
-      Color selectedColor = sceneColorPicker.getValue();
-      BackgroundColorStore.setCurrentBackgroundColor(selectedColor);
-
-    });
-    sceneColorPicker.setPrefWidth(200);
-    sceneColorPicker.setPrefHeight(50);
-
-    VBox sceneColorVbox = new VBox(5, scenePicker, sceneColorPicker);
-    sceneColorVbox.setAlignment(Pos.CENTER);
-
-    // Put all pairs side by side in an HBox
-    HBox colorPickersHbox = new HBox(40, primColorVbox, secColorVbox, sceneColorVbox);
-    colorPickersHbox.setAlignment(Pos.CENTER);
+    // Colopickers moved to a separate file 
+    var colorPickers = new ColorPickersPane();
 
     // Making the title on top of the admin menu screen
     Label adminMenuText = new TitleLabel("Set & Test Design");
 
-    adminMenuLayout.getChildren().addAll(adminMenuText, colorPickersHbox);
+    adminMenuLayout.getChildren().addAll(adminMenuText, colorPickers);
 
     // this gridpane is used for all the middle buttons in the admin menu,
     // to align tem properly in rows and columns.
