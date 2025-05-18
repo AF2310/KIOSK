@@ -12,8 +12,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+
+import java.util.Locale.LanguageRange;
+
 import org.example.buttons.ArrowButton;
 import org.example.kiosk.LabelManager;
+import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
 
 /**
@@ -98,6 +102,8 @@ public class CheckoutGridWithButtons extends HBox {
         rightSpacer, rightArrowButton);
   }
 
+  
+
   // Update grid content based on the current page
   private void updateGrid() {
     // Clear previous items
@@ -111,8 +117,8 @@ public class CheckoutGridWithButtons extends HBox {
       Product item = items[i];
       Image itemImage = new Image(item.getImagePath());
       ImageView image = new ImageView(itemImage);
-      image.setFitHeight(200);
-      image.setFitWidth(150);
+      image.setFitHeight(150);
+      // image.setFitWidth(150);
       image.setPreserveRatio(true);
 
       // Slot for Label and Price
@@ -160,6 +166,8 @@ public class CheckoutGridWithButtons extends HBox {
       int row = (i - pageStartIndex) / 3;
       itemGrid.add(itemSlot, column, row);
     }
+
+    LanguageSetting.getInstance().updateAllLabels(itemGrid);
 
     // Add empty slots for grid shape
     int totalItems = pageEndIndex - pageStartIndex;

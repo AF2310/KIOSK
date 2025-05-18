@@ -216,7 +216,7 @@ public class WelcomeScreen {
     Parent root = scene.getRoot();
 
     LanguageSetting.getInstance().registerRoot(root);
-    LanguageSetting.getInstance().updateAllLabels(root);
+    LanguageSetting.getInstance().updateAllLabels(mainPane);
 
     return scene;
   }
