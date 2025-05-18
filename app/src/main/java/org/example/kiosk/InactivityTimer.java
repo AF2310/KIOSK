@@ -85,7 +85,13 @@ public class InactivityTimer {
 
       // Button for confirmation that user is still active
       Button button = new Button("Yes");
-      button.setOnAction(e -> popup.close());
+
+      // User confirms he's still active
+      // -> popup gets removed and timer resets
+      button.setOnAction(e -> {
+        popup.close();
+        resetTimer();
+      });
 
       // Layout and style of popup elements
       VBox layout = new VBox(20, label, button);
@@ -102,7 +108,7 @@ public class InactivityTimer {
    * Method to reset the inactivity timer and re-start
    * the timer.
    */
-  public void resetTimer() {
+  private void resetTimer() {
     // Terminate the timer
     timer.cancel();
 
