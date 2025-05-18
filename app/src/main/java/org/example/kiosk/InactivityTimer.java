@@ -97,4 +97,13 @@ public class InactivityTimer {
       popup.show();
     });
   }
+
+  /**
+   * Method to reset the inactivity timer.
+   */
+  public void resetTimer() {
+    timer.cancel();
+    timer = new Timer();
+    startTimer();
+  }
 }
