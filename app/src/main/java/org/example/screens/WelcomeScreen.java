@@ -174,6 +174,7 @@ public class WelcomeScreen {
         primaryStage.setScene(mainMenuScene);
 
         InactivityTimer.getInstance().startTimer();
+        System.out.println("DEBUG: TIMER STARTED");
 
       } catch (SQLException ex) {
         ex.printStackTrace();
@@ -195,6 +196,7 @@ public class WelcomeScreen {
         primaryStage.setScene(mainMenuScene);
 
         InactivityTimer.getInstance().startTimer();
+        System.out.println("DEBUG: TIMER STARTED");
 
       } catch (SQLException ex) {
         ex.printStackTrace();

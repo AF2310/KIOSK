@@ -392,6 +392,7 @@ public class MainMenuScreen {
       System.out.println("Order canceled!");
 
       InactivityTimer.getInstance().stopTimer();
+      System.out.println("DEBUG: TIMER STOPPED");
 
       primaryStage.setScene(welcomeScrScene);
     });
