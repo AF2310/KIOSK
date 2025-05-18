@@ -24,8 +24,8 @@ public class App extends Application {
     Scene welcomeScene = welcomeScreen.createWelcomeScreen(primaryStage, windowWidth, windowHeight);
 
     // Reset timer globally when user is active in the kiosk
-    welcomeScene.addEventFilter(MouseEvent.ANY, e -> InactivityTimer.getInstance().resetTimer());
-    welcomeScene.addEventFilter(KeyEvent.ANY, e -> InactivityTimer.getInstance().resetTimer());
+    primaryStage.addEventFilter(MouseEvent.ANY, e -> InactivityTimer.getInstance().resetTimer());
+    primaryStage.addEventFilter(KeyEvent.ANY, e -> InactivityTimer.getInstance().resetTimer());
 
     // Force fullscreen mode
     primaryStage.setFullScreen(false);
