@@ -609,11 +609,15 @@ public class MainMenuScreen {
       if (item != null) {
         Label name = new Label(item.getName());
         name.setStyle("-fx-font-size: 16px;");
+        // Add to label mangager, to be able to change colors
+        LabelManager.register(name);
 
         Label price = new Label(String.format("%.0f :-", item.getPrice()));
         price.setStyle("-fx-font-weight: bold; -fx-font-size: 18px;");
         HBox priceBox = new HBox(price);
         priceBox.setAlignment(Pos.BASELINE_RIGHT);
+        // Add to label mangager, to be able to change colors
+        LabelManager.register(price);
 
         ItemDetails detailScreen = new ItemDetails();
 
@@ -676,9 +680,9 @@ public class MainMenuScreen {
         button.setStyle(
             "-fx-background-color: transparent;"
                 + "-fx-font-size: 50px;"
-                // + "-fx-text-fill: black;"
                 + "-fx-font-weight: bold;");
         LabelManager.register(button);
+        button.setOpacity(1);
       }
 
       // Other categories the user isn't currently in
@@ -698,7 +702,6 @@ public class MainMenuScreen {
         button.setStyle(
             "-fx-background-color: transparent;"
                 + "-fx-font-size: 40px;"
-                // + "-fx-text-fill: rgba(0, 0, 0, 0.33);"
                 + "-fx-font-weight: bold;");
         LabelManager.register(button);
         button.setOpacity(0.3);

@@ -65,6 +65,7 @@ public class ColorPickersPane extends HBox {
       CartSquareButton.setButtonColor(selectedColor);
       ColorBtnOutlineImage.setButtonColor(selectedColor);
       ArrowButton.setButtonColor(selectedColor);
+      ConfirmOrderButton.setButtonBackgroundColor(selectedColor);
 
       LabelManager.setTextColor(selectedColor);
     });
