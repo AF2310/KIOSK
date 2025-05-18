@@ -45,22 +45,35 @@ public class CustomizationScreen {
     adminMenuLayout.setAlignment(Pos.TOP_CENTER);
     adminMenuLayout.setPadding(new Insets(10));
 
-    // Label for label color picker
-    Label labelPicker = new Label("Text color: ");
-    labelPicker.setStyle(
+    // Color picker for main color
+    Label primClrLabel = new Label("Prime color: ");
+    primClrLabel.setStyle(
         "-fx-font-size: 25px;"
         + "-fx-font-weight: bold;");
 
-    // Color picker
-    ColorPicker colorPicker = new ColorPicker(Color.BLACK);
-    colorPicker.setOnAction(e -> {
-      Color selectedColor = colorPicker.getValue();
+    ColorPicker primClrPicker = new ColorPicker(Color.BLACK);
+    primClrPicker.setOnAction(e -> {
+      Color selectedColor = primClrPicker.getValue();
       BlackButtonWithImage.setButtonBackgroundColor(selectedColor);
       ColorSquareButtonWithImage.setButtonColor(selectedColor);
       TitleLabel.setTextColor(selectedColor);
     });
-    colorPicker.setPrefWidth(200);
-    colorPicker.setPrefHeight(50);
+    primClrPicker.setPrefWidth(200);
+    primClrPicker.setPrefHeight(50);
+
+    // Color picker for compliment color
+    Label secPickerLbl = new Label("Secondary color: ");
+    secPickerLbl.setStyle(
+        "-fx-font-size: 25px;"
+        + "-fx-font-weight: bold;");
+
+    ColorPicker secClrPicker = new ColorPicker(Color.BLACK);
+    secClrPicker.setOnAction(e -> {
+      Color selectedColor = secClrPicker.getValue();
+      ColorButtonWithImage.setButtonBackgroundColor(selectedColor);
+    });
+    secClrPicker.setPrefWidth(200);
+    secClrPicker.setPrefHeight(50);
 
     // Label for label color picker
     Label scenePicker = new Label("Background color: ");
@@ -82,8 +95,8 @@ public class CustomizationScreen {
     // Making the title on top of the admin menu screen
     Label adminMenuText = new TitleLabel("Set & Test Design");
 
-    adminMenuLayout.getChildren().addAll(adminMenuText, labelPicker, colorPicker,
-        scenePicker, sceneColorPicker);
+    adminMenuLayout.getChildren().addAll(adminMenuText, primClrLabel, primClrPicker,
+        secPickerLbl, secClrPicker, scenePicker, sceneColorPicker);
 
     // this gridpane is used for all the middle buttons in the admin menu,
     // to align tem properly in rows and columns.
