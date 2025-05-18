@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -32,8 +33,6 @@ import org.example.orders.Order;
  * Order History class.
  */
 public class AdminOrdHistoryScreen {
-
-  private LanguageSetting languageSetting = new LanguageSetting();
 
   /**
    * Scene to display the order history.
@@ -192,14 +191,23 @@ public class AdminOrdHistoryScreen {
 
     // Translate all the text
     langButton.addAction(event -> {
-      // Toggle the language in LanguageSetting
-      languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
-      languageSetting.updateAllLabels(layout);
-      // historyTable.refresh();
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
     });
 
-    return new Scene(layout, 1920, 1080);
+    LanguageSetting.getInstance().updateAllLabels(layout);
+
+    Scene historyScene = new Scene(layout, 1920, 1080);
+
+    // Update the language for the scene upon creation
+    Parent root = historyScene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
+
+    return historyScene;
 
   }
 

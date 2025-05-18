@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -68,8 +69,6 @@ public class MainMenuScreen {
   public Cart cart = Cart.getInstance();
   private String mode;
   private Connection conn;
-
-  private LanguageSetting languageSetting = new LanguageSetting();
 
   /**
    * Creates the main menu scene.
@@ -415,13 +414,15 @@ public class MainMenuScreen {
     // Create language button
     var langButton = new LangBtn();
 
-    // Just pass in the Labeled components to translate
+    // Translate all the text
     langButton.addAction(event -> {
-      // Toggle the language in LanguageSetting
-      languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
-      languageSetting.updateAllLabels(layout);
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
     });
+
+    LanguageSetting.getInstance().updateAllLabels(layout);
 
     // Added all components for the bottom part
     bottomButtons.getChildren().addAll(langButton, spacer, cartButton, cancelButton);
@@ -442,6 +443,12 @@ public class MainMenuScreen {
       scene.setBackgroundColor(bgColor);
 
     }
+
+    // Update the language for the scene upon creation
+    Parent root = scene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
 
     return scene;
   }

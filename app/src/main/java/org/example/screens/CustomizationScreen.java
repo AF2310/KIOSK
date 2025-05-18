@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -20,7 +21,6 @@ import org.example.buttons.ColorButtonWithImage;
 import org.example.buttons.ColorPickersPane;
 import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
-import org.example.buttons.MidButton;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.LanguageSetting;
 
@@ -28,7 +28,6 @@ import org.example.kiosk.LanguageSetting;
  * Screen for customizing and testing the kiosk design.
  */
 public class CustomizationScreen {
-  private LanguageSetting languageSetting = new LanguageSetting();
 
   /**
    * Admin menu screen.
@@ -126,14 +125,20 @@ public class CustomizationScreen {
 
     // Translate all the text
     langButton.addAction(event -> {
-      // Toggle the language in LanguageSetting
-      languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
-      languageSetting.updateAllLabels(mainBorderPane);
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(mainBorderPane);
     });
 
-    var adminMenuScene = new CustomScene(mainBorderPane, windowWidth, windowHeight);
+    var customizationScene = new CustomScene(mainBorderPane, windowWidth, windowHeight);
 
-    return adminMenuScene;
+    // Update the language for the scene upon creation
+    Parent root = customizationScene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
+
+    return customizationScene;
   }
 }

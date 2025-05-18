@@ -1,9 +1,9 @@
 package org.example.screens;
 
 import java.sql.Connection;
-import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
 import org.example.buttons.MidButtonWithImage;
+import org.example.kiosk.LanguageSetting;
 import org.example.sql.SqlConnectionCheck;
 import org.example.users.AdminAuth;
 
@@ -27,9 +28,9 @@ public class AdminLoginScreen {
   /**
    * Admin login screen.
    *
-   * @param primaryStage The actual window itself.
-   * @param windowWidth Size of window width
-   * @param windowHeight Size of window height
+   * @param primaryStage    The actual window itself.
+   * @param windowWidth     Size of window width
+   * @param windowHeight    Size of window height
    * @param welcomeScrScene Welcome screen scene
    * @return Returns the admin login screen
    */
@@ -38,7 +39,7 @@ public class AdminLoginScreen {
       double windowWidth,
       double windowHeight,
       Scene welcomeScrScene) {
-    //the mainlayout
+    // the mainlayout
     VBox adminMenuLayout = new VBox(20);
     adminMenuLayout.setAlignment(Pos.CENTER);
 
@@ -46,35 +47,32 @@ public class AdminLoginScreen {
     adminMenuTitle.setText("Admin Menu");
     adminMenuTitle.setStyle(
         "-fx-text-fill: black;"
-        + "-fx-font-weight: lighter;"
-        + "-fx-font-size: 50;"
-        + "-fx-background-radius: 10;"
-    );
+            + "-fx-font-weight: lighter;"
+            + "-fx-font-size: 50;"
+            + "-fx-background-radius: 10;");
 
-    //the field to enter the username
+    // the field to enter the username
     TextField usernameField = new TextField();
     usernameField.setMaxSize(460, 140);
     usernameField.setPromptText("Username");
     usernameField.setStyle(
         "-fx-background-color: grey;"
-        + "-fx-text-fill: black;"
-        + "-fx-font-weight: lighter;"
-        + "-fx-font-size: 50;"
-        + "-fx-background-radius: 10;"
-    );
-      
-    //the field to enter the password
+            + "-fx-text-fill: black;"
+            + "-fx-font-weight: lighter;"
+            + "-fx-font-size: 50;"
+            + "-fx-background-radius: 10;");
+
+    // the field to enter the password
     PasswordField passwordField = new PasswordField();
     passwordField.setMaxSize(460, 140);
     passwordField.setPromptText("Password");
     passwordField.setStyle(
         "-fx-background-color: grey;"
-        + "-fx-text-fill: black;"
-        + "-fx-font-weight: lighter;"
-        + "-fx-font-size: 50;"
-        + "-fx-background-radius: 10;"
-    );
-    
+            + "-fx-text-fill: black;"
+            + "-fx-font-weight: lighter;"
+            + "-fx-font-size: 50;"
+            + "-fx-background-radius: 10;");
+
     Image errorIcon = new Image(getClass().getResourceAsStream("/errorLogin.png"));
     ImageView errorIconView = new ImageView(errorIcon);
     errorIconView.setFitWidth(40);
@@ -83,25 +81,24 @@ public class AdminLoginScreen {
 
     var errorLabel = new Label();
     errorLabel.setStyle(
-          "-fx-text-fill: black;"
-        + "-fx-font-weight: lighter;"
-        + "-fx-font-size: 50;"
-        + "-fx-background-radius: 10;"
-    );
+        "-fx-text-fill: black;"
+            + "-fx-font-weight: lighter;"
+            + "-fx-font-size: 50;"
+            + "-fx-background-radius: 10;");
     errorLabel.setGraphic(errorIconView);
     errorLabel.setGraphicTextGap(10);
-    //Initially hidden
+    // Initially hidden
     errorLabel.setVisible(false);
 
     var loginButton = new MidButton(
         "Login",
         "rgb(0, 0, 0)",
         50);
-    
+
     // Add the language button
     var langButton = new LangBtn();
 
-    //login button functionality
+    // login button functionality
     loginButton.setOnAction(e -> {
       String username = usernameField.getText();
       String password = passwordField.getText();
@@ -114,7 +111,7 @@ public class AdminLoginScreen {
         passwordField.clear();
         AdminMenuScreen adminMenuScreen = new AdminMenuScreen();
         Scene adminMenuScene = adminMenuScreen.createAdminMenuScreen(primaryStage,
-                      windowWidth, windowHeight, welcomeScrScene, conn);
+            windowWidth, windowHeight, welcomeScrScene, conn);
         primaryStage.setScene(adminMenuScene);
       } else {
         if (langButton.isEnglish()) {
@@ -127,69 +124,63 @@ public class AdminLoginScreen {
         errorLabel.setVisible(true);
         passwordField.clear();
 
-
       }
     });
 
-    //back button
+    // back button
     var backButton = new MidButtonWithImage(
         "Back to Menu",
         "/back.png",
         "rgb(255, 255, 255)");
-        
-    
+
     // Put buttons in an HBox
     HBox buttonContainer = new HBox(20);
     buttonContainer.setAlignment(Pos.CENTER);
     buttonContainer.getChildren().addAll(loginButton, backButton);
-  
+
     // Set action for back button (to go back to the welcome screen)
     backButton.setOnAction(e -> {
       primaryStage.setScene(welcomeScrScene);
     });
-    
+
     adminMenuLayout.getChildren().addAll(
         adminMenuTitle,
         usernameField,
         passwordField,
         loginButton,
         backButton,
-        errorLabel
-    );
-
-    // Just pass in the Labeled components to translate
-    langButton.addAction(event -> {
-      // Update both labels and text input controls
-      langButton.updateLanguage(
-          // Labels
-          List.of(
-            adminMenuTitle,
-            loginButton.getButtonLabel(),
-            backButton.getButtonLabel(),
-            errorLabel
-          ),
-          // Text input fields
-          List.of(
-            usernameField,
-            passwordField
-          )
-      );
-    });
+        errorLabel);
 
     // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
     StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
 
-    //put everything into a stackpane
+    // put everything into a stackpane
     StackPane mainPane = new StackPane(adminMenuLayout, langButton);
     mainPane.setPrefSize(windowWidth, windowHeight);
-    
+
+    // Translate all the text
+    langButton.addAction(event -> {
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(mainPane);
+    });
+
+    LanguageSetting.getInstance().updateAllLabels(mainPane);
 
     // Create the admin login scene and go there
     Scene adminLoginScene = new Scene(mainPane, windowWidth, windowHeight);
 
-    // Puts focus on the admin menu label so that the username field isn't by default focused
-    adminMenuTitle.requestFocus(); 
+    // Puts focus on the admin menu label so that the username field isn't by
+    // default focused
+    adminMenuTitle.requestFocus();
+
+    // Update the language for the scene upon creation
+    Parent root = adminLoginScene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
 
     return adminLoginScene;
   }
