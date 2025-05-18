@@ -2,8 +2,6 @@ package org.example.kiosk;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,8 +12,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
-
 import org.example.buttons.MidButton;
 import org.example.orders.Cart;
 
@@ -32,6 +28,7 @@ public class InactivityTimer {
   private Stage primaryStage;
   private Scene welcomeScene;
   private boolean isActive = false;
+  private int inactivityTime = 5;
 
   /**
    * The timer constructor.
@@ -88,9 +85,6 @@ public class InactivityTimer {
     if (!isActive && !(primaryStage.getScene().equals(welcomeScene))) {
       timer = new Timer(true);
       timer.schedule(displayInactivityPopup(), 10 * 1000);
-      //PauseTransition transition = new PauseTransition(Duration.seconds(30));
-      //transition.setOnFinished(e -> displayInactivityPopup());
-      //transition.play();
       isActive = true;
     }
   }
@@ -144,7 +138,7 @@ public class InactivityTimer {
       // Make timer for full reset if user doesn't respond to popup after 5 seconds
       // User has 5 seconds to respond
       Timer popupTimer = new Timer(true);
-      popupTimer.schedule(getFullResetTask(inactivityPopup, popupTimer), 5 * 1000);
+      popupTimer.schedule(getFullResetTask(inactivityPopup, popupTimer), inactivityTime * 1000);
 
       // User confirms he's still active
       // -> popup gets removed and all timers reset
