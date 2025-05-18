@@ -33,8 +33,8 @@ public class App extends Application {
     primaryStage.setTitle("Self Check Kiosk by Clarke");
     primaryStage.show();
 
-    // Stop timer when application is closed
-    // -> so application wont run even after closing the window
+    // Stop timer globally when application is closed,
+    // so application wont run even after closing the window
     primaryStage.setOnCloseRequest(e -> InactivityTimer.getInstance().stopTimer());
   }
 
