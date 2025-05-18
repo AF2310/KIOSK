@@ -9,6 +9,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -173,8 +175,18 @@ public class WelcomeScreen {
             "eatHere");
         primaryStage.setScene(mainMenuScene);
 
+        InactivityTimer.getInstance().setPrimaryStage(primaryStage);
+
+        primaryStage.addEventFilter(
+            MouseEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
+        );
+
+        primaryStage.addEventFilter(
+            KeyEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
+        );
+
         InactivityTimer.getInstance().startTimer();
-        System.out.println("DEBUG: TIMER STARTED");
+        System.out.println("DEBUG_2: TIMER STARTED");
 
       } catch (SQLException ex) {
         ex.printStackTrace();
@@ -195,8 +207,18 @@ public class WelcomeScreen {
             "takeaway");
         primaryStage.setScene(mainMenuScene);
 
+        InactivityTimer.getInstance().setPrimaryStage(primaryStage);
         InactivityTimer.getInstance().startTimer();
-        System.out.println("DEBUG: TIMER STARTED");
+
+        primaryStage.addEventFilter(
+            MouseEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
+        );
+
+        primaryStage.addEventFilter(
+            KeyEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
+        );
+
+        System.out.println("DEBUG_1: TIMER STARTED");
 
       } catch (SQLException ex) {
         ex.printStackTrace();

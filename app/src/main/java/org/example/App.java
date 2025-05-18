@@ -2,8 +2,6 @@ package org.example;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.example.kiosk.InactivityTimer;
 import org.example.screens.WelcomeScreen;
@@ -22,10 +20,9 @@ public class App extends Application {
     // Create the WelcomeScreen object and get the scene
     WelcomeScreen welcomeScreen = new WelcomeScreen();
     Scene welcomeScene = welcomeScreen.createWelcomeScreen(primaryStage, windowWidth, windowHeight);
-
-    // Reset timer globally when user is active in the kiosk
-    primaryStage.addEventFilter(MouseEvent.ANY, e -> InactivityTimer.getInstance().resetTimer());
-    primaryStage.addEventFilter(KeyEvent.ANY, e -> InactivityTimer.getInstance().resetTimer());
+    
+    // Get the welcome scene to stop timer every time on this scene
+    InactivityTimer.getInstance().setWelcomeScene(welcomeScene);
 
     // Force fullscreen mode
     primaryStage.setFullScreen(false);

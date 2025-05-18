@@ -22,6 +22,7 @@ public class InactivityTimer {
   private static InactivityTimer instance;
   private Timer timer = new Timer();
   private Stage primaryStage;
+  private Scene welcomeScene;
 
   /**
    * The timer constructor.
@@ -49,6 +50,10 @@ public class InactivityTimer {
     this.primaryStage = primaryStage;
   }
 
+  public void setWelcomeScene(Scene welcomeScene) {
+    this.welcomeScene = welcomeScene;
+  }
+
   /**
    * Start the timer.
    * Timer has sceduled delay in miliseconds, so we
@@ -57,7 +62,11 @@ public class InactivityTimer {
    * displayed (TimerTask).
    */
   public void startTimer() {
-    timer.schedule(displayInactivityPopup(), 30 * 1000);
+    // Timer only active in Scenes that aren't the WelcomeScreen
+    if (!(primaryStage.getScene().equals(welcomeScene))) {
+      timer.schedule(displayInactivityPopup(), 30 * 1000);
+      System.out.println("DEBUG_0: TIMER ACTIVE");
+    }
   }
 
   /**
@@ -125,18 +134,23 @@ public class InactivityTimer {
    * the timer.
    */
   public void resetTimer() {
-    // Terminate the timer
-    timer.cancel();
-
-    // Make a new timer and start it
-    timer = new Timer();
-    startTimer();
+    // Timer only active in Scenes that aren't the WelcomeScreen
+    if (!(primaryStage.getScene().equals(welcomeScene))) {
+      // Terminate the timer
+      timer.cancel();
+      System.out.println("DEBUG_0: TIMER RESET");
+  
+      // Make a new timer and start it
+      timer = new Timer();
+      startTimer();
+    }
   }
 
   /**
    * Method to stop the inactivity timer completely.
    */
   public void stopTimer() {
+    System.out.println("DEBUG_0: TIMER STOP");
     timer.cancel();
   }
 }

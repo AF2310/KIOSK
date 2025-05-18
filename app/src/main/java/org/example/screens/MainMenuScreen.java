@@ -391,10 +391,10 @@ public class MainMenuScreen {
       Cart.getInstance().clearCart();
       System.out.println("Order canceled!");
 
+      primaryStage.setScene(welcomeScrScene);
+      InactivityTimer.getInstance().setPrimaryStage(primaryStage);
       InactivityTimer.getInstance().stopTimer();
       System.out.println("DEBUG: TIMER STOPPED");
-
-      primaryStage.setScene(welcomeScrScene);
     });
 
     // Create Cart button
