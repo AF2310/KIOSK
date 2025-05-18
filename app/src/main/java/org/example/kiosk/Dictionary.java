@@ -232,7 +232,9 @@ public class Dictionary {
     swedishToEnglish.put(swedish, english);
   }
 
-  // Toggle between English and Swedish
+  /**
+   * Toggle between English and Swedish.
+   */
   public void toggleLanguage() {
     toEnglish = !toEnglish;
   }
