@@ -65,22 +65,33 @@ public class InactivityTimer {
    */
   private void inactivityPopup() {
 
+    // Run action after time; needed to prevent crashes
     Platform.runLater(() -> {
 
+      // Make the popup
       Stage popup = new Stage();
+
+      // Set stage the popup will go over
       popup.initOwner(primaryStage);
+
+      // User cannot interact with anything else until popup is gone
       popup.initModality(Modality.APPLICATION_MODAL);
+
+      // No title section for popup
       popup.initStyle(StageStyle.UNDECORATED);
 
-
+      // Label of the popup
       Label label = new Label("Are you still there?");
 
+      // Button for confirmation that user is still active
       Button button = new Button("Yes");
       button.setOnAction(e -> popup.close());
 
+      // Layout and style of popup elements
       VBox layout = new VBox(20, label, button);
       layout.setStyle("-fx-padding: 30; -fx-alignment: center; -fx-background-color: white;");
 
+      // Set finished scene in popup
       Scene scene = new Scene(layout, 300, 150);
       popup.setScene(scene);
       popup.show();
