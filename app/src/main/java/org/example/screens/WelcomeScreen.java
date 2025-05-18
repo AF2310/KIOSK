@@ -173,9 +173,7 @@ public class WelcomeScreen {
             "eatHere");
         primaryStage.setScene(mainMenuScene);
 
-        // TODO make inactivity timer
-        //InactivityTimer timer = new InactivityTimer(primaryStage);
-        //timer.startTimer();
+        InactivityTimer.getInstance().startTimer();
 
       } catch (SQLException ex) {
         ex.printStackTrace();
@@ -196,9 +194,7 @@ public class WelcomeScreen {
             "takeaway");
         primaryStage.setScene(mainMenuScene);
 
-        // TODO make inactivity timer
-        //InactivityTimer timer = new InactivityTimer(primaryStage);
-        //timer.startTimer();
+        InactivityTimer.getInstance().startTimer();
 
       } catch (SQLException ex) {
         ex.printStackTrace();
