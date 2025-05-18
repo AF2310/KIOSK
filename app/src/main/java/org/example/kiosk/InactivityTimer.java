@@ -98,16 +98,16 @@ public class InactivityTimer {
     Platform.runLater(() -> {
 
       // Make the popup
-      Stage popup = new Stage();
+      Stage inactivityPopup = new Stage();
 
       // Set stage the popup will go over
-      popup.initOwner(primaryStage);
+      inactivityPopup.initOwner(primaryStage);
 
       // User cannot interact with anything else until popup is gone
-      popup.initModality(Modality.APPLICATION_MODAL);
+      inactivityPopup.initModality(Modality.APPLICATION_MODAL);
 
       // No title section for popup
-      popup.initStyle(StageStyle.UNDECORATED);
+      inactivityPopup.initStyle(StageStyle.UNDECORATED);
 
       // Label of the popup
       Label label = new Label("Are you still there?");
@@ -118,7 +118,7 @@ public class InactivityTimer {
       // User confirms he's still active
       // -> popup gets removed and timer resets
       button.setOnAction(e -> {
-        popup.close();
+        inactivityPopup.close();
         resetTimer();
       });
 
@@ -128,8 +128,8 @@ public class InactivityTimer {
 
       // Set finished scene in popup
       Scene scene = new Scene(layout, 300, 150);
-      popup.setScene(scene);
-      popup.show();
+      inactivityPopup.setScene(scene);
+      inactivityPopup.show();
     });
   }
 
@@ -176,10 +176,17 @@ public class InactivityTimer {
   private void resetToWelcomeScreen() {
     Timer popupTimer = new Timer();
 
-    popupTimer.schedule(new TimerTask() {
-      
-      // TODO insert auto reset code
-
-    }, 15 * 1000);
+    /* popupTimer.schedule(new TimerTask() {
+      public void run() {
+        Platform.runLater(() -> {
+          if (popup.isShowing()) {
+            popup.close();
+            primaryStage.setScene(welcomeScene);
+            stopTimer(); // stop further timers if needed
+            System.out.println("DEBUG: No response, returned to welcome screen.");
+          }
+        });
+      }
+    }, 5 * 1000); */
   }
 }
