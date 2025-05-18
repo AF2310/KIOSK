@@ -2,7 +2,14 @@ package org.example.kiosk;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  * This is the timer that starts counting after a
@@ -57,6 +64,26 @@ public class InactivityTimer {
    * This method contains the inactivity popup itself.
    */
   private void inactivityPopup() {
-    // TODO: popup code
+
+    Platform.runLater(() -> {
+
+      Stage popup = new Stage();
+      popup.initOwner(primaryStage);
+      popup.initModality(Modality.APPLICATION_MODAL);
+      popup.initStyle(StageStyle.UNDECORATED);
+
+
+      Label label = new Label("Are you still there?");
+
+      Button button = new Button("Yes");
+      button.setOnAction(e -> popup.close());
+
+      VBox layout = new VBox(20, label, button);
+      layout.setStyle("-fx-padding: 30; -fx-alignment: center; -fx-background-color: white;");
+
+      Scene scene = new Scene(layout, 300, 150);
+      popup.setScene(scene);
+      popup.show();
+    });
   }
 }
