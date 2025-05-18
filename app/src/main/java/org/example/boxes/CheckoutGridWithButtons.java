@@ -13,6 +13,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.example.buttons.ArrowButton;
+import org.example.kiosk.LabelManager;
 import org.example.menu.Product;
 
 /**
@@ -57,6 +58,7 @@ public class CheckoutGridWithButtons extends HBox {
 
     // Setup page counter label
     pageCounterLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: normal;");
+    LabelManager.register(pageCounterLabel);
 
     // Setup actions for the left navigation button
     leftArrowButton.setOnAction(e -> {
@@ -116,9 +118,14 @@ public class CheckoutGridWithButtons extends HBox {
       // Slot for Label and Price
       HBox labelAndPrice = new HBox();
       labelAndPrice.setAlignment(Pos.CENTER);
-      labelAndPrice.getChildren().addAll(
-          new Label(item.getName()),
-          new Label(String.format(" %.0f :-", item.getPrice())));
+      Label nameLabel = new Label(item.getName());
+      Label priceLabel = new Label(String.format(" %.0f :-", item.getPrice()));
+
+      // To change color with picker
+      LabelManager.register(nameLabel);
+      LabelManager.register(priceLabel);
+
+      labelAndPrice.getChildren().addAll(nameLabel, priceLabel);
 
       // Slot for Plus/Minus Buttons and Quantity value
       int quantity = quantitys[i];

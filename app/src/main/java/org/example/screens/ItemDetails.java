@@ -111,6 +111,7 @@ public class ItemDetails {
     for (int i = 0; i < Math.min(visibleCount, ingredients.size()); i++) {
       Label ingrLabel = new Label(ingredients.get(i).getName());
       ingrLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: normal;");
+      LabelManager.register(ingrLabel);
 
       // Calling on corresponding block from List
       AddRemoveBlock addRemoveBlock = blocks.get(i);
@@ -371,9 +372,7 @@ public class ItemDetails {
   public CustomScene createMealUpsell(Stage primaryStage, Scene mainMenu, Single item,
       List<AddRemoveBlock> blocks, List<Integer> quantities, Connection conn) {
     var mainText = new TitleLabel("Do you want to make it a meal?");
-    mainText.setStyle(
-        "-fx-font-size: 65px;"
-            + "-fx-font-weight: bold;");
+
     LabelManager.register(mainText);
 
     var yesButton = new BlackButtonWithImage("Yes", "/green_tick.png");
