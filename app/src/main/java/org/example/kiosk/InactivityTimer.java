@@ -175,14 +175,7 @@ public class InactivityTimer {
     isActive = false;
   }
 
-  private void resetToWelcomeScreen(Stage inactivityPopup) {
-
-    Timer popupTimer = new Timer();
-
-    popupTimer.schedule(getResetTask(inactivityPopup), 5 * 1000);
-  }
-
-  private TimerTask getResetTask(Stage inactivityPopup) {
+  private TimerTask getFullResetTask(Stage inactivityPopup) {
     TimerTask resetTask = new TimerTask() {
       public void run() {
 
