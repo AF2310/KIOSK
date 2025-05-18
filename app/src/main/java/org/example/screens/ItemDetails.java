@@ -25,11 +25,14 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.boxes.AddRemoveBlock;
 import org.example.buttons.ArrowButton;
+import org.example.buttons.BlackButtonWithImage;
+import org.example.buttons.ColorBtnOutlineImage;
 import org.example.buttons.ColorButtonWithImage;
 import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButtonWithImage;
 import org.example.buttons.TitleLabel;
+import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Ingredient;
 import org.example.menu.Meal;
@@ -158,6 +161,7 @@ public class ItemDetails {
 
         Label ingrLabel = new Label(ingredients.get(i).getName());
         ingrLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: normal;");
+        LabelManager.register(ingrLabel);
 
         // Calling on corresponding block from List
         AddRemoveBlock addRemoveBlock = blocks.get(i);
@@ -180,6 +184,7 @@ public class ItemDetails {
     descriptionLabel.setStyle(
         "-fx-font-size: 20px;"
             + "-fx-font-weight: normal;");
+    LabelManager.register(descriptionLabel);
 
     // Left side of the top part of the screen
     VBox nameAndDescriptionBox = new VBox(20);
@@ -222,6 +227,7 @@ public class ItemDetails {
     priceLabel.setStyle(
         "-fx-font-size: 35px;"
             + "-fx-font-weight: bold;");
+    LabelManager.register(priceLabel);
 
     // Wrapper to align the Label in its VBox
     HBox priceWrapper = new HBox(priceLabel);
@@ -364,13 +370,14 @@ public class ItemDetails {
    */
   public CustomScene createMealUpsell(Stage primaryStage, Scene mainMenu, Single item,
       List<AddRemoveBlock> blocks, List<Integer> quantities, Connection conn) {
-    Label mainText = new Label("Do you want to make it a meal?");
+    var mainText = new TitleLabel("Do you want to make it a meal?");
     mainText.setStyle(
         "-fx-font-size: 65px;"
             + "-fx-font-weight: bold;");
+    LabelManager.register(mainText);
 
-    MidButtonWithImage yesButton = new MidButtonWithImage("Yes", "/green_tick.png", "rgb(0, 0, 0)");
-    MidButtonWithImage noButton = new MidButtonWithImage("No", "/cancel.png", "rgb(255, 255, 255)");
+    var yesButton = new BlackButtonWithImage("Yes", "/green_tick.png");
+    var noButton = new ColorBtnOutlineImage("No", "/cancel.png");
 
     HBox buttonBox = new HBox(20);
     buttonBox.setPadding(new Insets(50));

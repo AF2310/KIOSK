@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import org.example.buttons.BlackButtonWithImage;
 import org.example.buttons.ColorBtnOutlineImage;
 import org.example.buttons.LangBtn;
+import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;
 import org.example.sql.SqlConnectionCheck;
 
@@ -48,19 +49,21 @@ public class WelcomeScreen {
 
     // Setup labels
     var welcome = new Label("Welcome to");
+    LabelManager.register(welcome);
     var companyTitle = new Label("Bun & Patty");
+    LabelManager.register(companyTitle);
 
     // Customize labels
     welcome.setStyle(
         "-fx-background-color: transparent;"
-            + "-fx-text-fill: black;"
+            // + "-fx-text-fill: black;"
             + "-fx-font-weight: lighter;"
             + "-fx-font-size: 100;"
             + "-fx-background-radius: 10;");
 
     companyTitle.setStyle(
         "-fx-background-color: transparent;"
-            + "-fx-text-fill: black;"
+            // + "-fx-text-fill: black;"
             + "-fx-font-weight: bolder;"
             + "-fx-font-size: 160;"
             + "-fx-background-radius: 10;");
@@ -151,6 +154,7 @@ public class WelcomeScreen {
     // Test sql connection
     SqlConnectionCheck connectionCheck = new SqlConnectionCheck();
     Label mysql = connectionCheck.getMysqlLabel();
+    LabelManager.register(mysql);
 
     mainWindow.getChildren().addAll(
         welcome, companyTitle, rowOfBurgers, rowOfButtons, mysql, termsButton);
