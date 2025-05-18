@@ -27,6 +27,8 @@ import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SqrBtnWithOutline;
+import org.example.buttons.TitleLabel;
+import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Drink;
 import org.example.menu.Meal;
@@ -108,9 +110,8 @@ public class MealCustomizationScreen {
       System.err.println("Failed to set main for the meal.");
     }
     // Creating the title for the scene
-    Label title = new Label("Pick a Side for your Meal");
-    title.setStyle("-fx-font-size: 40px;"
-        + "-fx-font-weight: bold;");
+    Label title = new TitleLabel("Pick a Side for your Meal");
+
     // Centering it on top of the layout
     HBox titleBox = new HBox(title);
     titleBox.setAlignment(Pos.CENTER);
@@ -158,6 +159,7 @@ public class MealCustomizationScreen {
 
       Label sideLabel = new Label(side.getName());
       sideLabel.setStyle("-fx-font-size: 14px;");
+      LabelManager.register(sideLabel);
 
       sideBox.getChildren().addAll(sideImage, sideLabel);
 
@@ -190,6 +192,7 @@ public class MealCustomizationScreen {
 
     Label mealLabel = new Label(meal.getName());
     mealLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+    LabelManager.register(mealLabel);
     mealDisplay.getChildren().addAll(mealImage, mealLabel);
     centerBox.getChildren().addAll(sideOptionsGrid, mealDisplay);
     layout.setCenter(centerBox);
@@ -284,10 +287,7 @@ public class MealCustomizationScreen {
   public CustomScene createDrinkSelectionScene(Stage stage, Scene mainScene,
       Meal meal, Scene sideScene) {
 
-    Label title = new Label("Pick a Drink for your Meal");
-    title.setStyle("-fx-font-size: 40px;"
-        + "-fx-font-weight: bold;");
-
+    Label title = new TitleLabel("Pick a Drink for your Meal");
 
     // The drink options scene is for now almost exact same as the side scene one,
     // It just has a different label, so no need for commenting this part
@@ -335,6 +335,7 @@ public class MealCustomizationScreen {
 
       Label drinkLabel = new Label(drink.getName());
       drinkLabel.setStyle("-fx-font-size: 14px;");
+      LabelManager.register(drinkLabel);
 
       drinkBox.getChildren().addAll(drinkImage, drinkLabel);
       drinkBox.setOnMouseClicked(e -> {
@@ -358,6 +359,7 @@ public class MealCustomizationScreen {
     mealImage.setPreserveRatio(true);
 
     Label mealLabel = new Label(meal.getName());
+    LabelManager.register(mealLabel);
     mealLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
     mealDisplay.getChildren().addAll(mealImage, mealLabel);
     centerBox.getChildren().addAll(drinkOptionsGrid, mealDisplay);
