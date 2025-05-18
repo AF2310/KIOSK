@@ -165,28 +165,40 @@ public class InactivityTimer {
   public void stopTimer() {
     System.out.println("TIMER STATUS BEFORE STOP: " + isActive);
     System.out.println("Current Scene: " + primaryStage.getScene());
+
     if (timer != null) {
       timer.cancel();
       timer = null;
       System.out.println("DEBUG_0: TIMER STOP");
     }
+    
     isActive = false;
   }
 
-  private void resetToWelcomeScreen() {
+  private void resetToWelcomeScreen(Stage inactivityPopup) {
+
     Timer popupTimer = new Timer();
 
-    /* popupTimer.schedule(new TimerTask() {
+    popupTimer.schedule(getResetTask(inactivityPopup), 5 * 1000);
+  }
+
+  private TimerTask getResetTask(Stage inactivityPopup) {
+    TimerTask resetTask = new TimerTask() {
       public void run() {
+
         Platform.runLater(() -> {
-          if (popup.isShowing()) {
-            popup.close();
+
+          if (inactivityPopup.isShowing()) {
+
+            inactivityPopup.close();
             primaryStage.setScene(welcomeScene);
-            stopTimer(); // stop further timers if needed
-            System.out.println("DEBUG: No response, returned to welcome screen.");
+            stopTimer();
+            System.out.println("DEBUG_0: No response, return to welcome screen.");
           }
         });
       }
-    }, 5 * 1000); */
+    };
+
+    return resetTask;
   }
 }
