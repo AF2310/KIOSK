@@ -6,6 +6,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+
+import org.example.kiosk.LabelManager;
 import org.example.screens.BackgroundColorStore;
 
 /**
@@ -63,6 +65,8 @@ public class ColorPickersPane extends HBox {
       CartSquareButton.setButtonColor(selectedColor);
       ColorBtnOutlineImage.setButtonColor(selectedColor);
       ArrowButton.setButtonColor(selectedColor);
+
+      LabelManager.setTextColor(selectedColor);
     });
 
     secClrPicker.setOnAction(e -> {
