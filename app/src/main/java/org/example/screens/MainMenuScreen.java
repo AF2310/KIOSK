@@ -32,6 +32,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -69,6 +70,7 @@ public class MainMenuScreen {
   public Cart cart = Cart.getInstance();
   private String mode;
   private Connection conn;
+  private boolean filtersActive = false;
 
   private LanguageSetting languageSetting = new LanguageSetting();
 
@@ -148,11 +150,12 @@ public class MainMenuScreen {
 
     ComboBox<String> gridCategoryBox = new ComboBox<>();
     gridCategoryBox.getItems().addAll(
-        "-- Any Category --", "Burgers", "Sides", "Drinks", "Desserts");
+        "-- Any Category --", "Burgers", "Sides", "Drinks", "Desserts","Meals", "Special Offers");
     gridCategoryBox.setPromptText("Select Category...");
     gridCategoryBox.setStyle("-fx-font-size: 14px; -fx-pref-width: 150px;");
 
     gridSearchButton.setOnAction(e -> {
+      filtersActive = true;
       currentSearchName = gridSearchField.getText().trim();
 
       currentSearchCategory = "";
@@ -306,6 +309,11 @@ public class MainMenuScreen {
       final int index = i;
       btn.setOnAction(e -> {
         currentCategoryIndex = index;
+        filtersActive = false;
+        currentSearchName = "";
+        currentSearchCategory = "";
+        currentSearchPrice = -1;
+        //currentSearchCategory = "";
         updateGrid();
         updateCategoryButtonStyles();
       });
@@ -369,7 +377,12 @@ public class MainMenuScreen {
     // Locking arrows left and right and locking menu items in middle
     BorderPane centerMenuLayout = new BorderPane();
     centerMenuLayout.setLeft(leftArrowVcentered);
-    centerMenuLayout.setCenter(itemGrid);
+    ScrollPane scrollPane = new ScrollPane(itemGrid);
+    scrollPane.setFitToWidth(true);
+    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+    scrollPane.setPadding(new Insets(10));
+    centerMenuLayout.setCenter(scrollPane);
     centerMenuLayout.setRight(rightArrowVcentered);
 
     // Setting center menu content to center of actual menu
@@ -488,10 +501,27 @@ public class MainMenuScreen {
     itemGrid.setPadding(new Insets(10));
     itemGrid.setAlignment(Pos.CENTER);
 
+    /*ScrollPane scrollPane = new ScrollPane(itemGrid);
+    scrollPane.setFitToWidth(true);
+    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+    scrollPane.setPadding(new Insets(10));
+    BorderPane layout = (BorderPane) ((StackPane) primaryStage.getScene().getRoot()).getChildren().get(0);
+    BorderPane centerMenuLayout = (BorderPane) layout.getCenter();
+    centerMenuLayout.setCenter(scrollPane);*/
+
+    
     // Load items depending on category
     List<Product> items = new ArrayList<>();
 
-    if ("Meals".equals(categories[currentCategoryIndex])) {
+    //String selectedCat = currentSearchCategory.trim();
+    //boolean isAnyCategory = selectedCat.isEmpty() || selectedCat.equalsIgnoreCase("-- Any Category --");
+    String currentCategory = categories[currentCategoryIndex];
+    //boolean showAll = currentSearchCategory.isEmpty() ||
+                    //currentSearchCategory.equalsIgnoreCase("-- Any Category --");
+
+
+    /*if (currentCategory.equalsIgnoreCase("Meals")) {
       try {
         String sql = """
             SELECT meal_id, name, description, price, image_url
@@ -500,6 +530,7 @@ public class MainMenuScreen {
 
         PreparedStatement ps = conn.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
+        //List<Product> meals = new ArrayList<>();
 
         while (rs.next()) {
           Meal meal = new Meal(rs.getString("name"), conn);
@@ -511,7 +542,8 @@ public class MainMenuScreen {
 
           items.add(meal);
         }
-
+        //items.addAll(meals);
+        //categoryItems.put("Meals", meals);
         rs.close();
         ps.close();
       } catch (SQLException e) {
@@ -519,7 +551,7 @@ public class MainMenuScreen {
       }
     } else {
       // Get from preloaded categories
-      String selectedCat = currentSearchCategory.trim();
+      /*String selectedCat = currentSearchCategory.trim();
       boolean isAnyCategory = selectedCat.isEmpty() || selectedCat.equalsIgnoreCase("-- Any Category --");
       if (isAnyCategory) {
         for (String cat : categories) {
@@ -539,9 +571,123 @@ public class MainMenuScreen {
         List<Product> categoryList = categoryItems.getOrDefault(actualCategory, new ArrayList<>());
         items.addAll(categoryList);
       }
-    }
+      if (showAll) {
+        // Show all categories including meals
+        //for (String cat : categories) {
+          String cat = categories[currentCategoryIndex];
+            if (cat.equals("Meals")) {
+                // Add meals to "any category" view
+                try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT meal_id, name, price, image_url FROM meal");
+                    ResultSet rs = ps.executeQuery()) {
+                    
+                    while (rs.next()) {
+                        Meal meal = new Meal(rs.getString("name"), conn);
+                        meal.setId(rs.getInt("meal_id"));
+                        meal.setPrice(rs.getFloat("price"));
+                        meal.setImagePath(rs.getString("image_url"));
+                        items.add(meal);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            } else if (!cat.equals("Special Offers")) {
+                items.addAll(categoryItems.getOrDefault(cat, new ArrayList<>()));
+            }
+       // }
+    } else {
+        // Specific category search
+        String targetCat = currentSearchCategory.isEmpty() ? 
+                          currentCategory : currentSearchCategory;
+        
+        if (targetCat.equalsIgnoreCase("Meals")) {
+            try (PreparedStatement ps = conn.prepareStatement(
+                "SELECT meal_id, name, price, image_url FROM meal");
+                ResultSet rs = ps.executeQuery()) {
+                
+                while (rs.next()) {
+                    Meal meal = new Meal(rs.getString("name"), conn);
+                    meal.setId(rs.getInt("meal_id"));
+                    meal.setPrice(rs.getFloat("price"));
+                    meal.setImagePath(rs.getString("image_url"));
+                    items.add(meal);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            items.addAll(categoryItems.getOrDefault(targetCat, new ArrayList<>()));
+        }
+      }
+    }*/
 
     // FILTERS: Apply name, price, and category filter
+    if (filtersActive) {
+      boolean isAnyCategory = currentSearchCategory.equalsIgnoreCase("-- Any Category --");
+      if (isAnyCategory) {
+        for (String cat : categories) {
+          if (cat.equals("Meals")) {
+              // Load meals from database
+              try (PreparedStatement ps = conn.prepareStatement(
+                  "SELECT meal_id, name, price, image_url FROM meal");
+                  ResultSet rs = ps.executeQuery()) {
+                  while (rs.next()) {
+                      Meal meal = new Meal(rs.getString("name"), conn);
+                      meal.setId(rs.getInt("meal_id"));
+                      meal.setPrice(rs.getFloat("price"));
+                      meal.setImagePath(rs.getString("image_url"));
+                      items.add(meal);
+                  }
+              } catch (SQLException e) {
+                  e.printStackTrace();
+              }
+          } else if (!cat.equals("Special Offers")) {
+              items.addAll(categoryItems.getOrDefault(cat, new ArrayList<>()));
+          }
+        }
+
+      } else {
+        String targetCat = currentSearchCategory;
+        if (targetCat.equals("Meals")) {
+            // Load meals from database
+            try (PreparedStatement ps = conn.prepareStatement(
+                "SELECT meal_id, name, price, image_url FROM meal");
+                ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Meal meal = new Meal(rs.getString("name"), conn);
+                    meal.setId(rs.getInt("meal_id"));
+                    meal.setPrice(rs.getFloat("price"));
+                    meal.setImagePath(rs.getString("image_url"));
+                    items.add(meal);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            items.addAll(categoryItems.getOrDefault(targetCat, new ArrayList<>()));
+        }
+
+      }
+    } else {
+      if (currentCategory.equals("Meals")) {
+        try (PreparedStatement ps = conn.prepareStatement(
+            "SELECT meal_id, name, price, image_url FROM meal");
+            ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Meal meal = new Meal(rs.getString("name"), conn);
+                meal.setId(rs.getInt("meal_id"));
+                meal.setPrice(rs.getFloat("price"));
+                meal.setImagePath(rs.getString("image_url"));
+                items.add(meal);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      } else {
+          items.addAll(categoryItems.getOrDefault(currentCategory, new ArrayList<>()));
+      }
+
+    }
     List<Product> filteredProducts = new ArrayList<>(items);
 
     if (!currentSearchName.isEmpty()) {
@@ -560,11 +706,13 @@ public class MainMenuScreen {
 
     if (!currentSearchCategory.isEmpty()
         && !currentSearchCategory.equalsIgnoreCase("-- Any Category --")) {
-      String targetCategory = currentSearchCategory.toLowerCase();
+      String filterCategory = currentSearchCategory.toLowerCase();
       filteredProducts = filteredProducts.stream()
           .filter(p -> {
             if (p instanceof Single single) {
-              return single.getType().toString().toLowerCase().equals(targetCategory);
+              return single.getType().toString().toLowerCase().equals(filterCategory);
+            } else if (p instanceof Meal && filterCategory.equals("meals")) {
+              return true;
             }
             return false;
           })
@@ -580,17 +728,17 @@ public class MainMenuScreen {
       && !currentSearchCategory.equalsIgnoreCase("-- Any Category --"));
 
     if (filtersActive) {
-      totalItemsPerPage = filteredProducts.size();
-      maxItemsPerRow = 8;
+      maxItemsPerRow = 6;
     }
+    int itemsToShow = filteredProducts.size();
 
-    int itemsToShow;
+    /*int itemsToShow;
 
     if (filtersActive) {
         itemsToShow = filteredProducts.size();
     } else {
         itemsToShow = Math.min(totalItemsPerPage, filteredProducts.size());
-    }
+    }*/
 
     // Create the empty image to fill the grid slots
     Image emptyImage = new Image(
