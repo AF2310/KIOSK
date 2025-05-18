@@ -31,7 +31,7 @@ public class InactivityTimer {
    */
   public void startTimer() {
     
-    //timer.schedule(displayInactivityPopup(), 60);
+    timer.schedule(displayInactivityPopup(), 60);
   }
 
   /**
@@ -39,7 +39,11 @@ public class InactivityTimer {
    * 'Are you still there?'.
    */
   private TimerTask displayInactivityPopup() {
-    // TODO: display inactivity method (use helper method below)
+    return new TimerTask() {
+      public void run() {
+        inactivityPopup();
+      }
+    };
   }
 
   private void inactivityPopup() {
