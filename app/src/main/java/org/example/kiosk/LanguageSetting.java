@@ -21,6 +21,10 @@ public class LanguageSetting {
   public String selectedLanguage;
   private Dictionary dictionary;
 
+  /**
+   * Constructs a new LanguageSetting instance with English as the default
+   * language.
+   */
   public LanguageSetting() {
     this.dictionary = new Dictionary();
     this.selectedLanguage = "en";
