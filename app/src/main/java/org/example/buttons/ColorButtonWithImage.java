@@ -20,7 +20,7 @@ public class ColorButtonWithImage extends Button {
 
   private Label buttonLabel;
 
-  private static String buttonBackgroundColor = "rgb(0, 0, 255)";
+  private static String buttonBackgroundColor = "rgb(1, 176, 51)";
   private static final List<ColorButtonWithImage> instances = new ArrayList<>();
 
   /**

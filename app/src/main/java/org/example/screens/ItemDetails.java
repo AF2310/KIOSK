@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import org.example.boxes.AddRemoveBlock;
 import org.example.buttons.ArrowButton;
 import org.example.buttons.ColorButtonWithImage;
+import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButtonWithImage;
 import org.example.buttons.SquareButtonWithImg;
@@ -233,9 +234,8 @@ public class ItemDetails {
     rightSide.setAlignment(Pos.CENTER);
     rightSide.getChildren().addAll(imageView, priceWrapper);
 
-    SquareButtonWithImg backButton = new SquareButtonWithImg("Back",
-        "back.png",
-        "rgb(255, 255, 255)");
+    var backButton = new ColorSquareButtonWithImage("Back",
+        "back.png");
 
     backButton.setOnAction(e -> {
       primaryStage.setScene(prevScene);

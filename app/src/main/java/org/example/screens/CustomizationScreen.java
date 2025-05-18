@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.ColorButtonWithImage;
+import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
 import org.example.buttons.SqrBtnWithOutline;
@@ -55,6 +56,7 @@ public class CustomizationScreen {
     colorPicker.setOnAction(e -> {
       Color selectedColor = colorPicker.getValue();
       ColorButtonWithImage.setButtonBackgroundColor(selectedColor);
+      ColorSquareButtonWithImage.setButtonColor(selectedColor);
       TitleLabel.setTextColor(selectedColor);
     });
     colorPicker.setPrefWidth(200);
@@ -94,7 +96,7 @@ public class CustomizationScreen {
     var testBtn1 = new MidButton("Filled", "rgb(1, 176, 51)", 30);
     var testBtn2 = new ColorButtonWithImage("With Image", "/eatHere.png");
     var testBtn3 = new MidButton("Outlined", "rgb(255, 255, 255)", 30);
-    var testBtn4 = new SqrBtnWithOutline("With Image", "/cancel.png", "rgb(195, 4, 4)");
+    var testBtn4 = new ColorSquareButtonWithImage("With Image", "/back.png");
 
     centerGrid.add(testBtn1, 0, 0);
     centerGrid.add(testBtn4, 0, 1);
