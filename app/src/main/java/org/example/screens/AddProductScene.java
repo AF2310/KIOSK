@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -31,8 +32,6 @@ import org.example.sql.SqlConnectionCheck;
  * Scene in the admin menu for adding products to the menu.
  */
 public class AddProductScene {
-
-  private LanguageSetting languageSetting = new LanguageSetting();
 
   private Stage primaryStage;
   private Scene prevScene;
@@ -133,7 +132,8 @@ public class AddProductScene {
       ex.printStackTrace();
       showAlert("Database error", "Failed to load categories", Alert.AlertType.ERROR);
     }
-    // TODO: Make connection to sql a singleton so we don't create new connections each time.
+    // TODO: Make connection to sql a singleton so we don't create new connections
+    // each time.
 
     // Maps categories to default image paths for now
     // TODO: Make an implementation for putting in new images for products
@@ -323,23 +323,28 @@ public class AddProductScene {
     // Language Button
     var langButton = new LangBtn();
 
-    // Translate all the text
     langButton.addAction(event -> {
-      // Toggle the language in LanguageSetting
-      languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
-      languageSetting.updateAllLabels(layout);
-      // historyTable.refresh();
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
     });
 
     // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
     StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
 
-    //put everything into a stackpane
+    // put everything into a stackpane
     StackPane mainPane = new StackPane(layout, langButton);
 
     Scene addProductScene = new Scene(mainPane, 1920, 1080);
+
+    // Update the language for the scene upon creation
+    Parent root = addProductScene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
+
     return addProductScene;
   }
 

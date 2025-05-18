@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -41,8 +42,6 @@ import org.example.orders.OrderListWrapper;
  * Admin screen for sales stats.
  */
 public class SalesStatsScreen {
-
-  private LanguageSetting languageSetting = new LanguageSetting();
     
   /**
    * Scene to display the order history.
@@ -178,13 +177,25 @@ public class SalesStatsScreen {
 
     // Translate all the text
     langButton.addAction(event -> {
-      // Toggle the language in LanguageSetting
-      languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
-      languageSetting.updateAllLabels(layout);
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
     });
 
-    return new Scene(layout, 1920, 1080);
+    LanguageSetting.getInstance().updateAllLabels(layout);
+
+    Scene scene = new Scene(layout, 1920, 1080);
+
+    // Update the language for the scene upon creation
+    Parent root = scene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
+
+    LanguageSetting.getInstance().updateAllLabels(layout);
+
+    return scene;
 
   }
 

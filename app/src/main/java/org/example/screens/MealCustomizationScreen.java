@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
@@ -41,8 +42,6 @@ import org.example.orders.Cart;
  * A Class for picking side and drink option for the meal.
  */
 public class MealCustomizationScreen {
-
-  private LanguageSetting languageSetting = new LanguageSetting();
 
   private Connection conn;
 
@@ -400,11 +399,13 @@ public class MealCustomizationScreen {
 
     // Translate all the text
     langButton.addAction(event -> {
-      // Toggle the language in LanguageSetting
-      languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
-      languageSetting.updateAllLabels(layout);
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
     });
+
+    LanguageSetting.getInstance().updateAllLabels(layout);
 
     CustomScene scene = new CustomScene(layout, 1920, 1080);
 
@@ -416,6 +417,12 @@ public class MealCustomizationScreen {
       scene.setBackgroundColor(bgColor);
 
     }
+
+    // Update the language for the scene upon creation
+    Parent root = scene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
 
     return scene;
   }

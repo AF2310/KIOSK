@@ -3,6 +3,7 @@ package org.example.screens;
 import java.sql.Connection;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -24,8 +25,6 @@ import org.example.kiosk.LanguageSetting;
  */
 public class AdminMenuScreen {
 
-  private LanguageSetting languageSetting = new LanguageSetting();
-
   /**
    * Admin menu screen.
    */
@@ -40,7 +39,7 @@ public class AdminMenuScreen {
     VBox adminMenuLayout = new VBox(20);
     adminMenuLayout.setAlignment(Pos.TOP_CENTER);
     adminMenuLayout.setPadding(new Insets(10));
-    
+
     // Making the title on top of the admin menu screen
     Label adminMenuText = new Label("Welcome, Admin!");
     adminMenuText.setStyle(
@@ -58,7 +57,7 @@ public class AdminMenuScreen {
 
     // All the same instances of the MidButton
     MidButton updateMenuBtn = new MidButton("Update Menu Items", "rgb(255, 255, 255)", 30);
-    
+
     MidButton orderHistoryBtn = new MidButton("Order History", "rgb(255, 255, 255)", 30);
     orderHistoryBtn.setOnAction(e -> {
       Scene historyScene = new AdminOrdHistoryScreen().showHistoryScene(
@@ -66,7 +65,7 @@ public class AdminMenuScreen {
           adminMenuLayout.getScene());
       primaryStage.setScene(historyScene);
     });
-      
+
     MidButton salesSummaryBtn = new MidButton("See Sales Summary", "rgb(255, 255, 255)", 30);
     salesSummaryBtn.setOnAction(e -> {
       Scene statsScene = new SalesStatsScreen().showStatsScene(
@@ -77,7 +76,7 @@ public class AdminMenuScreen {
 
     MidButton changeTimerBtn = new MidButton("Change Timer Setting", "rgb(255, 255, 255)", 30);
     MidButton specialOffersBtn = new MidButton("Set Special Offers", "rgb(255, 255, 255)", 30);
-    
+
     centerGrid.add(updateMenuBtn, 0, 0);
     centerGrid.add(changeTimerBtn, 0, 1);
     centerGrid.add(specialOffersBtn, 0, 2);
@@ -88,7 +87,7 @@ public class AdminMenuScreen {
 
     searchBarBtn.setOnAction(e -> {
       Scene searchBarScreen = new SeachBarScreen().showSearchScene(
-          primaryStage, 
+          primaryStage,
           adminMenuLayout.getScene());
       primaryStage.setScene(searchBarScreen);
     });
@@ -147,19 +146,27 @@ public class AdminMenuScreen {
     StackPane.setAlignment(customBtn, Pos.TOP_RIGHT);
     StackPane.setMargin(customBtn, new Insets(50, 50, 0, 0));
 
-    //put everything into a stackpane
+    // put everything into a stackpane
     StackPane layout = new StackPane(mainBorderPane, customBtn);
     layout.setPrefSize(windowWidth, windowHeight);
 
     // Translate all the text
     langButton.addAction(event -> {
-      // Toggle the language in LanguageSetting
-      languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
-      languageSetting.updateAllLabels(layout);
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
+
+      lang.updateAllLabels(layout);
     });
 
     Scene adminMenuScene = new Scene(layout, windowWidth, windowHeight);
+
+    // Update the language for the scene upon creation
+    Parent root = adminMenuScene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
 
     return adminMenuScene;
   }

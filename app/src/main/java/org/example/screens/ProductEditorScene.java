@@ -2,6 +2,7 @@ package org.example.screens;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
@@ -21,8 +22,6 @@ import org.example.menu.Product;
  * Used in the admin menu in 'UpdateMenuItems.java'.
  */
 public class ProductEditorScene {
-
-  private LanguageSetting languageSetting = new LanguageSetting();
 
   private Stage primaryStage;
   private Scene prevScene;
@@ -107,12 +106,22 @@ public class ProductEditorScene {
 
     // Translate all the text
     langButton.addAction(event -> {
-      // Toggle the language in LanguageSetting
-      languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
-      languageSetting.updateAllLabels(layout);
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
     });
 
-    return new Scene(layout, 1920, 1080);
+    Scene scene = new Scene(layout, 1920, 1080);
+
+    // Update the language for the scene upon creation
+    Parent root = scene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
+
+    LanguageSetting.getInstance().updateAllLabels(layout);
+
+    return scene;
   }
 }

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -35,7 +36,6 @@ import org.example.users.Customer;
 public class CheckoutScreen {
 
   private Stage primaryStage;
-  private LanguageSetting languageSetting = new LanguageSetting();
 
   /**
    * Creating a scene for the checkout menu.
@@ -228,14 +228,15 @@ public class CheckoutScreen {
         checkoutGrid,
         bottomPart);
 
-    // Just pass in the Labeled components to translate
+    // Translate all the text
     langButton.addAction(event -> {
-      // Toggle the language in LanguageSetting
-      languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en"
-      );
-      languageSetting.updateAllLabels(layout);
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
     });
+
+    LanguageSetting.getInstance().updateAllLabels(layout);
 
     // Create final scene result
     CustomScene scene = new CustomScene(layout, windowWidth, windowHeight);
@@ -248,6 +249,12 @@ public class CheckoutScreen {
       scene.setBackgroundColor(bgColor);
 
     }
+
+    // Update the language for the scene upon creation
+    Parent root = scene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
 
     return scene;
   }

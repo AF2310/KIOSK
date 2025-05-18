@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -46,8 +47,6 @@ import org.example.orders.Cart;
  */
 public class ItemDetails {
 
-  private LanguageSetting languageSetting = new LanguageSetting();
-
   /**
    * Creating a scene for a specific item, displaying all item details.
    * Only for single items
@@ -70,15 +69,16 @@ public class ItemDetails {
     List<Ingredient> ingredients = item.ingredients;
     // Make a deep copy of ingredients to avoid reusing the original list
     // System.out.println("Original ingredients: " + item.ingredients);
-    // List<Ingredient> ingredients = new ArrayList<>(new LinkedHashSet<>(item.ingredients));
+    // List<Ingredient> ingredients = new ArrayList<>(new
+    // LinkedHashSet<>(item.ingredients));
     // System.out.println("Ingredients after HashSet conversion: " + ingredients);
     // Original list
     // System.out.println("Before modification: " + item.ingredients);
     // Create a new list with no duplicates, using LinkedHashSet to preserve order
-    // List<Ingredient> ingredients = new ArrayList<>(new LinkedHashSet<>(item.ingredients));
+    // List<Ingredient> ingredients = new ArrayList<>(new
+    // LinkedHashSet<>(item.ingredients));
     // // Check after modification
     // System.out.println("After manual duplicate removal: " + ingredients);
-
 
     List<Integer> quantities = new ArrayList<>();
     /*
@@ -170,6 +170,7 @@ public class ItemDetails {
         row.setAlignment(Pos.CENTER_RIGHT);
         ingredientBox.getChildren().add(row);
       }
+      LanguageSetting.getInstance().updateAllLabels(ingredientBox);
     });
 
     // Putting the ingredient box and the scroll button together in a vboc
@@ -318,15 +319,20 @@ public class ItemDetails {
 
     // Translate all the text
     langButton.addAction(event -> {
-      // Toggle the language in LanguageSetting
-      languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
-      languageSetting.updateAllLabels(layout);
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
     });
 
     CustomScene scene = new CustomScene(layout, 1920, 1080);
 
-    
+    // Update the language for the scene upon creation
+    Parent root = scene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
+
     // Reads and applies the customized background color
     Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
 
