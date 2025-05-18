@@ -28,7 +28,8 @@ public class InactivityTimer {
   private Stage primaryStage;
   private Scene welcomeScene;
   private boolean isActive = false;
-  private int inactivityTime = 5;
+  private int inactivityTimePopup = 5;
+  private int inactivityTimeShop = 10;
 
   /**
    * The timer constructor.
@@ -74,7 +75,7 @@ public class InactivityTimer {
   /**
    * Start the timer.
    * Timer has sceduled delay in miliseconds, so we
-   * convert to seconds -> 30 * 1000 = 30 seconds.
+   * convert to seconds -> e.g. 30 * 1000 = 30 seconds.
    * After time has passed, inactivity popup will be
    * displayed (TimerTask).
    */
@@ -84,7 +85,7 @@ public class InactivityTimer {
     // and timer cannot be already active
     if (!isActive && !(primaryStage.getScene().equals(welcomeScene))) {
       timer = new Timer(true);
-      timer.schedule(displayInactivityPopup(), 10 * 1000);
+      timer.schedule(displayInactivityPopup(), inactivityTimeShop * 1000);
       isActive = true;
     }
   }
@@ -138,7 +139,10 @@ public class InactivityTimer {
       // Make timer for full reset if user doesn't respond to popup after 5 seconds
       // User has 5 seconds to respond
       Timer popupTimer = new Timer(true);
-      popupTimer.schedule(getFullResetTask(inactivityPopup, popupTimer), inactivityTime * 1000);
+      popupTimer.schedule(
+          getFullResetTask(inactivityPopup, popupTimer),
+          inactivityTimePopup * 1000
+      );
 
       // User confirms he's still active
       // -> popup gets removed and all timers reset
