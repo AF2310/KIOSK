@@ -172,4 +172,14 @@ public class InactivityTimer {
     }
     isActive = false;
   }
+
+  private void resetToWelcomeScreen() {
+    Timer popupTimer = new Timer();
+
+    popupTimer.schedule(new TimerTask() {
+      
+      // TODO insert auto reset code
+
+    }, 15 * 1000);
+  }
 }
