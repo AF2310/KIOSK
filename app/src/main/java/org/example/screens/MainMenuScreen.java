@@ -11,6 +11,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.example.buttons.ArrowButton;
+import org.example.buttons.CancelButtonWithText;
+import org.example.buttons.LangBtn;
+import org.example.buttons.SearchBar;
+import org.example.buttons.SqrBtnImgOnly;
+import org.example.kiosk.LanguageSetting;
+import org.example.menu.Imenu;
+import org.example.menu.Meal;
+import org.example.menu.Menu;
+import org.example.menu.Product;
+import org.example.menu.Single;
+import org.example.menu.Type;
+import org.example.orders.Cart;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -31,19 +46,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import org.example.buttons.ArrowButton;
-import org.example.buttons.CancelButtonWithText;
-import org.example.buttons.LangBtn;
-import org.example.buttons.SearchBar;
-import org.example.buttons.SqrBtnImgOnly;
-import org.example.kiosk.LanguageSetting;
-import org.example.menu.Imenu;
-import org.example.menu.Meal;
-import org.example.menu.Menu;
-import org.example.menu.Product;
-import org.example.menu.Single;
-import org.example.menu.Type;
-import org.example.orders.Cart;
 
 /**
  * The main menu screen.
@@ -467,12 +469,12 @@ public class MainMenuScreen {
   private void setupMenuData() throws SQLException {
     Imenu menu = new Menu(conn);
 
-    categoryItems.put("Burgers", convert(conn, menu.getMains()));
+    categoryItems.put("Burgers", convert(conn, (menu.getMains())));
     categoryItems.put("Sides", convert(conn, menu.getSides()));
     categoryItems.put("Drinks", convert(conn, menu.getDrinks()));
     categoryItems.put("Desserts", convert(conn, menu.getDesserts()));
     categoryItems.put("Special Offers", List.of());
-    categoryItems.put("Meals", null);
+    categoryItems.put("Meals", new ArrayList<>());
 
   }
 
@@ -517,9 +519,26 @@ public class MainMenuScreen {
       }
     } else {
       // Get from preloaded categories
-      String category = categories[currentCategoryIndex];
-      List<Product> categoryList = categoryItems.getOrDefault(category, new ArrayList<>());
-      items.addAll(categoryList);
+      String selectedCat = currentSearchCategory.trim();
+      boolean isAnyCategory = selectedCat.isEmpty() || selectedCat.equalsIgnoreCase("-- Any Category --");
+      if (isAnyCategory) {
+        for (String cat : categories) {
+          List<Product> list = categoryItems.get(cat);
+          if (list != null) {
+            items.addAll(list);
+          }
+        }
+      } else {
+        String actualCategory;
+        if (!currentSearchCategory.isEmpty() &&
+        !currentSearchCategory.equalsIgnoreCase("-- Any Category --")) {
+          actualCategory = currentSearchCategory;
+        }  else {
+          actualCategory = categories[currentCategoryIndex];
+        }
+        List<Product> categoryList = categoryItems.getOrDefault(actualCategory, new ArrayList<>());
+        items.addAll(categoryList);
+      }
     }
 
     // FILTERS: Apply name, price, and category filter
@@ -556,14 +575,22 @@ public class MainMenuScreen {
     int maxItemsPerRow = 4;
     int totalItemsPerPage = 8;
 
-    // boolean filtersActive = !currentSearchName.isEmpty() || currentSearchPrice >= 0
-    //     || (!currentSearchCategory.isEmpty()
-    //     && !currentSearchCategory.equalsIgnoreCase("-- Any Category --"));
+    boolean filtersActive = !currentSearchName.isEmpty() || currentSearchPrice >= 0
+        || (!currentSearchCategory.isEmpty()
+      && !currentSearchCategory.equalsIgnoreCase("-- Any Category --"));
 
-    // // if (filtersActive) {
-    // //   totalItemsPerPage = filteredProducts.size();
-    // //   maxItemsPerRow = 4;
-    // // }
+    if (filtersActive) {
+      totalItemsPerPage = filteredProducts.size();
+      maxItemsPerRow = 8;
+    }
+
+    int itemsToShow;
+
+    if (filtersActive) {
+        itemsToShow = filteredProducts.size();
+    } else {
+        itemsToShow = Math.min(totalItemsPerPage, filteredProducts.size());
+    }
 
     // Create the empty image to fill the grid slots
     Image emptyImage = new Image(
@@ -571,7 +598,7 @@ public class MainMenuScreen {
             + "AQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/hd5JnkAAAAASUVORK5CYII=");
 
     // Populate grid with items or empty image
-    for (int i = 0; i < totalItemsPerPage; i++) {
+    for (int i = 0; i < itemsToShow; i++) {
 
       VBox itemBox = new VBox(10);
       itemBox.setAlignment(Pos.CENTER);
@@ -711,6 +738,13 @@ public class MainMenuScreen {
     for (int i = 0; i < categoryButtons.size(); i++) {
       styleCategoryButton(categoryButtons.get(i), i == currentCategoryIndex, i);
     }
+  }
+
+  private List<Product> safe(List<Single> singles) throws SQLException {
+    if (singles == null) {
+      return new ArrayList<>();
+    }
+    return convert(conn, singles);
   }
 
 }
