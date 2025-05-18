@@ -4,6 +4,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.example.menu.Ingredient;
+import org.example.menu.Menu;
+import org.example.menu.Single;
+
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -13,9 +18,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.example.menu.Ingredient;
-import org.example.menu.Menu;
-import org.example.menu.Single;
 
 /**
  * The SearchBar class provides a user interface component for searching items
@@ -29,6 +31,7 @@ public class SearchBar extends VBox {
   private final Button searchButton;
   private final ListView<String> resultList;
   private final ComboBox<String> categoryCombo;
+  private java.util.function.Consumer<Object> resultSelectHandler;
 
   /**
    * Constructs a SearchBar instance with the specified database connection.
@@ -275,6 +278,35 @@ public class SearchBar extends VBox {
 
     });
 
+    resultList.setOnMouseClicked(e -> {
+      String selectedText = resultList.getSelectionModel().getSelectedItem();
+      if (selectedText == null || resultSelectHandler == null) {
+        return;
+      }
+      try {
+        Menu menu = new Menu(conn);
+        List<Single> allSingles = new ArrayList<>();
+        allSingles.addAll(menu.getMains());
+        allSingles.addAll(menu.getSides());
+        allSingles.addAll(menu.getDrinks());
+        allSingles.addAll(menu.getDesserts());
+        allSingles.addAll(menu.getExtras());
+
+        String clickedItemName = selectedText.split(" - ")[0].replace("Single: ", "").trim();
+
+        for (Single s : allSingles) {
+          if (s.getName().equalsIgnoreCase(clickedItemName)) {
+            resultSelectHandler.accept(s);
+            break;
+          }
+        }
+
+      } catch (SQLException ex) {
+        ex.printStackTrace();
+
+      }
+    });
+
   }
 
   public String getText() {
@@ -304,6 +336,10 @@ public class SearchBar extends VBox {
     } else {
       return Double.parseDouble(input);
     }
+  }
+
+  public void setOnResultSelectHandler(java.util.function.Consumer<Object> handler) {
+    this.resultSelectHandler = handler;
   }
 
   // private String normalizeCategory(String categoryName) {
