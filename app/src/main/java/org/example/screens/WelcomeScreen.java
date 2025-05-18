@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.buttons.BlackButtonWithImage;
+import org.example.buttons.ColorBtnOutlineImage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButtonWithImage;
 import org.example.kiosk.LanguageSetting;
@@ -114,10 +115,10 @@ public class WelcomeScreen {
         "/eatHere.png"
     );
 
-    var takeAwayBtn = new MidButtonWithImage(
+    var takeAwayBtn = new ColorBtnOutlineImage(
         "Takeaway",
-        "/takeaway.png",
-        "rgb(255, 255, 255)");
+        "/takeaway.png"
+    );
 
     rowOfButtons.getChildren().addAll(eatHereBtn, takeAwayBtn);
 

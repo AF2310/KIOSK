@@ -17,6 +17,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.buttons.BlackButtonWithImage;
 import org.example.buttons.CancelButtonWithText;
+import org.example.buttons.CartSquareButton;
+import org.example.buttons.ColorBtnOutlineImage;
 import org.example.buttons.ColorButtonWithImage;
 import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
@@ -33,7 +35,7 @@ public class CustomizationScreen {
   /**
    * Admin menu screen.
    */
-  public Scene showCustomizationScreen(
+  public CustomScene showCustomizationScreen(
       Stage primaryStage,
       double windowWidth,
       double windowHeight,
@@ -49,7 +51,7 @@ public class CustomizationScreen {
     Label primClrLabel = new Label("Prime color: ");
     primClrLabel.setStyle(
         "-fx-font-size: 25px;"
-        + "-fx-font-weight: bold;");
+            + "-fx-font-weight: bold;");
 
     ColorPicker primClrPicker = new ColorPicker(Color.BLACK);
     primClrPicker.setOnAction(e -> {
@@ -57,15 +59,19 @@ public class CustomizationScreen {
       BlackButtonWithImage.setButtonBackgroundColor(selectedColor);
       ColorSquareButtonWithImage.setButtonColor(selectedColor);
       TitleLabel.setTextColor(selectedColor);
+      CartSquareButton.setButtonColor(selectedColor);
+      ColorBtnOutlineImage.setButtonColor(selectedColor);
     });
     primClrPicker.setPrefWidth(200);
     primClrPicker.setPrefHeight(50);
+    VBox primColorVbox = new VBox(5, primClrLabel, primClrPicker);
+    primColorVbox.setAlignment(Pos.CENTER);
 
     // Color picker for compliment color
     Label secPickerLbl = new Label("Secondary color: ");
     secPickerLbl.setStyle(
         "-fx-font-size: 25px;"
-        + "-fx-font-weight: bold;");
+            + "-fx-font-weight: bold;");
 
     ColorPicker secClrPicker = new ColorPicker(Color.BLACK);
     secClrPicker.setOnAction(e -> {
@@ -74,14 +80,15 @@ public class CustomizationScreen {
     });
     secClrPicker.setPrefWidth(200);
     secClrPicker.setPrefHeight(50);
+    VBox secColorVbox = new VBox(5, secPickerLbl, secClrPicker);
+    secColorVbox.setAlignment(Pos.CENTER);
 
-    // Label for label color picker
+    // Color picker for background
     Label scenePicker = new Label("Background color: ");
     scenePicker.setStyle(
         "-fx-font-size: 25px;"
-        + "-fx-font-weight: bold;");
+            + "-fx-font-weight: bold;");
 
-    // Color picker for scenes
     ColorPicker sceneColorPicker = new ColorPicker(Color.BLACK);
     sceneColorPicker.setOnAction(e -> {
 
@@ -92,11 +99,17 @@ public class CustomizationScreen {
     sceneColorPicker.setPrefWidth(200);
     sceneColorPicker.setPrefHeight(50);
 
+    VBox sceneColorVbox = new VBox(5, scenePicker, sceneColorPicker);
+    sceneColorVbox.setAlignment(Pos.CENTER);
+
+    // Put all pairs side by side in an HBox
+    HBox colorPickersHbox = new HBox(40, primColorVbox, secColorVbox, sceneColorVbox);
+    colorPickersHbox.setAlignment(Pos.CENTER);
+
     // Making the title on top of the admin menu screen
     Label adminMenuText = new TitleLabel("Set & Test Design");
 
-    adminMenuLayout.getChildren().addAll(adminMenuText, primClrLabel, primClrPicker,
-        secPickerLbl, secClrPicker, scenePicker, sceneColorPicker);
+    adminMenuLayout.getChildren().addAll(adminMenuText, colorPickersHbox);
 
     // this gridpane is used for all the middle buttons in the admin menu,
     // to align tem properly in rows and columns.
@@ -110,11 +123,13 @@ public class CustomizationScreen {
     var testBtn2 = new ColorButtonWithImage("With Image", "/eatHere.png");
     var testBtn3 = new BlackButtonWithImage("BlBtn", "/eatHere.png");
     var testBtn4 = new ColorSquareButtonWithImage("With Image", "/back.png");
+    var testBtn5 = new ColorBtnOutlineImage("Outline", "/back.png");
 
     centerGrid.add(testBtn1, 0, 0);
     centerGrid.add(testBtn4, 0, 1);
     centerGrid.add(testBtn2, 1, 0);
     centerGrid.add(testBtn3, 1, 1);
+    centerGrid.add(testBtn5, 0, 2);
 
     // Adding the language button which already has the functionality of
     // changing the logo of the language
@@ -149,7 +164,7 @@ public class CustomizationScreen {
         primaryStage.setScene(welcomeScreen);
 
       } catch (SQLException ex) {
-        
+
         ex.printStackTrace();
 
       }
@@ -175,7 +190,7 @@ public class CustomizationScreen {
       languageSetting.updateAllLabels(mainBorderPane);
     });
 
-    Scene adminMenuScene = new Scene(mainBorderPane, windowWidth, windowHeight);
+    var adminMenuScene = new CustomScene(mainBorderPane, windowWidth, windowHeight);
 
     return adminMenuScene;
   }

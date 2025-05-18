@@ -38,8 +38,9 @@ public class ArrowButton extends Button {
         "-fx-background-color: rgb(255, 255, 255);"
         + "-fx-border-color: " + borderColor + ";"
         + "-fx-border-width: 3px;"
-        + "-fx-border-radius: 12px;" // For round borders
-        + "-fx-padding: 10px;"      // For wider clickable area
+        + "-fx-border-radius: 12px;"
+        + "-fx-background-radius: 12;"
+        + "-fx-padding: 10px;"
     );
 
     // Using hard coded arrow image

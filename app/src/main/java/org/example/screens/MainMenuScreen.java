@@ -33,9 +33,9 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.example.buttons.ArrowButton;
 import org.example.buttons.CancelButtonWithText;
+import org.example.buttons.CartSquareButton;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SearchBar;
-import org.example.buttons.SqrBtnImgOnly;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Imenu;
 import org.example.menu.Meal;
@@ -392,7 +392,7 @@ public class MainMenuScreen {
     });
 
     // Create Cart button
-    var cartButton = new SqrBtnImgOnly();
+    var cartButton = new CartSquareButton();
 
     // Checkout screen
     CheckoutScreen checkoutScreen = new CheckoutScreen();

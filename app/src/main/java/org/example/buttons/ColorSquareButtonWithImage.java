@@ -19,7 +19,7 @@ import javafx.scene.paint.Color;
 public class ColorSquareButtonWithImage extends Button {
 
   private Label buttonLabel;
-  private static String buttonColor = "rgb(1, 176, 51)";
+  private static String buttonColor = "rgb(0, 0, 0)";
   private ImageView imageView;
   private static final List<ColorSquareButtonWithImage> instances = new ArrayList<>();
 
@@ -114,7 +114,7 @@ public class ColorSquareButtonWithImage extends Button {
   // Overloaded method to allow passing image path as String
   private ImageView createTintedImageView(String imagePath, Color tintColor) {
     try {
-      Image image = new Image(imagePath, true);  // true = background loading
+      Image image = new Image(imagePath, true);
       return createTintedImageView(image, tintColor);
     } catch (Exception e) {
       System.err.println("Failed to load image: " + imagePath);
