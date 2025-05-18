@@ -124,7 +124,7 @@ public class InactivityTimer {
    * Method to reset the inactivity timer and re-start
    * the timer.
    */
-  private void resetTimer() {
+  public void resetTimer() {
     // Terminate the timer
     timer.cancel();
 
