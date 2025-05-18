@@ -30,7 +30,8 @@ public class InactivityTimer {
    * The timer constructor.
    * No need for extra variables as this is a singleton.
    */
-  private InactivityTimer() {}
+  private InactivityTimer() {
+  }
 
   /**
    * Method to get the single instance of the
@@ -56,7 +57,7 @@ public class InactivityTimer {
   }
 
   /**
-   * Setter method for welcone scene. This scene will be used to fully 
+   * Setter method for welcone scene. This scene will be used to fully
    * reset to the welcome screen if the inactivity of the user gets
    * confirmed. It is also used to compare the current stage.
    *
@@ -74,7 +75,7 @@ public class InactivityTimer {
    * displayed (TimerTask).
    */
   public void startTimer() {
-    
+
     // Timer only active in Scenes that aren't the WelcomeScreen
     // and timer cannot be already active
     if (!isActive && !(primaryStage.getScene().equals(welcomeScene))) {
@@ -197,8 +198,10 @@ public class InactivityTimer {
    * welcome scene.
    *
    * @param inactivityPopup Popup confirming the user is still active
-   * @param popupTimer Timer for the popup and the full reset to the main menu screen
-   * @return TimerTask for the reset if user remains inactive during the popup and the timer ran out
+   * @param popupTimer      Timer for the popup and the full reset to the main
+   *                        menu screen
+   * @return TimerTask for the reset if user remains inactive during the popup and
+   *         the timer ran out
    */
   private TimerTask getFullResetTask(Stage inactivityPopup, Timer popupTimer) {
 
