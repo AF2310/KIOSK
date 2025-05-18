@@ -23,13 +23,11 @@ public class InactivityTimer {
   private Timer timer = new Timer();
   private Stage primaryStage;
   private Scene welcomeScene;
+  private boolean isActive = false;
 
   /**
    * The timer constructor.
-   *
-   * @param primaryStage the current stage to put
-   *      the inactivity popup
-   *      in later on
+   * No need for extra variables as this is a singleton.
    */
   private InactivityTimer() {}
 
@@ -63,9 +61,15 @@ public class InactivityTimer {
    */
   public void startTimer() {
     // Timer only active in Scenes that aren't the WelcomeScreen
-    if (!(primaryStage.getScene().equals(welcomeScene))) {
+    // and timer cannot be already active
+    System.out.println("DEBUG_SCENE: " + primaryStage.getScene());
+    System.out.println("DEBUG_EQUALS: " + primaryStage.getScene().equals(welcomeScene));
+
+    if (!isActive && !(primaryStage.getScene().equals(welcomeScene))) {
+      timer = new Timer();
       timer.schedule(displayInactivityPopup(), 30 * 1000);
       System.out.println("DEBUG_0: TIMER ACTIVE");
+      isActive = true;
     }
   }
 
@@ -109,7 +113,7 @@ public class InactivityTimer {
       Label label = new Label("Are you still there?");
 
       // Button for confirmation that user is still active
-      MidButton button = new MidButton("Yes", "green", 10);
+      MidButton button = new MidButton("Yes", "green", 40);
 
       // User confirms he's still active
       // -> popup gets removed and timer resets
@@ -134,14 +138,23 @@ public class InactivityTimer {
    * the timer.
    */
   public void resetTimer() {
+    System.out.println("DEBUG_SCENE: " + primaryStage.getScene());
+    System.out.println("DEBUG_EQUALS: " + primaryStage.getScene().equals(welcomeScene));
+
+    // Skip if timer wasn't even active to prevent unwanted timer start
+    if (!isActive) {
+      System.out.println("DEBUG: Ignored reset, timer not active.");
+      return;
+    }
+
     // Timer only active in Scenes that aren't the WelcomeScreen
     if (!(primaryStage.getScene().equals(welcomeScene))) {
       // Terminate the timer
       timer.cancel();
+      isActive = false;
       System.out.println("DEBUG_0: TIMER RESET");
   
       // Make a new timer and start it
-      timer = new Timer();
       startTimer();
     }
   }
@@ -150,7 +163,13 @@ public class InactivityTimer {
    * Method to stop the inactivity timer completely.
    */
   public void stopTimer() {
-    System.out.println("DEBUG_0: TIMER STOP");
-    timer.cancel();
+    System.out.println("TIMER STATUS BEFORE STOP: " + isActive);
+    System.out.println("Current Scene: " + primaryStage.getScene());
+    if (timer != null) {
+      timer.cancel();
+      timer = null;
+      System.out.println("DEBUG_0: TIMER STOP");
+    }
+    isActive = false;
   }
 }

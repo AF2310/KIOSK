@@ -20,6 +20,7 @@ import org.example.buttons.ConfirmOrderButton;
 import org.example.buttons.EatHereButton;
 import org.example.buttons.LangBtn;
 import org.example.buttons.TakeAwayButton;
+import org.example.kiosk.InactivityTimer;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
 import org.example.orders.Cart;
@@ -186,7 +187,8 @@ public class CheckoutScreen {
           ordConfirmScene,
           welcomeScrScene);
 
-      // Clear cart after order has been done
+      // Clear cart and stop timer after order has been done
+      InactivityTimer.getInstance().stopTimer();
       Cart.getInstance().clearCart();
     });
 
@@ -201,6 +203,7 @@ public class CheckoutScreen {
     // and user gets send back to welcome screen
     cancelButton.setOnAction(e -> {
       Cart.getInstance().clearCart();
+      InactivityTimer.getInstance().stopTimer();
       System.out.println("Order canceled!");
       primaryStage.setScene(welcomeScrScene);
     });
