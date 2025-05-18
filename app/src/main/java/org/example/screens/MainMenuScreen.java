@@ -394,7 +394,6 @@ public class MainMenuScreen {
       primaryStage.setScene(welcomeScrScene);
       InactivityTimer.getInstance().setPrimaryStage(primaryStage);
       InactivityTimer.getInstance().stopTimer();
-      System.out.println("DEBUG: TIMER STOPPED");
     });
 
     // Create Cart button

@@ -176,17 +176,15 @@ public class WelcomeScreen {
         primaryStage.setScene(mainMenuScene);
 
         InactivityTimer.getInstance().setPrimaryStage(primaryStage);
+        InactivityTimer.getInstance().startTimer();
 
+        // Any movement of the user resets the inactivity timer
         primaryStage.addEventFilter(
             MouseEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
         );
-
         primaryStage.addEventFilter(
             KeyEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
         );
-
-        InactivityTimer.getInstance().startTimer();
-        System.out.println("DEBUG_2: TIMER STARTED");
 
       } catch (SQLException ex) {
         ex.printStackTrace();
@@ -210,15 +208,13 @@ public class WelcomeScreen {
         InactivityTimer.getInstance().setPrimaryStage(primaryStage);
         InactivityTimer.getInstance().startTimer();
 
+        // Any movement of the user resets the inactivity timer
         primaryStage.addEventFilter(
             MouseEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
         );
-
         primaryStage.addEventFilter(
             KeyEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
         );
-
-        System.out.println("DEBUG_1: TIMER STARTED");
 
       } catch (SQLException ex) {
         ex.printStackTrace();
