@@ -30,7 +30,6 @@ import org.example.buttons.ColorBtnOutlineImage;
 import org.example.buttons.ColorButtonWithImage;
 import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
-import org.example.buttons.MidButtonWithImage;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;

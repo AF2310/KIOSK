@@ -7,6 +7,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.example.buttons.TitleLabel;
+import org.example.kiosk.LabelManager;
+
 
 /**
  * This screen displays the confirmation of the order
@@ -39,12 +42,8 @@ public class OrderConfirmationScreen {
       int orderId) {
 
     // Title of the screen -> Order confirmation message
-    Label orderConfirmationLabel = new Label("Ordered Successfully!");
+    Label orderConfirmationLabel = new TitleLabel("Ordered Successfully!");
     orderConfirmationLabel.setAlignment(Pos.CENTER);
-    orderConfirmationLabel.setStyle(
-        "-fx-font-size: 60px;"
-        + "-fx-font-weight: bold;"
-    );
 
     // Order id label
     Label orderIdLabel = new Label("Order number: " + orderId);
@@ -52,6 +51,7 @@ public class OrderConfirmationScreen {
         "-fx-font-size: 30px;"
         + "-fx-font-weight: normal;"
     );
+    LabelManager.register(orderIdLabel);
 
     // Combining both labels
     VBox screenLabelBox = new VBox();
