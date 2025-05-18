@@ -61,17 +61,17 @@ public class CustomizationScreen {
     centerGrid.setAlignment(Pos.CENTER);
 
     // Test Buttons
-    var testBtn1 = new MidButton("Filled", "rgb(1, 176, 51)", 30);
+    var testBtn1 = new ColorBtnOutlineImage("Outline", "/back.png");
     var testBtn2 = new ColorButtonWithImage("With Image", "/eatHere.png");
     var testBtn3 = new BlackButtonWithImage("BlBtn", "/eatHere.png");
     var testBtn4 = new ColorSquareButtonWithImage("With Image", "/back.png");
-    var testBtn5 = new ColorBtnOutlineImage("Outline", "/back.png");
+    // var testBtn5 = new MidButton("Filled", "rgb(1, 176, 51)", 30);
 
     centerGrid.add(testBtn1, 0, 0);
     centerGrid.add(testBtn4, 0, 1);
     centerGrid.add(testBtn2, 1, 0);
     centerGrid.add(testBtn3, 1, 1);
-    centerGrid.add(testBtn5, 0, 2);
+    // centerGrid.add(testBtn5, 0, 2);
 
     // Adding the language button which already has the functionality of
     // changing the logo of the language
