@@ -36,6 +36,7 @@ import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SearchBar;
 import org.example.buttons.SqrBtnImgOnly;
+import org.example.kiosk.InactivityTimer;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Imenu;
 import org.example.menu.Meal;
@@ -386,8 +387,12 @@ public class MainMenuScreen {
     var cancelButton = new CancelButtonWithText();
 
     cancelButton.setOnAction(e -> {
+
       Cart.getInstance().clearCart();
       System.out.println("Order canceled!");
+
+      InactivityTimer.getInstance().stopTimer();
+
       primaryStage.setScene(welcomeScrScene);
     });
 
