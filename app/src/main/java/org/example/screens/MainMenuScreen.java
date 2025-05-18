@@ -36,6 +36,7 @@ import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.CartSquareButton;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SearchBar;
+import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Imenu;
 import org.example.menu.Meal;
@@ -675,8 +676,9 @@ public class MainMenuScreen {
         button.setStyle(
             "-fx-background-color: transparent;"
                 + "-fx-font-size: 50px;"
-                + "-fx-text-fill: black;"
+                // + "-fx-text-fill: black;"
                 + "-fx-font-weight: bold;");
+        LabelManager.register(button);
       }
 
       // Other categories the user isn't currently in
@@ -696,8 +698,10 @@ public class MainMenuScreen {
         button.setStyle(
             "-fx-background-color: transparent;"
                 + "-fx-font-size: 40px;"
-                + "-fx-text-fill: rgba(0, 0, 0, 0.33);"
+                // + "-fx-text-fill: rgba(0, 0, 0, 0.33);"
                 + "-fx-font-weight: bold;");
+        LabelManager.register(button);
+        button.setOpacity(0.3);
       }
     }
   }

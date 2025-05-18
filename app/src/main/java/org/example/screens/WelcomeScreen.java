@@ -154,6 +154,7 @@ public class WelcomeScreen {
     // Test sql connection
     SqlConnectionCheck connectionCheck = new SqlConnectionCheck();
     Label mysql = connectionCheck.getMysqlLabel();
+    LabelManager.register(mysql);
 
     mainWindow.getChildren().addAll(
         welcome, companyTitle, rowOfBurgers, rowOfButtons, mysql, termsButton);
