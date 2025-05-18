@@ -15,12 +15,12 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.example.buttons.BlackButtonWithImage;
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.ColorButtonWithImage;
 import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
-import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.LanguageSetting;
 
@@ -55,7 +55,7 @@ public class CustomizationScreen {
     ColorPicker colorPicker = new ColorPicker(Color.BLACK);
     colorPicker.setOnAction(e -> {
       Color selectedColor = colorPicker.getValue();
-      ColorButtonWithImage.setButtonBackgroundColor(selectedColor);
+      BlackButtonWithImage.setButtonBackgroundColor(selectedColor);
       ColorSquareButtonWithImage.setButtonColor(selectedColor);
       TitleLabel.setTextColor(selectedColor);
     });
@@ -95,7 +95,7 @@ public class CustomizationScreen {
     // Test Buttons
     var testBtn1 = new MidButton("Filled", "rgb(1, 176, 51)", 30);
     var testBtn2 = new ColorButtonWithImage("With Image", "/eatHere.png");
-    var testBtn3 = new MidButton("Outlined", "rgb(255, 255, 255)", 30);
+    var testBtn3 = new BlackButtonWithImage("BlBtn", "/eatHere.png");
     var testBtn4 = new ColorSquareButtonWithImage("With Image", "/back.png");
 
     centerGrid.add(testBtn1, 0, 0);

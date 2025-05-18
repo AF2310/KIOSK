@@ -29,7 +29,6 @@ import org.example.buttons.ColorButtonWithImage;
 import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButtonWithImage;
-import org.example.buttons.SquareButtonWithImg;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Ingredient;
