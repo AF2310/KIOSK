@@ -2,17 +2,15 @@ package org.example.kiosk;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
-
 import org.example.buttons.MidButton;
 import org.example.orders.Cart;
 
@@ -25,7 +23,7 @@ import org.example.orders.Cart;
 public class InactivityTimer {
 
   private static InactivityTimer instance;
-  private Timer timer;
+  private Timer timer = new Timer();
   private Stage primaryStage;
   private Scene welcomeScene;
   private boolean isActive = false;
@@ -83,11 +81,8 @@ public class InactivityTimer {
     // Timer only active in Scenes that aren't the WelcomeScreen
     // and timer cannot be already active
     if (!isActive && !(primaryStage.getScene().equals(welcomeScene))) {
-      timer = new Timer(true);
-      timer.schedule(displayInactivityPopup(), 10 * 1000);
-      //PauseTransition transition = new PauseTransition(Duration.seconds(30));
-      //transition.setOnFinished(e -> displayInactivityPopup());
-      //transition.play();
+      timer = new Timer();
+      timer.schedule(displayInactivityPopup(), 30 * 1000);
       isActive = true;
     }
   }
@@ -136,7 +131,7 @@ public class InactivityTimer {
 
       // Make timer for full reset if user doesn't respond to popup after 5 seconds
       // User has 5 seconds to respond
-      Timer popupTimer = new Timer(true);
+      Timer popupTimer = new Timer();
       popupTimer.schedule(getFullResetTask(inactivityPopup, popupTimer), 5 * 1000);
 
       // User confirms he's still active
@@ -144,17 +139,31 @@ public class InactivityTimer {
       button.setOnAction(e -> {
         inactivityPopup.close();
         popupTimer.cancel();
-        // Fuck you, timer!
-        popupTimer.purge();
+        System.out.println("DEBUG_0: POPUP TIMER CANCELLED");
         resetTimer();
       });
 
-      // Layout and style of popup elements
+      // Layout, astetics and style of popup elements
       VBox layout = new VBox(20, label, button);
-      layout.setStyle("-fx-padding: 30; -fx-alignment: center; -fx-background-color: white;");
+      layout.setAlignment(Pos.CENTER);
+      layout.setStyle(
+          "-fx-background-color: white;"
+          + "-fx-border-radius: 20;"
+          + "-fx-background-radius: 20;"
+          + "-fx-padding: 30;"
+          + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 4);"
+      );
+
+      // Outer part to center layout on screen and have round edges properly visible
+      StackPane finalLayout = new StackPane(layout);
+      finalLayout.setStyle("-fx-background-color: transparent;");
+      finalLayout.setPrefSize(400, 200);
 
       // Set finished scene in popup
-      Scene scene = new Scene(layout, 300, 150);
+      Scene scene = new Scene(finalLayout);
+      // Make backgrounf invisible to see popup frame
+      scene.setFill(null);
+
       inactivityPopup.setScene(scene);
       inactivityPopup.show();
     });
@@ -173,6 +182,7 @@ public class InactivityTimer {
 
     // Timer only active in Scenes that aren't the WelcomeScreen
     if (!(primaryStage.getScene().equals(welcomeScene))) {
+      System.out.println("DEBUG_0: TIMER RESET");
       // Terminate the timer
       timer.cancel();
       isActive = false;
@@ -221,12 +231,15 @@ public class InactivityTimer {
         Platform.runLater(() -> {
           // Execute only after inactivity popup is visible
           if (inactivityPopup.isShowing()) {
+
             inactivityPopup.close();
-            Cart.getInstance().clearCart();
-            primaryStage.setScene(welcomeScene);
-            stopTimer();
             popupTimer.cancel();
-            popupTimer.purge(); // fu timer
+
+            Cart.getInstance().clearCart();
+
+            stopTimer();
+
+            primaryStage.setScene(welcomeScene);
           }
         });
       }
