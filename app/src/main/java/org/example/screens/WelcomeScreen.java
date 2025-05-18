@@ -14,8 +14,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.example.buttons.BlackButtonWithImage;
+import org.example.buttons.ColorBtnOutlineImage;
 import org.example.buttons.LangBtn;
-import org.example.buttons.MidButtonWithImage;
 import org.example.kiosk.LanguageSetting;
 import org.example.sql.SqlConnectionCheck;
 
@@ -108,15 +109,15 @@ public class WelcomeScreen {
     rowOfButtons.setPadding(new Insets(30));
     rowOfButtons.setAlignment(Pos.CENTER);
 
-    var eatHereBtn = new MidButtonWithImage(
+    var eatHereBtn = new BlackButtonWithImage(
         "Eat Here",
-        "/eatHere.png",
-        "rgb(0, 0, 0)");
+        "/eatHere.png"
+    );
 
-    var takeAwayBtn = new MidButtonWithImage(
+    var takeAwayBtn = new ColorBtnOutlineImage(
         "Takeaway",
-        "/takeaway.png",
-        "rgb(255, 255, 255)");
+        "/takeaway.png"
+    );
 
     rowOfButtons.getChildren().addAll(eatHereBtn, takeAwayBtn);
 
