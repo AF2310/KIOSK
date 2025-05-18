@@ -132,4 +132,11 @@ public class InactivityTimer {
     timer = new Timer();
     startTimer();
   }
+
+  /**
+   * Method to stop the inactivity timer completely.
+   */
+  public void stopTimer() {
+    timer.cancel();
+  }
 }
