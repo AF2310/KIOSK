@@ -28,15 +28,21 @@ public class InactivityTimer {
 
   /**
    * Start the timer.
+   * Timer has sceduled delay in miliseconds, so we
+   * convert to seconds -> 30 * 1000 = 30 seconds.
+   * After time has passed, inactivity popup will be
+   * displayed (TimerTask).
    */
   public void startTimer() {
-    
-    timer.schedule(displayInactivityPopup(), 60);
+    timer.schedule(displayInactivityPopup(), 30 * 1000);
   }
 
   /**
    * The timer task is an inactivity popup, asking
    * 'Are you still there?'.
+   * Uses private helper methods for popup.
+   *
+   * @return TimerTask containing popup
    */
   private TimerTask displayInactivityPopup() {
     return new TimerTask() {
@@ -46,6 +52,10 @@ public class InactivityTimer {
     };
   }
 
+  /**
+   * Helper method for displayInactivityPopup().
+   * This method contains the inactivity popup itself.
+   */
   private void inactivityPopup() {
     // TODO: popup code
   }
