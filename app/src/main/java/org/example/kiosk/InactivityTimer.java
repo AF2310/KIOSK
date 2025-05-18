@@ -19,6 +19,7 @@ import org.example.buttons.MidButton;
  */
 public class InactivityTimer {
 
+  private static InactivityTimer instance;
   private Timer timer = new Timer();
   private Stage primaryStage;
 
@@ -29,7 +30,22 @@ public class InactivityTimer {
    *      the inactivity popup
    *      in later on
    */
-  public InactivityTimer(Stage primaryStage) {
+  private InactivityTimer() {}
+
+  /**
+   * Method to get the single instance of the
+   * InactivityTimer.
+   *
+   * @return the InactivityTimer instance
+   */
+  public static InactivityTimer getInstance() {
+    if (instance == null) {
+      instance = new InactivityTimer();
+    }
+    return instance;
+  }
+
+  public void setPrimaryStage(Stage primaryStage) {
     this.primaryStage = primaryStage;
   }
 
