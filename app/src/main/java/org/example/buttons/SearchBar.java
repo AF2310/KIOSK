@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.example.menu.Ingredient;
 import org.example.menu.Menu;
+import org.example.menu.Product;
 import org.example.menu.Single;
 
 import javafx.geometry.Insets;
@@ -31,7 +32,9 @@ public class SearchBar extends VBox {
   private final Button searchButton;
   private final ListView<String> resultList;
   private final ComboBox<String> categoryCombo;
-  private java.util.function.Consumer<Object> resultSelectHandler;
+  private java.util.function.Consumer<Product> resultSelectHandler;
+  private java.util.function.Consumer<List<Product>> resultsListHandler;
+  private List<Single> filteredSingles = new ArrayList<>();
 
   /**
    * Constructs a SearchBar instance with the specified database connection.
@@ -269,11 +272,17 @@ public class SearchBar extends VBox {
             resultList.getItems().add("Single: " + s.getName() + " - " + s.getPrice() + " SEK");
           }
         }
+        filteredSingles = filtered;
 
       } catch (SQLException ex) {
         resultList.getItems().add("SQL Error: " + ex.getMessage());
       } catch (NumberFormatException ex) {
         resultList.getItems().add("Invalid price input.");
+      }
+
+      if (resultsListHandler != null) {
+        List<Product> productList = new ArrayList<>(filteredSingles);
+        resultsListHandler.accept(productList);
       }
 
     });
@@ -338,8 +347,12 @@ public class SearchBar extends VBox {
     }
   }
 
-  public void setOnResultSelectHandler(java.util.function.Consumer<Object> handler) {
+  public void setOnResultSelectHandler(java.util.function.Consumer<Product> handler) {
     this.resultSelectHandler = handler;
+  }
+
+  public void setOnResultsListHandler(java.util.function.Consumer<List<Product>> handler) {
+    this.resultsListHandler = handler;
   }
 
   // private String normalizeCategory(String categoryName) {

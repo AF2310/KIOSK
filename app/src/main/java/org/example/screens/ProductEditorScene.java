@@ -49,15 +49,26 @@ public class ProductEditorScene {
     this.prevScene = prevScene;
     this.productTable = productTable;
     this.searchBar = searchBar;
+    searchBar.setOnResultsListHandler(filteredProducts -> {
+      productTable.getItems().clear();
+      productTable.getItems().addAll(filteredProducts);
+    });
     searchBar.setOnResultSelectHandler(selected -> {
         if (selected instanceof Product product) {
-          if (!productTable.getItems().contains(product)) {
+          /*if (!productTable.getItems().contains(product)) {
             productTable.getItems().add(product);
+          }*/
+          boolean alreadyExists = productTable.getItems().stream()
+            .anyMatch(p -> p.getId() == product.getId());
+
+          if (!alreadyExists) {
+              productTable.getItems().add(product);
           }
 
         }
       }
     );
+    
   }
 
   /**
