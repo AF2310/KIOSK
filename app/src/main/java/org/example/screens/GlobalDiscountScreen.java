@@ -15,6 +15,7 @@ import org.example.buttons.MidButton;
 import org.example.buttons.RectangleButtonWithText;
 import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.TitleLabel;
+import org.example.discounts.GlobalDiscount;
 
 
 /**
@@ -79,6 +80,14 @@ public class GlobalDiscountScreen {
     backButton.setOnAction(e -> primaryStage.setScene(prevScene));
     SqrBtnWithOutline applyDiscount = new SqrBtnWithOutline("Apply",
            "/green_tick.png", "rgb(81, 173, 86)");
+
+    // Applying the global discount on clicking "apply"
+    applyDiscount.setOnAction(e -> {
+      GlobalDiscount discount = new GlobalDiscount();
+      discount.applyDiscount(discountPercentage);
+      primaryStage.setScene(prevScene);
+    });
+
     HBox bottomBox = new HBox(applyDiscount, backButton);
     bottomBox.setAlignment(Pos.BOTTOM_CENTER);
     bottomBox.setPadding(new Insets(0, 0, 50, 0));
