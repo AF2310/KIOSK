@@ -120,7 +120,7 @@ public class CustomizationScreen {
     HBox.setHgrow(spacerBottom, Priority.ALWAYS);
 
     // Similar to a normal cancel button, it just has text under the image
-    CancelButtonWithText cancelButton = new CancelButtonWithText();
+    CancelButtonWithText cancelButton = new ColorSquareButtonWithImage("Cancel", "/cancel.png");
     HBox bottomRightBox = new HBox(cancelButton);
     bottomRightBox.setAlignment(Pos.BOTTOM_RIGHT);
 

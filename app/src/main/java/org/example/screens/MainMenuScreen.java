@@ -33,7 +33,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.example.buttons.ArrowButton;
-import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.CartSquareButton;
 import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
