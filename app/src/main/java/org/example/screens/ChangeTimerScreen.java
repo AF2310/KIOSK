@@ -61,6 +61,11 @@ public class ChangeTimerScreen {
     windowTitle.setStyle(
       "-fx-font-size: 45px;"
       + "-fx-font-weight: bold;");
+    windowTitle.setAlignment(Pos.TOP_CENTER);
+
+    HBox titleBox = new HBox(windowTitle);
+    titleBox.setAlignment(Pos. CENTER);
+    titleBox.setPadding(new Insets(20, 0, 60, 0));
 
 
     // Timer editor kiosk - VBOX LEFT
@@ -75,7 +80,7 @@ public class ChangeTimerScreen {
     Label currentKioskTimer = new Label(
       "Current inactivity timer (kiosk): "
       + InactivityTimer.getInstance().getInactivityTimer()
-      + "seconds"
+      + " seconds"
     );
     currentKioskTimer.setStyle("-fx-font-size: 20px;");
 
@@ -136,7 +141,7 @@ public class ChangeTimerScreen {
     // Timer editor popup - VBOX RIGHT
 
     // Label for kiosk timer
-    Label popupTimerTitle = new Label("Kiosk Timer:");
+    Label popupTimerTitle = new Label("Popup Timer:");
     popupTimerTitle.setStyle(
       "-fx-font-size: 30px;"
       + "-fx-font-weight: bold;");
@@ -145,7 +150,7 @@ public class ChangeTimerScreen {
     Label currentPopupTimer = new Label(
       "Current inactivity timer (kiosk): "
       + InactivityTimer.getInstance().getInactivityTimerPopup()
-      + "seconds"
+      + " seconds"
     );
     currentPopupTimer.setStyle("-fx-font-size: 20px;");
 
@@ -181,7 +186,7 @@ public class ChangeTimerScreen {
 
         // Update display label
         currentPopupTimer.setText(
-          "Current inactivity timer (kiosk): "
+          "Current inactivity timer (popup): "
           + newValue + " seconds");
 
         updateFeedbackR.setText("Timer updated successfully!");
@@ -205,8 +210,17 @@ public class ChangeTimerScreen {
 
     // Combine both timer editors
 
-    HBox timerEditor = new HBox(500, timerShop, timerPopup);
+    HBox timerEditor = new HBox(400, timerShop, timerPopup);
     timerEditor.setAlignment(Pos.CENTER);
+
+
+    // Spacer for title and timer editors
+    // TODO make spacer work
+    /* Region spacerTop = new Region();
+    HBox.setHgrow(spacerTop, Priority.ALWAYS);
+
+    VBox topLayout = new VBox(windowTitle, spacerTop, timerEditor);
+    topLayout.setAlignment(Pos.TOP_CENTER); */
 
 
     // Language + Cancel Buttons HBOX BOTTOM
@@ -230,26 +244,17 @@ public class ChangeTimerScreen {
     HBox bottomContainer = new HBox();
     bottomContainer.setAlignment(Pos.BOTTOM_LEFT);
     bottomContainer.getChildren().addAll(langButton, spacerBottom, backButton);
-    
-    // VBOX main layout COMBINE ALL
-    // timer editor box
-    // confirmation text BOX
-    // language + cancel box
 
-    // Spacer for title and timer editors
-    // TODO make spacer work
-    //Region spacerTop = new Region();
-    //HBox.setHgrow(spacerTop, Priority.ALWAYS);
-
-    //VBox topLayout = new VBox(windowTitle, spacerTop, timerEditor);
 
     // Setting positioning of all the elements
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(50));
-    // layout.setTop(topLayout)
-    layout.setTop(windowTitle);
+    //layout.setTop(topLayout);
+    layout.setTop(titleBox);
     //layout.setCenter(timerPopup);
-    layout.setCenter(timerEditor);  //-> later when right part is done and combined
+    BorderPane.setMargin(timerEditor, new Insets(200, 0, 50, 0));
+    layout.setCenter(timerEditor);
+    
     layout.setBottom(bottomContainer);
 
     return new Scene(layout, 1920, 1080);
