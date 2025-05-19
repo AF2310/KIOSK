@@ -119,8 +119,9 @@ public class AddMealScene {
           PreparedStatement stmt = connection.getConnection().prepareStatement(sql);
           stmt.setString(1, selectedProducts.get(0));
           ResultSet rs = stmt.executeQuery();
-
+          
           rs.next();
+          int productId = rs.getInt("product_id");
           rs.close();
           stmt.close();
           
@@ -133,10 +134,10 @@ public class AddMealScene {
           stmt2.setDouble(3, Double.parseDouble(mealPrice.getText()));
           stmt2.setString(4, "/food/default_meal.png");
           
-          int productId = rs.getInt("product_id");
           stmt2.setInt(5, productId);
           stmt2.executeUpdate();
           
+          int mealId;
           try (ResultSet generatedKeys = stmt2.getGeneratedKeys()) {
             if (generatedKeys.next()) {
               mealId = generatedKeys.getInt(1);
@@ -145,6 +146,39 @@ public class AddMealScene {
             }
           }          
           stmt2.close();
+
+          for (int i = 0; i < selectSides.size(); i++) {
+            String sql3 = "SELECT product_id FROM product WHERE name = ?";
+            PreparedStatement stmt3 = connection.getConnection().prepareStatement(sql3);
+            stmt3.setString(1, selectSides.get(i));
+            ResultSet rs3 = stmt3.executeQuery();
+            rs3.next();
+
+            int sideId = rs3.getInt("product_id");
+
+            String sql4 = "INSERT INTO meal_sideoptions (meal_id, product_id) Values (?, ?)";
+            PreparedStatement stmt4 = connection.getConnection().prepareStatement(sql4);
+            stmt4.setInt(1, mealId);
+            stmt4.setInt(2, sideId);
+            stmt4.executeUpdate();
+          }
+
+          for (int i = 0; i < selectedDrinks.size(); i++) {
+            String sql5 = "SELECT product_id FROM product WHERE name = ?";
+            PreparedStatement stmt5 = connection.getConnection().prepareStatement(sql5);
+            stmt5.setString(1, selectedDrinks.get(i));
+            ResultSet rs5 = stmt5.executeQuery();
+            rs5.next();
+
+            int drinkId = rs5.getInt("product_id");
+
+            String sql6 = "INSERT INTO meal_drinkoptions (meal_id, product_id) Values (?, ?)";
+            PreparedStatement stmt6 = connection.getConnection().prepareStatement(sql6);
+            stmt6.setInt(1, mealId);
+            stmt6.setInt(2, drinkId);
+            stmt6.executeUpdate();
+          }
+
           connection.getConnection().commit();
           System.out.println("Ended");
         } catch (Exception ex) {
