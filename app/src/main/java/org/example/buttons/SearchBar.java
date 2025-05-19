@@ -3,6 +3,7 @@ package org.example.buttons;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.example.menu.Ingredient;
@@ -265,6 +266,28 @@ public class SearchBar extends VBox {
             filtered.add(single);
           }
         }
+        boolean nameFilterActive = !name.isEmpty();
+        boolean priceFilterActive = !priceText.isEmpty();
+
+        Comparator<Single> nameComparator = Comparator.comparing(Single::getName,String.CASE_INSENSITIVE_ORDER);
+        Comparator<Single> priceComparator = Comparator.comparingDouble(Single::getPrice);
+
+        if (nameFilterActive && !priceFilterActive) {
+          filtered.sort(nameComparator);
+
+        } else if  (!nameFilterActive && priceFilterActive) {
+          filtered.sort(priceComparator.reversed());
+
+        } else if (nameFilterActive && priceFilterActive) {
+          filtered.sort(nameComparator.thenComparing(priceComparator));
+
+
+        }
+
+
+
+
+
         if (filtered.isEmpty()) {
           resultList.getItems().add("No items found.");
         } else {
@@ -273,6 +296,7 @@ public class SearchBar extends VBox {
           }
         }
         filteredSingles = filtered;
+
 
       } catch (SQLException ex) {
         resultList.getItems().add("SQL Error: " + ex.getMessage());

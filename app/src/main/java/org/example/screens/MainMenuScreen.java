@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -875,6 +876,22 @@ public class MainMenuScreen {
 
     if (filtersActive) {
       maxItemsPerRow = 6;
+    }
+
+    boolean nameFilterActive = !currentSearchName.isEmpty();
+    boolean priceFilterActive = currentSearchPrice >= 0;
+    Comparator<Product> nameComparator = Comparator.comparing(Product::getName, String.CASE_INSENSITIVE_ORDER);
+    Comparator<Product> priceComparator = Comparator.comparingDouble(Product::getPrice);
+
+    if (nameFilterActive && !priceFilterActive) {
+      filteredProducts.sort(nameComparator);
+
+    } else if (!nameFilterActive && priceFilterActive) {
+      filteredProducts.sort(priceComparator.reversed());
+    } else {
+      Comparator<Product> combinedComparator = nameComparator.thenComparing(priceComparator);
+      filteredProducts.sort(combinedComparator);
+
     }
     int itemsToShow = filteredProducts.size();
 
