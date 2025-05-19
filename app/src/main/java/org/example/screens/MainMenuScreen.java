@@ -242,12 +242,47 @@ public class MainMenuScreen {
         + "-fx-content-display: GRAPHIC_ONLY;");
 
     gridSearchBox.setStyle(
-        "-fx-background-color: rgba(255, 255, 255, 0.9);"
-        + "-fx-border-color: gold;"
-        + "-fx-border-width: 2px;"
-        + "-fx-border-radius: 20px;"
-        + "-fx-background-radius: 20px;"
-        + "-fx-padding: 10px;");
+      "-fx-background-color: rgba(245, 245, 245, 0.85);"
+      + "-fx-border-color: linear-gradient(to right, #ffd700 30%, #ffa500);"
+      + "-fx-border-width: 2px;"
+      + "-fx-border-radius: 15px;"
+      + "-fx-background-radius: 15px;"
+      + "-fx-padding: 15px 20px;"
+      + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0.5, 0, 2);");
+
+    String fieldStyle = 
+      "-fx-background-color: rgba(255, 255, 255, 0.4);"
+      + "-fx-border-color: #ddd;"
+      + "-fx-border-radius: 8px;"
+      + "-fx-padding: 8px 12px;"
+      + "-fx-font-size: 14px;"
+      + "-fx-focus-color: #ffd700;"
+      + "-fx-faint-focus-color: #ffd70022;"
+      + "fx-prompt-text-fill: #888;";
+    
+    gridSearchField.setStyle(fieldStyle);
+    priceFilterField.setStyle(fieldStyle);
+
+    gridCategoryBox.setStyle(
+      "-fx-background-color: rgba(255, 255, 255, 0.4);"
+      + "-fx-border-color: #ddd;"
+      + "-fx-border-radius: 8px;"
+      + "-fx-padding: 4px 8px;"
+      + "-fx-font-size: 14px;"
+      + "-fx-popup-border-color: #eee;"
+      + "-fx-focus-color: #ffd700;");
+    
+      gridSearchButton.setStyle(
+        "-fx-background-color: linear-gradient(to bottom, #ffd700, #ffaa00);"
+        + "-fx-text-fill: #2a2a2a;"
+        + "-fx-font-weight: bold;"
+        + "-fx-font-size: 14px;"
+        + "-fx-padding: 8px 20px;"
+        + "-fx-border-radius: 8px;"
+        + "-fx-background-radius: 8px;"
+        + "-fx-cursor: hand;"
+        + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);");
+
 
     // Align the search button to top-right
     StackPane.setAlignment(showSearchBtn, Pos.TOP_RIGHT);
@@ -382,8 +417,39 @@ public class MainMenuScreen {
     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
     scrollPane.setPadding(new Insets(10));
+
     centerMenuLayout.setCenter(scrollPane);
     centerMenuLayout.setRight(rightArrowVcentered);
+    scrollPane.setStyle(
+      "-fx-background: transparent;" +
+      "-fx-background-color: transparent;" +
+      "-fx-padding: 0;" +
+      "-fx-background-insets: 0;"
+    );
+
+    String scrollPaneStyle = 
+      "-fx-background: transparent;" +
+      "-fx-background-color: transparent;" +
+      "-fx-padding: 0;" +
+      "-fx-background-insets: 0;" +
+      ".scroll-bar:vertical {" +
+      "    -fx-background-color: transparent;" +
+      "}" +
+      ".scroll-bar:vertical .track {" +
+      "    -fx-background-color: transparent;" +
+      "}" +
+      ".scroll-bar:vertical .thumb {" +
+      "    -fx-background-color: rgba(200,200,200,0.5);" +
+      "    -fx-background-radius: 4px;" +
+      "}" +
+      ".scroll-bar:vertical .thumb:hover {" +
+      "    -fx-background-color: rgba(180,180,180,0.7);" +
+      "}";
+
+    scrollPane.setStyle(scrollPaneStyle);
+
+    
+
 
     // Setting center menu content to center of actual menu
     layout.setCenter(centerMenuLayout);
