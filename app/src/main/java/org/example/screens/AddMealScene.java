@@ -17,6 +17,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.RectangleTextFieldWithLabel;
 import org.example.buttons.SqrBtnWithOutline;
 import org.example.sql.SqlConnectionCheck;
@@ -61,6 +63,9 @@ public class AddMealScene {
 
       while (rs.next()) {
         CheckBox checkBox = new CheckBox(rs.getString("name"));
+        checkBox.setStyle(
+          "-fx-font-size: 18px;"
+        );
         products.add(checkBox);
       }
 
@@ -70,6 +75,9 @@ public class AddMealScene {
 
       while (rs2.next()) {
         CheckBox checkBox = new CheckBox(rs2.getString("name"));
+        checkBox.setStyle(
+          "-fx-font-size: 18px;"
+        );
         sides.add(checkBox);
       }
 
@@ -79,6 +87,9 @@ public class AddMealScene {
 
       while (rs3.next()) {
         CheckBox checkBox = new CheckBox(rs3.getString("name"));
+        checkBox.setStyle(
+          "-fx-font-size: 18px;"
+        );
         drinks.add(checkBox);
       }
     } catch (Exception e) {
@@ -88,9 +99,13 @@ public class AddMealScene {
     ListView<CheckBox> pickSide = new ListView<>(sides);
     ListView<CheckBox> pickDrink = new ListView<>(drinks);
     ListView<CheckBox> chooseProduct = new ListView<>(products);
-
+    chooseProduct.setPrefSize(100, 300);
+    chooseProduct.setMaxWidth(350);
     VBox pickOptionsBox = new VBox(pickSide, pickDrink);
+    pickOptionsBox.setSpacing(20);
+    pickOptionsBox.setPadding(new Insets(0, 50, 0, 10));
 
+    
     var productLabel = new Label("Choose Main");
     productLabel.setStyle("-fx-font-size: 30");
 
@@ -100,9 +115,13 @@ public class AddMealScene {
     
     VBox leftSide = new VBox();
     leftSide.getChildren().addAll(mealName, mealPrice, mealDescription);
-
+    leftSide.setAlignment(Pos.CENTER);
+    leftSide.setPadding(new Insets(20));
     var menuLabel = new Label("Add a meal to the menu");
     menuLabel.setStyle("-fx-font-size: 40; -fx-font-weight: bold;");
+    HBox topLayout = new HBox(menuLabel);
+    topLayout.setAlignment(Pos.CENTER);
+    topLayout.setPadding(new Insets(30));
   
     SqrBtnWithOutline confirmButton = new SqrBtnWithOutline("Confirm",
         "green_tick.png", "rgb(81, 173, 86)");
@@ -190,12 +209,20 @@ public class AddMealScene {
 
     });
 
+    BackBtnWithTxt backButton = new BackBtnWithTxt();
+    backButton.setOnAction(e -> {
+      primaryStage.setScene(prevScene);
+      });
+    HBox bottomLayout = new HBox(confirmButton, backButton);
+    bottomLayout.setAlignment(Pos.CENTER);
+    bottomLayout.setPadding(new Insets(20));
+    bottomLayout.setSpacing(20);
     BorderPane layout = new BorderPane();
-    layout.setTop(menuLabel);
+    layout.setTop(topLayout);
     layout.setLeft(leftSide);
     layout.setCenter(chooseProductBox);
     layout.setRight(pickOptionsBox);
-    layout.setBottom(confirmButton);
+    layout.setBottom(bottomLayout);
 
     
     Scene addMealScene = new Scene(layout, 1920, 1080);
