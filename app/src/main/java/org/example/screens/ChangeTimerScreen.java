@@ -1,11 +1,20 @@
 package org.example.screens;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import org.example.kiosk.InactivityTimer;
 // import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
 
@@ -52,9 +61,79 @@ public class ChangeTimerScreen {
 
 
     // VBox LEFT
-    // Label
-    // button change timer shop
+
+
+    // Label for kiosk timer
+    Label kioskTimerTitle = new Label("Kiosk Timer:");
+    kioskTimerTitle.setStyle(
+      "-fx-font-size: 30px;"
+      + "-fx-font-weight: bold;");
+
+    // Current kiosk timer value
+    Label currentKioskTimer = new Label(
+      "Current inactivity timer (kiosk): "
+      + InactivityTimer.getInstance().getInactivityTimer()
+      + "seconds"
+    );
+    currentKioskTimer.setStyle("-fx-font-size: 20px;");
+
+    // Input field to enter new value
+    TextField kioskTimerInput = new TextField();
+    kioskTimerInput.setPromptText("New timer value (in seconds)");
+    kioskTimerInput.setMaxWidth(250);
+
+    // Label for feedback after update
+    Label updateFeedback = new Label();
+    updateFeedback.setStyle("-fx-font-size: 18px;");
     
+    // Button to submit new value
+    Button updateButton = new Button("Update Timer");
+
+    updateButton.setOnAction(e -> {
+      String input = kioskTimerInput.getText();
+
+      // Error handling of incorrect value input
+      try {
+        // If input is int value
+        int newValue = Integer.parseInt(input);
+
+        // If int value is not reasonable (realistic)
+        if (newValue < 5) {
+            updateFeedback.setText("Please enter a value >= 5 seconds.");
+            // No value change
+            return;
+        }
+
+        // Set new inactivity timer
+        InactivityTimer.getInstance().setNewInactivityTimer(newValue);
+
+        // Update display label
+        currentKioskTimer.setText(
+          "Current inactivity timer (kiosk): "
+          + newValue + " seconds");
+
+        updateFeedback.setText("Timer updated successfully!");
+
+      } catch (NumberFormatException ex) {
+          updateFeedback.setText("Invalid input! Please enter a number.");
+      }
+    });
+
+    // Spacer for left timer editor
+    //Region spacerl = new Region();
+    //HBox.setHgrow(spacerl, Priority.ALWAYS);
+
+    // Combine left timer editor
+    VBox timerShop = new VBox(
+      15,
+      kioskTimerTitle,
+      currentKioskTimer,
+      kioskTimerInput,
+      updateButton,
+      updateFeedback
+    );
+    timerShop.setAlignment(Pos.TOP_LEFT);
+
     // VBOX RIGHT
     // Label
     // Button change timer popup
