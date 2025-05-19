@@ -2,6 +2,8 @@ package org.example.screens;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -15,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.buttons.RectangleTextFieldWithLabel;
+import org.example.buttons.SqrBtnWithOutline;
 import org.example.sql.SqlConnectionCheck;
 
 
@@ -99,15 +102,65 @@ public class AddMealScene {
 
     var menuLabel = new Label("Add a meal to the menu");
     menuLabel.setStyle("-fx-font-size: 40; -fx-font-weight: bold;");
+  
+    SqrBtnWithOutline confirmButton = new SqrBtnWithOutline("Confirm",
+        "green_tick.png", "rgb(81, 173, 86)");
+
+    confirmButton.setOnAction(e -> {
+      ArrayList<String> selectedProducts = getSelected(products);
+      if (selectedProducts.size() == 1) {
+        ArrayList<String> selectedDrinks = getSelected(drinks);
+        ArrayList<String> selectSides = getSelected(sides);
+
+        try {
+          SqlConnectionCheck connection = new SqlConnectionCheck();
+          String sql = "SELECT product_id FROM product WHERE name = ?";
+          PreparedStatement stmt = connection.getConnection().prepareStatement(sql);
+          stmt.setString(1, selectedProducts.get(0));
+          ResultSet rs = stmt.executeQuery();
+
+          rs.next();
+          int productId = rs.getInt("product_id");
+          rs.close();
+          stmt.close();
+
+          String sql2 = "INSERT INTO meal (name, description, price, image_url, product_id) VALUES (?, ?, ?, ?, ?)";
+          PreparedStatement stmt2 = connection.getConnection().prepareStatement(sql2);
+          stmt2.setString(1, mealName.getText());
+          stmt2.setString(2, mealDescription.getText());
+          stmt2.setDouble(3, Double.parseDouble(mealPrice.getText()));
+          stmt2.setString(4, "/food/default_meal.png");
+          stmt2.setInt(5, productId);
+          stmt2.executeUpdate();
+          stmt2.close();
+          System.out.println("Ended");
+        } catch (Exception ex) {
+          ex.printStackTrace();
+        }
+      } else {
+        System.out.println("Choose only one Product");
+      }
+    });
 
     BorderPane layout = new BorderPane();
     layout.setTop(menuLabel);
     layout.setLeft(leftSide);
     layout.setCenter(chooseProductBox);
     layout.setRight(pickOptionsBox);
+    layout.setBottom(confirmButton);
 
     
     Scene addMealScene = new Scene(layout, 1920, 1080);
     return addMealScene;
+  }
+
+  private ArrayList<String> getSelected(ObservableList<CheckBox> list) {
+    ArrayList<String> select = new ArrayList<>();
+    for (CheckBox cb : list) {
+      if (cb.isSelected()) {
+        select.add(cb.getText());
+      }
+    }
+    return select;
   }
 }
