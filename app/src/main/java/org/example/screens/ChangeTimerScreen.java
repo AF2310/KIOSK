@@ -212,17 +212,18 @@ public class ChangeTimerScreen {
 
     // Spacer for title and timer editors
     // TODO make spacer work
-    Region spacerTop = new Region();
-    HBox.setHgrow(spacerTop, Priority.ALWAYS);
+    //Region spacerTop = new Region();
+    //HBox.setHgrow(spacerTop, Priority.ALWAYS);
 
-    VBox topLayout = new VBox(windowTitle, spacerTop, timerShop);
+    //VBox topLayout = new VBox(windowTitle, spacerTop, timerEditor);
 
     // Setting positioning of all the elements
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(50));
-    layout.setTop(topLayout);
-    layout.setCenter(timerShop);
-    //layout.setCenter(timerEditor);  -> later when right part is done and combined
+    // layout.setTop(topLayout)
+    layout.setTop(windowTitle);
+    //layout.setCenter(timerPopup);
+    layout.setCenter(timerEditor);  //-> later when right part is done and combined
     //layout.setBottom(bottomContainer);
 
     return new Scene(layout, 1920, 1080);
