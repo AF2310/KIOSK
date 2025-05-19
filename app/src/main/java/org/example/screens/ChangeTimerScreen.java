@@ -65,7 +65,9 @@ public class ChangeTimerScreen {
 
     // Timer editor kiosk - VBOX LEFT
 
-    // Label for kiosk timer
+    VBox timerShop = getEditorBox(true);
+
+    /* // Label for kiosk timer
     Label kioskTimerTitle = new Label("Kiosk Timer:");
     kioskTimerTitle.setStyle(
       "-fx-font-size: 30px;"
@@ -133,12 +135,14 @@ public class ChangeTimerScreen {
       updateButtonKiosk,
       updateFeedbackL
     );
-    timerShop.setAlignment(Pos.TOP_LEFT);
+    timerShop.setAlignment(Pos.TOP_LEFT); */
 
 
     // Timer editor popup - VBOX RIGHT
 
-    // Label for kiosk timer
+    VBox timerPopup = getEditorBox(false);
+
+    /* // Label for kiosk timer
     Label popupTimerTitle = new Label("Popup Timer:");
     popupTimerTitle.setStyle(
       "-fx-font-size: 30px;"
@@ -206,7 +210,7 @@ public class ChangeTimerScreen {
       updateButtonPopup,
       updateFeedbackR
     );
-    timerPopup.setAlignment(Pos.TOP_RIGHT);
+    timerPopup.setAlignment(Pos.TOP_RIGHT); */
 
 
     // Combine both timer editors
@@ -248,5 +252,103 @@ public class ChangeTimerScreen {
     layout.setBottom(bottomContainer);
 
     return new Scene(layout, 1920, 1080);
+  }
+
+  /**
+   * Flexible helper method for the timer editor boxes.
+   *
+   * @param title title of the editor
+   * @param isKioskTimer true if it's the kiosk timer
+   *                     false it it's the popup timer
+   * @return
+   */
+  private VBox getEditorBox(boolean isKioskTimer) {
+
+    // Getting name depending on what kind of timer
+    String name;
+    if (isKioskTimer) name = "Kiosk ";
+    else name = "Popup ";
+
+    // Label for timer
+    Label timerTitle = new Label(name + "Timer:");
+    timerTitle.setStyle(
+      "-fx-font-size: 30px;"
+      + "-fx-font-weight: bold;");
+
+    // Get current timer value depending on what kind of timer
+    int currentTimerValue;
+    if (isKioskTimer) {
+      currentTimerValue = InactivityTimer.getInstance().getInactivityTimer();
+    } else {
+      currentTimerValue = InactivityTimer.getInstance().getInactivityTimerPopup();
+    }
+
+    // Current timer value
+    Label currentTimer = new Label(
+      "Current inactivity timer: " + currentTimerValue + " seconds"
+    );
+    currentTimer.setStyle("-fx-font-size: 20px;");
+
+    // Input field to enter new value
+    TextField timerInput = new TextField();
+    timerInput.setPromptText("New timer value (in seconds)");
+    timerInput.setMaxWidth(250);
+
+    // Label for feedback after update
+    Label consoleOutput = new Label();
+    consoleOutput.setStyle("-fx-font-size: 18px;");
+    
+    // Button to submit new value
+    Button updateButton = new Button("Update Timer");
+
+    updateButton.setOnAction(e -> {
+      String input = timerInput.getText();
+
+      // Error handling of incorrect value input
+      try {
+        // If input is int value
+        int newValue = Integer.parseInt(input);
+
+        // If int value is not reasonable (realistic)
+        if (newValue < 5) {
+            consoleOutput.setText("Please enter a value >= 5 seconds.");
+            // No value change
+            return;
+        }
+
+        // User entered proper value -> execute value change
+
+        // Set new inactivity timer depending on what kind of timer
+        if (isKioskTimer) {
+          InactivityTimer.getInstance().setNewInactivityTimer(newValue);
+        } else {
+          InactivityTimer.getInstance().setNewInactivityTimerPopup(newValue);
+        }
+
+        // Update display label
+        currentTimer.setText(
+          "Current inactivity timer: "
+          + newValue + " seconds");
+
+        consoleOutput.setText("Timer updated successfully!");
+
+        // User entered a letter -> no value change
+      } catch (NumberFormatException ex) {
+          consoleOutput.setText("Invalid input! Please enter a number.");
+      }
+    });
+
+    // Combine left timer editor
+    VBox timer = new VBox(
+      20,
+      timerTitle,
+      currentTimer,
+      timerInput,
+      updateButton,
+      consoleOutput
+    );
+    timer.setAlignment(Pos.TOP_LEFT);
+
+    return timer;
   }
 }
