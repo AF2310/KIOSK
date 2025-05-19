@@ -8,8 +8,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import org.example.kiosk.InactivityTimer;
 // import org.example.kiosk.LanguageSetting;
@@ -115,10 +119,6 @@ public class ChangeTimerScreen {
       }
     });
 
-    // Spacer for left timer editor
-    //Region spacerl = new Region();
-    //HBox.setHgrow(spacerl, Priority.ALWAYS);
-
     // Combine left timer editor
     VBox timerShop = new VBox(
       15,
@@ -130,25 +130,33 @@ public class ChangeTimerScreen {
     );
     timerShop.setAlignment(Pos.TOP_LEFT);
 
+
     // VBOX RIGHT
     // Label
     // Button change timer popup
-
+    
     // Combine both in timer editor HBox
-
+    
     // confirmation text as label
-
+    
     // Language + Cancel Buttons HBOX BOTTOM
-
+    
     // VBOX main layout COMBINE ALL
     // timer editor box
     // confirmation text BOX
     // language + cancel box
 
+    // Spacer for title and timer editors
+    // TODO make spacer work
+    Region spacerTop = new Region();
+    HBox.setHgrow(spacerTop, Priority.ALWAYS);
+
+    VBox topLayout = new VBox(windowTitle, spacerTop, timerShop);
+
     // Setting positioning of all the elements
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(50));
-    layout.setTop(windowTitle);
+    layout.setTop(topLayout);
     layout.setCenter(timerShop);
     //layout.setCenter(timerEditor);  -> later when right part is done and combined
     //layout.setBottom(bottomContainer);
