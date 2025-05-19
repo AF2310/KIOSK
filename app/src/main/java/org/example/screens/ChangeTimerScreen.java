@@ -3,6 +3,7 @@ package org.example.screens;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
+// import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
 
 /**
@@ -10,6 +11,8 @@ import org.example.menu.Product;
  * Used in the admin menu in 'AdminMenuScreen.java'.
  */
 public class ChangeTimerScreen {
+
+  // private LanguageSetting languageSetting = new LanguageSetting();
 
   private Stage primaryStage;
   private Scene prevScene;
