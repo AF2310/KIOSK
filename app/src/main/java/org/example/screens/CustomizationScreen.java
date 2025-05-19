@@ -6,7 +6,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -20,6 +22,7 @@ import org.example.buttons.ColorBtnOutlineImage;
 import org.example.buttons.ColorButtonWithImage;
 import org.example.buttons.ColorPickersPane;
 import org.example.buttons.ColorSquareButtonWithImage;
+import org.example.buttons.KioskName;
 import org.example.buttons.LangBtn;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.LanguageSetting;
@@ -39,18 +42,50 @@ public class CustomizationScreen {
       Scene welcomeScrScene,
       Connection conn) {
 
-    // the mainlayout
+    // The mainlayout
     VBox adminMenuLayout = new VBox(20);
     adminMenuLayout.setAlignment(Pos.TOP_CENTER);
     adminMenuLayout.setPadding(new Insets(10));
+    
+    // Label to prompt name change
+    Label promptInput = new Label("Change Kiosk Name here: ");
+    promptInput.setStyle(
+        "-fx-font-size: 25px;"
+        + "-fx-font-weight: bold;"
+    );
 
-    // Colopickers moved to a separate file 
-    var colorPickers = new ColorPickersPane();
+    // Textfield for the name change
+    TextField nameInput = new TextField();
+    nameInput.setMaxWidth(300);
+    nameInput.setAlignment(Pos.CENTER);
+    nameInput.setText("Current name: " + KioskName.getCompanyTitle());
+    
+    // Saves the name into KioskName.java
+    Button saveNameButton = new Button("Save name");
+    saveNameButton.setOnAction(e -> {
+
+      String newName = nameInput.getText().trim();
+
+      if (!newName.isEmpty()) {
+
+        KioskName.setCompanyTitle(newName);
+
+      }
+      
+    });
+
+    // Wraps all the name stuff
+    VBox nameBox = new VBox(10, promptInput, nameInput, saveNameButton);
+    nameBox.setAlignment(Pos.CENTER);
 
     // Making the title on top of the admin menu screen
     Label adminMenuText = new TitleLabel("Set & Test Design");
 
-    adminMenuLayout.getChildren().addAll(adminMenuText, colorPickers);
+    // Colopickers moved to a separate file 
+    var colorPickers = new ColorPickersPane();
+
+    // Wraps top part of the screen
+    adminMenuLayout.getChildren().addAll(adminMenuText, nameBox, colorPickers);
 
     // this gridpane is used for all the middle buttons in the admin menu,
     // to align tem properly in rows and columns.
@@ -105,6 +140,7 @@ public class CustomizationScreen {
 
     });
 
+    // Wraps bottom part of the screen
     HBox bottomLayout = new HBox();
     bottomLayout.setPadding(new Insets(0, 0, 0, 0));
     bottomLayout.getChildren().addAll(bottomLeftBox, spacerBottom, bottomRightBox);

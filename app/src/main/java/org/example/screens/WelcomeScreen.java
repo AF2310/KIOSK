@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.buttons.BlackButtonWithImage;
 import org.example.buttons.ColorBtnOutlineImage;
+import org.example.buttons.KioskName;
 import org.example.buttons.LangBtn;
 import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;
@@ -48,7 +49,7 @@ public class WelcomeScreen {
     // Setup labels
     var welcome = new Label("Welcome to");
     LabelManager.register(welcome);
-    var companyTitle = new Label("Bun & Patty");
+    var companyTitle = new Label(KioskName.getCompanyTitle());
     LabelManager.register(companyTitle);
 
     // Customize labels
