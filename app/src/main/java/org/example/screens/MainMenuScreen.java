@@ -26,6 +26,10 @@ import org.example.menu.Single;
 import org.example.menu.Type;
 import org.example.orders.Cart;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -34,6 +38,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -47,6 +52,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * The main menu screen.
@@ -213,15 +219,27 @@ public class MainMenuScreen {
     showSearchBtn.setGraphic(searchGraphic);
     final boolean[] isSearchVisible = { false };
     VBox.setMargin(gridSearchBox, new Insets(5));
+
+    Timeline fadeIn = new Timeline(new KeyFrame( Duration.millis(200),
+      new KeyValue(gridSearchBox.opacityProperty(), 1),
+      new KeyValue(gridSearchBox.translateYProperty(), 0)));
+    fadeIn.setDelay(Duration.millis(50));
     showSearchBtn.setOnAction(e -> {
       isSearchVisible[0] = !isSearchVisible[0];
       if (isSearchVisible[0]) {
         if (!top.getChildren().contains(gridSearchBox)) {
           top.getChildren().add(gridSearchBox);
           searchCircle.setFill(Color.GOLD);
+          fadeIn.play();
 
         } else {
           top.getChildren().remove(gridSearchBox);
+
+          FadeTransition fadeOut = new FadeTransition(Duration.millis(150), gridSearchBox);
+          fadeOut.setToValue(0);
+          fadeOut.setOnFinished(event -> top.getChildren().remove(gridSearchBox));
+          fadeOut.play();
+
           searchCircle.setFill(Color.RED);
 
           currentSearchName = "";
@@ -272,16 +290,51 @@ public class MainMenuScreen {
       + "-fx-popup-border-color: #eee;"
       + "-fx-focus-color: #ffd700;");
     
-      gridSearchButton.setStyle(
-        "-fx-background-color: linear-gradient(to bottom, #ffd700, #ffaa00);"
-        + "-fx-text-fill: #2a2a2a;"
-        + "-fx-font-weight: bold;"
-        + "-fx-font-size: 14px;"
-        + "-fx-padding: 8px 20px;"
-        + "-fx-border-radius: 8px;"
-        + "-fx-background-radius: 8px;"
-        + "-fx-cursor: hand;"
-        + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);");
+    gridSearchButton.setStyle(
+      "-fx-background-color: linear-gradient(to bottom, #ffd700, #ffaa00);"
+      + "-fx-text-fill: #2a2a2a;"
+      + "-fx-font-weight: bold;"
+      + "-fx-font-size: 14px;"
+      + "-fx-padding: 8px 20px;"
+      + "-fx-border-radius: 8px;"
+      + "-fx-background-radius: 8px;"
+      + "-fx-cursor: hand;"
+      + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);");
+    
+      gridSearchButton.hoverProperty().addListener((obs, oldVal, isHovering) -> {
+        String baseStyle = "-fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 8px 20px;";
+        String hoverStyle = baseStyle +
+            """
+            -fx-background-color: linear-gradient(to bottom, #ffeb3b, #ffc107);
+            -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 3);
+            """;
+        String normalStyle = baseStyle +
+            """
+            -fx-background-color: linear-gradient(to bottom, #ffd700, #ffaa00);
+            -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+            """;
+        if (isHovering) {
+          gridSearchButton.setStyle(hoverStyle);
+        } else {
+          gridSearchButton.setStyle(normalStyle);
+        }
+      } );
+
+      gridSearchBox.setOpacity(0);
+      gridSearchBox.setTranslateY(10);
+      gridSearchBox.setSpacing(15);
+
+      HBox.setMargin(gridSearchField, new Insets(0, 0, 0, 10));
+      HBox.setMargin(gridSearchButton, new Insets(0, 10, 0, 0));
+
+      /*Timeline fadeIn = new Timeline(new KeyFrame( Duration.millis(200),
+        new KeyValue(gridSearchBox.opacityProperty(), 1),
+        new KeyValue(gridSearchBox.translateYProperty(), 0)));
+      fadeIn.setDelay(Duration.millis(50));*/
+
+
+
+
 
 
     // Align the search button to top-right
@@ -420,35 +473,62 @@ public class MainMenuScreen {
 
     centerMenuLayout.setCenter(scrollPane);
     centerMenuLayout.setRight(rightArrowVcentered);
-    scrollPane.setStyle(
-      "-fx-background: transparent;" +
-      "-fx-background-color: transparent;" +
-      "-fx-padding: 0;" +
-      "-fx-background-insets: 0;"
-    );
-
-    String scrollPaneStyle = 
-      "-fx-background: transparent;" +
-      "-fx-background-color: transparent;" +
-      "-fx-padding: 0;" +
-      "-fx-background-insets: 0;" +
-      ".scroll-bar:vertical {" +
+    String scrollPanestyle = ".custom-scroll-pane {" +
       "    -fx-background-color: transparent;" +
+      "    -fx-background-insets: 0;" +
+      "    -fx-padding: 0;" +
       "}" +
-      ".scroll-bar:vertical .track {" +
+      ".custom-scroll-pane .scroll-bar:vertical {" +
       "    -fx-background-color: transparent;" +
+      "    -fx-background-insets: 0;" +
+      "    -fx-padding: 0;" +
       "}" +
-      ".scroll-bar:vertical .thumb {" +
-      "    -fx-background-color: rgba(200,200,200,0.5);" +
+      ".custom-scroll-pane .scroll-bar:vertical .track {" +
+      "    -fx-background-color: transparent;" +
+      "    -fx-border-color: transparent;" +
+      "    -fx-background-radius: 0;" +
+      "}" +
+      ".custom-scroll-pane .scroll-bar:vertical .thumb {" +
+      "    -fx-background-color: rgba(200, 200, 200, 0.5);" +
       "    -fx-background-radius: 4px;" +
+      "    -fx-border-radius: 4px;" +
       "}" +
-      ".scroll-bar:vertical .thumb:hover {" +
-      "    -fx-background-color: rgba(180,180,180,0.7);" +
+      ".custom-scroll-pane .scroll-bar:vertical .thumb:hover {" +
+      "    -fx-background-color: rgba(180, 180, 180, 0.7);" +
+      "}" +
+      ".custom-scroll-pane .scroll-bar:vertical .increment-button," +
+      ".custom-scroll-pane .scroll-bar:vertical .decrement-button {" +
+      "    -fx-background-color: transparent;" +
+      "    -fx-padding: 0;" +
+      "}" +
+      ".custom-scroll-pane .scroll-bar:vertical .increment-arrow," +
+      ".custom-scroll-pane .scroll-bar:vertical .decrement-arrow {" +
+      "    -fx-shape: \" \";" +
+      "    -fx-padding: 0;" +
       "}";
-
-    scrollPane.setStyle(scrollPaneStyle);
-
     
+    itemGrid.setStyle("-fx-background-color: transparent;" +
+      "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 12, 0.5, 0, 2);");
+    scrollPane.getStyleClass().add("custom-scroll-pane");
+    scrollPane.getStylesheets().add("data:text/css;charset=utf-8," + scrollPanestyle);
+
+    scrollPane.setFitToWidth(true);
+    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+    scrollPane.setPadding(new Insets(10));
+
+    itemGrid.setStyle(itemGrid.getStyle() +
+      "-fx-background-color: transparent;" +
+      "-fx-padding: 15px;" +
+      "-fx-hgap: 25px;" +
+      "-fx-vgap: 25px;"
+      );
+
+    scrollPane.setEffect(new DropShadow(12, Color.gray(0, 0.05)));
+
+    layout.setStyle(
+      "-fx-background-color: transparent;"
+      );
 
 
     // Setting center menu content to center of actual menu
