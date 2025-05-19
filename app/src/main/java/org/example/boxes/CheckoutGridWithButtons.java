@@ -12,9 +12,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-
-import java.util.Locale.LanguageRange;
-
 import org.example.buttons.ArrowButton;
 import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;

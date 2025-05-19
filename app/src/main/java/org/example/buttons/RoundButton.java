@@ -16,8 +16,8 @@ import javafx.scene.image.ImageView;
 public class RoundButton extends Button {
 
   // List to hold images to cycle through
-  private List<String> imagePaths = new ArrayList<>();
-  private int currentImageIndex = 0;
+  protected List<String> imagePaths = new ArrayList<>();
+  protected int currentImageIndex = 0;
 
   /**
    * Constructor for the button.
@@ -97,7 +97,10 @@ public class RoundButton extends Button {
   }
 
   // Image setter
-  private void setImage(String imagePath, int size) {
+  /**
+   * Sets the button's graphic to the specified image path with the given size.
+   */
+  public void setImage(String imagePath, int size) {
 
     Image image = new Image(imagePath);
     ImageView imageView = new ImageView(image);
@@ -108,8 +111,10 @@ public class RoundButton extends Button {
 
   }
 
-  // Method to allow to cycle through images on click
-  private void cycleImages(int size) {
+  /**
+   * Cycles to the next image in the list and updates the button's graphic.
+   */
+  public void cycleImages(int size) {
 
     if (!imagePaths.isEmpty()) {
 
