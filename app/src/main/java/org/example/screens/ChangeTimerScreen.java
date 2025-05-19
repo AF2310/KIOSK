@@ -1,7 +1,9 @@
 package org.example.screens;
 
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 // import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
@@ -31,5 +33,43 @@ public class ChangeTimerScreen {
 
     this.primaryStage = primaryStage;
     this.prevScene = prevScene;
+  }
+
+  /**
+   * This is the method to create the scene for changing
+   * the inactivity timers in the main menu for customers.
+   *
+   * @return change timer scene
+   */
+  public Scene getChangeTimerScene() {
+
+    // title label
+
+    // VBox LEFT
+    // Label
+    // button change timer shop
+    
+    // VBOX RIGHT
+    // Label
+    // Button change timer popup
+
+    // Combine both in timer editor HBox
+
+    // confirmation text as label
+
+    // Language + Cancel Buttons HBOX BOTTOM
+
+    // VBOX main layout COMBINE ALL
+    // timer editor box
+    // confirmation text BOX
+    // language + cancel box
+
+    // Setting positioning of all the elements
+    BorderPane layout = new BorderPane();
+    layout.setPadding(new Insets(50));
+    //layout.setTop(topContainer);
+    //layout.setBottom(bottomContainer);
+
+    return new Scene(layout, 1920, 1080);
   }
 }
