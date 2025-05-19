@@ -83,13 +83,13 @@ public class ChangeTimerScreen {
     kioskTimerInput.setMaxWidth(250);
 
     // Label for feedback after update
-    Label updateFeedback = new Label();
-    updateFeedback.setStyle("-fx-font-size: 18px;");
+    Label updateFeedbackL = new Label();
+    updateFeedbackL.setStyle("-fx-font-size: 18px;");
     
     // Button to submit new value
-    Button updateButton = new Button("Update Timer");
+    Button updateButtonKiosk = new Button("Update Timer");
 
-    updateButton.setOnAction(e -> {
+    updateButtonKiosk.setOnAction(e -> {
       String input = kioskTimerInput.getText();
 
       // Error handling of incorrect value input
@@ -99,7 +99,7 @@ public class ChangeTimerScreen {
 
         // If int value is not reasonable (realistic)
         if (newValue < 5) {
-            updateFeedback.setText("Please enter a value >= 5 seconds.");
+            updateFeedbackL.setText("Please enter a value >= 5 seconds.");
             // No value change
             return;
         }
@@ -112,10 +112,10 @@ public class ChangeTimerScreen {
           "Current inactivity timer (kiosk): "
           + newValue + " seconds");
 
-        updateFeedback.setText("Timer updated successfully!");
+        updateFeedbackL.setText("Timer updated successfully!");
 
       } catch (NumberFormatException ex) {
-          updateFeedback.setText("Invalid input! Please enter a number.");
+          updateFeedbackL.setText("Invalid input! Please enter a number.");
       }
     });
 
@@ -125,20 +125,84 @@ public class ChangeTimerScreen {
       kioskTimerTitle,
       currentKioskTimer,
       kioskTimerInput,
-      updateButton,
-      updateFeedback
+      updateButtonKiosk,
+      updateFeedbackL
     );
     timerShop.setAlignment(Pos.TOP_LEFT);
 
 
     // VBOX RIGHT
-    // Label
-    // Button change timer popup
+
+    // Label for kiosk timer
+    Label popupTimerTitle = new Label("Kiosk Timer:");
+    popupTimerTitle.setStyle(
+      "-fx-font-size: 30px;"
+      + "-fx-font-weight: bold;");
+
+    // Current kiosk timer value
+    Label currentPopupTimer = new Label(
+      "Current inactivity timer (kiosk): "
+      + InactivityTimer.getInstance().getInactivityTimerPopup()
+      + "seconds"
+    );
+    currentPopupTimer.setStyle("-fx-font-size: 20px;");
+
+    // Input field to enter new value
+    TextField popupTimerInput = new TextField();
+    popupTimerInput.setPromptText("New timer value (in seconds)");
+    popupTimerInput.setMaxWidth(250);
+
+    // Label for feedback after update
+    Label updateFeedbackR = new Label();
+    updateFeedbackR.setStyle("-fx-font-size: 18px;");
     
-    // Combine both in timer editor HBox
-    
-    // confirmation text as label
-    
+    // Button to submit new value
+    Button updateButtonPopup = new Button("Update Timer");
+
+    updateButtonPopup.setOnAction(e -> {
+      String input = popupTimerInput.getText();
+
+      // Error handling of incorrect value input
+      try {
+        // If input is int value
+        int newValue = Integer.parseInt(input);
+
+        // If int value is not reasonable (realistic)
+        if (newValue < 5) {
+            updateFeedbackR.setText("Please enter a value >= 5 seconds.");
+            // No value change
+            return;
+        }
+
+        // Set new inactivity timer
+        InactivityTimer.getInstance().setNewInactivityTimerPopup(newValue);
+
+        // Update display label
+        currentPopupTimer.setText(
+          "Current inactivity timer (kiosk): "
+          + newValue + " seconds");
+
+        updateFeedbackR.setText("Timer updated successfully!");
+
+      } catch (NumberFormatException ex) {
+          updateFeedbackR.setText("Invalid input! Please enter a number.");
+      }
+    });
+
+    // Combine left timer editor
+    VBox timerPopup = new VBox(
+      15,
+      popupTimerTitle,
+      currentPopupTimer,
+      popupTimerInput,
+      updateButtonPopup,
+      updateFeedbackR
+    );
+    timerPopup.setAlignment(Pos.TOP_RIGHT);
+
+    HBox timerEditor = new HBox(500, timerShop, timerPopup);
+    timerEditor.setAlignment(Pos.CENTER);
+
     // Language + Cancel Buttons HBOX BOTTOM
     
     // VBOX main layout COMBINE ALL
