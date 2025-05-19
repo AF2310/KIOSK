@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.LangBtn;
 import org.example.kiosk.InactivityTimer;
-// import org.example.kiosk.LanguageSetting;
+import org.example.kiosk.LanguageSetting;
 
 /**
  * This is the timer editor scene.
@@ -23,7 +23,7 @@ import org.example.kiosk.InactivityTimer;
  */
 public class ChangeTimerScreen {
 
-  // private LanguageSetting languageSetting = new LanguageSetting();
+  private LanguageSetting languageSetting = new LanguageSetting();
 
   private Stage primaryStage;
   private Scene prevScene;
@@ -90,13 +90,13 @@ public class ChangeTimerScreen {
     layout.setCenter(timerEditor);
     layout.setBottom(bottomContainer);
 
-    /* // Translate all the text
+    // Translate all the text
     langButton.addAction(event -> {
       // Toggle the language in LanguageSetting
       languageSetting.changeLanguage(
           languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
       languageSetting.updateAllLabels(layout);
-    }); */
+    });
 
     return new Scene(layout, 1920, 1080);
   }
