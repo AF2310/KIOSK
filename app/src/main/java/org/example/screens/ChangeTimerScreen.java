@@ -5,7 +5,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -13,13 +12,10 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.Window;
-
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.LangBtn;
 import org.example.kiosk.InactivityTimer;
 // import org.example.kiosk.LanguageSetting;
-import org.example.menu.Product;
 
 /**
  * This is the timer editor scene.
@@ -31,7 +27,6 @@ public class ChangeTimerScreen {
 
   private Stage primaryStage;
   private Scene prevScene;
-  private TableView<Product> productTable;
 
   /**
    * The timer editor scene constructor.
@@ -111,6 +106,8 @@ public class ChangeTimerScreen {
             return;
         }
 
+        // User entered proper value -> execute value change
+
         // Set new inactivity timer
         InactivityTimer.getInstance().setNewInactivityTimer(newValue);
 
@@ -121,6 +118,7 @@ public class ChangeTimerScreen {
 
         updateFeedbackL.setText("Timer updated successfully!");
 
+        // User entered a letter -> no value change
       } catch (NumberFormatException ex) {
           updateFeedbackL.setText("Invalid input! Please enter a number.");
       }
@@ -181,6 +179,8 @@ public class ChangeTimerScreen {
             return;
         }
 
+        // User entered proper value -> execute value change
+
         // Set new inactivity timer
         InactivityTimer.getInstance().setNewInactivityTimerPopup(newValue);
 
@@ -191,6 +191,7 @@ public class ChangeTimerScreen {
 
         updateFeedbackR.setText("Timer updated successfully!");
 
+        // User entered a letter -> no value change
       } catch (NumberFormatException ex) {
           updateFeedbackR.setText("Invalid input! Please enter a number.");
       }
@@ -212,15 +213,6 @@ public class ChangeTimerScreen {
 
     HBox timerEditor = new HBox(400, timerShop, timerPopup);
     timerEditor.setAlignment(Pos.CENTER);
-
-
-    // Spacer for title and timer editors
-    // TODO make spacer work
-    /* Region spacerTop = new Region();
-    HBox.setHgrow(spacerTop, Priority.ALWAYS);
-
-    VBox topLayout = new VBox(windowTitle, spacerTop, timerEditor);
-    topLayout.setAlignment(Pos.TOP_CENTER); */
 
 
     // Language + Cancel Buttons HBOX BOTTOM
@@ -249,9 +241,7 @@ public class ChangeTimerScreen {
     // Setting positioning of all the elements
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(50));
-    //layout.setTop(topLayout);
     layout.setTop(titleBox);
-    //layout.setCenter(timerPopup);
     BorderPane.setMargin(timerEditor, new Insets(200, 0, 50, 0));
     layout.setCenter(timerEditor);
     
