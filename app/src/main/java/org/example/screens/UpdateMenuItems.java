@@ -47,6 +47,7 @@ public class UpdateMenuItems {
     MidButton addProductButton = makeMidButton("Add Product to Menu");
     MidButton editProductButton = makeMidButton("Edit Product Data");
     MidButton removeProductButton = makeMidButton("Remove Product from Menu");
+    MidButton addMealButton = makeMidButton("Add a Meal");
 
     // Actions for all mid buttons
 
@@ -114,6 +115,7 @@ public class UpdateMenuItems {
     gridPane.add(addProductButton, 0, 0);
     gridPane.add(editProductButton, 0, 1);
     gridPane.add(removeProductButton, 0, 2);
+    gridPane.add(addMealButton, 0, 3);
 
     // Pass in the Labeled components to translate
     langButton.addAction(event -> {
