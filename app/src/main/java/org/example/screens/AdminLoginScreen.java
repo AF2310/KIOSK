@@ -95,9 +95,6 @@ public class AdminLoginScreen {
         "rgb(0, 0, 0)",
         50);
 
-    // Add the language button
-    var langButton = new LangBtn();
-
     // login button functionality
     loginButton.setOnAction(e -> {
       String username = usernameField.getText();
@@ -114,7 +111,8 @@ public class AdminLoginScreen {
             windowWidth, windowHeight, welcomeScrScene, conn);
         primaryStage.setScene(adminMenuScene);
       } else {
-        if (langButton.isEnglish()) {
+        var currLang = LanguageSetting.getInstance();
+        if (currLang.equals("en")) {
           errorLabel.setText("Invalid login details");
         } else {
           errorLabel.setText("Ogiltig inloggning");
@@ -150,6 +148,9 @@ public class AdminLoginScreen {
         loginButton,
         backButton,
         errorLabel);
+
+    // Add the language button
+    var langButton = new LangBtn();
 
     // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);

@@ -131,6 +131,7 @@ public class WelcomeScreen {
     rowOfBurgers.getChildren().addAll(burgerView1, burgerView2, burgerButton);
 
     var langButton = new LangBtn();
+    langButton.updateImage();
 
     // Translate all the text
     langButton.addAction(event -> {
@@ -139,8 +140,6 @@ public class WelcomeScreen {
       lang.changeLanguage(newLang);
       lang.updateAllLabels(mainWindow);
     });
-
-    LanguageSetting.getInstance().updateAllLabels(mainWindow);
 
     // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
@@ -216,7 +215,9 @@ public class WelcomeScreen {
     Parent root = scene.getRoot();
 
     LanguageSetting.getInstance().registerRoot(root);
-    LanguageSetting.getInstance().updateAllLabels(mainPane);
+    LanguageSetting.getInstance().updateAllLabels(mainWindow);
+    // LanguageSetting.getInstance().updateAllLabels(eatHereBtn);
+    // LanguageSetting.getInstance().updateAllLabels(takeAwayBtn);
 
     return scene;
   }

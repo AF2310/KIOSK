@@ -13,6 +13,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
+import org.example.buttons.LangBtn;
+
 
 /**
  * Singleton class that manages language settings for the entire kiosk system.
@@ -62,16 +64,13 @@ public class LanguageSetting {
   /**
   * Changes the application's language if valid.
   */
-  // public void changeLanguage(String newLanguage) {
-  // if (newLanguage.equals("en") || newLanguage.equals("sv")) {
-  // this.selectedLanguage = newLanguage;
-  // dictionary.toggleLanguage();
-  // }
-  // }
   public void changeLanguage(String newLanguage) {
     if (newLanguage.equals("en") || newLanguage.equals("sv")) {
       this.selectedLanguage = newLanguage;
       dictionary.toggleLanguage();
+
+      // Update all buttons to show the current language
+      LangBtn.updateAllLanguageButtons();
 
       // Update all registered UI roots
       for (Parent root : registeredRoots) {
@@ -146,7 +145,7 @@ public class LanguageSetting {
       }
 
       if (node instanceof Parent) {
-        updateAllLabels((Parent) node); // Recursive call
+        updateAllLabels((Parent) node);
       }
     }
   }

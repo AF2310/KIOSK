@@ -413,6 +413,7 @@ public class MainMenuScreen {
 
     // Create language button
     var langButton = new LangBtn();
+    langButton.updateImage();
 
     // Translate all the text
     langButton.addAction(event -> {
