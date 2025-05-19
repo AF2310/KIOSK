@@ -8,9 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -61,7 +58,6 @@ public class ChangeTimerScreen {
 
 
     // VBox LEFT
-
 
     // Label for kiosk timer
     Label kioskTimerTitle = new Label("Kiosk Timer:");
@@ -152,7 +148,9 @@ public class ChangeTimerScreen {
     // Setting positioning of all the elements
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(50));
-    //layout.setTop(topContainer);
+    layout.setTop(windowTitle);
+    layout.setCenter(timerShop);
+    //layout.setCenter(timerEditor);  -> later when right part is done and combined
     //layout.setBottom(bottomContainer);
 
     return new Scene(layout, 1920, 1080);
