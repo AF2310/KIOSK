@@ -188,6 +188,20 @@ public class Dictionary {
     addTranslation("pending", "väntande");
     addTranslation("PAID", "Betald");
 
+    // Timer Editor
+    addTranslation("Timer Editor:", "Timerredigerare");
+    addTranslation("Kiosk ", "Kiosk ");  //TODO maybe unnecessary
+    addTranslation("Popup ", "Popup ");  //TODO maybe unnecessary
+    addTranslation("Timer:", "Tidtagare:");
+    addTranslation("Current inactivity timer: ", "Nuvarande inaktivitetstimer: ");
+    addTranslation(" seconds", " sekunder");
+    addTranslation("New timer value (in seconds)", "Ny timervärde (i sekunder)");
+    addTranslation("Update Timer", "Uppdatera timer");
+    addTranslation("Please enter a value >= 5 seconds.", "Vänligen ange ett värde >= 5 sekunder.");
+    addTranslation("Timer updated successfully!", "Timern har uppdaterats!");
+    addTranslation(
+        "Invalid input! Please enter a number.", "Ogiltig inmatning! Vänligen ange ett nummer.");
+
     // Delete/Edit vocabulary
     addTranslation("Edit Product Data", "Redigera produktdata");
     addTranslation("Orders by Hour", "Beställningar per timme");
