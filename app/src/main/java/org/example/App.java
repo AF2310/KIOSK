@@ -7,8 +7,8 @@ import org.example.kiosk.InactivityTimer;
 import org.example.screens.WelcomeScreen;
 
 /**
-* The main app class.
-*/
+ * The main app class.
+ */
 public class App extends Application {
 
   @Override
@@ -20,15 +20,15 @@ public class App extends Application {
     // Create the WelcomeScreen object and get the scene
     WelcomeScreen welcomeScreen = new WelcomeScreen();
     Scene welcomeScene = welcomeScreen.createWelcomeScreen(primaryStage, windowWidth, windowHeight);
-    
-    // Get the welcome scene to stop timer every time on this scene
+
+    // Get welcome scene to stop timer every time on this scene and for later use
     InactivityTimer.getInstance().setWelcomeScene(welcomeScene);
 
     // Force fullscreen mode
     primaryStage.setFullScreen(false);
     // primaryStage.setFullScreenExitHint("");
     // Optional: remove the default "press ESC to exit full screen" message
-    // primaryStage.setResizable(false); 
+    // primaryStage.setResizable(false);
 
     // Set the scene and show the stage
     primaryStage.setScene(welcomeScene);

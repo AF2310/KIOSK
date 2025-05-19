@@ -130,8 +130,7 @@ public class InactivityTimer {
       Label label = new Label("Are you still there?");
       label.setStyle(
           "-fx-font-weight: bold;"
-          + "-fx-font-size: 25px;"
-      );    
+              + "-fx-font-size: 25px;");
 
       // Button for confirmation that user is still active
       MidButton button = new MidButton("Yes", "green", 40);
@@ -141,8 +140,7 @@ public class InactivityTimer {
       Timer popupTimer = new Timer(true);
       popupTimer.schedule(
           getFullResetTask(inactivityPopup, popupTimer),
-          inactivityTimePopup * 1000
-      );
+          inactivityTimePopup * 1000);
 
       // User confirms he's still active
       // -> popup gets removed and all timers reset
@@ -158,12 +156,11 @@ public class InactivityTimer {
       layout.setAlignment(Pos.CENTER);
       layout.setStyle(
           "-fx-background-color: white;"
-          + "-fx-border-color: black;"
-          + "-fx-border-width: 3px;"
-          + "-fx-border-radius: 20;"
-          + "-fx-background-radius: 20;"
-          + "-fx-padding: 30;"
-      );
+              + "-fx-border-color: black;"
+              + "-fx-border-width: 3px;"
+              + "-fx-border-radius: 20;"
+              + "-fx-background-radius: 20;"
+              + "-fx-padding: 30;");
 
       // Outer part to center layout on screen and have round edges properly visible
       StackPane finalLayout = new StackPane(layout);
