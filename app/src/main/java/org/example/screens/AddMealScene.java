@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -67,6 +66,18 @@ public class AddMealScene {
           "-fx-font-size: 18px;"
         );
         products.add(checkBox);
+      }
+
+      for (CheckBox checkbox : products) {
+        checkbox.setOnAction(e -> {
+          if (checkbox.isSelected()) {
+            for (CheckBox otherbox : products) {
+              if (otherbox != checkbox) {
+                otherbox.setSelected(false);
+              }
+            }
+          }
+        });
       }
 
       String sql2 = "SELECT name FROM product WHERE category_id = 2";
