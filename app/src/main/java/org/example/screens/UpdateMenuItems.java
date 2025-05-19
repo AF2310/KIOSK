@@ -29,6 +29,7 @@ import org.example.buttons.MidButton;
 import org.example.menu.Product;
 import org.example.menu.Type;
 
+
 /**
  * Updating menu class.
  */
@@ -87,7 +88,12 @@ public class UpdateMenuItems {
 
       // Set the new (current) scene
       primaryStage.setScene(productDeletionScene.getProductDeletionScene());
+    });
 
+    addMealButton.setOnAction(e -> {
+      AddMealScene addMealScene = new AddMealScene(primaryStage, prevScene);
+      
+      primaryStage.setScene(addMealScene.getAddMealScene());
     });
 
     // Back button -> user goes to previous screen
