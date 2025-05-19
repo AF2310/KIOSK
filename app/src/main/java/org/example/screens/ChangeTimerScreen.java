@@ -15,6 +15,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
+import org.example.buttons.BackBtnWithTxt;
+import org.example.buttons.LangBtn;
 import org.example.kiosk.InactivityTimer;
 // import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
@@ -61,7 +63,7 @@ public class ChangeTimerScreen {
       + "-fx-font-weight: bold;");
 
 
-    // VBox LEFT
+    // Timer editor kiosk - VBOX LEFT
 
     // Label for kiosk timer
     Label kioskTimerTitle = new Label("Kiosk Timer:");
@@ -131,7 +133,7 @@ public class ChangeTimerScreen {
     timerShop.setAlignment(Pos.TOP_LEFT);
 
 
-    // VBOX RIGHT
+    // Timer editor popup - VBOX RIGHT
 
     // Label for kiosk timer
     Label popupTimerTitle = new Label("Kiosk Timer:");
@@ -189,7 +191,7 @@ public class ChangeTimerScreen {
       }
     });
 
-    // Combine left timer editor
+    // Combine right timer editor
     VBox timerPopup = new VBox(
       15,
       popupTimerTitle,
@@ -200,10 +202,34 @@ public class ChangeTimerScreen {
     );
     timerPopup.setAlignment(Pos.TOP_RIGHT);
 
+
+    // Combine both timer editors
+
     HBox timerEditor = new HBox(500, timerShop, timerPopup);
     timerEditor.setAlignment(Pos.CENTER);
 
+
     // Language + Cancel Buttons HBOX BOTTOM
+
+    // Back button
+    // Clicking button means user goes to previous screen
+    var backButton = new BackBtnWithTxt();
+    backButton.setOnAction(e -> {
+      primaryStage.setScene(prevScene);
+    });
+
+    // Language Button
+    // cycles images on click
+    var langButton = new LangBtn();
+
+    // Spacer for Bottom Row
+    Region spacerBottom = new Region();
+    HBox.setHgrow(spacerBottom, Priority.ALWAYS);
+
+    // Bottom row of the screen
+    HBox bottomContainer = new HBox();
+    bottomContainer.setAlignment(Pos.BOTTOM_LEFT);
+    bottomContainer.getChildren().addAll(langButton, spacerBottom, backButton);
     
     // VBOX main layout COMBINE ALL
     // timer editor box
@@ -224,7 +250,7 @@ public class ChangeTimerScreen {
     layout.setTop(windowTitle);
     //layout.setCenter(timerPopup);
     layout.setCenter(timerEditor);  //-> later when right part is done and combined
-    //layout.setBottom(bottomContainer);
+    layout.setBottom(bottomContainer);
 
     return new Scene(layout, 1920, 1080);
   }
