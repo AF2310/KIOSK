@@ -87,8 +87,7 @@ public class SalesStatsScreen {
 
       // Clears out the right side VBox for the new chart
       topRight.getChildren().clear();
-      Map<String, Integer> salesData = countProductSales(wrapper.orders);
-      BarChart<String, Number> chart = createProductSales(salesData);
+      BarChart<String, Number> chart = createProductSales(wrapper.orders);
       topRight.getChildren().add(chart);
 
     });
@@ -99,8 +98,7 @@ public class SalesStatsScreen {
 
       // Clears out the right side VBox for the new chart
       topRight.getChildren().clear();
-      Map<DayOfWeek, Integer> weekdayCounts = countOrdersPerWeekday(wrapper.orders);
-      BarChart<String, Number> chart = createOrdersPerWeekday(weekdayCounts);
+      BarChart<String, Number> chart = createOrdersPerWeekday(wrapper.orders);
       topRight.getChildren().add(chart);
 
     });
@@ -111,8 +109,7 @@ public class SalesStatsScreen {
 
       // Clears out the right side VBox for the new chart
       topRight.getChildren().clear();
-      Map<Double, Integer> hourCounts = countOrdersByHour(wrapper.orders);
-      LineChart<Number, Number> chart = createOrdersByHour(hourCounts);
+      LineChart<Number, Number> chart = createOrdersByHour(wrapper.orders);
       topRight.getChildren().add(chart);
 
     });
@@ -123,8 +120,7 @@ public class SalesStatsScreen {
 
       // Clears out the right side VBox for the new chart
       topRight.getChildren().clear();
-      Map<String, Double> revenueData = calculateProductRevenue(wrapper.orders);
-      PieChart pieChart = createProductRevenue(revenueData);
+      PieChart pieChart = createProductRevenue(wrapper.orders);
       topRight.getChildren().add(pieChart);
 
     });
@@ -135,8 +131,7 @@ public class SalesStatsScreen {
 
       // Clears out the right side VBox for the new chart
       topRight.getChildren().clear();
-      Map<String, Double> revenueData = calculateMonthlyRevenue(wrapper.orders);
-      BarChart<String, Number> barChart = createMonthlyRevenue(revenueData);
+      BarChart<String, Number> barChart = createMonthlyRevenue(wrapper.orders);
       topRight.getChildren().add(barChart);
 
     });
@@ -312,10 +307,11 @@ public class SalesStatsScreen {
     }
 
   }
-  
-  // Data collection for the Products vs Quantity ordered chart
-  private Map<String, Integer> countProductSales(ArrayList<Order> orders) {
 
+  // Rendering the Products vs Quantity ordered chart
+  private BarChart<String, Number> createProductSales(ArrayList<Order> orders) {
+
+    // Data collection Part
     Map<String, Integer> productSales = new HashMap<>();
 
     for (Order order : orders) {
@@ -331,13 +327,7 @@ public class SalesStatsScreen {
 
     }
 
-    return productSales;
-
-  }
-
-  // Rendering the Products vs Quantity ordered chart
-  private BarChart<String, Number> createProductSales(Map<String, Integer> productSales) {
-
+    // Rendering Part
     // Parameter is named xxAxis because of checkstyle naming conventions
     CategoryAxis xxAxis = new CategoryAxis();
     xxAxis.setLabel("Product");
@@ -367,9 +357,10 @@ public class SalesStatsScreen {
     return barChart;
   }
 
-  // Data collection for Orders vs Weekdays chart
-  private Map<DayOfWeek, Integer> countOrdersPerWeekday(ArrayList<Order> orders) {
+  // Rendering Orders vs Weekdays chart
+  private BarChart<String, Number> createOrdersPerWeekday(ArrayList<Order> orders) {
 
+    // Data collection part
     Map<DayOfWeek, Integer> weekdayCounts = new LinkedHashMap<>();
 
     for (Order order : orders) {
@@ -380,13 +371,7 @@ public class SalesStatsScreen {
 
     }
 
-    return weekdayCounts;
-
-  }
-
-  // Rendering Orders vs Weekdays chart
-  private BarChart<String, Number> createOrdersPerWeekday(Map<DayOfWeek, Integer> weekdayCounts) {
-
+    // Rendering Part
     // Parameter is named xxAxis because of checkstyle naming conventions
     CategoryAxis xxAxis = new CategoryAxis();
     xxAxis.setLabel("Weekday");
@@ -415,9 +400,10 @@ public class SalesStatsScreen {
 
   }
 
-  // Data collection for Orders by Hours graph
-  private Map<Double, Integer> countOrdersByHour(ArrayList<Order> orders) {
+  // Rendering Orders by Hours graph
+  private LineChart<Number, Number> createOrdersByHour(ArrayList<Order> orders) {
 
+    // Data collection Part
     Map<Double, Integer> hourCounts = new TreeMap<>();
 
     for (Order order : orders) {
@@ -433,13 +419,7 @@ public class SalesStatsScreen {
 
     }
 
-    return hourCounts;
-
-  }
-
-  // Rendering Orders by Hours graph
-  private LineChart<Number, Number> createOrdersByHour(Map<Double, Integer> hourCount) {
-
+    // Rendering Part
     // Parameter is named xxAxis because of checkstyle naming conventions
     NumberAxis xxAxis = new NumberAxis(0, 24, 0.25);
     xxAxis.setLabel("Hour of Day");
@@ -457,7 +437,7 @@ public class SalesStatsScreen {
     XYChart.Series<Number, Number> series = new XYChart.Series<>();
     series.setName("Volume of Orders");
 
-    hourCount.entrySet().stream()
+    hourCounts.entrySet().stream()
         .sorted(Map.Entry.comparingByKey())
         .forEach(entry -> {
           double hour = entry.getKey();
@@ -472,9 +452,10 @@ public class SalesStatsScreen {
 
   }
 
-  // Data collection for revenue share of products chart
-  private Map<String, Double> calculateProductRevenue(ArrayList<Order> orders) {
+  // Rendering revenue share of products chart
+  private PieChart createProductRevenue(ArrayList<Order> orders) {
 
+    // Data collection part
     Map<String, Double> revenueMap = new HashMap<>();
 
     for (Order order : orders) {
@@ -489,13 +470,7 @@ public class SalesStatsScreen {
 
     }
 
-    return revenueMap;
-
-  }
-
-  // Rendering revenue share of products chart
-  private PieChart createProductRevenue(Map<String, Double> revenueMap) {
-
+    // Rendering part
     PieChart pieChart = new PieChart();
     pieChart.setTitle("Product Revenue Share");
 
@@ -512,10 +487,11 @@ public class SalesStatsScreen {
     return pieChart;
 
   }
+  
+  // Chart rendering month vs revenue (last 12 months)
+  private BarChart<String, Number> createMonthlyRevenue(ArrayList<Order> orders) {
 
-  // Data collection for revenue of last 12 months chart
-  private Map<String, Double> calculateMonthlyRevenue(ArrayList<Order> orders) {
-
+    //Data collection part
     Map<String, Double> monthlyRevenue = new LinkedHashMap<>();
 
     LocalDateTime now = LocalDateTime.now();
@@ -542,13 +518,7 @@ public class SalesStatsScreen {
 
     }
 
-    return monthlyRevenue;
-
-  }
-  
-  // Chart rendering month vs revenue (last 12 months)
-  private BarChart<String, Number> createMonthlyRevenue(Map<String, Double> revenueData) {
-
+    //Rendering part
     CategoryAxis xxAxis = new CategoryAxis();
     xxAxis.setLabel("Month");
 
@@ -561,7 +531,7 @@ public class SalesStatsScreen {
     XYChart.Series<String, Number> series = new XYChart.Series<>();
     series.setName("Revenue");
 
-    for (Map.Entry<String, Double> entry : revenueData.entrySet()) {
+    for (Map.Entry<String, Double> entry : monthlyRevenue.entrySet()) {
 
       series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
 
