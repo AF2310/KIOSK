@@ -88,8 +88,15 @@ public class ChangeTimerScreen {
     layout.setTop(titleBox);
     BorderPane.setMargin(timerEditor, new Insets(200, 0, 50, 0));
     layout.setCenter(timerEditor);
-    
     layout.setBottom(bottomContainer);
+
+    /* // Translate all the text
+    langButton.addAction(event -> {
+      // Toggle the language in LanguageSetting
+      languageSetting.changeLanguage(
+          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
+      languageSetting.updateAllLabels(layout);
+    }); */
 
     return new Scene(layout, 1920, 1080);
   }
