@@ -253,26 +253,40 @@ public class InactivityTimer {
   }
 
   /**
-   * Method for editing the general inacitvity timer in the
+   * Setter for editing the general inacitvity timer in the
    * kiosk.
    *
    * @param newShopInactivityTimer new int time in seconds
    *                               allowed inactivity until popup checker
    */
   public void setNewInactivityTimer(int newShopInactivityTimer) {
-    // TODO for admin menu -> edit timer
-    //this.inactivityTimeShop = newShopInactivityTimer;
+    this.inactivityTimeShop = newShopInactivityTimer;
   }
 
   /**
-   * Method for editing the inactivity timer of the popup that
+   * Getter for editing the general inacitvity timer in the
+   * kiosk.
+   */
+  public int getInactivityTimer() {
+    return inactivityTimeShop;
+  }
+
+  /**
+   * Setter for editing the inactivity timer of the popup that
    * checks if the user is still active.
    *
    * @param newPopupInactivityTimer new int time in seconds
    *                                allowed inactivity in popup until full reset
    */
-  public void setNewPopupInactivityTimer(int newPopupInactivityTimer) {
-    // TODO for admin menu -> edit timer
-    //this.inactivityTimePopup = newPopupInactivityTimer;
+  public void setNewInactivityTimerPopup(int newPopupInactivityTimer) {
+    this.inactivityTimePopup = newPopupInactivityTimer;
+  }
+
+  /**
+   * Getter for editing the inacitvity timer in the
+   * popup of the kiosk.
+   */
+  public int getInactivityTimerPopup() {
+    return inactivityTimePopup;
   }
 }
