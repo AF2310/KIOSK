@@ -37,7 +37,7 @@ public class LangBtn extends RoundButton {
     imagePaths.add(englishImagePath);
     imagePaths.add(swedishImagePath);
 
-    instances.add(new WeakReference<>(this)); // Track instance
+    instances.add(new WeakReference<>(this));
     updateImage(); // Set image based on current language
   }
 
@@ -63,7 +63,7 @@ public class LangBtn extends RoundButton {
     while (iterator.hasNext()) {
       LangBtn button = iterator.next().get();
       if (button == null) {
-        iterator.remove(); // Clean up GC'd references
+        iterator.remove();
       } else {
         button.updateImage();
       }
@@ -84,7 +84,7 @@ public class LangBtn extends RoundButton {
       input.setPromptText(dictionary.translate(input.getPromptText()));
     }
 
-    LangBtn.updateAllLanguageButtons(); // Ensure all LangBtns update image
+    LangBtn.updateAllLanguageButtons();
   }
 
   /**
