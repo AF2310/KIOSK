@@ -129,10 +129,23 @@ public class SalesStatsScreen {
 
     });
 
+    // Button for Revenue of last 12 month
+    MidButton revenuesBtn = new MidButton("Revenue (last 12 Month)", "rgb(255, 255, 255)", 30);
+    revenuesBtn.setOnAction(e -> {
+
+      // Clears out the right side VBox for the new chart
+      topRight.getChildren().clear();
+      Map<String, Double> revenueData = calculateMonthlyRevenue(wrapper.orders);
+      BarChart<String, Number> barChart = createMonthlyRevenue(revenueData);
+      topRight.getChildren().add(barChart);
+
+    });
+
     // VBox for the Buttons
     VBox topLeft = new VBox();
     topLeft.getChildren().addAll(
-        pageLabel, productSalesBtn, ordersPerDayBtn, ordersByHourBtn, productRevenuesBtn);
+        pageLabel, productSalesBtn, ordersPerDayBtn,
+        ordersByHourBtn, productRevenuesBtn, revenuesBtn);
     topLeft.setPadding(new Insets(10));
     topLeft.setSpacing(25);
     topLeft.setPrefWidth(640);
@@ -497,6 +510,65 @@ public class SalesStatsScreen {
     }
 
     return pieChart;
+
+  }
+
+  // Data collection for revenue of last 12 months chart
+  private Map<String, Double> calculateMonthlyRevenue(ArrayList<Order> orders) {
+
+    Map<String, Double> monthlyRevenue = new LinkedHashMap<>();
+
+    LocalDateTime now = LocalDateTime.now();
+
+    for (int i = 11; i >= 0; i--) {
+
+      LocalDateTime month = now.minusMonths(i);
+      String label = month.getYear() + "-" + String.format("%02d", month.getMonthValue());
+      monthlyRevenue.put(label, 0.0);
+
+    }
+
+    for (Order order : orders) {
+
+      LocalDateTime date = order.getOrderDate().toLocalDateTime();
+      String label = date.getYear() + "-" + String.format("%02d", date.getMonthValue());
+
+      if (monthlyRevenue.containsKey(label)) {
+
+        double updated = monthlyRevenue.get(label) + order.getAmountTotal();
+        monthlyRevenue.put(label, updated);
+
+      }
+
+    }
+
+    return monthlyRevenue;
+
+  }
+  
+  // Chart rendering month vs revenue (last 12 months)
+  private BarChart<String, Number> createMonthlyRevenue(Map<String, Double> revenueData) {
+
+    CategoryAxis xxAxis = new CategoryAxis();
+    xxAxis.setLabel("Month");
+
+    NumberAxis yyAxis = new NumberAxis();
+    yyAxis.setLabel("Revenue in SEK");
+
+    BarChart<String, Number> barChart = new BarChart<>(xxAxis, yyAxis);
+    barChart.setTitle("Total Revenue of the last 12 Months");
+
+    XYChart.Series<String, Number> series = new XYChart.Series<>();
+    series.setName("Revenue");
+
+    for (Map.Entry<String, Double> entry : revenueData.entrySet()) {
+
+      series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+
+    }
+
+    barChart.getData().add(series);
+    return barChart;
 
   }
 
