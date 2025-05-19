@@ -2,6 +2,7 @@ package org.example.screens;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -43,7 +44,12 @@ public class ChangeTimerScreen {
    */
   public Scene getChangeTimerScene() {
 
-    // title label
+    // Label for screen title
+    Label windowTitle = new Label("Timer Editor:");
+    windowTitle.setStyle(
+      "-fx-font-size: 45px;"
+      + "-fx-font-weight: bold;");
+
 
     // VBox LEFT
     // Label
