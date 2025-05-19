@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import org.example.animations.FadingAnimation;
 import org.example.boxes.CheckoutGridWithButtons;
 import org.example.buttons.BackBtnWithTxt;
-import org.example.buttons.CancelButtonWithText;
+import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.ConfirmOrderButton;
 import org.example.buttons.EatHereButton;
 import org.example.buttons.LangBtn;
@@ -173,7 +173,7 @@ public class CheckoutScreen {
     backButton.setOnAction(e -> primaryStage.setScene(mainMenuScreen));
 
     // Cancel button
-    var cancelButton = new CancelButtonWithText();
+    var cancelButton = new ColorSquareButtonWithImage("Cancel", "/cancel.png");
     // clicking button means cancellation of order
     // and user gets send back to welcome screen
     cancelButton.setOnAction(e -> {

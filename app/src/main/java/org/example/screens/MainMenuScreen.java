@@ -35,6 +35,7 @@ import javafx.stage.Stage;
 import org.example.buttons.ArrowButton;
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.CartSquareButton;
+import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SearchBar;
 import org.example.kiosk.LabelManager;
@@ -383,7 +384,7 @@ public class MainMenuScreen {
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
     // Create cancel button
-    var cancelButton = new CancelButtonWithText();
+    var cancelButton = new ColorSquareButtonWithImage("Cancel", "/cancel.png");
 
     cancelButton.setOnAction(e -> {
       Cart.getInstance().clearCart();

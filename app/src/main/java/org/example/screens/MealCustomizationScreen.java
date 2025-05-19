@@ -26,6 +26,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.CancelButtonWithText;
+import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.TitleLabel;
@@ -364,11 +365,9 @@ public class MealCustomizationScreen {
     centerBox.getChildren().addAll(drinkOptionsGrid, mealDisplay);
     layout.setCenter(centerBox);
 
-
-
     var langButton = new LangBtn();
-    var confirmBtn = new SqrBtnWithOutline("Confirm", "green_tick.png", "rgb(81, 173, 86)");
-    var cancelBtn = new CancelButtonWithText();
+    var confirmBtn = new ColorSquareButtonWithImage("Confirm", "green_tick.png");
+    var cancelBtn = new ColorSquareButtonWithImage("Cancel", "/cancel.png");
     var backButton = new BackBtnWithTxt();
 
     Region spacer1 = new Region();
