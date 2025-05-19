@@ -251,4 +251,26 @@ public class InactivityTimer {
 
     return resetTask;
   }
+
+  /**
+   * Method for editing the general inacitvity timer in the
+   * kiosk.
+   *
+   * @param newShopInactivityTimer new int time in seconds
+   *                               allowed inactivity until popup checker
+   */
+  public void setNewInactivityTimer(int newShopInactivityTimer) {
+    // TODO for admin menu -> edit timer
+  }
+
+  /**
+   * Method for editing the inactivity timer of the popup that
+   * checks if the user is still active.
+   *
+   * @param newPopupInactivityTimer new int time in seconds
+   *                                allowed inactivity in popup until full reset
+   */
+  public void setNewPopupInactivityTimer(int newPopupInactivityTimer) {
+    // TODO for admin menu -> edit timer
+  }
 }
