@@ -1,13 +1,17 @@
 package org.example.buttons;
 
+import java.sql.Connection;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import org.example.kiosk.LabelManager;
 import org.example.screens.BackgroundColorStore;
+import org.example.screens.CustomizationScreen;
 
 /**
  * A reusable component for the three color pickers used in CustomizationScreen.
@@ -21,7 +25,13 @@ public class ColorPickersPane extends HBox {
    * Constructs a ColorPickersPane with 
    * three color pickers for primary, secondary, and background colors.
    */
-  public ColorPickersPane() {
+  public ColorPickersPane(
+      Stage primaryStage,
+      Double windowWidth,
+      Double windowHeight,
+      Scene welcomeScrScene,
+      Connection conn) {
+
     setSpacing(40);
     setAlignment(Pos.CENTER);
 
@@ -52,10 +62,16 @@ public class ColorPickersPane extends HBox {
     getChildren().addAll(primColorVbox, secColorVbox, sceneColorVbox);
 
     // Setup color change listeners
-    setupListeners();
+    setupListeners(primaryStage, windowWidth, windowHeight, welcomeScrScene, conn);
   }
 
-  private void setupListeners() {
+  private void setupListeners(
+      Stage primaryStage,
+      Double windowWidth,
+      Double windowHeight,
+      Scene welcomeScrScene,
+      Connection conn) {
+        
     primClrPicker.setOnAction(e -> {
       Color selectedColor = primClrPicker.getValue();
       BlackButtonWithImage.setButtonBackgroundColor(selectedColor);
@@ -77,6 +93,11 @@ public class ColorPickersPane extends HBox {
     sceneColorPicker.setOnAction(e -> {
       Color selectedColor = sceneColorPicker.getValue();
       BackgroundColorStore.setCurrentBackgroundColor(selectedColor);
+
+      Scene statsScene = new CustomizationScreen().showCustomizationScreen(
+          primaryStage, windowWidth, windowHeight, welcomeScrScene, conn);
+      primaryStage.setScene(statsScene);
+
     });
   }
 

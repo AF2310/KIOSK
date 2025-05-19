@@ -15,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.buttons.BlackButtonWithImage;
 import org.example.buttons.CancelButtonWithText;
@@ -82,7 +83,8 @@ public class CustomizationScreen {
     Label adminMenuText = new TitleLabel("Set & Test Design");
 
     // Colopickers moved to a separate file 
-    var colorPickers = new ColorPickersPane();
+    var colorPickers = new ColorPickersPane(
+        primaryStage, windowWidth, windowHeight, welcomeScrScene, conn);
 
     // Wraps top part of the screen
     adminMenuLayout.getChildren().addAll(adminMenuText, nameBox, colorPickers);
@@ -167,6 +169,15 @@ public class CustomizationScreen {
 
     LanguageSetting.getInstance().registerRoot(root);
     LanguageSetting.getInstance().updateAllLabels(root);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      customizationScene.setBackgroundColor(bgColor);
+
+    }
 
     return customizationScene;
   }
