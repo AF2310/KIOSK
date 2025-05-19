@@ -261,6 +261,7 @@ public class InactivityTimer {
    */
   public void setNewInactivityTimer(int newShopInactivityTimer) {
     // TODO for admin menu -> edit timer
+    //this.inactivityTimeShop = newShopInactivityTimer;
   }
 
   /**
@@ -272,5 +273,6 @@ public class InactivityTimer {
    */
   public void setNewPopupInactivityTimer(int newPopupInactivityTimer) {
     // TODO for admin menu -> edit timer
+    //this.inactivityTimePopup = newPopupInactivityTimer;
   }
 }
