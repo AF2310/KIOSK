@@ -2,6 +2,7 @@ package org.example.screens;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
@@ -120,19 +121,31 @@ public class AddMealScene {
           ResultSet rs = stmt.executeQuery();
 
           rs.next();
-          int productId = rs.getInt("product_id");
           rs.close();
           stmt.close();
-
-          String sql2 = "INSERT INTO meal (name, description, price, image_url, product_id) VALUES (?, ?, ?, ?, ?)";
-          PreparedStatement stmt2 = connection.getConnection().prepareStatement(sql2);
+          
+          String sql2 = "INSERT INTO meal"
+              + "(name, description, price, image_url, product_id) VALUES (?, ?, ?, ?, ?)";
+          PreparedStatement stmt2 = connection.getConnection().prepareStatement(
+                sql2, PreparedStatement.RETURN_GENERATED_KEYS);
           stmt2.setString(1, mealName.getText());
           stmt2.setString(2, mealDescription.getText());
           stmt2.setDouble(3, Double.parseDouble(mealPrice.getText()));
           stmt2.setString(4, "/food/default_meal.png");
+          
+          int productId = rs.getInt("product_id");
           stmt2.setInt(5, productId);
           stmt2.executeUpdate();
+          
+          try (ResultSet generatedKeys = stmt2.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+              mealId = generatedKeys.getInt(1);
+            } else {
+              throw new SQLException("Creating producted failed, no ID obtained");
+            }
+          }          
           stmt2.close();
+          connection.getConnection().commit();
           System.out.println("Ended");
         } catch (Exception ex) {
           ex.printStackTrace();
@@ -140,6 +153,7 @@ public class AddMealScene {
       } else {
         System.out.println("Choose only one Product");
       }
+
     });
 
     BorderPane layout = new BorderPane();
