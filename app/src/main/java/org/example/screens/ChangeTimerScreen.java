@@ -52,170 +52,10 @@ public class ChangeTimerScreen {
   public Scene getChangeTimerScene() {
 
     // Label for screen title
-    Label windowTitle = new Label("Timer Editor:");
-    windowTitle.setStyle(
-      "-fx-font-size: 45px;"
-      + "-fx-font-weight: bold;");
-    windowTitle.setAlignment(Pos.TOP_CENTER);
+    HBox titleBox = getWindowTitle();
 
-    HBox titleBox = new HBox(windowTitle);
-    titleBox.setAlignment(Pos. CENTER);
-    titleBox.setPadding(new Insets(20, 0, 60, 0));
-
-
-    // Timer editor kiosk - VBOX LEFT
-
-    VBox timerShop = getEditorBox(true);
-
-    /* // Label for kiosk timer
-    Label kioskTimerTitle = new Label("Kiosk Timer:");
-    kioskTimerTitle.setStyle(
-      "-fx-font-size: 30px;"
-      + "-fx-font-weight: bold;");
-
-    // Current kiosk timer value
-    Label currentKioskTimer = new Label(
-      "Current inactivity timer (kiosk): "
-      + InactivityTimer.getInstance().getInactivityTimer()
-      + " seconds"
-    );
-    currentKioskTimer.setStyle("-fx-font-size: 20px;");
-
-    // Input field to enter new value
-    TextField kioskTimerInput = new TextField();
-    kioskTimerInput.setPromptText("New timer value (in seconds)");
-    kioskTimerInput.setMaxWidth(250);
-
-    // Label for feedback after update
-    Label updateFeedbackL = new Label();
-    updateFeedbackL.setStyle("-fx-font-size: 18px;");
-    
-    // Button to submit new value
-    Button updateButtonKiosk = new Button("Update Timer");
-
-    updateButtonKiosk.setOnAction(e -> {
-      String input = kioskTimerInput.getText();
-
-      // Error handling of incorrect value input
-      try {
-        // If input is int value
-        int newValue = Integer.parseInt(input);
-
-        // If int value is not reasonable (realistic)
-        if (newValue < 5) {
-            updateFeedbackL.setText("Please enter a value >= 5 seconds.");
-            // No value change
-            return;
-        }
-
-        // User entered proper value -> execute value change
-
-        // Set new inactivity timer
-        InactivityTimer.getInstance().setNewInactivityTimer(newValue);
-
-        // Update display label
-        currentKioskTimer.setText(
-          "Current inactivity timer (kiosk): "
-          + newValue + " seconds");
-
-        updateFeedbackL.setText("Timer updated successfully!");
-
-        // User entered a letter -> no value change
-      } catch (NumberFormatException ex) {
-          updateFeedbackL.setText("Invalid input! Please enter a number.");
-      }
-    });
-
-    // Combine left timer editor
-    VBox timerShop = new VBox(
-      15,
-      kioskTimerTitle,
-      currentKioskTimer,
-      kioskTimerInput,
-      updateButtonKiosk,
-      updateFeedbackL
-    );
-    timerShop.setAlignment(Pos.TOP_LEFT); */
-
-
-    // Timer editor popup - VBOX RIGHT
-
-    VBox timerPopup = getEditorBox(false);
-
-    /* // Label for kiosk timer
-    Label popupTimerTitle = new Label("Popup Timer:");
-    popupTimerTitle.setStyle(
-      "-fx-font-size: 30px;"
-      + "-fx-font-weight: bold;");
-
-    // Current kiosk timer value
-    Label currentPopupTimer = new Label(
-      "Current inactivity timer (kiosk): "
-      + InactivityTimer.getInstance().getInactivityTimerPopup()
-      + " seconds"
-    );
-    currentPopupTimer.setStyle("-fx-font-size: 20px;");
-
-    // Input field to enter new value
-    TextField popupTimerInput = new TextField();
-    popupTimerInput.setPromptText("New timer value (in seconds)");
-    popupTimerInput.setMaxWidth(250);
-
-    // Label for feedback after update
-    Label updateFeedbackR = new Label();
-    updateFeedbackR.setStyle("-fx-font-size: 18px;");
-    
-    // Button to submit new value
-    Button updateButtonPopup = new Button("Update Timer");
-
-    updateButtonPopup.setOnAction(e -> {
-      String input = popupTimerInput.getText();
-
-      // Error handling of incorrect value input
-      try {
-        // If input is int value
-        int newValue = Integer.parseInt(input);
-
-        // If int value is not reasonable (realistic)
-        if (newValue < 5) {
-            updateFeedbackR.setText("Please enter a value >= 5 seconds.");
-            // No value change
-            return;
-        }
-
-        // User entered proper value -> execute value change
-
-        // Set new inactivity timer
-        InactivityTimer.getInstance().setNewInactivityTimerPopup(newValue);
-
-        // Update display label
-        currentPopupTimer.setText(
-          "Current inactivity timer (popup): "
-          + newValue + " seconds");
-
-        updateFeedbackR.setText("Timer updated successfully!");
-
-        // User entered a letter -> no value change
-      } catch (NumberFormatException ex) {
-          updateFeedbackR.setText("Invalid input! Please enter a number.");
-      }
-    });
-
-    // Combine right timer editor
-    VBox timerPopup = new VBox(
-      15,
-      popupTimerTitle,
-      currentPopupTimer,
-      popupTimerInput,
-      updateButtonPopup,
-      updateFeedbackR
-    );
-    timerPopup.setAlignment(Pos.TOP_RIGHT); */
-
-
-    // Combine both timer editors
-
-    HBox timerEditor = new HBox(400, timerShop, timerPopup);
+    // Get editor for kiosk timer and popup timer and combine both
+    HBox timerEditor = new HBox(400, getEditorBox(true), getEditorBox(false));
     timerEditor.setAlignment(Pos.CENTER);
 
 
@@ -242,7 +82,7 @@ public class ChangeTimerScreen {
     bottomContainer.getChildren().addAll(langButton, spacerBottom, backButton);
 
 
-    // Setting positioning of all the elements
+    // Setting positioning of all the elements - putting all elements together
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(50));
     layout.setTop(titleBox);
@@ -255,12 +95,31 @@ public class ChangeTimerScreen {
   }
 
   /**
+   * Helper method to get the window's title.
+   *
+   * @return window title in an HBox
+   */
+  private HBox getWindowTitle() {
+    // Label for screen title
+    Label windowTitle = new Label("Timer Editor:");
+    windowTitle.setStyle(
+      "-fx-font-size: 45px;"
+      + "-fx-font-weight: bold;");
+    windowTitle.setAlignment(Pos.TOP_CENTER);
+
+    HBox titleBox = new HBox(windowTitle);
+    titleBox.setAlignment(Pos. CENTER);
+    titleBox.setPadding(new Insets(20, 0, 60, 0));
+
+    return titleBox;
+  }
+
+  /**
    * Flexible helper method for the timer editor boxes.
    *
-   * @param title title of the editor
    * @param isKioskTimer true if it's the kiosk timer
    *                     false it it's the popup timer
-   * @return
+   * @return VBox containing one timer editor
    */
   private VBox getEditorBox(boolean isKioskTimer) {
 
