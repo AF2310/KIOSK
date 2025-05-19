@@ -2,8 +2,6 @@ package org.example.screens;
 
 import java.sql.Connection;
 import java.util.List;
-
-import javafx.collections.ListChangeListener.Change;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -58,8 +56,7 @@ public class AdminMenuScreen {
     centerGrid.setAlignment(Pos.CENTER);
 
     // All the same instances of the MidButton
-    MidButton updateMenuBtn = new MidButton("Update Menu Items", "rgb(255, 255, 255)", 30);
-    
+
     MidButton orderHistoryBtn = new MidButton("Order History", "rgb(255, 255, 255)", 30);
     orderHistoryBtn.setOnAction(e -> {
       Scene historyScene = new AdminOrdHistoryScreen().showHistoryScene(
@@ -67,7 +64,9 @@ public class AdminMenuScreen {
           adminMenuLayout.getScene());
       primaryStage.setScene(historyScene);
     });
-      
+
+    MidButton updateMenuBtn = new MidButton("Update Menu Items", "rgb(255, 255, 255)", 30);
+    
     MidButton salesSummaryBtn = new MidButton("See Sales Summary", "rgb(255, 255, 255)", 30);
     salesSummaryBtn.setOnAction(e -> {
       Scene statsScene = new SalesStatsScreen().showStatsScene(
@@ -83,6 +82,7 @@ public class AdminMenuScreen {
           adminMenuLayout.getScene()).getChangeTimerScene();
       primaryStage.setScene(timerEditor);
     });
+
     MidButton specialOffersBtn = new MidButton("Set Special Offers", "rgb(255, 255, 255)", 30);
     
     centerGrid.add(updateMenuBtn, 0, 0);
