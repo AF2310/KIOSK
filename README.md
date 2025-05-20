@@ -126,3 +126,5 @@ Vince created the sales summary stats section, featuring four different graphs: 
 Arseny translated both the admin and customer menus. He also moved the database to allow more simultanious connections. Also worked on merging.
 
 We had 2 meetings. One after the meeting with client in person, to discuss this sprints tasks in details and one in discord on monday to wrap up the sprint. Each meeting was an hour long.
+
+![alt text](references/Class_Sp20.png)

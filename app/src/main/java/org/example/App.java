@@ -3,11 +3,12 @@ package org.example;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.example.kiosk.InactivityTimer;
 import org.example.screens.WelcomeScreen;
 
 /**
-* The main app class.
-*/
+ * The main app class.
+ */
 public class App extends Application {
 
   @Override
@@ -20,16 +21,23 @@ public class App extends Application {
     WelcomeScreen welcomeScreen = new WelcomeScreen();
     Scene welcomeScene = welcomeScreen.createWelcomeScreen(primaryStage, windowWidth, windowHeight);
 
+    // Get welcome scene to stop timer every time on this scene and for later use
+    InactivityTimer.getInstance().setWelcomeScene(welcomeScene);
+
     // Force fullscreen mode
     primaryStage.setFullScreen(false);
     // primaryStage.setFullScreenExitHint("");
     // Optional: remove the default "press ESC to exit full screen" message
-    // primaryStage.setResizable(false); 
+    // primaryStage.setResizable(false);
 
     // Set the scene and show the stage
     primaryStage.setScene(welcomeScene);
     primaryStage.setTitle("Self Check Kiosk by Clarke");
     primaryStage.show();
+
+    // Stop timer globally when application is closed,
+    // so application wont run even after closing the window
+    primaryStage.setOnCloseRequest(e -> InactivityTimer.getInstance().stopTimer());
   }
 
   /**

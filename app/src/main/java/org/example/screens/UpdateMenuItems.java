@@ -68,7 +68,7 @@ public class UpdateMenuItems {
       ProductEditorScene productEditor = new ProductEditorScene(
           primaryStage,
           prevScene,
-          getProductTable(true, true, true, true));
+          getProductTable(true, true, true, true, true));
 
       // Set the new (current) scene
       primaryStage.setScene(productEditor.getProductEditorScene());
@@ -81,7 +81,7 @@ public class UpdateMenuItems {
       DeleteProductScene productDeletionScene = new DeleteProductScene(
           primaryStage,
           prevScene,
-          getProductTable(false, false, false, false));
+          getProductTable(false, false, false, false, false));
 
       // Set the new (current) scene
       primaryStage.setScene(productDeletionScene.getProductDeletionScene());
@@ -128,8 +128,7 @@ public class UpdateMenuItems {
       langButton.updateLanguage(List.of(
           addProductButton.getButtonLabel(),
           editProductButton.getButtonLabel(),
-          removeProductButton.getButtonLabel()
-      ));
+          removeProductButton.getButtonLabel()));
     });
 
     // Position the language button in the bottom-left corner
@@ -142,7 +141,7 @@ public class UpdateMenuItems {
     layout.setCenter(gridPane);
     layout.setBottom(bottomContainer);
 
-    //put everything into a stackpane
+    // put everything into a stackpane
     StackPane layoutWithLangButton = new StackPane(layout, langButton);
 
     Scene updateItemScene = new Scene(layoutWithLangButton, 1920, 1080);
@@ -179,7 +178,8 @@ public class UpdateMenuItems {
       boolean priceEditable,
       boolean descriptionEditable,
       boolean activityEditable,
-      boolean nameEditable) {
+      boolean nameEditable,
+      boolean timeEditable) {
 
     // Product ID column
     TableColumn<Product, Integer> idColumn = new TableColumn<>("Product ID");
@@ -350,6 +350,39 @@ public class UpdateMenuItems {
     }
     priceColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
 
+    // Product preparation time column
+    TableColumn<Product, Integer> timeColumn = new TableColumn<>("Preparation Time");
+    timeColumn.setCellValueFactory(new PropertyValueFactory<>("preparationTime"));
+
+    // If product preparation time is editable
+    if (timeEditable) {
+      timeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+      timeColumn.setOnEditCommit(event -> {
+        Product product = event.getRowValue();
+        int newTime = event.getNewValue();
+        int productId = product.getId();
+        product.setPreparationTime(newTime);
+
+        // TODO: This will be moved later
+        try {
+          Connection connection = DriverManager.getConnection(
+              "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+                  + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+                  + "?user=u5urh19mtnnlgmog"
+                  + "&password=zPgqf8o6na6pv8j8AX8r"
+                  + "&useSSL=true"
+                  + "&allowPublicKeyRetrieval=true");
+
+          // update the newly inserted price in database
+          updateProductPreptime(newTime, productId, connection);
+
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      });
+    }
+    timeColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+
     // Creating Table
     TableView<Product> productTable = new TableView<>();
     productTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
@@ -364,6 +397,7 @@ public class UpdateMenuItems {
     productTable.getColumns().add(categoryColumn);
     productTable.getColumns().add(activityColumn);
     productTable.getColumns().add(priceColumn);
+    productTable.getColumns().add(timeColumn);
 
     // Querys data into the table
     try {
@@ -482,8 +516,8 @@ public class UpdateMenuItems {
     ArrayList<Product> products = new ArrayList<>();
 
     // SQL query to fetch needed data from database
-    String sql = "SELECT p.product_id, p.`name`, "
-        + "p.description, c.`name` AS type, p.is_active, p.price "
+    String sql = "SELECT p.product_id, p.`name`, p.description, "
+        + "c.`name` AS type, p.is_active, p.price, p.preparation_time "
         + "FROM product p "
         + "JOIN category c ON p.category_id = c.category_id";
 
@@ -499,6 +533,7 @@ public class UpdateMenuItems {
         Type type = Type.valueOf(rs.getString("type").toUpperCase());
         int isActive = rs.getInt("is_active");
         double price = rs.getDouble("price");
+        int prepTime = rs.getInt("preparation_time");
 
         // Make new product with all fetched database data
         Product product = new Product() {
@@ -509,6 +544,7 @@ public class UpdateMenuItems {
         product.setDescription(description);
         product.setActivity(isActive);
         product.setPrice(price);
+        product.setPreparationTime(prepTime);
 
         // Add completed product to array
         products.add(product);
@@ -539,6 +575,32 @@ public class UpdateMenuItems {
 
     try (PreparedStatement stmt = connection.prepareStatement(sql)) {
       stmt.setDouble(1, newPrice);
+      stmt.setInt(2, productId);
+      stmt.executeUpdate();
+    }
+  }
+
+  /**
+   * This method updates the preparation time of a specific product in
+   * the database.
+   * This method is used in the update price section of the admin menu.
+   *
+   * @param newTime    int new preparation time of the product
+   * @param productId  int product id of product that will be updated
+   * @param connection database connection
+   * @throws SQLException database error
+   */
+  private void updateProductPreptime(
+      int newTime,
+      int productId,
+      Connection connection) throws SQLException {
+
+    String sql = "UPDATE product "
+        + "SET preparation_time = ? "
+        + "WHERE product_id = ?";
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+      stmt.setDouble(1, newTime);
       stmt.setInt(2, productId);
       stmt.executeUpdate();
     }

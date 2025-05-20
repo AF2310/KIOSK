@@ -45,10 +45,10 @@ public class ProductEditorScene {
   }
 
   /**
-   * This is the method to create the scene for deleting
+   * This is the method to create the scene for editing
    * products in the admin menu.
    *
-   * @return product deletion menu scene
+   * @return product editor scene
    */
   public Scene getProductEditorScene() {
 

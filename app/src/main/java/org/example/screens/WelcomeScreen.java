@@ -10,6 +10,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -20,6 +22,7 @@ import org.example.buttons.ColorBtnOutlineImage;
 import org.example.buttons.KioskName;
 import org.example.buttons.LangBtn;
 import org.example.kiosk.LabelManager;
+import org.example.kiosk.InactivityTimer;
 import org.example.kiosk.LanguageSetting;
 import org.example.sql.SqlConnectionCheck;
 
@@ -181,6 +184,18 @@ public class WelcomeScreen {
             0,
             "eatHere");
         primaryStage.setScene(mainMenuScene);
+
+        InactivityTimer.getInstance().setPrimaryStage(primaryStage);
+        InactivityTimer.getInstance().startTimer();
+
+        // Any movement of the user resets the inactivity timer
+        primaryStage.addEventFilter(
+            MouseEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
+        );
+        primaryStage.addEventFilter(
+            KeyEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
+        );
+
       } catch (SQLException ex) {
         ex.printStackTrace();
       }
@@ -198,6 +213,18 @@ public class WelcomeScreen {
             0,
             "takeaway");
         primaryStage.setScene(mainMenuScene);
+
+        InactivityTimer.getInstance().setPrimaryStage(primaryStage);
+        InactivityTimer.getInstance().startTimer();
+
+        // Any movement of the user resets the inactivity timer
+        primaryStage.addEventFilter(
+            MouseEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
+        );
+        primaryStage.addEventFilter(
+            KeyEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
+        );
+
       } catch (SQLException ex) {
         ex.printStackTrace();
       }

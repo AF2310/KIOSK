@@ -38,6 +38,7 @@ import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SearchBar;
 import org.example.kiosk.LabelManager;
+import org.example.kiosk.InactivityTimer;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Imenu;
 import org.example.menu.Meal;
@@ -416,9 +417,13 @@ public class MainMenuScreen {
     var cancelButton = new ColorSquareButtonWithImage("Cancel", "/cancel.png");
 
     cancelButton.setOnAction(e -> {
+
       Cart.getInstance().clearCart();
       System.out.println("Order canceled!");
+
       primaryStage.setScene(welcomeScrScene);
+      InactivityTimer.getInstance().setPrimaryStage(primaryStage);
+      InactivityTimer.getInstance().stopTimer();
     });
 
     // Create Cart button

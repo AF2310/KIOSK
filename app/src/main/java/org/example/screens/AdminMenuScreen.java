@@ -75,6 +75,13 @@ public class AdminMenuScreen {
     });
 
     MidButton changeTimerBtn = new MidButton("Change Timer Setting", "rgb(255, 255, 255)", 30);
+    changeTimerBtn.setOnAction(e -> {
+      Scene timerEditor = new ChangeTimerScreen(
+          primaryStage,
+          adminMenuLayout.getScene()).getChangeTimerScene();
+      primaryStage.setScene(timerEditor);
+    });
+
     MidButton specialOffersBtn = new MidButton("Set Special Offers", "rgb(255, 255, 255)", 30);
 
     centerGrid.add(updateMenuBtn, 0, 0);

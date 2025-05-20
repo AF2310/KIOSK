@@ -26,7 +26,6 @@ public class LanguageSetting {
   private final Dictionary dictionary;
   private String selectedLanguage;
   public List<String> availableLanguages;
-
   private final List<Parent> registeredRoots = new ArrayList<>();
 
   /**
