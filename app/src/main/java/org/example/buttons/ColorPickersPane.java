@@ -30,7 +30,10 @@ public class ColorPickersPane extends HBox {
       Double windowWidth,
       Double windowHeight,
       Scene welcomeScrScene,
-      Connection conn) {
+      Connection conn,
+      Color initialPrimeColor,
+      Color initialSecColor,
+      Color initialBackgrounColor) {
 
     setSpacing(40);
     setAlignment(Pos.CENTER);
@@ -38,7 +41,7 @@ public class ColorPickersPane extends HBox {
     // Primary Color Picker
     Label primClrLabel = new Label("Prime color: ");
     primClrLabel.setStyle("-fx-font-size: 25px; -fx-font-weight: bold;");
-    primClrPicker = new ColorPicker(Color.BLACK);
+    primClrPicker = new ColorPicker(initialPrimeColor);
     primClrPicker.setPrefSize(200, 50);
     VBox primColorVbox = new VBox(5, primClrLabel, primClrPicker);
     primColorVbox.setAlignment(Pos.CENTER);
@@ -46,7 +49,7 @@ public class ColorPickersPane extends HBox {
     // Secondary Color Picker
     Label secPickerLbl = new Label("Secondary color: ");
     secPickerLbl.setStyle("-fx-font-size: 25px; -fx-font-weight: bold;");
-    secClrPicker = new ColorPicker(Color.BLACK);
+    secClrPicker = new ColorPicker(initialSecColor);
     secClrPicker.setPrefSize(200, 50);
     VBox secColorVbox = new VBox(5, secPickerLbl, secClrPicker);
     secColorVbox.setAlignment(Pos.CENTER);
@@ -54,7 +57,7 @@ public class ColorPickersPane extends HBox {
     // Background Color Picker
     Label scenePicker = new Label("Background color: ");
     scenePicker.setStyle("-fx-font-size: 25px; -fx-font-weight: bold;");
-    sceneColorPicker = new ColorPicker(Color.BLACK);
+    sceneColorPicker = new ColorPicker(initialBackgrounColor);
     sceneColorPicker.setPrefSize(200, 50);
     VBox sceneColorVbox = new VBox(5, scenePicker, sceneColorPicker);
     sceneColorVbox.setAlignment(Pos.CENTER);

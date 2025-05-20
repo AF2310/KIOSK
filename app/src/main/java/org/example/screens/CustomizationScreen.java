@@ -18,7 +18,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.buttons.BlackButtonWithImage;
-import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.ColorBtnOutlineImage;
 import org.example.buttons.ColorButtonWithImage;
 import org.example.buttons.ColorPickersPane;
@@ -84,7 +83,14 @@ public class CustomizationScreen {
 
     // Colopickers moved to a separate file 
     var colorPickers = new ColorPickersPane(
-        primaryStage, windowWidth, windowHeight, welcomeScrScene, conn);
+        primaryStage,
+        windowWidth,
+        windowHeight,
+        welcomeScrScene,
+        conn,
+        TitleLabel.getTextColor(),
+        ColorButtonWithImage.getButtonColor(),
+        BackgroundColorStore.getCurrentBackgroundColor());
 
     // Wraps top part of the screen
     adminMenuLayout.getChildren().addAll(adminMenuText, nameBox, colorPickers);
@@ -120,13 +126,13 @@ public class CustomizationScreen {
     HBox.setHgrow(spacerBottom, Priority.ALWAYS);
 
     // Similar to a normal cancel button, it just has text under the image
-    CancelButtonWithText cancelButton = new ColorSquareButtonWithImage("Cancel", "/cancel.png");
-    HBox bottomRightBox = new HBox(cancelButton);
+    ColorSquareButtonWithImage cancelBtn = new ColorSquareButtonWithImage("Cancel", "/cancel.png");
+    HBox bottomRightBox = new HBox(cancelBtn);
     bottomRightBox.setAlignment(Pos.BOTTOM_RIGHT);
 
     // go back to the main screen if clicked
     // reinstantiates welcome screen, so the color change takes effect
-    cancelButton.setOnAction(e -> {
+    cancelBtn.setOnAction(e -> {
 
       try {
 
