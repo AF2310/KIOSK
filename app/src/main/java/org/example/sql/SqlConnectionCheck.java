@@ -1,7 +1,6 @@
 package org.example.sql;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import javafx.scene.control.Label;
 
@@ -12,7 +11,6 @@ public class SqlConnectionCheck {
 
   // Declare the Label
   private Label mysql;
-  private Connection connection;
 
   /**
    * Construct the class.
@@ -20,21 +18,8 @@ public class SqlConnectionCheck {
   public SqlConnectionCheck() {
     // SQL Connection starts here
     mysql = new Label(); // Initialize the Label variable
-
-    try {
-      // Establish connection
-      connection = DriverManager.getConnection(
-          "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-          + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-          + "?user=u5urh19mtnnlgmog"
-          + "&password=zPgqf8o6na6pv8j8AX8r"
-          + "&useSSL=true"
-          + "&allowPublicKeyRetrieval=true"
-      );
-      
+    try (Connection connection = DatabaseManager.getConnection()) {
       mysql.setText("Driver found and connected");
-
-      connection.setAutoCommit(false);
 
       // Error handling
     } catch (SQLException e) {
@@ -56,22 +41,5 @@ public class SqlConnectionCheck {
    */
   public Label getMysqlLabel() {
     return mysql;
-  }
-
-  public Connection getConnection() {
-    return connection;
-  }
-
-  /**
-  * Closes the database connection.
-  */
-  public void closeConnection() {
-    try {
-      if (connection != null && !connection.isClosed()) {
-        connection.close();
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
   }
 }

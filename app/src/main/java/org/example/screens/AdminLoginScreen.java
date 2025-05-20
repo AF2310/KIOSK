@@ -1,6 +1,7 @@
 package org.example.screens;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -17,6 +18,7 @@ import javafx.stage.Stage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
 import org.example.buttons.MidButtonWithImage;
+import org.example.sql.DatabaseManager;
 import org.example.kiosk.LanguageSetting;
 import org.example.sql.SqlConnectionCheck;
 import org.example.users.AdminAuth;
@@ -97,31 +99,34 @@ public class AdminLoginScreen {
 
     // login button functionality
     loginButton.setOnAction(e -> {
-      String username = usernameField.getText();
-      String password = passwordField.getText();
-      SqlConnectionCheck connection = new SqlConnectionCheck();
-      AdminAuth adminauth = new AdminAuth(connection.getConnection());
-      Boolean checkLogin = adminauth.verifyAdmin(username, password);
-      Connection conn = connection.getConnection();
-      if (checkLogin) {
-        errorLabel.setVisible(false);
-        passwordField.clear();
-        AdminMenuScreen adminMenuScreen = new AdminMenuScreen();
-        Scene adminMenuScene = adminMenuScreen.createAdminMenuScreen(primaryStage,
-            windowWidth, windowHeight, welcomeScrScene, conn);
-        primaryStage.setScene(adminMenuScene);
-      } else {
-        var currLang = LanguageSetting.getInstance();
-        if (currLang.equals("en")) {
-          errorLabel.setText("Invalid login details");
+      try (Connection connection = DatabaseManager.getConnection()) {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+        AdminAuth adminauth = new AdminAuth(connection);
+        Boolean checkLogin = adminauth.verifyAdmin(username, password);
+        if (checkLogin) {
+          errorLabel.setVisible(false);
+          passwordField.clear();
+          AdminMenuScreen adminMenuScreen = new AdminMenuScreen();
+          Scene adminMenuScene = adminMenuScreen.createAdminMenuScreen(primaryStage,
+              windowWidth, windowHeight, welcomeScrScene, connection);
+          primaryStage.setScene(adminMenuScene);
         } else {
-          errorLabel.setText("Ogiltig inloggning");
-        }
-        // Shows error if a wrong username or password is entered
-        // errorLabel.setText("Invalid login details");
-        errorLabel.setVisible(true);
-        passwordField.clear();
+          var currLang = LanguageSetting.getInstance();
+          if (currLang.equals("en")) {
+            errorLabel.setText("Invalid login details");
+          } else {
+            errorLabel.setText("Ogiltig inloggning");
+          }
+          // Shows error if a wrong username or password is entered
+          // errorLabel.setText("Invalid login details");
+          errorLabel.setVisible(true);
+          passwordField.clear();
 
+        }
+      } catch (SQLException e1) {
+        // TODO Auto-generated catch block
+        e1.printStackTrace();
       }
     });
 

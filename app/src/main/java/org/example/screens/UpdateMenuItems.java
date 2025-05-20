@@ -1,12 +1,12 @@
 package org.example.screens;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -26,15 +26,17 @@ import javafx.util.converter.IntegerStringConverter;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
-import org.example.menu.Product;
-import org.example.menu.Type;
-
+import org.example.buttons.RectangleTextFieldWithLabel;
+import org.example.buttons.SqrBtnWithOutline;
+import org.example.buttons.TickBoxWithLabel;
+import org.example.sql.SqlConnectionCheck;
 
 /**
  * Updating menu class.
  */
 public class UpdateMenuItems {
-
+  private SqlQueries queries = new SqlQueries();
+  private Stage primaryStage;
   /**
    * Creates a scene for updating menu items in the admin interface.
    *

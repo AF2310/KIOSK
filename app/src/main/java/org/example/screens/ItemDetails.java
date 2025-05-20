@@ -39,6 +39,8 @@ import org.example.menu.Meal;
 import org.example.menu.Single;
 import org.example.menu.Type;
 import org.example.orders.Cart;
+import org.example.sql.DatabaseManager;
+import org.example.sql.SqlQueries;
 
 /**
  * Screen for the details of an Item.
@@ -46,6 +48,7 @@ import org.example.orders.Cart;
  * (add, remove ingredients and such).
  */
 public class ItemDetails {
+  SqlQueries queries = new SqlQueries();
 
   /**
    * Creating a scene for a specific item, displaying all item details.
@@ -59,13 +62,9 @@ public class ItemDetails {
    */
   public CustomScene create(Stage primaryStage, Scene prevScene, Single item, Cart cart)
       throws SQLException {
-    item.setIngredients(DriverManager.getConnection(
-        "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-            + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-            + "?user=u5urh19mtnnlgmog"
-            + "&password=zPgqf8o6na6pv8j8AX8r"
-            + "&useSSL=true"
-            + "&allowPublicKeyRetrieval=true"));
+    try (Connection connection = DatabaseManager.getConnection()) {
+      queries.setIngredientsForSingle(connection, item);
+    }
     List<Ingredient> ingredients = item.ingredients;
     // Make a deep copy of ingredients to avoid reusing the original list
     // System.out.println("Original ingredients: " + item.ingredients);
