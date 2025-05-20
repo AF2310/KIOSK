@@ -29,6 +29,7 @@ import org.example.buttons.MidButton;
 import org.example.menu.Product;
 import org.example.menu.Type;
 
+
 /**
  * Updating menu class.
  */
@@ -84,10 +85,27 @@ public class UpdateMenuItems {
 
       // Set the new (current) scene
       primaryStage.setScene(productDeletionScene.getProductDeletionScene());
+    });
 
+    MidButton addMealButton = makeMidButton("Add a Meal");
+
+    addMealButton.setOnAction(e -> {
+      AddMealScene addMealScene = new AddMealScene(primaryStage, prevScene);
+      
+      primaryStage.setScene(addMealScene.getAddMealScene());
     });
 
     MidButton globalDiscountButton = makeMidButton("Apply Global Discounts");
+
+    globalDiscountButton.setOnAction(e -> {
+      GlobalDiscountScreen globalDiscountScreen = new GlobalDiscountScreen(
+          primaryStage,
+          prevScene);
+      
+      primaryStage.setScene(globalDiscountScreen.getGlobalDiscountScreen());
+    });
+
+    // MidButton globalDiscountButton = makeMidButton("Apply Global Discounts");
 
     globalDiscountButton.setOnAction(e -> {
       GlobalDiscountScreen globalDiscountScreen = new GlobalDiscountScreen(

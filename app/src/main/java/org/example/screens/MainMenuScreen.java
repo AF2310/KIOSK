@@ -19,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -188,7 +189,7 @@ public class MainMenuScreen {
     gridSearchBox.setAlignment(Pos.CENTER);
 
     Button showSearchBtn = new Button();
-
+    DropShadow searchShadow = new DropShadow();
     showSearchBtn.setMinSize(80, 80);
     showSearchBtn.setMaxSize(80, 80);
 
@@ -214,14 +215,22 @@ public class MainMenuScreen {
     }
 
     searchCircle.setStroke(Color.RED);
-
+    
     Label searchLabel = new Label("FILTER\nITEMS");
     searchLabel.setTextAlignment(TextAlignment.CENTER);
     searchLabel.setStyle("-fx-font-size: 20px; "
-        + "-fx-font-weight: bold; "
-        + "-fx-text-fill: gold; "
-        + "-fx-underline: true;");
-
+    + "-fx-font-weight: bold; "
+    + "-fx-text-fill: gold; "
+    + "-fx-underline: true;");
+    
+    showSearchBtn.setOnMouseEntered(e -> {
+      searchLabel.setEffect(searchShadow);
+      searchShadow.setColor(Color.BLACK);
+      searchShadow.setRadius(3);
+    });
+    showSearchBtn.setOnMouseExited(e -> {
+      searchLabel.setEffect(null);
+    });
     searchLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
     StackPane searchGraphic = new StackPane(searchCircle, searchLabel);
 
@@ -284,6 +293,16 @@ public class MainMenuScreen {
 
       // Making a button for each category
       Button btn = new Button(cat);
+      DropShadow shadow = new DropShadow();
+      
+      btn.setOnMouseEntered(e -> {
+        btn.setEffect(shadow);
+        shadow.setColor(Color.BLACK);
+        shadow.setRadius(10);
+      });
+      btn.setOnMouseExited(e -> {
+        btn.setEffect(null);
+      });
 
       // Special offers needs special handling for asthetics of button
       if (cat.equalsIgnoreCase("Special Offers")) {

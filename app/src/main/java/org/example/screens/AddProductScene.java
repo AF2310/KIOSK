@@ -70,6 +70,7 @@ public class AddProductScene {
 
     // List view box for showing all the ingredients upon category selection
     ListView<String> ingredientListView = new ListView<>();
+    ingredientListView.setStyle("-fx-font-size: 20px;");
     ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     ingredientListView.setPrefSize(300, 400);
 
@@ -83,7 +84,7 @@ public class AddProductScene {
 
     // Creates a dropdown for selecting a product category
     DropBoxWithLabel productCategoryDropBox = new DropBoxWithLabel("Product Category:");
-
+    productCategoryDropBox.getComboBox().setStyle("-fx-font-size: 20px;");
     // Map to store category name and its corresponding ID from the database.
     Map<String, Integer> categoryMap = new HashMap<>();
 
