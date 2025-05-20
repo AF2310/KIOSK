@@ -191,8 +191,27 @@ public class MainMenuScreen {
     showSearchBtn.setMinSize(80, 80);
     showSearchBtn.setMaxSize(80, 80);
 
+    // To make coloring of search button dynamic
+    // reused for special offers
+    Color backgroundColor = BackgroundColorStore.getCurrentBackgroundColor();
+    int r = (int) (backgroundColor.getRed() * 255);
+    int g = (int) (backgroundColor.getGreen() * 255);
+    int b = (int) (backgroundColor.getBlue() * 255);
+
     Circle searchCircle = new Circle(50);
-    searchCircle.setFill(Color.GOLD);
+
+    // If warm background --> Silver
+    // Else --> Gold
+    if (r >= 100 && g <= 200 && b <= 100) {
+
+      searchCircle.setFill(Color.SILVER);
+
+    } else {
+
+      searchCircle.setFill(Color.GOLD);
+
+    }
+
     searchCircle.setStroke(Color.RED);
 
     Label searchLabel = new Label("FILTER\nITEMS");
@@ -279,12 +298,6 @@ public class MainMenuScreen {
             "-fx-background-color: transparent;"
                 + "-fx-padding: 0px;");
         
-        // For the special offers button color check
-        Color backgroundColor = BackgroundColorStore.getCurrentBackgroundColor();
-        int r = (int) (backgroundColor.getRed() * 255);
-        int g = (int) (backgroundColor.getGreen() * 255);
-        int b = (int) (backgroundColor.getBlue() * 255);
-
         // Make circle with noticible color
         Circle specialsCircle = new Circle(100);
 
