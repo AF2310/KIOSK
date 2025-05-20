@@ -6,32 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
+
 import org.example.buttons.ArrowButton;
 import org.example.buttons.CartSquareButton;
 import org.example.buttons.ColorSquareButtonWithImage;
@@ -48,6 +28,34 @@ import org.example.menu.Single;
 import org.example.menu.Type;
 import org.example.orders.Cart;
 import org.example.sql.DatabaseManager;
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * The main menu screen.
@@ -71,6 +79,7 @@ public class MainMenuScreen {
   public Cart cart = Cart.getInstance();
   private String mode;
   private Connection conn;
+  private boolean filtersActive = false;
 
   /**
    * Creates the main menu scene.
@@ -94,7 +103,6 @@ public class MainMenuScreen {
     this.mode = mode;
 
     this.conn = DatabaseManager.getConnection();
-    
 
     ImageView modeIcon = new ImageView();
     Label modeLabel = new Label();
@@ -142,11 +150,12 @@ public class MainMenuScreen {
 
     ComboBox<String> gridCategoryBox = new ComboBox<>();
     gridCategoryBox.getItems().addAll(
-        "-- Any Category --", "Burgers", "Sides", "Drinks", "Desserts");
+        "-- Any Category --", "Burgers", "Sides", "Drinks", "Desserts", "Meals", "Special Offers");
     gridCategoryBox.setPromptText("Select Category...");
     gridCategoryBox.setStyle("-fx-font-size: 14px; -fx-pref-width: 150px;");
 
     gridSearchButton.setOnAction(e -> {
+      filtersActive = true;
       currentSearchName = gridSearchField.getText().trim();
 
       currentSearchCategory = "";
@@ -208,18 +217,17 @@ public class MainMenuScreen {
     }
 
     searchCircle.setStroke(Color.RED);
-    
+
     Label searchLabel = new Label("FILTER\nITEMS");
     searchLabel.setTextAlignment(TextAlignment.CENTER);
     searchLabel.setStyle(
         "-fx-font-size: 20px; "
-        + "-fx-font-weight: bold; "
-        + "-fx-text-fill: gold; "
-        + "-fx-underline: true;"
-    );
+            + "-fx-font-weight: bold; "
+            + "-fx-text-fill: gold; "
+            + "-fx-underline: true;");
 
     DropShadow searchShadow = new DropShadow();
-    
+
     showSearchBtn.setOnMouseEntered(e -> {
       searchLabel.setEffect(searchShadow);
       searchShadow.setColor(Color.BLACK);
@@ -234,15 +242,27 @@ public class MainMenuScreen {
     showSearchBtn.setGraphic(searchGraphic);
     final boolean[] isSearchVisible = { false };
     VBox.setMargin(gridSearchBox, new Insets(5));
+
+    Timeline fadeIn = new Timeline(new KeyFrame(Duration.millis(200),
+        new KeyValue(gridSearchBox.opacityProperty(), 1),
+        new KeyValue(gridSearchBox.translateYProperty(), 0)));
+    fadeIn.setDelay(Duration.millis(50));
     showSearchBtn.setOnAction(e -> {
       isSearchVisible[0] = !isSearchVisible[0];
       if (isSearchVisible[0]) {
         if (!top.getChildren().contains(gridSearchBox)) {
           top.getChildren().add(gridSearchBox);
           searchCircle.setFill(Color.GOLD);
+          fadeIn.play();
 
         } else {
           top.getChildren().remove(gridSearchBox);
+
+          FadeTransition fadeOut = new FadeTransition(Duration.millis(150), gridSearchBox);
+          fadeOut.setToValue(0);
+          fadeOut.setOnFinished(event -> top.getChildren().remove(gridSearchBox));
+          fadeOut.play();
+
           searchCircle.setFill(Color.RED);
 
           currentSearchName = "";
@@ -258,17 +278,83 @@ public class MainMenuScreen {
     });
     showSearchBtn.setStyle(
         "-fx-background-color: transparent;"
-        + "-fx-padding: 0;"
-        + "-fx-border-width: 0;"
-        + "-fx-content-display: GRAPHIC_ONLY;");
+            + "-fx-padding: 0;"
+            + "-fx-border-width: 0;"
+            + "-fx-content-display: GRAPHIC_ONLY;");
 
     gridSearchBox.setStyle(
-        "-fx-background-color: rgba(255, 255, 255, 0.9);"
-        + "-fx-border-color: gold;"
-        + "-fx-border-width: 2px;"
-        + "-fx-border-radius: 20px;"
-        + "-fx-background-radius: 20px;"
-        + "-fx-padding: 10px;");
+        "-fx-background-color: rgba(245, 245, 245, 0.85);"
+            + "-fx-border-color: linear-gradient(to right, #ffd700 30%, #ffa500);"
+            + "-fx-border-width: 2px;"
+            + "-fx-border-radius: 15px;"
+            + "-fx-background-radius: 15px;"
+            + "-fx-padding: 15px 20px;"
+            + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0.5, 0, 2);");
+
+    String fieldStyle = "-fx-background-color: rgba(255, 255, 255, 0.4);"
+        + "-fx-border-color: #ddd;"
+        + "-fx-border-radius: 8px;"
+        + "-fx-padding: 8px 12px;"
+        + "-fx-font-size: 14px;"
+        + "-fx-focus-color: #ffd700;"
+        + "-fx-faint-focus-color: #ffd70022;"
+        + "fx-prompt-text-fill: #888;";
+
+    gridSearchField.setStyle(fieldStyle);
+    priceFilterField.setStyle(fieldStyle);
+
+    gridCategoryBox.setStyle(
+        "-fx-background-color: rgba(255, 255, 255, 0.4);"
+            + "-fx-border-color: #ddd;"
+            + "-fx-border-radius: 8px;"
+            + "-fx-padding: 4px 8px;"
+            + "-fx-font-size: 14px;"
+            + "-fx-popup-border-color: #eee;"
+            + "-fx-focus-color: #ffd700;");
+
+    gridSearchButton.setStyle(
+        "-fx-background-color: linear-gradient(to bottom, #ffd700, #ffaa00);"
+            + "-fx-text-fill: #2a2a2a;"
+            + "-fx-font-weight: bold;"
+            + "-fx-font-size: 14px;"
+            + "-fx-padding: 8px 20px;"
+            + "-fx-border-radius: 8px;"
+            + "-fx-background-radius: 8px;"
+            + "-fx-cursor: hand;"
+            + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);");
+
+    gridSearchButton.hoverProperty().addListener((obs, oldVal, isHovering) -> {
+      String baseStyle = "-fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 8px 20px;";
+      String hoverStyle = baseStyle
+          + """
+              -fx-background-color: linear-gradient(to bottom, #ffeb3b, #ffc107);
+              -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 3);
+              """;
+      String normalStyle = baseStyle
+          + """
+              -fx-background-color: linear-gradient(to bottom, #ffd700, #ffaa00);
+              -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+              """;
+      if (isHovering) {
+        gridSearchButton.setStyle(hoverStyle);
+      } else {
+        gridSearchButton.setStyle(normalStyle);
+      }
+    });
+
+    gridSearchBox.setOpacity(0);
+    gridSearchBox.setTranslateY(10);
+    gridSearchBox.setSpacing(15);
+
+    HBox.setMargin(gridSearchField, new Insets(0, 0, 0, 10));
+    HBox.setMargin(gridSearchButton, new Insets(0, 10, 0, 0));
+
+    /*
+     * Timeline fadeIn = new Timeline(new KeyFrame( Duration.millis(200),
+     * new KeyValue(gridSearchBox.opacityProperty(), 1),
+     * new KeyValue(gridSearchBox.translateYProperty(), 0)));
+     * fadeIn.setDelay(Duration.millis(50));
+     */
 
     // Align the search button to top-right
     StackPane.setAlignment(showSearchBtn, Pos.TOP_RIGHT);
@@ -276,9 +362,7 @@ public class MainMenuScreen {
     StackPane.setMargin(showSearchBtn, new Insets(20, 20, 0, 0));
 
     // SEARCH BAR STUFF ENDS
-
     // Category bar
-
     // Alignment with horizontal box
     HBox categoryBar = new HBox(15);
     categoryBar.setAlignment(Pos.CENTER);
@@ -291,7 +375,7 @@ public class MainMenuScreen {
       // Making a button for each category
       Button btn = new Button(cat);
       DropShadow shadow = new DropShadow();
-      
+
       btn.setOnMouseEntered(e -> {
         btn.setEffect(shadow);
         shadow.setColor(Color.BLACK);
@@ -314,7 +398,7 @@ public class MainMenuScreen {
         btn.setStyle(
             "-fx-background-color: transparent;"
                 + "-fx-padding: 0px;");
-        
+
         // Make circle with noticible color
         Circle specialsCircle = new Circle(100);
 
@@ -351,6 +435,11 @@ public class MainMenuScreen {
       final int index = i;
       btn.setOnAction(e -> {
         currentCategoryIndex = index;
+        filtersActive = false;
+        currentSearchName = "";
+        currentSearchCategory = "";
+        currentSearchPrice = -1;
+        // currentSearchCategory = "";
         updateGrid();
         updateCategoryButtonStyles();
       });
@@ -371,7 +460,6 @@ public class MainMenuScreen {
     updateGrid();
 
     // Arrow buttons to navigate menu
-
     // Arrow left
     // Make instance of arrow button that points left
     ArrowButton leftArrowButton = new ArrowButton(true, false);
@@ -414,14 +502,45 @@ public class MainMenuScreen {
     // Locking arrows left and right and locking menu items in middle
     BorderPane centerMenuLayout = new BorderPane();
     centerMenuLayout.setLeft(leftArrowVcentered);
-    centerMenuLayout.setCenter(itemGrid);
+    ScrollPane scrollPane = new ScrollPane(itemGrid);
+    scrollPane.setFitToWidth(true);
+    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+    scrollPane.setPadding(new Insets(10));
+
+    centerMenuLayout.setCenter(scrollPane);
     centerMenuLayout.setRight(rightArrowVcentered);
+
+    scrollPane.setFitToWidth(true);
+    // Make the scrollbars invisible
+    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    scrollPane.setPadding(new Insets(10));
+
+    // Make the ScrollPane completely transparent
+    String css = """
+        .custom-scroll-pane {
+            /* Background of the ScrollPane itself */
+            -fx-background-color: transparent;
+        }
+
+        .custom-scroll-pane .viewport {
+            /* Background of the area where content is displayed */
+            -fx-background-color: transparent;
+        }
+        """;
+
+    // Apply the style class and stylesheet to the ScrollPane
+    scrollPane.getStyleClass().add("custom-scroll-pane");
+    scrollPane.getStylesheets().add("data:text/css;charset=utf-8," + css);
+
+    layout.setStyle(
+        "-fx-background-color: transparent;");
 
     // Setting center menu content to center of actual menu
     layout.setCenter(centerMenuLayout);
 
     // Bottom buttons
-
     HBox bottomButtons = new HBox();
     bottomButtons.setPadding(new Insets(10));
 
@@ -521,18 +640,18 @@ public class MainMenuScreen {
   }
 
   /**
-   * Adds all menu items. Filling each item category with items.
-   * Added the items for the menu one by one for now, not through the database.
+   * Adds all menu items. Filling each item category with items. Added the
+   * items for the menu one by one for now, not through the database.
    */
   private void setupMenuData() throws SQLException {
     Imenu menu = new Menu(conn);
 
-    categoryItems.put("Burgers", convert(conn, menu.getMains()));
+    categoryItems.put("Burgers", convert(conn, (menu.getMains())));
     categoryItems.put("Sides", convert(conn, menu.getSides()));
     categoryItems.put("Drinks", convert(conn, menu.getDrinks()));
     categoryItems.put("Desserts", convert(conn, menu.getDesserts()));
     categoryItems.put("Special Offers", List.of());
-    categoryItems.put("Meals", null);
+    categoryItems.put("Meals", new ArrayList<>());
 
   }
 
@@ -549,40 +668,72 @@ public class MainMenuScreen {
     // Load items depending on category
     List<Product> items = new ArrayList<>();
 
-    if ("Meals".equals(categories[currentCategoryIndex])) {
-      try {
-        String sql = """
-            SELECT meal_id, name, description, price, image_url
-            FROM meal
-            """;
-
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ResultSet rs = ps.executeQuery();
-
-        while (rs.next()) {
-          Meal meal = new Meal(rs.getString("name"), conn);
-          meal.setId(rs.getInt("meal_id"));
-          meal.setName(rs.getString("name"));
-          meal.setPrice(rs.getFloat("price"));
-          meal.setImagePath(rs.getString("image_url"));
-          meal.setType(Type.MEAL);
-
-          items.add(meal);
-        }
-
-        rs.close();
-        ps.close();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    } else {
-      // Get from preloaded categories
-      String category = categories[currentCategoryIndex];
-      List<Product> categoryList = categoryItems.getOrDefault(category, new ArrayList<>());
-      items.addAll(categoryList);
-    }
+    String currentCategory = categories[currentCategoryIndex];
 
     // FILTERS: Apply name, price, and category filter
+    if (filtersActive) {
+      boolean isAnyCategory = currentSearchCategory.equalsIgnoreCase("-- Any Category --");
+      if (isAnyCategory) {
+        for (String cat : categories) {
+          if (cat.equals("Meals")) {
+            // Load meals from database
+            try (PreparedStatement ps = conn.prepareStatement(
+                "SELECT meal_id, name, price, image_url FROM meal"); ResultSet rs = ps.executeQuery()) {
+              while (rs.next()) {
+                Meal meal = new Meal(rs.getString("name"), conn);
+                meal.setId(rs.getInt("meal_id"));
+                meal.setPrice(rs.getFloat("price"));
+                meal.setImagePath(rs.getString("image_url"));
+                items.add(meal);
+              }
+            } catch (SQLException e) {
+              e.printStackTrace();
+            }
+          } else if (!cat.equals("Special Offers")) {
+            items.addAll(categoryItems.getOrDefault(cat, new ArrayList<>()));
+          }
+        }
+
+      } else {
+        String targetCat = currentSearchCategory;
+        if (targetCat.equals("Meals")) {
+          // Load meals from database
+          try (PreparedStatement ps = conn.prepareStatement(
+              "SELECT meal_id, name, price, image_url FROM meal"); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+              Meal meal = new Meal(rs.getString("name"), conn);
+              meal.setId(rs.getInt("meal_id"));
+              meal.setPrice(rs.getFloat("price"));
+              meal.setImagePath(rs.getString("image_url"));
+              items.add(meal);
+            }
+          } catch (SQLException e) {
+            e.printStackTrace();
+          }
+        } else {
+          items.addAll(categoryItems.getOrDefault(targetCat, new ArrayList<>()));
+        }
+
+      }
+    } else {
+      if (currentCategory.equals("Meals")) {
+        try (PreparedStatement ps = conn.prepareStatement(
+            "SELECT meal_id, name, price, image_url FROM meal"); ResultSet rs = ps.executeQuery()) {
+          while (rs.next()) {
+            Meal meal = new Meal(rs.getString("name"), conn);
+            meal.setId(rs.getInt("meal_id"));
+            meal.setPrice(rs.getFloat("price"));
+            meal.setImagePath(rs.getString("image_url"));
+            items.add(meal);
+          }
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      } else {
+        items.addAll(categoryItems.getOrDefault(currentCategory, new ArrayList<>()));
+      }
+
+    }
     List<Product> filteredProducts = new ArrayList<>(items);
 
     if (!currentSearchName.isEmpty()) {
@@ -601,11 +752,13 @@ public class MainMenuScreen {
 
     if (!currentSearchCategory.isEmpty()
         && !currentSearchCategory.equalsIgnoreCase("-- Any Category --")) {
-      String targetCategory = currentSearchCategory.toLowerCase();
+      String filterCategory = currentSearchCategory.toLowerCase();
       filteredProducts = filteredProducts.stream()
           .filter(p -> {
             if (p instanceof Single single) {
-              return single.getType().toString().toLowerCase().equals(targetCategory);
+              return single.getType().toString().toLowerCase().equals(filterCategory);
+            } else if (p instanceof Meal && filterCategory.equals("meals")) {
+              return true;
             }
             return false;
           })
@@ -614,24 +767,78 @@ public class MainMenuScreen {
 
     // Adjust layout if filters are used
     int maxItemsPerRow = 4;
-    int totalItemsPerPage = 8;
+    // int totalItemsPerPage = 8;
 
-    // boolean filtersActive = !currentSearchName.isEmpty() || currentSearchPrice >= 0
-    //     || (!currentSearchCategory.isEmpty()
-    //     && !currentSearchCategory.equalsIgnoreCase("-- Any Category --"));
+    boolean filtersActive = !currentSearchName.isEmpty() || currentSearchPrice >= 0
+        || (!currentSearchCategory.isEmpty()
+            && !currentSearchCategory.equalsIgnoreCase("-- Any Category --"));
 
-    // // if (filtersActive) {
-    // //   totalItemsPerPage = filteredProducts.size();
-    // //   maxItemsPerRow = 4;
-    // // }
+    if (filtersActive) {
+      maxItemsPerRow = 6;
+    }
 
+    boolean nameFilterActive = !currentSearchName.isEmpty();
+    boolean priceFilterActive = currentSearchPrice >= 0;
+    String searchTerm = currentSearchName.toLowerCase();
+
+    // Comparator<Product> nameComparator = Comparator.comparing(Product::getName,
+    // String.CASE_INSENSITIVE_ORDER);
+    Comparator<Product> nameComparator = new Comparator<Product>() {
+      public int compare(Product p1, Product p2) {
+        String n1 = p1.getName().toLowerCase();
+
+        String n2 = p2.getName().toLowerCase();
+
+        boolean s1Starts = n1.startsWith(searchTerm);
+
+        boolean s2Starts = n2.startsWith(searchTerm);
+
+        if (s1Starts && !s2Starts) {
+          return -1;
+        }
+
+        if (!s1Starts && s2Starts) {
+          return 1;
+        }
+
+        return n1.compareTo(n2);
+
+      }
+    };
+
+    if (!searchTerm.isEmpty()) {
+      filteredProducts.sort(nameComparator);
+    }
+    Comparator<Product> priceComparator = Comparator.comparingDouble(Product::getPrice);
+
+    if (nameFilterActive && !priceFilterActive) {
+      filteredProducts.sort(nameComparator);
+
+    } else if (!nameFilterActive && priceFilterActive) {
+      filteredProducts.sort(priceComparator.reversed());
+    } else {
+      Comparator<Product> combinedComparator = nameComparator.thenComparing(priceComparator);
+      filteredProducts.sort(combinedComparator);
+
+    }
+    int itemsToShow = filteredProducts.size();
+
+    /*
+     * int itemsToShow;
+     * 
+     * if (filtersActive) {
+     * itemsToShow = filteredProducts.size();
+     * } else {
+     * itemsToShow = Math.min(totalItemsPerPage, filteredProducts.size());
+     * }
+     */
     // Create the empty image to fill the grid slots
     Image emptyImage = new Image(
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABC"
             + "AQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/hd5JnkAAAAASUVORK5CYII=");
 
     // Populate grid with items or empty image
-    for (int i = 0; i < totalItemsPerPage; i++) {
+    for (int i = 0; i < itemsToShow; i++) {
 
       VBox itemBox = new VBox(10);
       itemBox.setAlignment(Pos.CENTER);
@@ -771,8 +978,8 @@ public class MainMenuScreen {
   }
 
   /**
-   * Helper method to update highlighting of category buttons.
-   * Iterates through category button list to update them all at once.
+   * Helper method to update highlighting of category buttons. Iterates
+   * through category button list to update them all at once.
    */
   private void updateCategoryButtonStyles() {
 

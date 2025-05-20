@@ -3,7 +3,14 @@ package org.example.buttons;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+
+import org.example.menu.Ingredient;
+import org.example.menu.Menu;
+import org.example.menu.Product;
+import org.example.menu.Single;
+
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -13,9 +20,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.example.menu.Ingredient;
-import org.example.menu.Menu;
-import org.example.menu.Single;
 
 /**
  * The SearchBar class provides a user interface component for searching items
@@ -29,6 +33,9 @@ public class SearchBar extends VBox {
   private final Button searchButton;
   private final ListView<String> resultList;
   private final ComboBox<String> categoryCombo;
+  private java.util.function.Consumer<Product> resultSelectHandler;
+  private java.util.function.Consumer<List<Product>> resultsListHandler;
+  private List<Single> filteredSingles = new ArrayList<>();
 
   /**
    * Constructs a SearchBar instance with the specified database connection.
@@ -259,6 +266,57 @@ public class SearchBar extends VBox {
             filtered.add(single);
           }
         }
+        boolean nameFilterActive = !name.isEmpty();
+        boolean priceFilterActive = !priceText.isEmpty();
+
+        //Comparator<Single> nameComparator = Comparator.comparing(Single::getName,String.CASE_INSENSITIVE_ORDER);
+        String searchTerm = name.toLowerCase();
+
+        Comparator<Single> nameComparator = new Comparator<Single>() {
+          public int compare(Single p1, Single p2) {
+            String n1 = p1.getName().toLowerCase();
+    
+            String n2 = p2.getName().toLowerCase();
+    
+            boolean s1Starts = n1.startsWith(searchTerm);
+    
+            boolean s2Starts = n2.startsWith(searchTerm);
+    
+            if (s1Starts && !s2Starts) {
+              return -1;
+            }
+    
+            if (!s1Starts && s2Starts) {
+              return 1;
+            }
+    
+            return n1.compareTo(n2);
+    
+    
+          }
+        };
+    
+        if (!searchTerm.isEmpty()) {
+          filtered.sort(nameComparator);
+        }
+        Comparator<Single> priceComparator = Comparator.comparingDouble(Single::getPrice);
+
+        if (nameFilterActive && !priceFilterActive) {
+          filtered.sort(nameComparator);
+
+        } else if  (!nameFilterActive && priceFilterActive) {
+          filtered.sort(priceComparator.reversed());
+
+        } else if (nameFilterActive && priceFilterActive) {
+          filtered.sort(nameComparator.thenComparing(priceComparator));
+
+
+        }
+
+
+
+
+
         if (filtered.isEmpty()) {
           resultList.getItems().add("No items found.");
         } else {
@@ -266,6 +324,8 @@ public class SearchBar extends VBox {
             resultList.getItems().add("Single: " + s.getName() + " - " + s.getPrice() + " SEK");
           }
         }
+        filteredSingles = filtered;
+
 
       } catch (SQLException ex) {
         resultList.getItems().add("SQL Error: " + ex.getMessage());
@@ -273,6 +333,40 @@ public class SearchBar extends VBox {
         resultList.getItems().add("Invalid price input.");
       }
 
+      if (resultsListHandler != null) {
+        List<Product> productList = new ArrayList<>(filteredSingles);
+        resultsListHandler.accept(productList);
+      }
+
+    });
+
+    resultList.setOnMouseClicked(e -> {
+      String selectedText = resultList.getSelectionModel().getSelectedItem();
+      if (selectedText == null || resultSelectHandler == null) {
+        return;
+      }
+      try {
+        Menu menu = new Menu(conn);
+        List<Single> allSingles = new ArrayList<>();
+        allSingles.addAll(menu.getMains());
+        allSingles.addAll(menu.getSides());
+        allSingles.addAll(menu.getDrinks());
+        allSingles.addAll(menu.getDesserts());
+        allSingles.addAll(menu.getExtras());
+
+        String clickedItemName = selectedText.split(" - ")[0].replace("Single: ", "").trim();
+
+        for (Single s : allSingles) {
+          if (s.getName().equalsIgnoreCase(clickedItemName)) {
+            resultSelectHandler.accept(s);
+            break;
+          }
+        }
+
+      } catch (SQLException ex) {
+        ex.printStackTrace();
+
+      }
     });
 
   }
@@ -304,6 +398,14 @@ public class SearchBar extends VBox {
     } else {
       return Double.parseDouble(input);
     }
+  }
+
+  public void setOnResultSelectHandler(java.util.function.Consumer<Product> handler) {
+    this.resultSelectHandler = handler;
+  }
+
+  public void setOnResultsListHandler(java.util.function.Consumer<List<Product>> handler) {
+    this.resultsListHandler = handler;
   }
 
   // private String normalizeCategory(String categoryName) {

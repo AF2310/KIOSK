@@ -1,5 +1,11 @@
 package org.example.screens;
 
+import org.example.buttons.BackBtnWithTxt;
+import org.example.buttons.LangBtn;
+import org.example.buttons.SearchBar;
+import org.example.kiosk.LanguageSetting;
+import org.example.menu.Product;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -12,10 +18,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.example.buttons.BackBtnWithTxt;
-import org.example.buttons.LangBtn;
-import org.example.kiosk.LanguageSetting;
-import org.example.menu.Product;
 
 /**
  * This is the product editor scene.
@@ -26,6 +28,8 @@ public class ProductEditorScene {
   private Stage primaryStage;
   private Scene prevScene;
   private TableView<Product> productTable;
+  private SearchBar searchBar;
+  
 
   /**
    * The product editor scene constructor.
@@ -37,11 +41,34 @@ public class ProductEditorScene {
   public ProductEditorScene(
       Stage primaryStage,
       Scene prevScene,
-      TableView<Product> productTable) {
+      TableView<Product> productTable,
+      SearchBar searchBar) {
 
     this.primaryStage = primaryStage;
     this.prevScene = prevScene;
     this.productTable = productTable;
+    this.searchBar = searchBar;
+    searchBar.setOnResultsListHandler(filteredProducts -> {
+      productTable.getItems().clear();
+      productTable.getItems().addAll(filteredProducts);
+    });
+    
+    searchBar.setOnResultSelectHandler(selected -> {
+        if (selected instanceof Product product) {
+          /*if (!productTable.getItems().contains(product)) {
+            productTable.getItems().add(product);
+          }*/
+          boolean alreadyExists = productTable.getItems().stream()
+            .anyMatch(p -> p.getId() == product.getId());
+
+          if (!alreadyExists) {
+              productTable.getItems().add(product);
+          }
+
+        }
+      }
+    );
+    
   }
 
   /**
@@ -70,6 +97,7 @@ public class ProductEditorScene {
     topBox.setAlignment(Pos.TOP_CENTER);
     topBox.setSpacing(40);
     topBox.getChildren().addAll(historyLabel, productListings);
+    topBox.getChildren().add(searchBar);
 
     // Upper part of the screen
     HBox topContainer = new HBox();

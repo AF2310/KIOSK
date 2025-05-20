@@ -7,6 +7,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.example.buttons.BackBtnWithTxt;
+import org.example.buttons.LangBtn;
+import org.example.buttons.MidButton;
+import org.example.buttons.SearchBar;
+import org.example.menu.Product;
+import org.example.menu.Type;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -23,16 +31,12 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
-import org.example.buttons.BackBtnWithTxt;
-import org.example.buttons.LangBtn;
-import org.example.buttons.MidButton;
-import org.example.menu.Product;
-import org.example.menu.Type;
 
 /**
  * Updating menu class.
  */
 public class UpdateMenuItems {
+  private Connection con;
 
   /**
    * Creates a scene for updating menu items in the admin interface.
@@ -43,6 +47,19 @@ public class UpdateMenuItems {
    */
   public Scene adminUpdateMenuItems(Stage primaryStage, Scene prevScene) {
 
+
+    try {
+      this.con = DriverManager.getConnection(
+          "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
+              + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
+              + "?user=u5urh19mtnnlgmog"
+              + "&password=zPgqf8o6na6pv8j8AX8r"
+              + "&useSSL=true"
+              + "&allowPublicKeyRetrieval=true");
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
     // All the buttons for updating menu items
     MidButton addProductButton = makeMidButton("Add Product to Menu");
     MidButton editProductButton = makeMidButton("Edit Product Data");
@@ -64,10 +81,12 @@ public class UpdateMenuItems {
     editProductButton.setOnAction(e -> {
 
       // Get product editor scene
+      SearchBar searchBar = new SearchBar(con);
       ProductEditorScene productEditor = new ProductEditorScene(
           primaryStage,
           prevScene,
-          getProductTable(true, true, true, true, true));
+          getProductTable(true, true, true, true, true),
+          searchBar);
 
       // Set the new (current) scene
       primaryStage.setScene(productEditor.getProductEditorScene());
@@ -77,10 +96,12 @@ public class UpdateMenuItems {
     removeProductButton.setOnAction(e -> {
 
       // Get product deletion scene
+      SearchBar searchBar = new SearchBar(con);
       DeleteProductScene productDeletionScene = new DeleteProductScene(
           primaryStage,
           prevScene,
-          getProductTable(false, false, false, false, false));
+          getProductTable(false, false, false, false, false),
+          searchBar);
 
       // Set the new (current) scene
       primaryStage.setScene(productDeletionScene.getProductDeletionScene());
