@@ -51,13 +51,9 @@ public class ChangeTimerScreen {
    */
   public Scene getChangeTimerScene() {
 
-    // Label for screen title
-    HBox titleBox = getWindowTitle();
-
     // Get editor for kiosk timer and popup timer and combine both
     HBox timerEditor = new HBox(400, getEditorBox(true), getEditorBox(false));
     timerEditor.setAlignment(Pos.CENTER);
-
 
     // Language + Cancel Buttons HBOX BOTTOM
 
@@ -81,11 +77,10 @@ public class ChangeTimerScreen {
     bottomContainer.setAlignment(Pos.BOTTOM_LEFT);
     bottomContainer.getChildren().addAll(langButton, spacerBottom, backButton);
 
-
     // Setting positioning of all the elements - putting all elements together
     BorderPane layout = new BorderPane();
     layout.setPadding(new Insets(50));
-    layout.setTop(titleBox);
+    layout.setTop(getWindowTitle());
     BorderPane.setMargin(timerEditor, new Insets(200, 0, 50, 0));
     layout.setCenter(timerEditor);
     layout.setBottom(bottomContainer);
@@ -110,12 +105,12 @@ public class ChangeTimerScreen {
     // Label for screen title
     Label windowTitle = new Label("Timer Editor:");
     windowTitle.setStyle(
-      "-fx-font-size: 45px;"
-      + "-fx-font-weight: bold;");
+        "-fx-font-size: 45px;"
+            + "-fx-font-weight: bold;");
     windowTitle.setAlignment(Pos.TOP_CENTER);
 
     HBox titleBox = new HBox(windowTitle);
-    titleBox.setAlignment(Pos. CENTER);
+    titleBox.setAlignment(Pos.CENTER);
     titleBox.setPadding(new Insets(20, 0, 60, 0));
 
     return titleBox;
@@ -131,15 +126,13 @@ public class ChangeTimerScreen {
   private VBox getEditorBox(boolean isKioskTimer) {
 
     // Getting name depending on what kind of timer
-    String name;
-    if (isKioskTimer) name = "Kiosk ";
-    else name = "Popup ";
+    String name = isKioskTimer ? "Kiosk " : "Popup ";
 
     // Label for timer
     Label timerTitle = new Label(name + "Timer:");
     timerTitle.setStyle(
-      "-fx-font-size: 30px;"
-      + "-fx-font-weight: bold;");
+        "-fx-font-size: 30px;"
+            + "-fx-font-weight: bold;");
 
     // Get current timer value depending on what kind of timer
     int currentTimerValue;
@@ -151,8 +144,7 @@ public class ChangeTimerScreen {
 
     // Current timer value
     Label currentTimer = new Label(
-      "Current inactivity timer: " + currentTimerValue + " seconds"
-    );
+        "Current inactivity timer: " + currentTimerValue + " seconds");
     currentTimer.setStyle("-fx-font-size: 20px;");
 
     // Input field to enter new value
@@ -163,7 +155,7 @@ public class ChangeTimerScreen {
     // Label for feedback after update
     Label consoleOutput = new Label();
     consoleOutput.setStyle("-fx-font-size: 18px;");
-    
+
     // Button to submit new value
     Button updateButton = new Button("Update Timer");
 
@@ -177,9 +169,9 @@ public class ChangeTimerScreen {
 
         // If int value is not reasonable (realistic)
         if (newValue < 5) {
-            consoleOutput.setText("Please enter a value >= 5 seconds.");
-            // No value change
-            return;
+          consoleOutput.setText("Please enter a value >= 5 seconds.");
+          // No value change
+          return;
         }
 
         // User entered proper value -> execute value change
@@ -193,26 +185,25 @@ public class ChangeTimerScreen {
 
         // Update display label
         currentTimer.setText(
-          "Current inactivity timer: "
-          + newValue + " seconds");
+            "Current inactivity timer: "
+                + newValue + " seconds");
 
         consoleOutput.setText("Timer updated successfully!");
 
         // User entered a letter -> no value change
       } catch (NumberFormatException ex) {
-          consoleOutput.setText("Invalid input! Please enter a number.");
+        consoleOutput.setText("Invalid input! Please enter a number.");
       }
     });
 
     // Combine left timer editor
     VBox timer = new VBox(
-      20,
-      timerTitle,
-      currentTimer,
-      timerInput,
-      updateButton,
-      consoleOutput
-    );
+        20,
+        timerTitle,
+        currentTimer,
+        timerInput,
+        updateButton,
+        consoleOutput);
     timer.setAlignment(Pos.TOP_LEFT);
 
     return timer;
