@@ -10,6 +10,6 @@ public class LoyaltyDiscount implements IdiscountStrategy {
   /**
    * Applying loyalty discount(s).
    */
-  public void applyDiscount() {}
+  public void applyDiscount(double percentage) {}
 
 }

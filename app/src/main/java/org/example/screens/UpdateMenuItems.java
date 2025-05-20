@@ -47,6 +47,7 @@ public class UpdateMenuItems {
     MidButton addProductButton = makeMidButton("Add Product to Menu");
     MidButton editProductButton = makeMidButton("Edit Product Data");
     MidButton removeProductButton = makeMidButton("Remove Product from Menu");
+    MidButton globalDiscountButton = makeMidButton("Apply Global Discounts");
 
     // Actions for all mid buttons
 
@@ -57,11 +58,9 @@ public class UpdateMenuItems {
       AddProductScene addProductScene = new AddProductScene(
           primaryStage,
           prevScene);
-
       // Set the new (current) scene
       primaryStage.setScene(addProductScene.getProductScene());
     });
-
     // Action: editing product
     editProductButton.setOnAction(e -> {
 
@@ -89,6 +88,14 @@ public class UpdateMenuItems {
 
     });
 
+    globalDiscountButton.setOnAction(e -> {
+      GlobalDiscountScreen globalDiscountScreen = new GlobalDiscountScreen(
+          primaryStage,
+          prevScene);
+      
+      primaryStage.setScene(globalDiscountScreen.getGlobalDiscountScreen());
+    });
+
     // Back button -> user goes to previous screen
     var backButton = new BackBtnWithTxt();
     backButton.setOnAction(e -> {
@@ -114,6 +121,7 @@ public class UpdateMenuItems {
     gridPane.add(addProductButton, 0, 0);
     gridPane.add(editProductButton, 0, 1);
     gridPane.add(removeProductButton, 0, 2);
+    gridPane.add(globalDiscountButton, 0, 3);
 
     // Pass in the Labeled components to translate
     langButton.addAction(event -> {
