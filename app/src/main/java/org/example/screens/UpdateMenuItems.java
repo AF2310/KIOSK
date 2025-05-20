@@ -47,7 +47,6 @@ public class UpdateMenuItems {
     MidButton addProductButton = makeMidButton("Add Product to Menu");
     MidButton editProductButton = makeMidButton("Edit Product Data");
     MidButton removeProductButton = makeMidButton("Remove Product from Menu");
-    MidButton globalDiscountButton = makeMidButton("Apply Global Discounts");
 
     // Actions for all mid buttons
 
@@ -87,6 +86,8 @@ public class UpdateMenuItems {
       primaryStage.setScene(productDeletionScene.getProductDeletionScene());
 
     });
+
+    MidButton globalDiscountButton = makeMidButton("Apply Global Discounts");
 
     globalDiscountButton.setOnAction(e -> {
       GlobalDiscountScreen globalDiscountScreen = new GlobalDiscountScreen(

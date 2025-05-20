@@ -56,8 +56,6 @@ public class AdminMenuScreen {
     centerGrid.setAlignment(Pos.CENTER);
 
     // All the same instances of the MidButton
-    MidButton updateMenuBtn = new MidButton("Update Menu Items", "rgb(255, 255, 255)", 30);
-
     MidButton orderHistoryBtn = new MidButton("Order History", "rgb(255, 255, 255)", 30);
     orderHistoryBtn.setOnAction(e -> {
       Scene historyScene = new AdminOrdHistoryScreen().showHistoryScene(
@@ -83,6 +81,7 @@ public class AdminMenuScreen {
     });
 
     MidButton specialOffersBtn = new MidButton("Set Special Offers", "rgb(255, 255, 255)", 30);
+    MidButton updateMenuBtn = new MidButton("Update Menu Items", "rgb(255, 255, 255)", 30);
 
     centerGrid.add(updateMenuBtn, 0, 0);
     centerGrid.add(changeTimerBtn, 0, 1);

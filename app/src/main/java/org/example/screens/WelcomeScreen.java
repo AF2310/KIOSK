@@ -21,8 +21,8 @@ import org.example.buttons.BlackButtonWithImage;
 import org.example.buttons.ColorBtnOutlineImage;
 import org.example.buttons.KioskName;
 import org.example.buttons.LangBtn;
-import org.example.kiosk.LabelManager;
 import org.example.kiosk.InactivityTimer;
+import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;
 import org.example.sql.SqlConnectionCheck;
 
