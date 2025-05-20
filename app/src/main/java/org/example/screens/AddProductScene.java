@@ -5,6 +5,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.example.buttons.DropBoxWithLabel;
+import org.example.buttons.LangBtn;
+import org.example.buttons.RectangleTextFieldWithLabel;
+import org.example.buttons.SqrBtnWithOutline;
+import org.example.buttons.TickBoxWithLabel;
+import org.example.kiosk.LanguageSetting;
+import org.example.sql.SqlConnectionCheck;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -19,13 +28,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.example.buttons.DropBoxWithLabel;
-import org.example.buttons.LangBtn;
-import org.example.buttons.RectangleTextFieldWithLabel;
-import org.example.buttons.SqrBtnWithOutline;
-import org.example.buttons.TickBoxWithLabel;
-import org.example.kiosk.LanguageSetting;
-import org.example.sql.SqlConnectionCheck;
 
 /**
  * Scene in the admin menu for adding products to the menu.

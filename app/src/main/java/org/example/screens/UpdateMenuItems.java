@@ -98,10 +98,12 @@ public class UpdateMenuItems {
     removeProductButton.setOnAction(e -> {
 
       // Get product deletion scene
+      SearchBar searchBar = new SearchBar(con);
       DeleteProductScene productDeletionScene = new DeleteProductScene(
           primaryStage,
           prevScene,
-          getProductTable(false, false, false, false));
+          getProductTable(false, false, false, false),
+          searchBar);
 
       // Set the new (current) scene
       primaryStage.setScene(productDeletionScene.getProductDeletionScene());

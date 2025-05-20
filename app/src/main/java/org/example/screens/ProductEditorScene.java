@@ -53,6 +53,7 @@ public class ProductEditorScene {
       productTable.getItems().clear();
       productTable.getItems().addAll(filteredProducts);
     });
+    
     searchBar.setOnResultSelectHandler(selected -> {
         if (selected instanceof Product product) {
           /*if (!productTable.getItems().contains(product)) {
