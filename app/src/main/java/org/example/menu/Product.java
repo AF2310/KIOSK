@@ -11,6 +11,7 @@ public abstract class Product {
   private Type type;
   private int isActive;
   private String imagePath;
+  private int preparationTime;
 
   public String getName() {
     return name;
@@ -58,6 +59,14 @@ public abstract class Product {
 
   public void setActivity(int isActive) {
     this.isActive = isActive;
+  }
+
+  public int getPreparationTime() {
+    return preparationTime;
+  }
+
+  public void setPreparationTime(int preparationTime) {
+    this.preparationTime = preparationTime;
   }
 
   public String getImagePath() {
