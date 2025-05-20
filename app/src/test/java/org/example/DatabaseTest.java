@@ -1,13 +1,11 @@
-// This file caused errors due to the Class "TestingQueries" not getting found.
-// If the person responsible finds it, please fix so it can get uncommented.
-
 package org.example;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import org.example.sql.SqlConnectionCheck;
+import org.example.sql.DatabaseManager;
 
 /**
  * Testing database.
@@ -20,29 +18,29 @@ public class DatabaseTest {
    * @param args input
    */
   public static void main(String[] args) {
-    Application.launch(TestApp.class, args); 
+    Application.launch(TestApp.class, args);
   }
-    
+
   /**
    * This is the test app.
    */
   public static class TestApp extends Application {
     @Override
-    public void start(Stage primaryStage) {
-      SqlConnectionCheck connectionCheck = new SqlConnectionCheck();
-      Connection connection = connectionCheck.getConnection();
-        
-      if (connection != null) {
-        System.out.println("Database connection successful!");
-        TestingQueries queries = new TestingQueries(connection);
-        boolean result = queries.insertAdmin("TEST", "TEST!");
-        System.out.println("Insert result: " + result);
-      } else {
-        System.out.println("Connection failed");
+    public void start(Stage primaryStage) throws SQLException {
+      try (Connection connection = DatabaseManager.getConnection()) {
+
+        if (connection != null) {
+          System.out.println("Database connection successful!");
+          TestingQueries queries = new TestingQueries(connection);
+          boolean result = queries.insertAdmin("TEST", "TEST!");
+          System.out.println("Insert result: " + result);
+        } else {
+          System.out.println("Connection failed");
+        }
+
+        // Exit after test
+        Platform.exit();
       }
-        
-      // Exit after test
-      Platform.exit();
     }
   }
 }
