@@ -880,7 +880,36 @@ public class MainMenuScreen {
 
     boolean nameFilterActive = !currentSearchName.isEmpty();
     boolean priceFilterActive = currentSearchPrice >= 0;
-    Comparator<Product> nameComparator = Comparator.comparing(Product::getName, String.CASE_INSENSITIVE_ORDER);
+    String searchTerm = currentSearchName.toLowerCase();
+
+    //Comparator<Product> nameComparator = Comparator.comparing(Product::getName, String.CASE_INSENSITIVE_ORDER);
+    Comparator<Product> nameComparator = new Comparator<Product>() {
+      public int compare(Product p1, Product p2) {
+        String n1 = p1.getName().toLowerCase();
+
+        String n2 = p2.getName().toLowerCase();
+
+        boolean s1Starts = n1.startsWith(searchTerm);
+
+        boolean s2Starts = n2.startsWith(searchTerm);
+
+        if (s1Starts && !s2Starts) {
+          return -1;
+        }
+
+        if (!s1Starts && s2Starts) {
+          return 1;
+        }
+
+        return n1.compareTo(n2);
+
+
+      }
+    };
+
+    if (!searchTerm.isEmpty()) {
+      filteredProducts.sort(nameComparator);
+    }
     Comparator<Product> priceComparator = Comparator.comparingDouble(Product::getPrice);
 
     if (nameFilterActive && !priceFilterActive) {

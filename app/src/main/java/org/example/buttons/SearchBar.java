@@ -269,7 +269,36 @@ public class SearchBar extends VBox {
         boolean nameFilterActive = !name.isEmpty();
         boolean priceFilterActive = !priceText.isEmpty();
 
-        Comparator<Single> nameComparator = Comparator.comparing(Single::getName,String.CASE_INSENSITIVE_ORDER);
+        //Comparator<Single> nameComparator = Comparator.comparing(Single::getName,String.CASE_INSENSITIVE_ORDER);
+        String searchTerm = name.toLowerCase();
+
+        Comparator<Single> nameComparator = new Comparator<Single>() {
+          public int compare(Single p1, Single p2) {
+            String n1 = p1.getName().toLowerCase();
+    
+            String n2 = p2.getName().toLowerCase();
+    
+            boolean s1Starts = n1.startsWith(searchTerm);
+    
+            boolean s2Starts = n2.startsWith(searchTerm);
+    
+            if (s1Starts && !s2Starts) {
+              return -1;
+            }
+    
+            if (!s1Starts && s2Starts) {
+              return 1;
+            }
+    
+            return n1.compareTo(n2);
+    
+    
+          }
+        };
+    
+        if (!searchTerm.isEmpty()) {
+          filtered.sort(nameComparator);
+        }
         Comparator<Single> priceComparator = Comparator.comparingDouble(Single::getPrice);
 
         if (nameFilterActive && !priceFilterActive) {
