@@ -33,8 +33,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.example.buttons.ArrowButton;
-import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.CartSquareButton;
+import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SearchBar;
 import org.example.kiosk.LabelManager;
@@ -191,8 +191,27 @@ public class MainMenuScreen {
     showSearchBtn.setMinSize(80, 80);
     showSearchBtn.setMaxSize(80, 80);
 
+    // To make coloring of search button dynamic
+    // reused for special offers
+    Color backgroundColor = BackgroundColorStore.getCurrentBackgroundColor();
+    int r = (int) (backgroundColor.getRed() * 255);
+    int g = (int) (backgroundColor.getGreen() * 255);
+    int b = (int) (backgroundColor.getBlue() * 255);
+
     Circle searchCircle = new Circle(50);
-    searchCircle.setFill(Color.GOLD);
+
+    // If warm background --> Silver
+    // Else --> Gold
+    if (r >= 100 && g <= 200 && b <= 100) {
+
+      searchCircle.setFill(Color.SILVER);
+
+    } else {
+
+      searchCircle.setFill(Color.GOLD);
+
+    }
+
     searchCircle.setStroke(Color.RED);
 
     Label searchLabel = new Label("FILTER\nITEMS");
@@ -278,10 +297,21 @@ public class MainMenuScreen {
         btn.setStyle(
             "-fx-background-color: transparent;"
                 + "-fx-padding: 0px;");
-
+        
         // Make circle with noticible color
         Circle specialsCircle = new Circle(100);
-        specialsCircle.setFill(Color.GOLD);
+
+        // If warm background --> Silver
+        // Else --> Gold
+        if (r >= 100 && g <= 200 && b <= 100) {
+
+          specialsCircle.setFill(Color.SILVER);
+
+        } else {
+
+          specialsCircle.setFill(Color.GOLD);
+
+        }
 
         // Creating Stackpane to stack label over circle
         StackPane specialsStack = new StackPane(specialsCircle, btn);
@@ -383,7 +413,7 @@ public class MainMenuScreen {
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
     // Create cancel button
-    var cancelButton = new CancelButtonWithText();
+    var cancelButton = new ColorSquareButtonWithImage("Cancel", "/cancel.png");
 
     cancelButton.setOnAction(e -> {
       Cart.getInstance().clearCart();

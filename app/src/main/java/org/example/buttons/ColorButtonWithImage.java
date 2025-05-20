@@ -105,4 +105,28 @@ public class ColorButtonWithImage extends Button {
     int b = (int) (color.getBlue() * 255);
     return "rgb(" + r + ", " + g + ", " + b + ")";
   }
+
+  /**
+   * To set the color picker pane default to current color.
+   *
+   * @return current color
+   */
+  public static Color getButtonColor() {
+
+    try {
+
+      String[] rgb = buttonBackgroundColor.replace("rgb(", "").replace(")", "").split(",");
+      int r = Integer.parseInt(rgb[0].trim());
+      int g = Integer.parseInt(rgb[1].trim());
+      int b = Integer.parseInt(rgb[2].trim());
+
+      return Color.rgb(r, g, b);
+
+    } catch (Exception e) {
+
+      return Color.BLACK;
+
+    }
+
+  }
 }
