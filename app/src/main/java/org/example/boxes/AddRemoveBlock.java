@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import org.example.buttons.CircleButtonWithSign;
+import org.example.kiosk.LabelManager;
 
 /**
  * Class for the AddRemoveBlock. Includes a label with quantity and two buttons
@@ -26,6 +27,7 @@ public class AddRemoveBlock extends HBox {
     this.quantity = Math.max(0, Math.min(initialQuantity, 9));
 
     quantityLabel = new Label(String.valueOf(quantity));
+    LabelManager.register(quantityLabel);
     minusButton = new CircleButtonWithSign("-");
     plusButton = new CircleButtonWithSign("+");
 

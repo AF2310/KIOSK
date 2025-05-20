@@ -22,7 +22,7 @@ public class DropBoxWithLabel extends VBox {
 
     comboBox = new ComboBox<>();
     comboBox.setPrefWidth(300);
-    comboBox.setStyle("-fx-background-color: white;");
+    comboBox.setStyle("-fx-font-size: 24px; -fx-background-color: white;");
 
     setSpacing(5);
     setAlignment(Pos.TOP_LEFT);

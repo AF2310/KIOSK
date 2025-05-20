@@ -7,11 +7,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+// import java.util.HashSet;
+// import java.util.LinkedHashSet;
 import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -21,18 +22,25 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.boxes.AddRemoveBlock;
 import org.example.buttons.ArrowButton;
+import org.example.buttons.BlackButtonWithImage;
+import org.example.buttons.ColorBtnOutlineImage;
+import org.example.buttons.ColorButtonWithImage;
+import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
-import org.example.buttons.MidButtonWithImage;
-import org.example.buttons.SquareButtonWithImg;
+import org.example.buttons.TitleLabel;
+import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Ingredient;
 import org.example.menu.Meal;
 import org.example.menu.Single;
 import org.example.menu.Type;
 import org.example.orders.Cart;
+import org.example.sql.DatabaseManager;
+import org.example.sql.SqlQueries;
 
 /**
  * Screen for the details of an Item.
@@ -40,8 +48,7 @@ import org.example.orders.Cart;
  * (add, remove ingredients and such).
  */
 public class ItemDetails {
-
-  private LanguageSetting languageSetting = new LanguageSetting();
+  SqlQueries queries = new SqlQueries();
 
   /**
    * Creating a scene for a specific item, displaying all item details.
@@ -53,27 +60,24 @@ public class ItemDetails {
    * @param cart         the cart where all items are
    * @return scene containing all item details
    */
-  public Scene create(Stage primaryStage, Scene prevScene, Single item, Cart cart)
+  public CustomScene create(Stage primaryStage, Scene prevScene, Single item, Cart cart)
       throws SQLException {
-    item.setIngredients(DriverManager.getConnection(
-        "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-            + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-            + "?user=u5urh19mtnnlgmog"
-            + "&password=zPgqf8o6na6pv8j8AX8r"
-            + "&useSSL=true"
-            + "&allowPublicKeyRetrieval=true"));
+    try (Connection connection = DatabaseManager.getConnection()) {
+      queries.setIngredientsForSingle(connection, item);
+    }
     List<Ingredient> ingredients = item.ingredients;
     // Make a deep copy of ingredients to avoid reusing the original list
     // System.out.println("Original ingredients: " + item.ingredients);
-    // List<Ingredient> ingredients = new ArrayList<>(new LinkedHashSet<>(item.ingredients));
+    // List<Ingredient> ingredients = new ArrayList<>(new
+    // LinkedHashSet<>(item.ingredients));
     // System.out.println("Ingredients after HashSet conversion: " + ingredients);
     // Original list
     // System.out.println("Before modification: " + item.ingredients);
     // Create a new list with no duplicates, using LinkedHashSet to preserve order
-    // List<Ingredient> ingredients = new ArrayList<>(new LinkedHashSet<>(item.ingredients));
+    // List<Ingredient> ingredients = new ArrayList<>(new
+    // LinkedHashSet<>(item.ingredients));
     // // Check after modification
     // System.out.println("After manual duplicate removal: " + ingredients);
-
 
     List<Integer> quantities = new ArrayList<>();
     /*
@@ -105,6 +109,7 @@ public class ItemDetails {
     for (int i = 0; i < Math.min(visibleCount, ingredients.size()); i++) {
       Label ingrLabel = new Label(ingredients.get(i).getName());
       ingrLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: normal;");
+      LabelManager.register(ingrLabel);
 
       // Calling on corresponding block from List
       AddRemoveBlock addRemoveBlock = blocks.get(i);
@@ -155,6 +160,7 @@ public class ItemDetails {
 
         Label ingrLabel = new Label(ingredients.get(i).getName());
         ingrLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: normal;");
+        LabelManager.register(ingrLabel);
 
         // Calling on corresponding block from List
         AddRemoveBlock addRemoveBlock = blocks.get(i);
@@ -163,6 +169,7 @@ public class ItemDetails {
         row.setAlignment(Pos.CENTER_RIGHT);
         ingredientBox.getChildren().add(row);
       }
+      LanguageSetting.getInstance().updateAllLabels(ingredientBox);
     });
 
     // Putting the ingredient box and the scroll button together in a vboc
@@ -170,16 +177,14 @@ public class ItemDetails {
     ingredientListBox.setAlignment(Pos.CENTER);
 
     // Item label
-    Label nameLabel = new Label(item.getName());
-    nameLabel.setStyle(
-        "-fx-font-size: 65px;"
-            + "-fx-font-weight: bold;");
+    var nameLabel = new TitleLabel(item.getName());
 
     // TODO: Add description to the item once it has one. This is dummy text
     var descriptionLabel = new Label("This is a yummy " + item.getName().toLowerCase());
     descriptionLabel.setStyle(
         "-fx-font-size: 20px;"
             + "-fx-font-weight: normal;");
+    LabelManager.register(descriptionLabel);
 
     // Left side of the top part of the screen
     VBox nameAndDescriptionBox = new VBox(20);
@@ -222,6 +227,7 @@ public class ItemDetails {
     priceLabel.setStyle(
         "-fx-font-size: 35px;"
             + "-fx-font-weight: bold;");
+    LabelManager.register(priceLabel);
 
     // Wrapper to align the Label in its VBox
     HBox priceWrapper = new HBox(priceLabel);
@@ -233,9 +239,8 @@ public class ItemDetails {
     rightSide.setAlignment(Pos.CENTER);
     rightSide.getChildren().addAll(imageView, priceWrapper);
 
-    SquareButtonWithImg backButton = new SquareButtonWithImg("Back",
-        "back.png",
-        "rgb(255, 255, 255)");
+    var backButton = new ColorSquareButtonWithImage("Back",
+        "back.png");
 
     backButton.setOnAction(e -> {
       primaryStage.setScene(prevScene);
@@ -247,9 +252,8 @@ public class ItemDetails {
     topContainer.setAlignment(Pos.CENTER);
     topContainer.getChildren().addAll(leftSide, rightSide);
 
-    MidButtonWithImage addToCartButton = new MidButtonWithImage("Add To Cart",
-        "cart_wh.png",
-        "rgb(81, 173, 86)");
+    var addToCartButton = new ColorButtonWithImage("Add To Cart",
+        "cart_wh.png");
 
     addToCartButton.setOnAction(e -> {
       try {
@@ -314,13 +318,30 @@ public class ItemDetails {
 
     // Translate all the text
     langButton.addAction(event -> {
-      // Toggle the language in LanguageSetting
-      languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
-      languageSetting.updateAllLabels(layout);
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
     });
 
-    return new Scene(layout, 1920, 1080);
+    CustomScene scene = new CustomScene(layout, 1920, 1080);
+
+    // Update the language for the scene upon creation
+    Parent root = scene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
+
+    return scene;
 
   }
 
@@ -352,15 +373,14 @@ public class ItemDetails {
    * @param conn         the connection to the database
    * @return the scene
    */
-  public Scene createMealUpsell(Stage primaryStage, Scene mainMenu, Single item,
+  public CustomScene createMealUpsell(Stage primaryStage, Scene mainMenu, Single item,
       List<AddRemoveBlock> blocks, List<Integer> quantities, Connection conn) {
-    Label mainText = new Label("Do you want to make it a meal?");
-    mainText.setStyle(
-        "-fx-font-size: 65px;"
-            + "-fx-font-weight: bold;");
+    var mainText = new TitleLabel("Do you want to make it a meal?");
 
-    MidButtonWithImage yesButton = new MidButtonWithImage("Yes", "/green_tick.png", "rgb(0, 0, 0)");
-    MidButtonWithImage noButton = new MidButtonWithImage("No", "/cancel.png", "rgb(255, 255, 255)");
+    LabelManager.register(mainText);
+
+    var yesButton = new BlackButtonWithImage("Yes", "/green_tick.png");
+    var noButton = new ColorBtnOutlineImage("No", "/cancel.png");
 
     HBox buttonBox = new HBox(20);
     buttonBox.setPadding(new Insets(50));
@@ -407,6 +427,17 @@ public class ItemDetails {
     layout.setAlignment(Pos.CENTER);
     layout.getChildren().addAll(mainText, buttonBox);
 
-    return new Scene(layout, 1920, 1080);
+    CustomScene scene = new CustomScene(layout, 1920, 1080);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
+
+    return scene;
   }
 }

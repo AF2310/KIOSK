@@ -10,6 +10,6 @@ public class LimitedTimeOffer implements IdiscountStrategy {
   /**
    * Applying discounts on limited time offers.
    */
-  public void applyDiscount() {}
+  public void applyDiscount(double percentage) {}
 
 }

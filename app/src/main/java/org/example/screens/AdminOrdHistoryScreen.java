@@ -1,14 +1,11 @@
 package org.example.screens;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -24,16 +21,14 @@ import javafx.stage.Stage;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.LangBtn;
 import org.example.kiosk.LanguageSetting;
-import org.example.menu.OrderItem;
-import org.example.menu.Product;
 import org.example.orders.Order;
+import org.example.sql.SqlQueries;
 
 /**
  * Order History class.
  */
 public class AdminOrdHistoryScreen {
-
-  private LanguageSetting languageSetting = new LanguageSetting();
+  private SqlQueries queries = new SqlQueries();
 
   /**
    * Scene to display the order history.
@@ -73,7 +68,7 @@ public class AdminOrdHistoryScreen {
           label.setWrapText(true);
           label.setStyle(
               "-fx-padding: 5px;"
-              + "-fx-alignment: Center;");
+                  + "-fx-alignment: Center;");
           label.maxWidthProperty().bind(this.widthProperty().subtract(10));
           label.setMinHeight(Region.USE_PREF_SIZE);
           setGraphic(label);
@@ -136,9 +131,9 @@ public class AdminOrdHistoryScreen {
     try {
 
       // Gets orders
-      ArrayList<Order> orders = queryOrders();
+      ArrayList<Order> orders = queries.queryOrders();
       // Gets Products for each order
-      queryOrderItemsFor(orders);
+      queries.queryOrderItemsFor(orders);
       // Inputs it into the table
       historyTable.getItems().addAll(orders);
 
@@ -192,116 +187,26 @@ public class AdminOrdHistoryScreen {
 
     // Translate all the text
     langButton.addAction(event -> {
-      // Toggle the language in LanguageSetting
-      languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
-      languageSetting.updateAllLabels(layout);
-      // historyTable.refresh();
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
     });
 
-    return new Scene(layout, 1920, 1080);
+    LanguageSetting.getInstance().updateAllLabels(layout);
+
+    Scene historyScene = new Scene(layout, 1920, 1080);
+
+    // Update the language for the scene upon creation
+    Parent root = historyScene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
+
+    return historyScene;
 
   }
 
   // Query for the orders
-  private ArrayList<Order> queryOrders() throws SQLException {
-
-    // ArrayList to hold all orders queried from the db
-    ArrayList<Order> history = new ArrayList<>();
-
-    String querySql = "SELECT order_ID, kiosk_ID, customer_ID, order_date, amount_total, status "
-        + "FROM `order`";
-
-    try (
-
-        Connection conn = DriverManager.getConnection(
-              "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-              + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-              + "?user=u5urh19mtnnlgmog"
-              + "&password=zPgqf8o6na6pv8j8AX8r"
-              + "&useSSL=true"
-              + "&allowPublicKeyRetrieval=true"
-        );
-
-        PreparedStatement stmt = conn.prepareStatement(querySql);
-        ResultSet results = stmt.executeQuery()
-
-    ) {
-      // Creates Orders from queried data
-      while (results.next()) {
-
-        int orderId = results.getInt("order_ID");
-        int kioskId = results.getInt("kiosk_ID");
-        int customerId = results.getInt("customer_ID");
-        Timestamp orderDate = results.getTimestamp("order_date");
-        double amountTotal = results.getDouble("amount_total");
-        String status = results.getString("status");
-
-        Order order = new Order(orderId, kioskId, customerId, orderDate, amountTotal, status);
-        history.add(order);
-
-      }
-
-    }
-
-    return history;
-
-  }
-
-  // Query for the Products belonging to each queried order
-  private void queryOrderItemsFor(ArrayList<Order> orders) throws SQLException {
-
-    String itemQuery = "SELECT oi.order_id, oi.product_id, p.name, p.price, oi.quantity "
-        + "FROM order_item oi "
-        + "JOIN product p ON oi.product_id = p.product_id";
-
-    try (
-
-        Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-                + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-                + "?user=u5urh19mtnnlgmog"
-                + "&password=zPgqf8o6na6pv8j8AX8r"
-                + "&useSSL=true"
-                + "&allowPublicKeyRetrieval=true");
-
-        PreparedStatement stmt = conn.prepareStatement(itemQuery);
-        ResultSet rs = stmt.executeQuery()
-
-    ) {
-
-      while (rs.next()) {
-
-        int orderId = rs.getInt("order_id");
-        int productId = rs.getInt("product_id");
-        String name = rs.getString("name");
-        double price = rs.getDouble("price");
-        int quantity = rs.getInt("quantity");
-
-        for (Order order : orders) {
-
-          if (order.getOrderId() == orderId) {
-
-            Product product = new Product() {
-            };
-            product.setId(productId);
-            product.setName(name);
-            product.setPrice(price);
-
-            OrderItem orderItem = new OrderItem(product, quantity, price);
-
-            order.getProducts().add(orderItem);
-
-            break;
-
-          }
-
-        }
-
-      }
-
-    }
-
-  }
 
 }

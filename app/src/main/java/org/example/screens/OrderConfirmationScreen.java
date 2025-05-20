@@ -5,7 +5,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.example.buttons.TitleLabel;
+import org.example.kiosk.LabelManager;
+
 
 /**
  * This screen displays the confirmation of the order
@@ -30,7 +34,7 @@ public class OrderConfirmationScreen {
    * @param orderId the id of the order (database)
    * @return scene containing the order confirmation
    */
-  public Scene createOrderConfirmationScreen(
+  public CustomScene createOrderConfirmationScreen(
       Stage primaryStage,
       double windowWidth,
       double windowHeight,
@@ -38,12 +42,8 @@ public class OrderConfirmationScreen {
       int orderId) {
 
     // Title of the screen -> Order confirmation message
-    Label orderConfirmationLabel = new Label("Ordered Successfully!");
+    Label orderConfirmationLabel = new TitleLabel("Ordered Successfully!");
     orderConfirmationLabel.setAlignment(Pos.CENTER);
-    orderConfirmationLabel.setStyle(
-        "-fx-font-size: 60px;"
-        + "-fx-font-weight: bold;"
-    );
 
     // Order id label
     Label orderIdLabel = new Label("Order number: " + orderId);
@@ -51,6 +51,7 @@ public class OrderConfirmationScreen {
         "-fx-font-size: 30px;"
         + "-fx-font-weight: normal;"
     );
+    LabelManager.register(orderIdLabel);
 
     // Combining both labels
     VBox screenLabelBox = new VBox();
@@ -65,6 +66,17 @@ public class OrderConfirmationScreen {
     oconfirmStack.getChildren().addAll(screenLabelBox);
     
     // Create final scene result
-    return new Scene(oconfirmStack, windowWidth, windowHeight);
+    CustomScene scene = new CustomScene(oconfirmStack, windowWidth, windowHeight);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
+
+    return scene;
   }
 }

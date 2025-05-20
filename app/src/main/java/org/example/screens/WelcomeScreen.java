@@ -3,35 +3,40 @@ package org.example.screens;
 import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.example.buttons.BlackButtonWithImage;
+import org.example.buttons.ColorBtnOutlineImage;
+import org.example.buttons.KioskName;
 import org.example.buttons.LangBtn;
-import org.example.buttons.MidButtonWithImage;
+import org.example.kiosk.InactivityTimer;
+import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;
 import org.example.sql.SqlConnectionCheck;
-
 
 /**
  * The welcome screen class.
  */
 public class WelcomeScreen {
 
-  private LanguageSetting languageSetting = new LanguageSetting();
-
   /**
    * The welcome class scene.
    *
    * @throws SQLException if the server has issues
    */
-  public Scene createWelcomeScreen(
+  public CustomScene createWelcomeScreen(
       Stage primaryStage,
       double windowWidth,
       double windowHeight) throws SQLException {
@@ -46,19 +51,21 @@ public class WelcomeScreen {
 
     // Setup labels
     var welcome = new Label("Welcome to");
-    var companyTitle = new Label("Bun & Patty");
+    LabelManager.register(welcome);
+    var companyTitle = new Label(KioskName.getCompanyTitle());
+    LabelManager.register(companyTitle);
 
     // Customize labels
     welcome.setStyle(
         "-fx-background-color: transparent;"
-            + "-fx-text-fill: black;"
+            // + "-fx-text-fill: black;"
             + "-fx-font-weight: lighter;"
             + "-fx-font-size: 100;"
             + "-fx-background-radius: 10;");
 
     companyTitle.setStyle(
         "-fx-background-color: transparent;"
-            + "-fx-text-fill: black;"
+            // + "-fx-text-fill: black;"
             + "-fx-font-weight: bolder;"
             + "-fx-font-size: 160;"
             + "-fx-background-radius: 10;");
@@ -68,7 +75,7 @@ public class WelcomeScreen {
     rowOfBurgers.setAlignment(Pos.CENTER);
 
     // Setup side images
-    
+
     // Image burger3 = new Image(getClass().getResourceAsStream("/burger3.png"));
 
     // Create a button with the burger image as its graphic
@@ -107,25 +114,20 @@ public class WelcomeScreen {
     rowOfButtons.setPadding(new Insets(30));
     rowOfButtons.setAlignment(Pos.CENTER);
 
-    var eatHereBtn = new MidButtonWithImage(
+    var eatHereBtn = new BlackButtonWithImage(
         "Eat Here",
-        "/eatHere.png",
-        "rgb(0, 0, 0)");
+        "/eatHere.png");
 
-    var takeAwayBtn = new MidButtonWithImage(
+    var takeAwayBtn = new ColorBtnOutlineImage(
         "Takeaway",
-        "/takeaway.png",
-        "rgb(255, 255, 255)");
+        "/takeaway.png");
 
     rowOfButtons.getChildren().addAll(eatHereBtn, takeAwayBtn);
 
     Button termsButton = new Button("Terms of Service");
     termsButton.setStyle(
-        "-fx-text-fill: blue; -fx-underline: true; -fx-background-color: transparent;"
-    );
+        "-fx-text-fill: blue; -fx-underline: true; -fx-background-color: transparent;");
     termsButton.setOnAction(e -> showTermsDialog(primaryStage));
-
-
 
     // Add centre image
     Image burger2 = new Image(getClass().getResourceAsStream("/burger2.png"));
@@ -133,13 +135,14 @@ public class WelcomeScreen {
     rowOfBurgers.getChildren().addAll(burgerView1, burgerView2, burgerButton);
 
     var langButton = new LangBtn();
+    langButton.updateImage();
 
     // Translate all the text
     langButton.addAction(event -> {
-      // Toggle the language in LanguageSetting
-      languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
-      languageSetting.updateAllLabels(mainWindow);
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(mainWindow);
     });
 
     // Position the language button in the bottom-left corner
@@ -149,6 +152,7 @@ public class WelcomeScreen {
     // Test sql connection
     SqlConnectionCheck connectionCheck = new SqlConnectionCheck();
     Label mysql = connectionCheck.getMysqlLabel();
+    LabelManager.register(mysql);
 
     mainWindow.getChildren().addAll(
         welcome, companyTitle, rowOfBurgers, rowOfButtons, mysql, termsButton);
@@ -157,13 +161,22 @@ public class WelcomeScreen {
     StackPane mainPane = new StackPane(mainWindow, langButton);
     mainPane.setPrefSize(windowWidth, windowHeight);
 
-    Scene scene = new Scene(mainPane, windowWidth, windowHeight);
+    CustomScene scene = new CustomScene(mainPane, windowWidth, windowHeight);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
 
     // Set up action for eat here
     eatHereBtn.setOnAction(e -> {
       try {
         MainMenuScreen mainMenuScreen = new MainMenuScreen();
-        Scene mainMenuScene = mainMenuScreen.createMainMenuScreen(
+        CustomScene mainMenuScene = mainMenuScreen.createMainMenuScreen(
             primaryStage,
             windowWidth,
             windowHeight,
@@ -171,17 +184,28 @@ public class WelcomeScreen {
             0,
             "eatHere");
         primaryStage.setScene(mainMenuScene);
+
+        InactivityTimer.getInstance().setPrimaryStage(primaryStage);
+        InactivityTimer.getInstance().startTimer();
+
+        // Any movement of the user resets the inactivity timer
+        primaryStage.addEventFilter(
+            MouseEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
+        );
+        primaryStage.addEventFilter(
+            KeyEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
+        );
+
       } catch (SQLException ex) {
         ex.printStackTrace();
       }
-
     });
 
     // Set up action for takeaway
     takeAwayBtn.setOnAction(e -> {
       try {
         MainMenuScreen mainMenuScreen = new MainMenuScreen();
-        Scene mainMenuScene = mainMenuScreen.createMainMenuScreen(
+        CustomScene mainMenuScene = mainMenuScreen.createMainMenuScreen(
             primaryStage,
             windowWidth,
             windowHeight,
@@ -189,6 +213,18 @@ public class WelcomeScreen {
             0,
             "takeaway");
         primaryStage.setScene(mainMenuScene);
+
+        InactivityTimer.getInstance().setPrimaryStage(primaryStage);
+        InactivityTimer.getInstance().startTimer();
+
+        // Any movement of the user resets the inactivity timer
+        primaryStage.addEventFilter(
+            MouseEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
+        );
+        primaryStage.addEventFilter(
+            KeyEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
+        );
+
       } catch (SQLException ex) {
         ex.printStackTrace();
       }
@@ -203,6 +239,14 @@ public class WelcomeScreen {
       primaryStage.setScene(adminMenuScene);
     });
 
+    // Update the language for the scene upon creation
+    Parent root = scene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(mainWindow);
+    // LanguageSetting.getInstance().updateAllLabels(eatHereBtn);
+    // LanguageSetting.getInstance().updateAllLabels(takeAwayBtn);
+
     return scene;
   }
 
@@ -212,15 +256,14 @@ public class WelcomeScreen {
     dialog.setTitle("Terms of Service");
     Label termsContent = new Label(
         "1. Acceptance of Terms\n"
-        + "By using our services, you agree to these terms...\n\n"
-        + "2. Service Description\n"
-        + "We provide food ordering services...\n\n"
-        + "3. User Responsibilities\n"
-        + "You must provide accurate information...\n\n"
-        + "4. Limitation of Liability\n"
-        + "We are not responsible for...\n\n"
-        + "Last Updated: "
-    );
+            + "By using our services, you agree to these terms...\n\n"
+            + "2. Service Description\n"
+            + "We provide food ordering services...\n\n"
+            + "3. User Responsibilities\n"
+            + "You must provide accurate information...\n\n"
+            + "4. Limitation of Liability\n"
+            + "We are not responsible for...\n\n"
+            + "Last Updated: ");
     termsContent.setWrapText(true);
     termsContent.setStyle("-fx-font-size: 14; -fx-padding: 10;");
 

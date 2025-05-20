@@ -1,6 +1,7 @@
 package org.example.screens;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,7 +13,7 @@ import javafx.stage.Stage;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SearchBar;
-import org.example.sql.SqlConnectionCheck;
+import org.example.sql.DatabaseManager;
 
 /**
  * This class represents a screen with a search bar and navigation buttons.
@@ -25,13 +26,14 @@ public class SeachBarScreen {
    * @param primaryStage this window
    * @param prevScene    previous scene to go back to
    * @return the scene itself
+   * @throws SQLException sql exception.
    */
-  public Scene showSearchScene(Stage primaryStage, Scene prevScene) {
+  public Scene showSearchScene(Stage primaryStage, Scene prevScene) throws SQLException {
 
-    Connection conn = new SqlConnectionCheck().getConnection();
+    Connection connection = DatabaseManager.getConnection();
 
     // Create the search bar
-    SearchBar adminSearch = new SearchBar(conn);
+    SearchBar adminSearch = new SearchBar(connection);
     adminSearch.setMaxWidth(800);
     adminSearch.setMinWidth(500);
 

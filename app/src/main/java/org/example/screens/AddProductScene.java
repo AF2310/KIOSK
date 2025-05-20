@@ -1,41 +1,55 @@
 package org.example.screens;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.example.buttons.DropBoxWithLabel;
+import org.example.buttons.LangBtn;
+import org.example.buttons.RectangleTextFieldWithLabel;
+import org.example.buttons.SqrBtnWithOutline;
+import org.example.buttons.SquareButtonWithImg;
+import org.example.buttons.TickBoxWithLabel;
+import org.example.kiosk.LanguageSetting;
+import org.example.sql.DatabaseManager;
+import org.example.sql.SqlQueries;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.example.buttons.DropBoxWithLabel;
-import org.example.buttons.LangBtn;
-import org.example.buttons.RectangleTextFieldWithLabel;
-import org.example.buttons.SqrBtnWithOutline;
-import org.example.buttons.TickBoxWithLabel;
-import org.example.kiosk.LanguageSetting;
-import org.example.sql.SqlConnectionCheck;
 
 /**
  * Scene in the admin menu for adding products to the menu.
  */
 public class AddProductScene {
 
-  private LanguageSetting languageSetting = new LanguageSetting();
-
   private Stage primaryStage;
   private Scene prevScene;
+  private ImageView imagePreview = new ImageView();
+  private Label imageUrlLabel = new Label("No image selected");
+  private String selectedImageUrl = "/food/default_burger.png"; // Default image
+  private String relativeImagePath;
 
   /**
    * The add product scene constructor.
@@ -59,6 +73,7 @@ public class AddProductScene {
 
     // List view box for showing all the ingredients upon category selection
     ListView<String> ingredientListView = new ListView<>();
+    ingredientListView.setStyle("-fx-font-size: 20px;");
     ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     ingredientListView.setPrefSize(300, 400);
 
@@ -72,15 +87,14 @@ public class AddProductScene {
 
     // Creates a dropdown for selecting a product category
     DropBoxWithLabel productCategoryDropBox = new DropBoxWithLabel("Product Category:");
-
+    productCategoryDropBox.getComboBox().setStyle("-fx-font-size: 20px;");
     // Map to store category name and its corresponding ID from the database.
     Map<String, Integer> categoryMap = new HashMap<>();
 
     // This is a query to fetch all the categories from the database
-    try {
-      SqlConnectionCheck connection = new SqlConnectionCheck();
+    try (Connection connection = DatabaseManager.getConnection()) {
       String sql = "SELECT category_id, name FROM category";
-      PreparedStatement stmt = connection.getConnection().prepareStatement(sql);
+      PreparedStatement stmt = connection.prepareStatement(sql);
       ResultSet rs = stmt.executeQuery();
 
       while (rs.next()) {
@@ -95,32 +109,11 @@ public class AddProductScene {
       productCategoryDropBox.getComboBox().setOnAction(e -> {
         // Gets selected category
         String selectedCategory = productCategoryDropBox.getSelectedItem();
+        SqlQueries queries = new SqlQueries();
         if (selectedCategory != null) {
-
           try {
-            // Joins category onto ingredients so we have ingredient_name + ingredient_id
-            String categoryOnIngredientsql = "SELECT i.ingredient_id, i.ingredient_name "
-                + "FROM ingredient i "
-                + "JOIN categoryingredients ci ON i.ingredient_id = ci.ingredient_id "
-                + "JOIN category c ON ci.category_id = c.category_id "
-                + "WHERE c.name = ?";
-
-            PreparedStatement statement = connection.getConnection().prepareStatement(
-                categoryOnIngredientsql);
-            // Selects the category ingredients
-            statement.setString(1, selectedCategory);
-            ResultSet resultSet = statement.executeQuery();
-
-            ObservableList<String> ingredients = FXCollections.observableArrayList();
-
-            // Here we populate the ingredient list view with the results
-            while (resultSet.next()) {
-              // Only shows the ingredients for the selected category
-              String ingredientName = resultSet.getString("ingredient_name");
-              ingredients.add(ingredientName);
-            }
-
-            ingredientListView.setItems(ingredients);
+            List<String> ingredients = queries.getIngredientsByCategory(selectedCategory);
+            ingredientListView.setItems(FXCollections.observableArrayList(ingredients));
 
           } catch (SQLException ex) {
             ex.printStackTrace();
@@ -128,20 +121,10 @@ public class AddProductScene {
           }
         }
       });
-
     } catch (SQLException ex) {
       ex.printStackTrace();
       showAlert("Database error", "Failed to load categories", Alert.AlertType.ERROR);
     }
-    // TODO: Make connection to sql a singleton so we don't create new connections each time.
-
-    // Maps categories to default image paths for now
-    // TODO: Make an implementation for putting in new images for products
-    Map<String, String> categoryImageMap = new HashMap<>();
-    categoryImageMap.put("Burger", "/food/default_burger.png");
-    categoryImageMap.put("Side", "/food/default_side.png");
-    categoryImageMap.put("Drink", "/food/default_drink.png");
-    categoryImageMap.put("Dessert", "/food/default_dessert.png");
 
     SqrBtnWithOutline confirmButton = new SqrBtnWithOutline("Confirm",
         "green_tick.png", "rgb(81, 173, 86)");
@@ -158,9 +141,8 @@ public class AddProductScene {
 
     // Handler for when the confirm button is clicked, it adds that new product
     confirmButton.setOnAction(e -> {
-      try {
-        SqlConnectionCheck connection = new SqlConnectionCheck();
-        connection.getConnection().setAutoCommit(false);
+      try (Connection connection = DatabaseManager.getConnection()) {
+        connection.setAutoCommit(false);
 
         ObservableList<String> selectedItems = ingredientListView
             .getSelectionModel().getSelectedItems();
@@ -186,25 +168,10 @@ public class AddProductScene {
             + " is_active, is_limited, image_url)"
             + " VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        PreparedStatement stmtProduct = connection.getConnection()
+        PreparedStatement stmtProduct = connection
             .prepareStatement(sqlProduct, PreparedStatement.RETURN_GENERATED_KEYS);
 
-        String imageFileName;
-
-        // And constructs the image file path based on the selected category
-        if (selectedCategory.equalsIgnoreCase("burgesr")) {
-          imageFileName = "default_burger.png";
-        } else if (selectedCategory.equalsIgnoreCase("desserts")) {
-          imageFileName = "default_dessert.png";
-        } else if (selectedCategory.equalsIgnoreCase("sides")) {
-          imageFileName = "default_side.png";
-        } else if (selectedCategory.equalsIgnoreCase("drinks")) {
-          imageFileName = "default_drink.png";
-        } else {
-          imageFileName = "default_burger.png"; // fallback in case no match
-        }
-
-        String imageUrl = "/food/" + imageFileName;
+        String imageUrl = relativeImagePath;
 
         byte isActive = (byte) (productIsActive.isSelected() ? 1 : 0);
         byte isLimited = (byte) (productIsLimited.isSelected() ? 1 : 0);
@@ -242,7 +209,7 @@ public class AddProductScene {
             + "VALUES (?, (SELECT ingredient_id FROM "
             + "ingredient WHERE ingredient_name = ?), ?)";
 
-        PreparedStatement stmtIngredients = connection.getConnection()
+        PreparedStatement stmtIngredients = connection
             .prepareStatement(sqlIngredients);
 
         int ingredientCount = 1;
@@ -255,7 +222,7 @@ public class AddProductScene {
         }
 
         stmtIngredients.executeBatch();
-        connection.getConnection().commit();
+        connection.commit();
 
       } catch (NumberFormatException ex) {
         showAlert(
@@ -306,8 +273,10 @@ public class AddProductScene {
     HBox menuLayoutCenter = new HBox(activeLimitedBox, categoryIdBox);
     menuLayoutCenter.setPadding(new Insets(0, 10, 280, 30));
 
+    VBox imageSelection = imageSelection();
+
     // Bottom container for add and back button
-    HBox bottomContainer = new HBox(20, confirmButton, backButton);
+    HBox bottomContainer = new HBox(20, confirmButton, backButton, imageSelection);
     bottomContainer.setAlignment(Pos.BOTTOM_CENTER);
     productName.setPrefWidth(300);
 
@@ -323,23 +292,28 @@ public class AddProductScene {
     // Language Button
     var langButton = new LangBtn();
 
-    // Translate all the text
     langButton.addAction(event -> {
-      // Toggle the language in LanguageSetting
-      languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
-      languageSetting.updateAllLabels(layout);
-      // historyTable.refresh();
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
     });
 
     // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
     StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
 
-    //put everything into a stackpane
+    // put everything into a stackpane
     StackPane mainPane = new StackPane(layout, langButton);
 
     Scene addProductScene = new Scene(mainPane, 1920, 1080);
+
+    // Update the language for the scene upon creation
+    Parent root = addProductScene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
+
     return addProductScene;
   }
 
@@ -356,5 +330,45 @@ public class AddProductScene {
     alert.setHeaderText(null);
     alert.setContentText(message);
     alert.showAndWait();
+  }
+
+  private VBox imageSelection() {
+
+    SquareButtonWithImg selectFile = new SquareButtonWithImg("Select image",
+        "right_arrow.png", "rgb(170, 170, 170)");
+
+    // Creating an image preview and the whole Vbox for image selection
+    imagePreview.setFitWidth(150);
+    imagePreview.setFitHeight(150);
+    imagePreview.setPreserveRatio(true);
+    VBox imageSelectionBox = new VBox(10, imagePreview, selectFile, imageUrlLabel);
+    imageSelectionBox.setAlignment(Pos.CENTER);
+    // Event handling for file choosing
+    FileChooser fileChooser = new FileChooser();
+    selectFile.setOnAction(e -> {
+      fileChooser.getExtensionFilters().addAll(
+          new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif"));
+
+      File selectedFile = fileChooser.showOpenDialog(primaryStage);
+
+      if (selectedFile != null) {
+        try {
+          String fileName = selectedFile.getName();
+          // Convert to URL string and store it
+          selectedImageUrl = selectedFile.toURI().toURL().toString();
+          this.relativeImagePath = "/food/" + fileName;
+
+          // Update the UI
+          imageUrlLabel.setText("Selected Image");
+          imagePreview.setImage(new Image(selectedImageUrl));
+
+        } catch (MalformedURLException ex) {
+          ex.printStackTrace();
+          showAlert("Error", "Invalid file path", Alert.AlertType.ERROR);
+        }
+      }
+    });
+
+    return imageSelectionBox;
   }
 }

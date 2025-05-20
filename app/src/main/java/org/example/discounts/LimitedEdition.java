@@ -10,6 +10,6 @@ public class LimitedEdition implements IdiscountStrategy {
   /**
    * Applying discounts or promotions of limited edition items.
    */
-  public void applyDiscount() {}
+  public void applyDiscount(double percentage) {}
 
 }

@@ -4,22 +4,25 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.animations.FadingAnimation;
 import org.example.boxes.CheckoutGridWithButtons;
 import org.example.buttons.BackBtnWithTxt;
-import org.example.buttons.CancelButtonWithText;
+import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.ConfirmOrderButton;
 import org.example.buttons.EatHereButton;
 import org.example.buttons.LangBtn;
 import org.example.buttons.TakeAwayButton;
+import org.example.buttons.TitleLabel;
+import org.example.kiosk.InactivityTimer;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
 import org.example.orders.Cart;
@@ -34,10 +37,6 @@ import org.example.users.Customer;
 public class CheckoutScreen {
 
   private Stage primaryStage;
-  private LanguageSetting languageSetting = new LanguageSetting();
-  // private Connection conn;
-  // private float totalPrice = 0.0f;
-  // private Label totalLabel;
 
   /**
    * Creating a scene for the checkout menu.
@@ -52,7 +51,7 @@ public class CheckoutScreen {
    * @param conn            the database connection
    * @return scene containing all the order details
    */
-  public Scene createCheckoutScreen(
+  public CustomScene createCheckoutScreen(
       Stage primaryStage,
       double windowWidth,
       double windowHeight,
@@ -86,13 +85,12 @@ public class CheckoutScreen {
     // Top of layout - creating elements
 
     // Title of the checkout screen
-    Label checkoutLabel = new Label("Checkout");
-    checkoutLabel.setStyle(
-        "-fx-font-size: 60px;"
-            + "-fx-font-weight: bold;");
+    var checkoutLabel = new TitleLabel("Checkout");
     // Alignment of label
     checkoutLabel.setAlignment(Pos.TOP_LEFT);
     checkoutLabel.setPadding(new Insets(50, 100, 50, 50));
+    checkoutLabel.setMinWidth(500); // Gives label space to breathe
+
 
     // Promo code section
     TextField promoField = new TextField();
@@ -106,26 +104,6 @@ public class CheckoutScreen {
             + "-fx-alignment: center;");
     promoField.setMaxWidth(300);
     promoField.setMaxHeight(100);
-
-    // // Create the Apply Promo button
-    // Button applyPromoButton = new Button();
-    // applyPromoButton.setGraphic(promoField);
-    // applyPromoButton.setStyle(
-    //     "-fx-background-color: #4CAF50;"
-    //         + "-fx-background-radius: 15;"
-    //         + "-fx-padding: 20;");
-    // applyPromoButton.setPrefSize(590, 90);
-    // applyPromoButton.setOnAction(e -> applyPromo(promoField.getText()));
-
-    // Top of layout - combining elements
-
-    // HBox leftsideBox = new HBox(100);
-    // leftsideBox.setAlignment(Pos.CENTER);
-    // leftsideBox.getChildren().addAll(
-    //     checkoutLabel,
-    //     promoField,
-    //     topLeftSpacer
-    // );
 
     HBox topBox = new HBox();
     topBox.setAlignment(Pos.TOP_LEFT);
@@ -186,7 +164,8 @@ public class CheckoutScreen {
           ordConfirmScene,
           welcomeScrScene);
 
-      // Clear cart after order has been done
+      // Clear cart and stop timer after order has been done
+      InactivityTimer.getInstance().stopTimer();
       Cart.getInstance().clearCart();
     });
 
@@ -196,11 +175,12 @@ public class CheckoutScreen {
     backButton.setOnAction(e -> primaryStage.setScene(mainMenuScreen));
 
     // Cancel button
-    var cancelButton = new CancelButtonWithText();
+    var cancelButton = new ColorSquareButtonWithImage("Cancel", "/cancel.png");
     // clicking button means cancellation of order
     // and user gets send back to welcome screen
     cancelButton.setOnAction(e -> {
       Cart.getInstance().clearCart();
+      InactivityTimer.getInstance().stopTimer();
       System.out.println("Order canceled!");
       primaryStage.setScene(welcomeScrScene);
     });
@@ -251,37 +231,34 @@ public class CheckoutScreen {
         checkoutGrid,
         bottomPart);
 
-    // Just pass in the Labeled components to translate
+    // Translate all the text
     langButton.addAction(event -> {
-      // Toggle the language in LanguageSetting
-      languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en"
-      );
-      languageSetting.updateAllLabels(layout);
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
     });
 
+    LanguageSetting.getInstance().updateAllLabels(layout);
+
     // Create final scene result
-    return new Scene(layout, windowWidth, windowHeight);
+    CustomScene scene = new CustomScene(layout, windowWidth, windowHeight);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
+
+    // Update the language for the scene upon creation
+    Parent root = scene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
+
+    return scene;
   }
-
-  // private void applyPromo(String code) {
-  //   try {
-  //     String sql = "";
-  //     PreparedStatement stmt = conn.prepareStatement(sql);
-  //     stmt.setString(1, code);
-  //     ResultSet rs = stmt.executeQuery();
-  //     if (rs.next()) {
-  //       float discount = rs.getFloat("discount");
-  //       totalPrice *= (1 - discount);
-  //       totalLabel.setText(String.format("Total: %.2f :- (%.0f%% discount applied)",
-  //           totalPrice, discount * 100));
-  //     } else {
-  //       totalLabel.setText("Invalid promo code");
-  //     }
-
-  //   } catch (SQLException ex) {
-  //     ex.printStackTrace();
-  //   }
-
-  // }
 }

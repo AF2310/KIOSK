@@ -8,6 +8,6 @@ public interface IdiscountStrategy {
   /**
    * applying discount.
    */
-  void applyDiscount();
+  void applyDiscount(double percentage);
     
 }

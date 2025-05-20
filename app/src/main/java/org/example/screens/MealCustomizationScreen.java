@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
@@ -25,8 +26,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.CancelButtonWithText;
+import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SqrBtnWithOutline;
+import org.example.buttons.TitleLabel;
+import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Drink;
 import org.example.menu.Meal;
@@ -39,8 +43,6 @@ import org.example.orders.Cart;
  * A Class for picking side and drink option for the meal.
  */
 public class MealCustomizationScreen {
-
-  private LanguageSetting languageSetting = new LanguageSetting();
 
   private Connection conn;
 
@@ -99,7 +101,7 @@ public class MealCustomizationScreen {
    * @param meal the meal for which this side is picked
    * @return returns a scene for side options.
    */
-  public Scene createSideSelectionScene(Stage stage, Scene returnScene,
+  public CustomScene createSideSelectionScene(Stage stage, Scene returnScene,
       Meal meal) {
     try {
       meal.setMain(conn);
@@ -108,9 +110,8 @@ public class MealCustomizationScreen {
       System.err.println("Failed to set main for the meal.");
     }
     // Creating the title for the scene
-    Label title = new Label("Pick a Side for your Meal");
-    title.setStyle("-fx-font-size: 40px;"
-        + "-fx-font-weight: bold;");
+    Label title = new TitleLabel("Pick a Side for your Meal");
+
     // Centering it on top of the layout
     HBox titleBox = new HBox(title);
     titleBox.setAlignment(Pos.CENTER);
@@ -158,6 +159,7 @@ public class MealCustomizationScreen {
 
       Label sideLabel = new Label(side.getName());
       sideLabel.setStyle("-fx-font-size: 14px;");
+      LabelManager.register(sideLabel);
 
       sideBox.getChildren().addAll(sideImage, sideLabel);
 
@@ -190,6 +192,7 @@ public class MealCustomizationScreen {
 
     Label mealLabel = new Label(meal.getName());
     mealLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+    LabelManager.register(mealLabel);
     mealDisplay.getChildren().addAll(mealImage, mealLabel);
     centerBox.getChildren().addAll(sideOptionsGrid, mealDisplay);
     layout.setCenter(centerBox);
@@ -229,7 +232,18 @@ public class MealCustomizationScreen {
       stage.setScene(drinkScene);
     });
 
-    return new Scene(layout, 1920, 1080);
+    CustomScene scene = new CustomScene(layout, 1920, 1080);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
+
+    return scene;
   }
 
   private List<Product> getDrinkOptionsForMeal(int mealId) {
@@ -270,13 +284,10 @@ public class MealCustomizationScreen {
    * @param sideScene goesback to the side scene
    * @return it returns the scene for drink options.
    */
-  public Scene createDrinkSelectionScene(Stage stage, Scene mainScene,
+  public CustomScene createDrinkSelectionScene(Stage stage, Scene mainScene,
       Meal meal, Scene sideScene) {
 
-    Label title = new Label("Pick a Drink for your Meal");
-    title.setStyle("-fx-font-size: 40px;"
-        + "-fx-font-weight: bold;");
-
+    Label title = new TitleLabel("Pick a Drink for your Meal");
 
     // The drink options scene is for now almost exact same as the side scene one,
     // It just has a different label, so no need for commenting this part
@@ -324,6 +335,7 @@ public class MealCustomizationScreen {
 
       Label drinkLabel = new Label(drink.getName());
       drinkLabel.setStyle("-fx-font-size: 14px;");
+      LabelManager.register(drinkLabel);
 
       drinkBox.getChildren().addAll(drinkImage, drinkLabel);
       drinkBox.setOnMouseClicked(e -> {
@@ -347,16 +359,15 @@ public class MealCustomizationScreen {
     mealImage.setPreserveRatio(true);
 
     Label mealLabel = new Label(meal.getName());
+    LabelManager.register(mealLabel);
     mealLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
     mealDisplay.getChildren().addAll(mealImage, mealLabel);
     centerBox.getChildren().addAll(drinkOptionsGrid, mealDisplay);
     layout.setCenter(centerBox);
 
-
-
     var langButton = new LangBtn();
-    var confirmBtn = new SqrBtnWithOutline("Confirm", "green_tick.png", "rgb(81, 173, 86)");
-    var cancelBtn = new CancelButtonWithText();
+    var confirmBtn = new ColorSquareButtonWithImage("Confirm", "green_tick.png");
+    var cancelBtn = new ColorSquareButtonWithImage("Cancel", "/cancel.png");
     var backButton = new BackBtnWithTxt();
 
     Region spacer1 = new Region();
@@ -387,19 +398,57 @@ public class MealCustomizationScreen {
 
     // Translate all the text
     langButton.addAction(event -> {
-      // Toggle the language in LanguageSetting
-      languageSetting.changeLanguage(
-          languageSetting.getSelectedLanguage().equals("en") ? "sv" : "en");
-      languageSetting.updateAllLabels(layout);
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
     });
 
-    return new Scene(layout, 1920, 1080);
+    LanguageSetting.getInstance().updateAllLabels(layout);
+
+    CustomScene scene = new CustomScene(layout, 1920, 1080);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
+
+    // Update the language for the scene upon creation
+    Parent root = scene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
+
+    return scene;
   }
 
   // TODO create this screen and link it after the drink selection.
-  public Scene createMealConfirmationScene(Stage stage, Scene drinkSelectionScene) {
+  /**
+   * Creates the meal confirmation scene after drink selection.
+   *
+   * @param stage the primary stage
+   * @param drinkSelectionScene the previous scene for drink selection
+   * @return the meal confirmation CustomScene
+   */
+  public CustomScene createMealConfirmationScene(Stage stage, Scene drinkSelectionScene) {
     BorderPane layout = new BorderPane();
-    return new Scene(layout, 1920, 1080);
+
+    CustomScene scene = new CustomScene(layout, 1920, 1080);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
+
+    return scene;
   }
 }
 
