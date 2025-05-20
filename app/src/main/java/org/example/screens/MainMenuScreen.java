@@ -278,10 +278,27 @@ public class MainMenuScreen {
         btn.setStyle(
             "-fx-background-color: transparent;"
                 + "-fx-padding: 0px;");
+        
+        // For the special offers button color check
+        Color backgroundColor = BackgroundColorStore.getCurrentBackgroundColor();
+        int r = (int) (backgroundColor.getRed() * 255);
+        int g = (int) (backgroundColor.getGreen() * 255);
+        int b = (int) (backgroundColor.getBlue() * 255);
 
         // Make circle with noticible color
         Circle specialsCircle = new Circle(100);
-        specialsCircle.setFill(Color.GOLD);
+
+        // If warm background --> Silver
+        // Else --> Gold
+        if (r >= 100 && g <= 200 && b <= 100) {
+
+          specialsCircle.setFill(Color.SILVER);
+
+        } else {
+
+          specialsCircle.setFill(Color.GOLD);
+
+        }
 
         // Creating Stackpane to stack label over circle
         StackPane specialsStack = new StackPane(specialsCircle, btn);
