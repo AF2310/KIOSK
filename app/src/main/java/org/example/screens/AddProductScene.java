@@ -339,7 +339,7 @@ public class AddProductScene {
     imagePreview.setFitWidth(150);
     imagePreview.setFitHeight(150);
     imagePreview.setPreserveRatio(true);
-    VBox imageSelectionBox = new VBox(10, selectFile, imagePreview, imageUrlLabel);
+    VBox imageSelectionBox = new VBox(10, imagePreview, selectFile, imageUrlLabel);
     imageSelectionBox.setAlignment(Pos.CENTER);
     // Event handling for file choosing
     FileChooser fileChooser = new FileChooser();
@@ -357,8 +357,7 @@ public class AddProductScene {
           this.relativeImagePath = "/food/" + fileName;
 
           // Update the UI
-          imageUrlLabel.setVisible(false);
-          imageUrlLabel.setText(relativeImagePath);
+          imageUrlLabel.setText("Selected Image");
           imagePreview.setImage(new Image(selectedImageUrl));
 
         } catch (MalformedURLException ex) {
