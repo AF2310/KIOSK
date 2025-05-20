@@ -20,7 +20,6 @@ import org.example.buttons.ColorButtonWithImage;
 import org.example.buttons.ColorPickersPane;
 import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
-import org.example.buttons.MidButton;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.LanguageSetting;
 

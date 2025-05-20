@@ -1,5 +1,8 @@
 package org.example.screens;
 
+
+import java.io.File;
+import java.net.MalformedURLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,18 +17,23 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.example.buttons.DropBoxWithLabel;
 import org.example.buttons.LangBtn;
 import org.example.buttons.RectangleTextFieldWithLabel;
 import org.example.buttons.SqrBtnWithOutline;
+import org.example.buttons.SquareButtonWithImg;
 import org.example.buttons.TickBoxWithLabel;
 import org.example.kiosk.LanguageSetting;
 import org.example.sql.SqlConnectionCheck;
+
 
 /**
  * Scene in the admin menu for adding products to the menu.
@@ -36,6 +44,10 @@ public class AddProductScene {
 
   private Stage primaryStage;
   private Scene prevScene;
+  private ImageView imagePreview = new ImageView();
+  private Label imageUrlLabel = new Label("No image selected");
+  private String selectedImageUrl = "/food/default_burger.png"; // Default image
+  private String relativeImagePath;
 
   /**
    * The add product scene constructor.
@@ -133,15 +145,7 @@ public class AddProductScene {
       ex.printStackTrace();
       showAlert("Database error", "Failed to load categories", Alert.AlertType.ERROR);
     }
-    // TODO: Make connection to sql a singleton so we don't create new connections each time.
 
-    // Maps categories to default image paths for now
-    // TODO: Make an implementation for putting in new images for products
-    Map<String, String> categoryImageMap = new HashMap<>();
-    categoryImageMap.put("Burger", "/food/default_burger.png");
-    categoryImageMap.put("Side", "/food/default_side.png");
-    categoryImageMap.put("Drink", "/food/default_drink.png");
-    categoryImageMap.put("Dessert", "/food/default_dessert.png");
 
     SqrBtnWithOutline confirmButton = new SqrBtnWithOutline("Confirm",
         "green_tick.png", "rgb(81, 173, 86)");
@@ -155,7 +159,7 @@ public class AddProductScene {
         "Product Description:", "rgb(255, 255, 255)");
     TickBoxWithLabel productIsActive = new TickBoxWithLabel("Is active?");
     TickBoxWithLabel productIsLimited = new TickBoxWithLabel("Is limited?");
-
+    
     // Handler for when the confirm button is clicked, it adds that new product
     confirmButton.setOnAction(e -> {
       try {
@@ -189,22 +193,8 @@ public class AddProductScene {
         PreparedStatement stmtProduct = connection.getConnection()
             .prepareStatement(sqlProduct, PreparedStatement.RETURN_GENERATED_KEYS);
 
-        String imageFileName;
 
-        // And constructs the image file path based on the selected category
-        if (selectedCategory.equalsIgnoreCase("burgesr")) {
-          imageFileName = "default_burger.png";
-        } else if (selectedCategory.equalsIgnoreCase("desserts")) {
-          imageFileName = "default_dessert.png";
-        } else if (selectedCategory.equalsIgnoreCase("sides")) {
-          imageFileName = "default_side.png";
-        } else if (selectedCategory.equalsIgnoreCase("drinks")) {
-          imageFileName = "default_drink.png";
-        } else {
-          imageFileName = "default_burger.png"; // fallback in case no match
-        }
-
-        String imageUrl = "/food/" + imageFileName;
+        String imageUrl = relativeImagePath;
 
         byte isActive = (byte) (productIsActive.isSelected() ? 1 : 0);
         byte isLimited = (byte) (productIsLimited.isSelected() ? 1 : 0);
@@ -306,10 +296,14 @@ public class AddProductScene {
     HBox menuLayoutCenter = new HBox(activeLimitedBox, categoryIdBox);
     menuLayoutCenter.setPadding(new Insets(0, 10, 280, 30));
 
+    VBox imageSelection = imageSelection();
+
     // Bottom container for add and back button
-    HBox bottomContainer = new HBox(20, confirmButton, backButton);
+    HBox bottomContainer = new HBox(20, confirmButton, backButton, imageSelection);
     bottomContainer.setAlignment(Pos.BOTTOM_CENTER);
     productName.setPrefWidth(300);
+
+
 
     // Final layout
     BorderPane layout = new BorderPane();
@@ -356,5 +350,47 @@ public class AddProductScene {
     alert.setHeaderText(null);
     alert.setContentText(message);
     alert.showAndWait();
+  }
+  
+  private VBox imageSelection() {
+
+    SquareButtonWithImg selectFile = new SquareButtonWithImg("Select image",
+             "right_arrow.png", "rgb(170, 170, 170)");
+
+    // Creating an image preview and the whole Vbox for image selection
+    imagePreview.setFitWidth(150);
+    imagePreview.setFitHeight(150);
+    imagePreview.setPreserveRatio(true);
+    VBox imageSelectionBox = new VBox(10, selectFile, imagePreview, imageUrlLabel);
+    imageSelectionBox.setAlignment(Pos.CENTER);
+    // Event handling for file choosing
+    FileChooser fileChooser = new FileChooser();
+    selectFile.setOnAction(e -> {
+      fileChooser.getExtensionFilters().addAll(
+        new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif")
+      );
+    
+      File selectedFile = fileChooser.showOpenDialog(primaryStage);
+    
+      if (selectedFile != null) {
+        try {
+          String fileName = selectedFile.getName();
+          // Convert to URL string and store it
+          selectedImageUrl = selectedFile.toURI().toURL().toString();
+          this.relativeImagePath = "/food/" + fileName;
+            
+          // Update the UI
+          imageUrlLabel.setVisible(false);
+          imageUrlLabel.setText(relativeImagePath);
+          imagePreview.setImage(new Image(selectedImageUrl));
+            
+        } catch (MalformedURLException ex) {
+          ex.printStackTrace();
+          showAlert("Error", "Invalid file path", Alert.AlertType.ERROR);
+        }
+      }
+    });
+
+    return imageSelectionBox;
   }
 }
