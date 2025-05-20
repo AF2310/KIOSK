@@ -189,7 +189,6 @@ public class MainMenuScreen {
     gridSearchBox.setAlignment(Pos.CENTER);
 
     Button showSearchBtn = new Button();
-    DropShadow searchShadow = new DropShadow();
     showSearchBtn.setMinSize(80, 80);
     showSearchBtn.setMaxSize(80, 80);
 
@@ -218,10 +217,14 @@ public class MainMenuScreen {
     
     Label searchLabel = new Label("FILTER\nITEMS");
     searchLabel.setTextAlignment(TextAlignment.CENTER);
-    searchLabel.setStyle("-fx-font-size: 20px; "
-    + "-fx-font-weight: bold; "
-    + "-fx-text-fill: gold; "
-    + "-fx-underline: true;");
+    searchLabel.setStyle(
+        "-fx-font-size: 20px; "
+        + "-fx-font-weight: bold; "
+        + "-fx-text-fill: gold; "
+        + "-fx-underline: true;"
+    );
+
+    DropShadow searchShadow = new DropShadow();
     
     showSearchBtn.setOnMouseEntered(e -> {
       searchLabel.setEffect(searchShadow);
