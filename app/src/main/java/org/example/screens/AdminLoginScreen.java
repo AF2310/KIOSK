@@ -18,9 +18,8 @@ import javafx.stage.Stage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
 import org.example.buttons.MidButtonWithImage;
-import org.example.sql.DatabaseManager;
 import org.example.kiosk.LanguageSetting;
-import org.example.sql.SqlConnectionCheck;
+import org.example.sql.DatabaseManager;
 import org.example.users.AdminAuth;
 
 /**

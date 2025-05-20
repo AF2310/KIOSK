@@ -21,8 +21,6 @@ import javafx.stage.Stage;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.LangBtn;
 import org.example.kiosk.LanguageSetting;
-import org.example.menu.OrderItem;
-import org.example.menu.Product;
 import org.example.orders.Order;
 import org.example.sql.SqlQueries;
 
@@ -70,7 +68,7 @@ public class AdminOrdHistoryScreen {
           label.setWrapText(true);
           label.setStyle(
               "-fx-padding: 5px;"
-              + "-fx-alignment: Center;");
+                  + "-fx-alignment: Center;");
           label.maxWidthProperty().bind(this.widthProperty().subtract(10));
           label.setMinHeight(Region.USE_PREF_SIZE);
           setGraphic(label);
@@ -209,6 +207,6 @@ public class AdminOrdHistoryScreen {
 
   }
 
-  // Query for the orders 
+  // Query for the orders
 
 }
