@@ -128,3 +128,25 @@ Arseny translated both the admin and customer menus. He also moved the database 
 We had 2 meetings. One after the meeting with client in person, to discuss this sprints tasks in details and one in discord on monday to wrap up the sprint. Each meeting was an hour long.
 
 ![alt text](references/Class_Sp20.png)
+
+
+
+Sprint 5 (Week 21)
+
+This week we continued working mainly on the admin features and polishing the customer interface. Namely, creating new meals via the admin menu, implementing an inactivity timer, improving the search bars and making the ui customizable.
+
+Vuk worked together with Jakob on the functionality to add a new meal to the database through the admin menu. He Also fixed the layout and the look of it and some buttons. He also addressed a design issue by resizing the drop box and list view in the new product screen after client feedback that they were too small. Vuk also experimented with hover shadow animations and applied them to the category names in the main menu and the search button in the top-right corner.
+
+Michelle implemented a global inactivity timer that now runs across the entire customer menu. If the user is inactive for a set amount of time, a popup appears, and if there is no interaction, the application automatically redirects the user back to the welcome screen. The timer can be edited in the corresponding admin menu section. She also impleneted the translation feature for the timer editor. Michelle also added getters and setters for preparation time in the product class and made the preparation time column in the admin product table editable directly into the database.
+
+Jakob worked on implementing the new meal creation feature with Vuk. He also worked on the stacking bug. Additionally, as with all previous sprints, Jakob handled organizational responsibilities and planning for both this and the nex sprint.
+
+Vince worked on the design costomization features. He added support for changing the kiosk name, background color, and buttons via the admin menu. He also added another graph to statistics screenand also cleaned up methods for the stats screen. He also updated the diagram to reflect the latest changes.
+
+Ignas added the global discount functionality, that allows the admin to apply a global discount across all products. He also implemented the option to import images for newly added products. He also worked on merging.
+
+Achilleas integrated the search bar into both the item edit and item remove screens, enhancing usability of these two screens. He also further improved the search bar's performance and visuals in the main menu screen for the customer, making it more intuitive and aligned with the overall interface design.
+
+Arseny worked with Vince on implementing kiosk customization options. He also worked on bug fixing and merging with Ignas and Vince.
+
+We had some brainstorming and colloborative sessions in small groups while working on stories and merging. We had one short meeting after the previous metting with TA in person and one long meeting on discord to wrap up the current sprint and plan the next one on Discord. During the sprint we were also actively communicating in Discord in text.
