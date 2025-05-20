@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Abstract base class for all single items on the menu.
  */
@@ -134,12 +135,12 @@ public class Single extends Product {
     }
 
     // Insert product in database with query and needed data
-    String insertSql = "INSERT INTO product " +
-        "(name, description, price, category_id, is_active) " +
-        "VALUES (?, ?, ?, ?, ?)";
+    String insertSql = "INSERT INTO product " 
+        + "(name, description, price, category_id, is_active) "
+        + "VALUES (?, ?, ?, ?, ?)";
 
     try (PreparedStatement stmt = conn.prepareStatement(
-      insertSql, Statement.RETURN_GENERATED_KEYS
+        insertSql, Statement.RETURN_GENERATED_KEYS
     )) {
       stmt.setString(1, getName());
       stmt.setString(2, getDescription());
@@ -225,10 +226,10 @@ public class Single extends Product {
     List<Single> list = new ArrayList<>();
 
     // SQL query to select all specified singles
-    String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type " +
-            "FROM product p " +
-            "JOIN category c ON p.category_id = c.category_id " +
-            "WHERE p.price < ? AND p.is_active = 1";
+    String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type " 
+            + "FROM product p " 
+            + "JOIN category c ON p.category_id = c.category_id " 
+            + "WHERE p.price < ? AND p.is_active = 1";
 
     // Prepare SQL statement with current connection
     // Try with this statement ensures the statement is closed automatically

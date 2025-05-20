@@ -1,12 +1,13 @@
 package org.example.screens;
 
-
 import java.io.File;
 import java.net.MalformedURLException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,8 +34,8 @@ import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.SquareButtonWithImg;
 import org.example.buttons.TickBoxWithLabel;
 import org.example.kiosk.LanguageSetting;
-import org.example.sql.SqlConnectionCheck;
-
+import org.example.sql.DatabaseManager;
+import org.example.sql.SqlQueries;
 
 /**
  * Scene in the admin menu for adding products to the menu.
@@ -89,10 +90,9 @@ public class AddProductScene {
     Map<String, Integer> categoryMap = new HashMap<>();
 
     // This is a query to fetch all the categories from the database
-    try {
-      SqlConnectionCheck connection = new SqlConnectionCheck();
+    try (Connection connection = DatabaseManager.getConnection()) {
       String sql = "SELECT category_id, name FROM category";
-      PreparedStatement stmt = connection.getConnection().prepareStatement(sql);
+      PreparedStatement stmt = connection.prepareStatement(sql);
       ResultSet rs = stmt.executeQuery();
 
       while (rs.next()) {
@@ -107,32 +107,11 @@ public class AddProductScene {
       productCategoryDropBox.getComboBox().setOnAction(e -> {
         // Gets selected category
         String selectedCategory = productCategoryDropBox.getSelectedItem();
+        SqlQueries queries = new SqlQueries();
         if (selectedCategory != null) {
-
           try {
-            // Joins category onto ingredients so we have ingredient_name + ingredient_id
-            String categoryOnIngredientsql = "SELECT i.ingredient_id, i.ingredient_name "
-                + "FROM ingredient i "
-                + "JOIN categoryingredients ci ON i.ingredient_id = ci.ingredient_id "
-                + "JOIN category c ON ci.category_id = c.category_id "
-                + "WHERE c.name = ?";
-
-            PreparedStatement statement = connection.getConnection().prepareStatement(
-                categoryOnIngredientsql);
-            // Selects the category ingredients
-            statement.setString(1, selectedCategory);
-            ResultSet resultSet = statement.executeQuery();
-
-            ObservableList<String> ingredients = FXCollections.observableArrayList();
-
-            // Here we populate the ingredient list view with the results
-            while (resultSet.next()) {
-              // Only shows the ingredients for the selected category
-              String ingredientName = resultSet.getString("ingredient_name");
-              ingredients.add(ingredientName);
-            }
-
-            ingredientListView.setItems(ingredients);
+            List<String> ingredients = queries.getIngredientsByCategory(selectedCategory);
+            ingredientListView.setItems(FXCollections.observableArrayList(ingredients));
 
           } catch (SQLException ex) {
             ex.printStackTrace();
@@ -140,12 +119,10 @@ public class AddProductScene {
           }
         }
       });
-
     } catch (SQLException ex) {
       ex.printStackTrace();
       showAlert("Database error", "Failed to load categories", Alert.AlertType.ERROR);
     }
-
 
     SqrBtnWithOutline confirmButton = new SqrBtnWithOutline("Confirm",
         "green_tick.png", "rgb(81, 173, 86)");
@@ -159,12 +136,11 @@ public class AddProductScene {
         "Product Description:", "rgb(255, 255, 255)");
     TickBoxWithLabel productIsActive = new TickBoxWithLabel("Is active?");
     TickBoxWithLabel productIsLimited = new TickBoxWithLabel("Is limited?");
-    
+
     // Handler for when the confirm button is clicked, it adds that new product
     confirmButton.setOnAction(e -> {
-      try {
-        SqlConnectionCheck connection = new SqlConnectionCheck();
-        connection.getConnection().setAutoCommit(false);
+      try (Connection connection = DatabaseManager.getConnection()) {
+        connection.setAutoCommit(false);
 
         ObservableList<String> selectedItems = ingredientListView
             .getSelectionModel().getSelectedItems();
@@ -190,9 +166,8 @@ public class AddProductScene {
             + " is_active, is_limited, image_url)"
             + " VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        PreparedStatement stmtProduct = connection.getConnection()
+        PreparedStatement stmtProduct = connection
             .prepareStatement(sqlProduct, PreparedStatement.RETURN_GENERATED_KEYS);
-
 
         String imageUrl = relativeImagePath;
 
@@ -232,7 +207,7 @@ public class AddProductScene {
             + "VALUES (?, (SELECT ingredient_id FROM "
             + "ingredient WHERE ingredient_name = ?), ?)";
 
-        PreparedStatement stmtIngredients = connection.getConnection()
+        PreparedStatement stmtIngredients = connection
             .prepareStatement(sqlIngredients);
 
         int ingredientCount = 1;
@@ -245,7 +220,7 @@ public class AddProductScene {
         }
 
         stmtIngredients.executeBatch();
-        connection.getConnection().commit();
+        connection.commit();
 
       } catch (NumberFormatException ex) {
         showAlert(
@@ -303,8 +278,6 @@ public class AddProductScene {
     bottomContainer.setAlignment(Pos.BOTTOM_CENTER);
     productName.setPrefWidth(300);
 
-
-
     // Final layout
     BorderPane layout = new BorderPane();
     layout.setTop(menuTitle);
@@ -356,11 +329,11 @@ public class AddProductScene {
     alert.setContentText(message);
     alert.showAndWait();
   }
-  
+
   private VBox imageSelection() {
 
     SquareButtonWithImg selectFile = new SquareButtonWithImg("Select image",
-             "right_arrow.png", "rgb(170, 170, 170)");
+        "right_arrow.png", "rgb(170, 170, 170)");
 
     // Creating an image preview and the whole Vbox for image selection
     imagePreview.setFitWidth(150);
@@ -372,23 +345,22 @@ public class AddProductScene {
     FileChooser fileChooser = new FileChooser();
     selectFile.setOnAction(e -> {
       fileChooser.getExtensionFilters().addAll(
-        new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif")
-      );
-    
+          new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif"));
+
       File selectedFile = fileChooser.showOpenDialog(primaryStage);
-    
+
       if (selectedFile != null) {
         try {
           String fileName = selectedFile.getName();
           // Convert to URL string and store it
           selectedImageUrl = selectedFile.toURI().toURL().toString();
           this.relativeImagePath = "/food/" + fileName;
-            
+
           // Update the UI
           imageUrlLabel.setVisible(false);
           imageUrlLabel.setText(relativeImagePath);
           imagePreview.setImage(new Image(selectedImageUrl));
-            
+
         } catch (MalformedURLException ex) {
           ex.printStackTrace();
           showAlert("Error", "Invalid file path", Alert.AlertType.ERROR);

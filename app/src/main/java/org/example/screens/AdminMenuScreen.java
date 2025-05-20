@@ -1,6 +1,7 @@
 package org.example.screens;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -92,9 +93,15 @@ public class AdminMenuScreen {
     MidButton searchBarBtn = new MidButton("Search", "rgb(255, 255, 255)", 30);
 
     searchBarBtn.setOnAction(e -> {
-      Scene searchBarScreen = new SeachBarScreen().showSearchScene(
-          primaryStage,
-          adminMenuLayout.getScene());
+      Scene searchBarScreen = null;
+      try {
+        searchBarScreen = new SeachBarScreen().showSearchScene(
+            primaryStage,
+            adminMenuLayout.getScene());
+      } catch (SQLException e1) {
+        // TODO Auto-generated catch block
+        e1.printStackTrace();
+      }
       primaryStage.setScene(searchBarScreen);
     });
 

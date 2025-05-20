@@ -29,7 +29,6 @@ import org.example.buttons.MidButton;
 import org.example.menu.Product;
 import org.example.menu.Type;
 
-
 /**
  * Updating menu class.
  */
