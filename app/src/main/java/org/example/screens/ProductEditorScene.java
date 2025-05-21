@@ -1,14 +1,7 @@
 package org.example.screens;
 
-import org.example.buttons.BackBtnWithTxt;
-import org.example.buttons.LangBtn;
-import org.example.buttons.SearchBar;
-import org.example.kiosk.LanguageSetting;
-import org.example.menu.Product;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
@@ -18,6 +11,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.buttons.BackBtnWithTxt;
+import org.example.buttons.LangBtn;
+import org.example.buttons.SearchBar;
+import org.example.kiosk.LanguageSetting;
+import org.example.menu.Product;
+
 
 /**
  * This is the product editor scene.
@@ -29,7 +28,6 @@ public class ProductEditorScene {
   private Scene prevScene;
   private TableView<Product> productTable;
   private SearchBar searchBar;
-  
 
   /**
    * The product editor scene constructor.
@@ -52,23 +50,20 @@ public class ProductEditorScene {
       productTable.getItems().clear();
       productTable.getItems().addAll(filteredProducts);
     });
-    
+
     searchBar.setOnResultSelectHandler(selected -> {
-        if (selected instanceof Product product) {
-          /*if (!productTable.getItems().contains(product)) {
-            productTable.getItems().add(product);
-          }*/
-          boolean alreadyExists = productTable.getItems().stream()
+      if (selected instanceof Product product) {
+
+        boolean alreadyExists = productTable.getItems().stream()
             .anyMatch(p -> p.getId() == product.getId());
 
-          if (!alreadyExists) {
-              productTable.getItems().add(product);
-          }
-
+        if (!alreadyExists) {
+          productTable.getItems().add(product);
         }
+
       }
-    );
-    
+    });
+
   }
 
   /**
@@ -132,23 +127,25 @@ public class ProductEditorScene {
     layout.setTop(topContainer);
     layout.setBottom(bottomContainer);
 
-    // Translate all the text
+    // Translate button action
     langButton.addAction(event -> {
       LanguageSetting lang = LanguageSetting.getInstance();
-      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      String newLang;
+      if (lang.getSelectedLanguage().equals("en")) {
+        newLang = "sv";
+      } else {
+        newLang = "en";
+      }
       lang.changeLanguage(newLang);
-      lang.updateAllLabels(layout);
+      lang.smartTranslate(layout);
     });
 
+    // Translate the whole layout before rendering
+    LanguageSetting lang = LanguageSetting.getInstance();
+    lang.registerRoot(layout);
+    lang.smartTranslate(layout);
+
     Scene scene = new Scene(layout, 1920, 1080);
-
-    // Update the language for the scene upon creation
-    Parent root = scene.getRoot();
-
-    LanguageSetting.getInstance().registerRoot(root);
-    LanguageSetting.getInstance().updateAllLabels(root);
-
-    LanguageSetting.getInstance().updateAllLabels(layout);
 
     return scene;
   }

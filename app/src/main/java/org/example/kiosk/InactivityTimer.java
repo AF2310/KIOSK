@@ -167,6 +167,11 @@ public class InactivityTimer {
       finalLayout.setStyle("-fx-background-color: transparent;");
       finalLayout.setPrefSize(400, 200);
 
+      // Translate the whole layout before rendering
+      LanguageSetting lang = LanguageSetting.getInstance();
+      lang.registerRoot(finalLayout);
+      lang.smartTranslate(finalLayout);
+
       // Set finished scene in popup
       Scene scene = new Scene(finalLayout);
       scene.setFill(Color.TRANSPARENT);

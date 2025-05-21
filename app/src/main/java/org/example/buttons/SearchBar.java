@@ -5,12 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
-import org.example.menu.Ingredient;
-import org.example.menu.Menu;
-import org.example.menu.Product;
-import org.example.menu.Single;
-
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -20,6 +14,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.example.menu.Ingredient;
+import org.example.menu.Menu;
+import org.example.menu.Product;
+import org.example.menu.Single;
+
 
 /**
  * The SearchBar class provides a user interface component for searching items
@@ -269,7 +268,6 @@ public class SearchBar extends VBox {
         boolean nameFilterActive = !name.isEmpty();
         boolean priceFilterActive = !priceText.isEmpty();
 
-        //Comparator<Single> nameComparator = Comparator.comparing(Single::getName,String.CASE_INSENSITIVE_ORDER);
         String searchTerm = name.toLowerCase();
 
         Comparator<Single> nameComparator = new Comparator<Single>() {

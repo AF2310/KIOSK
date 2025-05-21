@@ -3,7 +3,6 @@ package org.example.screens;
 import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -44,10 +43,6 @@ public class WelcomeScreen {
     // Initialize the welcome screen elements
     var mainWindow = new VBox();
     mainWindow.setAlignment(Pos.CENTER);
-
-    // Set background color and size
-    // mainWindow.setStyle("-fx-background-color: grey;");
-    // mainWindow.setPrefSize(windowWidth, windowHeight);
 
     // Setup labels
     var welcome = new Label("Welcome to");
@@ -137,13 +132,23 @@ public class WelcomeScreen {
     var langButton = new LangBtn();
     langButton.updateImage();
 
-    // Translate all the text
+    // Translate button action
     langButton.addAction(event -> {
       LanguageSetting lang = LanguageSetting.getInstance();
-      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      String newLang;
+      if (lang.getSelectedLanguage().equals("en")) {
+        newLang = "sv";
+      } else {
+        newLang = "en";
+      }
       lang.changeLanguage(newLang);
-      lang.updateAllLabels(mainWindow);
+      lang.translateLabels(mainWindow);
     });
+
+    // Translate the whole layout before rendering
+    LanguageSetting lang = LanguageSetting.getInstance();
+    lang.registerRoot(mainWindow);
+    lang.translateLabels(mainWindow);
 
     // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
@@ -190,11 +195,9 @@ public class WelcomeScreen {
 
         // Any movement of the user resets the inactivity timer
         primaryStage.addEventFilter(
-            MouseEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
-        );
+            MouseEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer());
         primaryStage.addEventFilter(
-            KeyEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
-        );
+            KeyEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer());
 
       } catch (SQLException ex) {
         ex.printStackTrace();
@@ -219,11 +222,9 @@ public class WelcomeScreen {
 
         // Any movement of the user resets the inactivity timer
         primaryStage.addEventFilter(
-            MouseEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
-        );
+            MouseEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer());
         primaryStage.addEventFilter(
-            KeyEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer()
-        );
+            KeyEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer());
 
       } catch (SQLException ex) {
         ex.printStackTrace();
@@ -238,14 +239,6 @@ public class WelcomeScreen {
     burgerButton.setOnAction(e -> {
       primaryStage.setScene(adminMenuScene);
     });
-
-    // Update the language for the scene upon creation
-    Parent root = scene.getRoot();
-
-    LanguageSetting.getInstance().registerRoot(root);
-    LanguageSetting.getInstance().updateAllLabels(mainWindow);
-    // LanguageSetting.getInstance().updateAllLabels(eatHereBtn);
-    // LanguageSetting.getInstance().updateAllLabels(takeAwayBtn);
 
     return scene;
   }

@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -46,20 +45,19 @@ public class CustomizationScreen {
     VBox adminMenuLayout = new VBox(20);
     adminMenuLayout.setAlignment(Pos.TOP_CENTER);
     adminMenuLayout.setPadding(new Insets(10));
-    
+
     // Label to prompt name change
     Label promptInput = new Label("Change Kiosk Name here: ");
     promptInput.setStyle(
         "-fx-font-size: 25px;"
-        + "-fx-font-weight: bold;"
-    );
+            + "-fx-font-weight: bold;");
 
     // Textfield for the name change
     TextField nameInput = new TextField();
     nameInput.setMaxWidth(300);
     nameInput.setAlignment(Pos.CENTER);
     nameInput.setText("Current name: " + KioskName.getCompanyTitle());
-    
+
     // Saves the name into KioskName.java
     Button saveNameButton = new Button("Save name");
     saveNameButton.setOnAction(e -> {
@@ -71,7 +69,7 @@ public class CustomizationScreen {
         KioskName.setCompanyTitle(newName);
 
       }
-      
+
     });
 
     // Wraps all the name stuff
@@ -81,7 +79,7 @@ public class CustomizationScreen {
     // Making the title on top of the admin menu screen
     Label adminMenuText = new TitleLabel("Set & Test Design");
 
-    // Colopickers moved to a separate file 
+    // Colopickers moved to a separate file
     var colorPickers = new ColorPickersPane(
         primaryStage,
         windowWidth,
@@ -160,21 +158,25 @@ public class CustomizationScreen {
     mainBorderPane.setCenter(centerGrid);
     mainBorderPane.setBottom(bottomLayout);
 
-    // Translate all the text
+    // Translate button action
     langButton.addAction(event -> {
       LanguageSetting lang = LanguageSetting.getInstance();
-      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      String newLang;
+      if (lang.getSelectedLanguage().equals("en")) {
+        newLang = "sv";
+      } else {
+        newLang = "en";
+      }
       lang.changeLanguage(newLang);
-      lang.updateAllLabels(mainBorderPane);
+      lang.smartTranslate(mainBorderPane);
     });
 
+    // Translate the whole layout before rendering
+    LanguageSetting lang = LanguageSetting.getInstance();
+    lang.registerRoot(mainBorderPane);
+    lang.smartTranslate(mainBorderPane);
+
     var customizationScene = new CustomScene(mainBorderPane, windowWidth, windowHeight);
-
-    // Update the language for the scene upon creation
-    Parent root = customizationScene.getRoot();
-
-    LanguageSetting.getInstance().registerRoot(root);
-    LanguageSetting.getInstance().updateAllLabels(root);
 
     // Reads and applies the customized background color
     Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();

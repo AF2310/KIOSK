@@ -41,14 +41,6 @@ public class AddMealScene {
    */
   public Scene getAddMealScene() {
 
-    RectangleTextFieldWithLabel mealName = new RectangleTextFieldWithLabel("Meal Name:",
-        "rgb(255, 255, 255)");
-    RectangleTextFieldWithLabel mealPrice = new RectangleTextFieldWithLabel("Price",
-        "rgb(255, 255, 255)");
-    RectangleTextFieldWithLabel mealDescription = new RectangleTextFieldWithLabel(
-        "Meal Description:",
-        "rgb(255, 255, 255)");
-
     ObservableList<CheckBox> products = FXCollections.observableArrayList();
     ObservableList<CheckBox> sides = FXCollections.observableArrayList();
     ObservableList<CheckBox> drinks = FXCollections.observableArrayList();
@@ -118,6 +110,14 @@ public class AddMealScene {
     chooseProductBox.setAlignment(Pos.CENTER);
     chooseProductBox.setPadding(new Insets(0, 150, 50, 0));
 
+    RectangleTextFieldWithLabel mealName = new RectangleTextFieldWithLabel("Meal Name:",
+        "rgb(255, 255, 255)");
+    RectangleTextFieldWithLabel mealPrice = new RectangleTextFieldWithLabel("Price",
+        "rgb(255, 255, 255)");
+    RectangleTextFieldWithLabel mealDescription = new RectangleTextFieldWithLabel(
+        "Meal Description:",
+        "rgb(255, 255, 255)");
+
     VBox leftSide = new VBox();
     leftSide.getChildren().addAll(mealName, mealPrice, mealDescription);
     leftSide.setAlignment(Pos.CENTER);
@@ -144,7 +144,6 @@ public class AddMealScene {
           ResultSet rs = stmt.executeQuery();
 
           rs.next();
-          int productId = rs.getInt("product_id");
           rs.close();
           stmt.close();
 
@@ -156,6 +155,8 @@ public class AddMealScene {
           stmt2.setString(2, mealDescription.getText());
           stmt2.setDouble(3, Double.parseDouble(mealPrice.getText()));
           stmt2.setString(4, "/food/default_meal.png");
+
+          int productId = rs.getInt("product_id");
 
           stmt2.setInt(5, productId);
           stmt2.executeUpdate();

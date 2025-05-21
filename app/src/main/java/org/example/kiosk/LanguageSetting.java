@@ -15,7 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.util.Callback;
 import org.example.buttons.LangBtn;
 
-
 /**
  * Singleton class that manages language settings for the entire kiosk system.
  */
@@ -61,8 +60,8 @@ public class LanguageSetting {
   }
 
   /**
-  * Changes the application's language if valid.
-  */
+   * Changes the application's language if valid.
+   */
   public void changeLanguage(String newLanguage) {
     if (newLanguage.equals("en") || newLanguage.equals("sv")) {
       this.selectedLanguage = newLanguage;
@@ -73,7 +72,7 @@ public class LanguageSetting {
 
       // Update all registered UI roots
       for (Parent root : registeredRoots) {
-        updateAllLabels(root);
+        smartTranslate(root);
       }
     }
   }
@@ -81,7 +80,83 @@ public class LanguageSetting {
   /**
    * Updates the text of all translatable nodes within the given root container.
    */
-  public void updateAllLabels(Parent root) {
+  public void smartTranslate(Parent root) {
+    for (Node node : root.getChildrenUnmodifiable()) {
+
+      if (node instanceof Label) {
+        Label label = (Label) node;
+        label.setText(dictionary.smartTranslate(label.getText()));
+      }
+
+      if (node instanceof TextField) {
+        TextField textField = (TextField) node;
+        textField.setPromptText(dictionary.smartTranslate(textField.getPromptText()));
+      }
+
+      if (node instanceof PasswordField) {
+        PasswordField passwordField = (PasswordField) node;
+        passwordField.setPromptText(dictionary.smartTranslate(passwordField.getPromptText()));
+      }
+
+      if (node instanceof ListView<?>) {
+        ListView<?> listView = (ListView<?>) node;
+
+        if (listView.getItems().isEmpty() || listView.getItems().get(0) instanceof String) {
+          @SuppressWarnings("unchecked")
+          ListView<String> stringListView = (ListView<String>) listView;
+
+          stringListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> param) {
+              return new ListCell<String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                  super.updateItem(item, empty);
+                  if (!empty && item != null) {
+                    setText(dictionary.smartTranslate(item));
+                  }
+                }
+              };
+            }
+          });
+        }
+      }
+
+      if (node instanceof Chart) {
+        Chart chart = (Chart) node;
+
+        if (chart instanceof XYChart<?, ?>) {
+          XYChart<?, ?> xyChart = (XYChart<?, ?>) chart;
+
+          if (xyChart.getXAxis() != null) {
+            xyChart.getXAxis().setLabel(dictionary.smartTranslate(xyChart.getXAxis().getLabel()));
+          }
+          if (xyChart.getYAxis() != null) {
+            xyChart.getYAxis().setLabel(dictionary.smartTranslate(xyChart.getYAxis().getLabel()));
+          }
+        }
+      }
+
+      if (node instanceof Button) {
+        Node graphic = ((Button) node).getGraphic();
+        if (graphic instanceof Parent) {
+          smartTranslate((Parent) graphic);
+        }
+        Button button = (Button) node;
+        button.setText(dictionary.smartTranslate(button.getText()));
+      }
+
+      if (node instanceof Parent) {
+        smartTranslate((Parent) node);
+      }
+    }
+  }
+
+  /**
+   * Updates the text of all translatable nodes within the given root container
+   * using the basic translate method instead of smartTranslate.
+   */
+  public void translateLabels(Parent root) {
     for (Node node : root.getChildrenUnmodifiable()) {
 
       if (node instanceof Label) {
@@ -139,17 +214,31 @@ public class LanguageSetting {
       }
 
       if (node instanceof Button) {
+        Node graphic = ((Button) node).getGraphic();
+        if (graphic instanceof Parent) {
+          translateLabels((Parent) graphic);
+        }
         Button button = (Button) node;
         button.setText(dictionary.translate(button.getText()));
       }
 
       if (node instanceof Parent) {
-        updateAllLabels((Parent) node);
+        translateLabels((Parent) node);
       }
     }
   }
 
   public String getSelectedLanguage() {
     return selectedLanguage;
+  }
+
+  /**
+   * Translates a single string using the current language setting.
+   *
+   * @param text the original string
+   * @return the translated string
+   */
+  public String translate(String text) {
+    return dictionary.translate(text);
   }
 }

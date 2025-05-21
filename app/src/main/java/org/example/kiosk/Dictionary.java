@@ -30,14 +30,13 @@ public class Dictionary {
     addTranslation("Drinks", "Drycker");
     addTranslation("Desserts", "Desserter");
     addTranslation("Meals", "Kombomenyer");
-    addTranslation("Special Offers", "Specialerbjudanden");
+    addTranslation("Special\nOffers", "Special\nErbjudanden");
     addTranslation("Cancel", "Avbryt");
     addTranslation("Filter Items", "Filtrera artiklar");
     addTranslation("Filter", "Filter");
     addTranslation("Item", "Artikel");
-    addTranslation("Special", "Special");
-    addTranslation("Offers", "Erbjudanden");
-
+    // addTranslation("Special", "Special");
+    // addTranslation("Offers", "Erbjudanden");
 
     // Admin login vocabulary
     addTranslation("Admin Menu", "Adminmeny");
@@ -158,11 +157,8 @@ public class Dictionary {
     addTranslation("Total", "Totalt");
     addTranslation("Enter Promo Code", "Ange Kampanjkod");
     addTranslation("Total", "Totalt");
-    // TODO: Fix the page counter label
-    addTranslation("Page 0 of 0", "Sida 0 av 0");
-    addTranslation("Page 1 of 1", "Sida 1 av 1");
-    addTranslation("Page 1 of 2", "Sida 1 av 2");
-    addTranslation("Page 2 of 2", "Sida 2 av 2");
+    addTranslation("Page", "Sida");
+    addTranslation("of", "av");
 
     // Sales statistics vocabulary
     addTranslation("Sales Statistics:", "Försäljningsstatistik:");
@@ -190,17 +186,24 @@ public class Dictionary {
 
     // Timer Editor
     addTranslation("Timer Editor:", "Timerredigerare");
-    addTranslation("Kiosk ", "Kiosk ");  //TODO maybe unnecessary
-    addTranslation("Popup ", "Popup ");  //TODO maybe unnecessary
     addTranslation("Timer:", "Tidtagare:");
     addTranslation("Current inactivity timer: ", "Nuvarande inaktivitetstimer: ");
     addTranslation(" seconds", " sekunder");
-    addTranslation("New timer value (in seconds)", "Ny timervärde (i sekunder)");
-    addTranslation("Update Timer", "Uppdatera timer");
+    // addTranslation("New timer value (in seconds)", "Nytt timervärde (i sekunder)");
+    addTranslation("Update Timer", "Uppdatera Timer");
     addTranslation("Please enter a value >= 5 seconds.", "Vänligen ange ett värde >= 5 sekunder.");
     addTranslation("Timer updated successfully!", "Timern har uppdaterats!");
     addTranslation(
         "Invalid input! Please enter a number.", "Ogiltig inmatning! Vänligen ange ett nummer.");
+    addTranslation("Popup Timer:", "Timer för Popup:");
+    addTranslation("Are you still there?", "Är du fortfarande där?");
+    addTranslation("Current", "Nuvarande");
+    addTranslation("inactivity", "inaktivitet");
+    addTranslation("timer", "timer");
+    addTranslation("seconds", "sekunder");
+    addTranslation("New", "Nytt");
+    addTranslation("value", "värde");
+    addTranslation("in", "i");
 
     // Delete/Edit vocabulary
     addTranslation("Edit Product Data", "Redigera produktdata");
@@ -227,7 +230,6 @@ public class Dictionary {
     addTranslation("Yes", "Ja");
     addTranslation("No", "Nej");
 
-    // TODO: Make the string recomp method for total in checkout and deletition of product
     // For the deletion confirmation line
     addTranslation("Product '", "Produkt '");
     addTranslation(" should be deleted?", " ska tas bort?");
@@ -263,4 +265,60 @@ public class Dictionary {
       return swedishToEnglish.getOrDefault(word, word);
     }
   }
+
+  // /**
+  // * Attempts to translate a full sentence; if not found, translates word by
+  // word.
+  // *
+  // * @param sentence the sentence to translate
+  // * @return the translated sentence or word-by-word translation if full
+  // sentence is not found
+  // */
+  // public String smartTranslate(String sentence) {
+  // String fullTranslation = translate(sentence);
+  // if (!fullTranslation.equals(sentence)) {
+  // return fullTranslation;
+  // }
+
+  // String[] words = sentence.split("\\s+");
+  // StringBuilder result = new StringBuilder();
+
+  // for (String word : words) {
+  // String cleanedWord = word.replaceAll("[^\\p{L}\\p{Nd}]", "");
+  // String punctuation = word.replaceAll("[\\p{L}\\p{Nd}]", "");
+
+  // String translatedWord = translate(cleanedWord);
+  // result.append(translatedWord).append(punctuation).append(" ");
+  // }
+
+  // return result.toString().trim();
+  // }
+  /**
+   * Attempts to translate a full sentence; if not found, translates word by word.
+   * Handles dynamic sentences like: "Current inactivity timer: 60 seconds"
+   * or "New timer value (in seconds)"
+   */
+  public String smartTranslate(String sentence) {
+    String fullTranslation = translate(sentence);
+    if (!fullTranslation.equals(sentence)) {
+      return fullTranslation;
+    }
+
+    // Translate word by word with punctuation handling
+    String[] words = sentence.split("\\s+");
+    StringBuilder result = new StringBuilder();
+
+    for (String word : words) {
+      // Extract word and punctuation
+      String cleanedWord = word.replaceAll("[^\\p{L}\\p{Nd}]", ""); // just letters/digits
+      String punctuation = word.replaceAll("[\\p{L}\\p{Nd}]", ""); // everything else
+
+      String translatedWord = translate(cleanedWord);
+
+      result.append(translatedWord).append(punctuation).append(" ");
+    }
+
+    return result.toString().trim();
+  }
+
 }

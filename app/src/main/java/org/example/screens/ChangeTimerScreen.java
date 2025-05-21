@@ -2,7 +2,6 @@ package org.example.screens;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -84,21 +83,25 @@ public class ChangeTimerScreen {
     layout.setCenter(timerEditor);
     layout.setBottom(bottomContainer);
 
-    // Translate all the text
+    // Translate button action
     langButton.addAction(event -> {
       LanguageSetting lang = LanguageSetting.getInstance();
-      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      String newLang;
+      if (lang.getSelectedLanguage().equals("en")) {
+        newLang = "sv";
+      } else {
+        newLang = "en";
+      }
       lang.changeLanguage(newLang);
-      lang.updateAllLabels(layout);
+      lang.smartTranslate(layout);
     });
 
+    // Translate the whole layout before rendering
+    LanguageSetting lang = LanguageSetting.getInstance();
+    lang.registerRoot(layout);
+    lang.smartTranslate(layout);
+
     var scene = new Scene(layout, 1920, 1080);
-
-    // Update the language for the scene upon creation
-    Parent root = scene.getRoot();
-
-    LanguageSetting.getInstance().registerRoot(root);
-    LanguageSetting.getInstance().updateAllLabels(root);
 
     return scene;
   }
@@ -148,10 +151,12 @@ public class ChangeTimerScreen {
     } else {
       currentTimerValue = InactivityTimer.getInstance().getInactivityTimerPopup();
     }
-
+    
     // Current timer value
     Label currentTimer = new Label(
-        "Current inactivity timer: " + currentTimerValue + " seconds");
+        "Current inactivity timer: "
+        + currentTimerValue
+        + " seconds");
     currentTimer.setStyle("-fx-font-size: 20px;");
 
     // Input field to enter new value
@@ -212,6 +217,11 @@ public class ChangeTimerScreen {
         updateButton,
         consoleOutput);
     timer.setAlignment(Pos.TOP_LEFT);
+
+    // Translate the whole layout before rendering
+    LanguageSetting lang = LanguageSetting.getInstance();
+    lang.registerRoot(timer);
+    lang.translateLabels(timer);
 
     return timer;
   }

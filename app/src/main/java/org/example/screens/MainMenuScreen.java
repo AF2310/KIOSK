@@ -11,23 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.example.buttons.ArrowButton;
-import org.example.buttons.CartSquareButton;
-import org.example.buttons.ColorSquareButtonWithImage;
-import org.example.buttons.LangBtn;
-import org.example.buttons.SearchBar;
-import org.example.kiosk.InactivityTimer;
-import org.example.kiosk.LabelManager;
-import org.example.kiosk.LanguageSetting;
-import org.example.menu.Imenu;
-import org.example.menu.Meal;
-import org.example.menu.Menu;
-import org.example.menu.Product;
-import org.example.menu.Single;
-import org.example.menu.Type;
-import org.example.orders.Cart;
-import org.example.sql.DatabaseManager;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -56,6 +39,23 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.example.buttons.ArrowButton;
+import org.example.buttons.CartSquareButton;
+import org.example.buttons.ColorSquareButtonWithImage;
+import org.example.buttons.LangBtn;
+import org.example.buttons.SearchBar;
+import org.example.kiosk.InactivityTimer;
+import org.example.kiosk.LabelManager;
+import org.example.kiosk.LanguageSetting;
+import org.example.menu.Imenu;
+import org.example.menu.Meal;
+import org.example.menu.Menu;
+import org.example.menu.Product;
+import org.example.menu.Single;
+import org.example.menu.Type;
+import org.example.orders.Cart;
+import org.example.sql.DatabaseManager;
+
 
 /**
  * The main menu screen.
@@ -349,13 +349,6 @@ public class MainMenuScreen {
     HBox.setMargin(gridSearchField, new Insets(0, 0, 0, 10));
     HBox.setMargin(gridSearchButton, new Insets(0, 10, 0, 0));
 
-    /*
-     * Timeline fadeIn = new Timeline(new KeyFrame( Duration.millis(200),
-     * new KeyValue(gridSearchBox.opacityProperty(), 1),
-     * new KeyValue(gridSearchBox.translateYProperty(), 0)));
-     * fadeIn.setDelay(Duration.millis(50));
-     */
-
     // Align the search button to top-right
     StackPane.setAlignment(showSearchBtn, Pos.TOP_RIGHT);
     // Add margin: 20 pixels from top and right
@@ -374,6 +367,7 @@ public class MainMenuScreen {
 
       // Making a button for each category
       Button btn = new Button(cat);
+      btn.setWrapText(true);
       DropShadow shadow = new DropShadow();
 
       btn.setOnMouseEntered(e -> {
@@ -583,17 +577,6 @@ public class MainMenuScreen {
 
     // Create language button
     var langButton = new LangBtn();
-    langButton.updateImage();
-
-    // Translate all the text
-    langButton.addAction(event -> {
-      LanguageSetting lang = LanguageSetting.getInstance();
-      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
-      lang.changeLanguage(newLang);
-      lang.updateAllLabels(layout);
-    });
-
-    LanguageSetting.getInstance().updateAllLabels(layout);
 
     // Added all components for the bottom part
     bottomButtons.getChildren().addAll(langButton, spacer, cartButton, cancelButton);
@@ -602,6 +585,24 @@ public class MainMenuScreen {
     // Add layout to Stack Pane for dynamic sizing
     StackPane mainPane = new StackPane(layout, showSearchBtn);
     mainPane.setPrefSize(windowWidth, windowHeight);
+
+    // Translate button action
+    langButton.addAction(event -> {
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang;
+      if (lang.getSelectedLanguage().equals("en")) {
+        newLang = "sv";
+      } else {
+        newLang = "en";
+      }
+      lang.changeLanguage(newLang);
+      lang.smartTranslate(mainPane);
+    });
+
+    // Translate the whole layout before rendering
+    LanguageSetting lang = LanguageSetting.getInstance();
+    lang.registerRoot(mainPane);
+    lang.smartTranslate(mainPane);
 
     // Create final scene result
     CustomScene scene = new CustomScene(mainPane, windowWidth, windowHeight);
@@ -619,7 +620,7 @@ public class MainMenuScreen {
     Parent root = scene.getRoot();
 
     LanguageSetting.getInstance().registerRoot(root);
-    LanguageSetting.getInstance().updateAllLabels(root);
+    LanguageSetting.getInstance().translateLabels(root);
 
     return scene;
   }
@@ -678,7 +679,8 @@ public class MainMenuScreen {
           if (cat.equals("Meals")) {
             // Load meals from database
             try (PreparedStatement ps = conn.prepareStatement(
-                "SELECT meal_id, name, price, image_url FROM meal"); ResultSet rs = ps.executeQuery()) {
+                "SELECT meal_id, name, price, image_url FROM meal");
+                ResultSet rs = ps.executeQuery()) {
               while (rs.next()) {
                 Meal meal = new Meal(rs.getString("name"), conn);
                 meal.setId(rs.getInt("meal_id"));
@@ -699,7 +701,8 @@ public class MainMenuScreen {
         if (targetCat.equals("Meals")) {
           // Load meals from database
           try (PreparedStatement ps = conn.prepareStatement(
-              "SELECT meal_id, name, price, image_url FROM meal"); ResultSet rs = ps.executeQuery()) {
+              "SELECT meal_id, name, price, image_url FROM meal");
+              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
               Meal meal = new Meal(rs.getString("name"), conn);
               meal.setId(rs.getInt("meal_id"));
@@ -823,15 +826,6 @@ public class MainMenuScreen {
     }
     int itemsToShow = filteredProducts.size();
 
-    /*
-     * int itemsToShow;
-     * 
-     * if (filtersActive) {
-     * itemsToShow = filteredProducts.size();
-     * } else {
-     * itemsToShow = Math.min(totalItemsPerPage, filteredProducts.size());
-     * }
-     */
     // Create the empty image to fill the grid slots
     Image emptyImage = new Image(
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABC"
@@ -918,7 +912,7 @@ public class MainMenuScreen {
       itemGrid.add(itemBox, i % maxItemsPerRow, i / maxItemsPerRow);
     }
 
-    LanguageSetting.getInstance().updateAllLabels(itemGrid);
+    LanguageSetting.getInstance().smartTranslate(itemGrid);
 
     updateCategoryButtonStyles();
   }
