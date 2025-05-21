@@ -39,26 +39,51 @@ public class TitleLabel extends Label {
             + "-fx-text-fill: " + textColor + ";");
   }
 
+  /**
+   * Setter for the font of the title label.
+   *
+   * @param font String name of the font
+   */
   public static void setFontFamily(String font) {
     fontFamily = font;
     updateAllStyles();
   }
 
+  /**
+   * Setter for the font size of the title label.
+   *
+   * @param size int font size value
+   */
   public static void setFontSize(int size) {
     fontSize = size;
     updateAllStyles();
   }
 
+  /**
+   * Setter for weight of the title label.
+   *
+   * @param weight String weight
+   */
   public static void setFontWeight(String weight) {
     fontWeight = weight;
     updateAllStyles();
   }
 
+  /**
+   * Setter for alignment of the title label.
+   *
+   * @param alignment String alignment (center, etc.)
+   */
   public static void setTextAlignment(String alignment) {
     textAlignment = alignment;
     updateAllStyles();
   }
 
+  /**
+   * Setter for text colour.
+   *
+   * @param color colour of the label
+   */
   public static void setTextColor(Color color) {
     textColor = toRgbString(color);
     updateAllStyles();

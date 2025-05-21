@@ -12,6 +12,11 @@ public class LabelManager {
   private static final List<Labeled> allLabels = new ArrayList<>();
   private static Color currentColor = Color.BLACK;
 
+  /**
+   * Registration of a labeled in the label manager.
+   *
+   * @param labeled new labeled that should be registered
+   */
   public static void register(Labeled labeled) {
     labeled.setTextFill(currentColor);
     allLabels.add(labeled);

@@ -25,6 +25,12 @@ public class DatabaseManager {
     
   }
 
+  /**
+   * Getter for database connection.
+   *
+   * @return the proper connection to the database
+   * @throws SQLException SQL errors
+   */
   public static Connection getConnection() throws SQLException {
     return dataSource.getConnection();
   }

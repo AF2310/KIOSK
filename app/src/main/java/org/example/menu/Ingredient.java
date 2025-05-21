@@ -43,18 +43,25 @@ public class Ingredient {
     return name;
   }
 
+  /**
+   * To string method for the name of the ingredient.
+   */
   public String toString() {
     return name;
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (obj == null || getClass() != obj.getClass())
+    }
+    if (obj == null || getClass() != obj.getClass()) {
       return false;
+    }
     Ingredient ingredient = (Ingredient) obj;
-    return getName() != null ? getName().equals(ingredient.getName()) : ingredient.getName() == null;
+    return getName() != null 
+        ? getName().equals(ingredient.getName()) 
+        : ingredient.getName() == null;
   }
 
   @Override
@@ -98,11 +105,21 @@ public class Ingredient {
     return list;
   }
 
-  public List<Ingredient> searchIngredientsByName(String name, Connection conn) throws SQLException {
+  /**
+   * Searching ingredients by name.
+   *
+   * @param name name of the desired ingredient
+   * @param conn database connection
+   * @return List containing all ingredients that match the input string name
+   * @throws SQLException SQL errors
+   */
+  public List<Ingredient> searchIngredientsByName(
+      String name, Connection conn) throws SQLException {
+
     List<Ingredient> list = new ArrayList<>();
-    String sql = "SELECT ingredient_id AS id, ingredient_name AS name " +
-        "FROM ingredient " +
-        "WHERE LOWER(ingredient_name) LIKE ?";
+    String sql = "SELECT ingredient_id AS id, ingredient_name AS name "
+        + "FROM ingredient "
+        + "WHERE LOWER(ingredient_name) LIKE ?";
     try (PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setString(1, "%" + name.toLowerCase() + "%");
       ResultSet rs = stmt.executeQuery();
@@ -114,13 +131,23 @@ public class Ingredient {
 
   }
 
-  public List<Ingredient> searchIngredientsByPrice(float maxPrice, Connection conn) throws SQLException {
+  /**
+   * Serching ingredients by price.
+   *
+   * @param maxPrice total maximum price that is searched for
+   * @param conn database connection
+   * @return List containing all ingredients that are below input price
+   * @throws SQLException SQL error
+   */
+  public List<Ingredient> searchIngredientsByPrice(
+      float maxPrice, Connection conn) throws SQLException {
+
     List<Ingredient> list = new ArrayList<>();
-    String sql = "SELECT DISTINCT i.ingredient_id AS id, i.ingredient_name AS name " +
-        "FROM ingredient i " +
-        "JOIN productingredients pi ON i.ingredient_id = pi.ingredient_id " +
-        "JOIN product p ON pi.product_id = p.product_id " +
-        "WHERE p.price < ?";
+    String sql = "SELECT DISTINCT i.ingredient_id AS id, i.ingredient_name AS name "
+        + "FROM ingredient i "
+        + "JOIN productingredients pi ON i.ingredient_id = pi.ingredient_id "
+        + "JOIN product p ON pi.product_id = p.product_id "
+        + "WHERE p.price < ?";
     try (PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setFloat(1, maxPrice);
       ResultSet rs = stmt.executeQuery();
@@ -131,14 +158,25 @@ public class Ingredient {
     return list;
   }
 
-  public List<Ingredient> searchIngredientByNameAndPrice(Connection conn, String name, float maxPrice)
+  /**
+   * Searching ingredients by name and price.
+   *
+   * @param conn database connection
+   * @param name string name of the desired ingredient
+   * @param maxPrice maximum price value that is searched for
+   * @return List containing all ingredients that fall below input max price and match input name
+   * @throws SQLException SQL error
+   */
+  public List<Ingredient> searchIngredientByNameAndPrice(
+      Connection conn, String name, float maxPrice)
+
       throws SQLException {
     List<Ingredient> list = new ArrayList<>();
-    String sql = "SELECT DISTINCT i.ingredient_id AS id, i.ingredient_name AS name " +
-        "FROM ingredient i " +
-        "JOIN productingredients pi ON i.ingredient_id = pi.ingredient_id " +
-        "JOIN product p ON pi.product_id = p.product_id " +
-        "WHERE LOWER(i.ingredient_name) LIKE ? AND p.price <= ?";
+    String sql = "SELECT DISTINCT i.ingredient_id AS id, i.ingredient_name AS name "
+        + "FROM ingredient i "
+        + "JOIN productingredients pi ON i.ingredient_id = pi.ingredient_id "
+        + "JOIN product p ON pi.product_id = p.product_id "
+        + "WHERE LOWER(i.ingredient_name) LIKE ? AND p.price <= ?";
     try (PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setString(1, "%" + name.toLowerCase() + "%");
       stmt.setFloat(2, maxPrice);
