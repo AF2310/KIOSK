@@ -372,8 +372,8 @@ public class MainMenuScreen {
 
       btn.setOnMouseEntered(e -> {
         btn.setEffect(shadow);
-        shadow.setColor(Color.BLACK);
-        shadow.setRadius(10);
+        shadow.setColor(Color.color(0, 0, 0, 0.5));
+        shadow.setRadius(5);
       });
       btn.setOnMouseExited(e -> {
         btn.setEffect(null);
