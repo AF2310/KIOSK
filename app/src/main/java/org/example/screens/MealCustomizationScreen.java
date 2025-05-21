@@ -199,8 +199,8 @@ public class MealCustomizationScreen {
 
     // Implementing a lot of the same stuff we implemented in other scenes,
     // the bottom bar with the language button and confirm and canccel
-    var languageBtn = new LangBtn();
-    HBox bottomLeftBox = new HBox(languageBtn);
+    var langButton = new LangBtn();
+    HBox bottomLeftBox = new HBox(langButton);
     bottomLeftBox.setAlignment(Pos.BOTTOM_LEFT);
     Region leftSpacer = new Region();
     Region rightSpacer = new Region();
@@ -217,7 +217,7 @@ public class MealCustomizationScreen {
 
     HBox bottomLayout = new HBox();
     bottomLayout.setPadding(new Insets(20));
-    bottomLayout.getChildren().addAll(languageBtn, leftSpacer, confirmBox, rightSpacer, cancelBox);
+    bottomLayout.getChildren().addAll(langButton, leftSpacer, confirmBox, rightSpacer, cancelBox);
     layout.setBottom(bottomLayout);
 
     // goes back to the main screen when the user clicks cancel
@@ -231,6 +231,24 @@ public class MealCustomizationScreen {
           stage.getScene());
       stage.setScene(drinkScene);
     });
+
+    // Translate the whole layout before creation
+    langButton.addAction(event -> {
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang;
+      if (lang.getSelectedLanguage().equals("en")) {
+        newLang = "sv";
+      } else {
+        newLang = "en";
+      }
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
+    });
+
+    // Update Language of the whole layout before creation
+    LanguageSetting lang = LanguageSetting.getInstance();
+    lang.registerRoot(layout);
+    lang.updateAllLabels(layout);
 
     CustomScene scene = new CustomScene(layout, 1920, 1080);
 

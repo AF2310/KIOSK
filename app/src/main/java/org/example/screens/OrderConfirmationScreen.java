@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.LabelManager;
+import org.example.kiosk.LanguageSetting;
 
 
 /**
@@ -64,6 +65,11 @@ public class OrderConfirmationScreen {
     // Making layout into a stackpane to create fade overlay later on
     StackPane oconfirmStack = new StackPane();
     oconfirmStack.getChildren().addAll(screenLabelBox);
+
+    // Update Language of the whole layout before creation
+    LanguageSetting lang = LanguageSetting.getInstance();
+    lang.registerRoot(oconfirmStack);
+    lang.updateAllLabels(oconfirmStack);
     
     // Create final scene result
     CustomScene scene = new CustomScene(oconfirmStack, windowWidth, windowHeight);

@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -183,25 +182,25 @@ public class SalesStatsScreen {
     layout.setPadding(new Insets(50));
     layout.getChildren().addAll(topContainer, bottomContainer);
 
-    // Translate all the text
+    // Translate all the text if click the translate button
     langButton.addAction(event -> {
       LanguageSetting lang = LanguageSetting.getInstance();
-      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      String newLang;
+      if (lang.getSelectedLanguage().equals("en")) {
+        newLang = "sv";
+      } else {
+        newLang = "en";
+      }
       lang.changeLanguage(newLang);
       lang.updateAllLabels(layout);
     });
 
-    LanguageSetting.getInstance().updateAllLabels(layout);
+    // Update Language of the whole layout before creation
+    LanguageSetting lang = LanguageSetting.getInstance();
+    lang.registerRoot(layout);
+    lang.updateAllLabels(layout);
 
     Scene scene = new Scene(layout, 1920, 1080);
-
-    // Update the language for the scene upon creation
-    Parent root = scene.getRoot();
-
-    LanguageSetting.getInstance().registerRoot(root);
-    LanguageSetting.getInstance().updateAllLabels(root);
-
-    LanguageSetting.getInstance().updateAllLabels(layout);
 
     return scene;
 

@@ -6,15 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
-
-import org.example.buttons.BackBtnWithTxt;
-import org.example.buttons.LangBtn;
-import org.example.buttons.MidButton;
-import org.example.buttons.SearchBar;
-import org.example.menu.Product;
-import org.example.menu.Type;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -31,6 +22,14 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
+import org.example.buttons.BackBtnWithTxt;
+import org.example.buttons.LangBtn;
+import org.example.buttons.MidButton;
+import org.example.buttons.SearchBar;
+import org.example.kiosk.LanguageSetting;
+import org.example.menu.Product;
+import org.example.menu.Type;
+
 
 /**
  * Updating menu class.
@@ -162,14 +161,6 @@ public class UpdateMenuItems {
     gridPane.add(removeProductButton, 0, 2);
     gridPane.add(globalDiscountButton, 0, 3);
 
-    // Pass in the Labeled components to translate
-    langButton.addAction(event -> {
-      langButton.updateLanguage(List.of(
-          addProductButton.getButtonLabel(),
-          editProductButton.getButtonLabel(),
-          removeProductButton.getButtonLabel()));
-    });
-
     // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
     StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
@@ -180,8 +171,26 @@ public class UpdateMenuItems {
     layout.setCenter(gridPane);
     layout.setBottom(bottomContainer);
 
+    // Translate all the text if click the translate button
+    langButton.addAction(event -> {
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang;
+      if (lang.getSelectedLanguage().equals("en")) {
+        newLang = "sv";
+      } else {
+        newLang = "en";
+      }
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
+    });
+
     // put everything into a stackpane
     StackPane layoutWithLangButton = new StackPane(layout, langButton);
+
+    // Update Language of the whole layout before creation
+    LanguageSetting lang = LanguageSetting.getInstance();
+    lang.registerRoot(layout);
+    lang.updateAllLabels(layout);
 
     Scene updateItemScene = new Scene(layoutWithLangButton, 1920, 1080);
 

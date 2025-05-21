@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -164,15 +163,23 @@ public class AdminLoginScreen {
     StackPane mainPane = new StackPane(adminMenuLayout, langButton);
     mainPane.setPrefSize(windowWidth, windowHeight);
 
-    // Translate all the text
+    // Translate the whole layout before creation
     langButton.addAction(event -> {
       LanguageSetting lang = LanguageSetting.getInstance();
-      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      String newLang;
+      if (lang.getSelectedLanguage().equals("en")) {
+        newLang = "sv";
+      } else {
+        newLang = "en";
+      }
       lang.changeLanguage(newLang);
       lang.updateAllLabels(mainPane);
     });
 
-    LanguageSetting.getInstance().updateAllLabels(mainPane);
+    // Update Language of the whole layout before creation
+    LanguageSetting lang = LanguageSetting.getInstance();
+    lang.registerRoot(mainPane);
+    lang.updateAllLabels(mainPane);
 
     // Create the admin login scene and go there
     Scene adminLoginScene = new Scene(mainPane, windowWidth, windowHeight);
@@ -180,12 +187,6 @@ public class AdminLoginScreen {
     // Puts focus on the admin menu label so that the username field isn't by
     // default focused
     adminMenuTitle.requestFocus();
-
-    // Update the language for the scene upon creation
-    Parent root = adminLoginScene.getRoot();
-
-    LanguageSetting.getInstance().registerRoot(root);
-    LanguageSetting.getInstance().updateAllLabels(root);
 
     return adminLoginScene;
   }

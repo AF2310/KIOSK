@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SearchBar;
+import org.example.kiosk.LanguageSetting;
 import org.example.sql.DatabaseManager;
 
 /**
@@ -60,6 +61,11 @@ public class SeachBarScreen {
     layout.setPadding(new Insets(50));
     layout.setCenter(centerBox);
     layout.setBottom(bottomContainer);
+
+    // Update Language of the whole layout before creation
+    LanguageSetting lang = LanguageSetting.getInstance();
+    lang.registerRoot(layout);
+    lang.updateAllLabels(layout);
 
     return new Scene(layout, 1920, 1080);
   }

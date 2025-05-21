@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -203,10 +202,7 @@ public class ItemDetails {
     if (inputStream == null) {
       System.err.println("ERROR: Image not found - " + item.getName());
 
-      // using Base64-encoded string to generate 1x1 transparent PNG
-      // This Base64 string is decoded into a transparent image when
-      // the Image constructor is called.
-      // This prevents fetching some empty image from the database.
+      // Generating empty image
       Image emptyImage = new Image(
           "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABC"
               + "AQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAwAB/hd5JnkAAAAASUVORK5CYII=");
@@ -291,8 +287,6 @@ public class ItemDetails {
     bottomRightBox.setAlignment(Pos.CENTER_RIGHT);
     bottomRightBox.getChildren().addAll(addToCartButton, backButton);
 
-    // Language Button
-    // cycles images on click
     // Language button
     var langButton = new LangBtn();
     HBox bottomLeftBox = new HBox(langButton);
@@ -316,21 +310,25 @@ public class ItemDetails {
     layout.setRight(rightSide);
     layout.setBottom(bottomContainer);
 
-    // Translate all the text
+    // Translate the whole layout before creation
     langButton.addAction(event -> {
       LanguageSetting lang = LanguageSetting.getInstance();
-      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      String newLang;
+      if (lang.getSelectedLanguage().equals("en")) {
+        newLang = "sv";
+      } else {
+        newLang = "en";
+      }
       lang.changeLanguage(newLang);
       lang.updateAllLabels(layout);
     });
 
+    // Update Language of the whole layout before creation
+    LanguageSetting lang = LanguageSetting.getInstance();
+    lang.registerRoot(layout);
+    lang.updateAllLabels(layout);
+
     CustomScene scene = new CustomScene(layout, 1920, 1080);
-
-    // Update the language for the scene upon creation
-    Parent root = scene.getRoot();
-
-    LanguageSetting.getInstance().registerRoot(root);
-    LanguageSetting.getInstance().updateAllLabels(root);
 
     // Reads and applies the customized background color
     Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
@@ -437,6 +435,11 @@ public class ItemDetails {
       scene.setBackgroundColor(bgColor);
 
     }
+
+    // Update Language of the whole layout before creation
+    LanguageSetting lang = LanguageSetting.getInstance();
+    lang.registerRoot(layout);
+    lang.updateAllLabels(layout);
 
     return scene;
   }
