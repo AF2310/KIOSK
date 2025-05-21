@@ -266,38 +266,6 @@ public class Dictionary {
     }
   }
 
-  // /**
-  // * Attempts to translate a full sentence; if not found, translates word by
-  // word.
-  // *
-  // * @param sentence the sentence to translate
-  // * @return the translated sentence or word-by-word translation if full
-  // sentence is not found
-  // */
-  // public String smartTranslate(String sentence) {
-  // String fullTranslation = translate(sentence);
-  // if (!fullTranslation.equals(sentence)) {
-  // return fullTranslation;
-  // }
-
-  // String[] words = sentence.split("\\s+");
-  // StringBuilder result = new StringBuilder();
-
-  // for (String word : words) {
-  // String cleanedWord = word.replaceAll("[^\\p{L}\\p{Nd}]", "");
-  // String punctuation = word.replaceAll("[\\p{L}\\p{Nd}]", "");
-
-  // String translatedWord = translate(cleanedWord);
-  // result.append(translatedWord).append(punctuation).append(" ");
-  // }
-
-  // return result.toString().trim();
-  // }
-  /**
-   * Attempts to translate a full sentence; if not found, translates word by word.
-   * Handles dynamic sentences like: "Current inactivity timer: 60 seconds"
-   * or "New timer value (in seconds)"
-   */
 public String smartTranslate(String sentence) {
   String fullTranslation = translate(sentence);
   if (!fullTranslation.equals(sentence)) {
