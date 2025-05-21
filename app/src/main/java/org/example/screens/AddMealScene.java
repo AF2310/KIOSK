@@ -29,6 +29,12 @@ public class AddMealScene {
   private Stage primaryStage;
   private Scene prevScene;
 
+  /**
+   * Adding a meal scene constructor.
+   *
+   * @param primaryStage the primary stage of the current scene
+   * @param prevScene the previous scene
+   */
   public AddMealScene(Stage primaryStage, Scene prevScene) {
     this.primaryStage = primaryStage;
     this.prevScene = prevScene;

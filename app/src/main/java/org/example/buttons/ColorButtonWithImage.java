@@ -94,6 +94,11 @@ public class ColorButtonWithImage extends Button {
     }
   }
 
+  /**
+   * Setter for the buttons background colour.
+   *
+   * @param color Colour of the background
+   */
   public static void setButtonBackgroundColor(Color color) {
     buttonBackgroundColor = toRgbString(color);
     updateAllStyles();

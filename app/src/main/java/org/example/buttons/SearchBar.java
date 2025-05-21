@@ -369,6 +369,11 @@ public class SearchBar extends VBox {
 
   }
 
+  /**
+   * Getter for the text of the name.
+   *
+   * @return String text name of the text field
+   */
   public String getText() {
     String name = nameField.getText();
     return name.trim();

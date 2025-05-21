@@ -237,8 +237,8 @@ public class Cart {
     for (int i = 0; i < items.size(); i++) {
       if (items.get(i) instanceof Meal) {
         Meal item = (Meal) items.get(i);
-        int quant = quantity.get(i);
         items.remove(i);
+        int quant = quantity.get(i);
         quantity.remove(i);
         items.add(item.getMain());
         quantity.add(quant);

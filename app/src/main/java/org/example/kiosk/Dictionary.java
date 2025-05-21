@@ -298,39 +298,39 @@ public class Dictionary {
    * Handles dynamic sentences like: "Current inactivity timer: 60 seconds"
    * or "New timer value (in seconds)"
    */
-public String smartTranslate(String sentence) {
-  String fullTranslation = translate(sentence);
-  if (!fullTranslation.equals(sentence)) {
-    return fullTranslation;
-  }
-
-  String[] words = sentence.split("\\s+");
-  StringBuilder result = new StringBuilder();
-
-  for (String word : words) {
-    // Detect word boundaries with punctuation (e.g., "Total:", "1.23", "kr.")
-    String prefix = "";
-    String suffix = "";
-
-    // Extract leading punctuation (e.g., quotes, parentheses)
-    while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(0))) {
-      prefix += word.charAt(0);
-      word = word.substring(1);
+  public String smartTranslate(String sentence) {
+    String fullTranslation = translate(sentence);
+    if (!fullTranslation.equals(sentence)) {
+      return fullTranslation;
     }
 
-    // Extract trailing punctuation
-    while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(word.length() - 1))) {
-      suffix = word.charAt(word.length() - 1) + suffix;
-      word = word.substring(0, word.length() - 1);
+    String[] words = sentence.split("\\s+");
+    StringBuilder result = new StringBuilder();
+
+    for (String word : words) {
+      // Detect word boundaries with punctuation (e.g., "Total:", "1.23", "kr.")
+      String prefix = "";
+      String suffix = "";
+
+      // Extract leading punctuation (e.g., quotes, parentheses)
+      while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(0))) {
+        prefix += word.charAt(0);
+        word = word.substring(1);
+      }
+
+      // Extract trailing punctuation
+      while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(word.length() - 1))) {
+        suffix = word.charAt(word.length() - 1) + suffix;
+        word = word.substring(0, word.length() - 1);
+      }
+
+      // Now 'word' should be clean — like "Total", "1.23", or "kr"
+      String translated = translate(word);
+      result.append(prefix).append(translated).append(suffix).append(" ");
     }
 
-    // Now 'word' should be clean — like "Total", "1.23", or "kr"
-    String translated = translate(word);
-    result.append(prefix).append(translated).append(suffix).append(" ");
+    return result.toString().trim();
   }
-
-  return result.toString().trim();
-}
 
 
 }
