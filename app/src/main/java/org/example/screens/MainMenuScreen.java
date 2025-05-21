@@ -11,12 +11,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.example.buttons.ArrowButton;
+import org.example.buttons.CartSquareButton;
+import org.example.buttons.ColorSquareButtonWithImage;
+import org.example.buttons.LangBtn;
+import org.example.buttons.SearchBar;
+import org.example.kiosk.InactivityTimer;
+import org.example.kiosk.LabelManager;
+import org.example.kiosk.LanguageSetting;
+import org.example.menu.Imenu;
+import org.example.menu.Meal;
+import org.example.menu.Menu;
+import org.example.menu.Product;
+import org.example.menu.Single;
+import org.example.menu.Type;
+import org.example.orders.Cart;
+import org.example.sql.DatabaseManager;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -38,23 +56,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.example.buttons.ArrowButton;
-import org.example.buttons.CartSquareButton;
-import org.example.buttons.ColorSquareButtonWithImage;
-import org.example.buttons.LangBtn;
-import org.example.buttons.SearchBar;
-import org.example.kiosk.InactivityTimer;
-import org.example.kiosk.LabelManager;
-import org.example.kiosk.LanguageSetting;
-import org.example.menu.Imenu;
-import org.example.menu.Meal;
-import org.example.menu.Menu;
-import org.example.menu.Product;
-import org.example.menu.Single;
-import org.example.menu.Type;
-import org.example.orders.Cart;
-import org.example.sql.DatabaseManager;
-
 
 /**
  * The main menu screen.
@@ -582,6 +583,15 @@ public class MainMenuScreen {
 
     // Create language button
     var langButton = new LangBtn();
+    langButton.updateImage();
+
+    // Translate all the text
+    langButton.addAction(event -> {
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
+    });
 
     LanguageSetting.getInstance().updateAllLabels(layout);
 
@@ -592,24 +602,6 @@ public class MainMenuScreen {
     // Add layout to Stack Pane for dynamic sizing
     StackPane mainPane = new StackPane(layout, showSearchBtn);
     mainPane.setPrefSize(windowWidth, windowHeight);
-
-    // Translate the whole layout before creation
-    langButton.addAction(event -> {
-      LanguageSetting language = LanguageSetting.getInstance();
-      String newLang;
-      if (language.getSelectedLanguage().equals("en")) {
-        newLang = "sv";
-      } else {
-        newLang = "en";
-      }
-      language.changeLanguage(newLang);
-      language.updateAllLabels(layout);
-    });
-
-    // Update Language of the whole layout before creation
-    LanguageSetting lang = LanguageSetting.getInstance();
-    lang.registerRoot(mainPane);
-    lang.updateAllLabels(mainPane);
 
     // Create final scene result
     CustomScene scene = new CustomScene(mainPane, windowWidth, windowHeight);
@@ -622,6 +614,12 @@ public class MainMenuScreen {
       scene.setBackgroundColor(bgColor);
 
     }
+
+    // Update the language for the scene upon creation
+    Parent root = scene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
 
     return scene;
   }
@@ -680,8 +678,7 @@ public class MainMenuScreen {
           if (cat.equals("Meals")) {
             // Load meals from database
             try (PreparedStatement ps = conn.prepareStatement(
-                "SELECT meal_id, name, price, image_url FROM meal");
-                ResultSet rs = ps.executeQuery()) {
+                "SELECT meal_id, name, price, image_url FROM meal"); ResultSet rs = ps.executeQuery()) {
               while (rs.next()) {
                 Meal meal = new Meal(rs.getString("name"), conn);
                 meal.setId(rs.getInt("meal_id"));
@@ -702,8 +699,7 @@ public class MainMenuScreen {
         if (targetCat.equals("Meals")) {
           // Load meals from database
           try (PreparedStatement ps = conn.prepareStatement(
-              "SELECT meal_id, name, price, image_url FROM meal");
-              ResultSet rs = ps.executeQuery()) {
+              "SELECT meal_id, name, price, image_url FROM meal"); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
               Meal meal = new Meal(rs.getString("name"), conn);
               meal.setId(rs.getInt("meal_id"));

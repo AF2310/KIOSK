@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.util.Callback;
 import org.example.buttons.LangBtn;
 
+
 /**
  * Singleton class that manages language settings for the entire kiosk system.
  */
@@ -60,8 +61,8 @@ public class LanguageSetting {
   }
 
   /**
-   * Changes the application's language if valid.
-   */
+  * Changes the application's language if valid.
+  */
   public void changeLanguage(String newLanguage) {
     if (newLanguage.equals("en") || newLanguage.equals("sv")) {
       this.selectedLanguage = newLanguage;
@@ -85,17 +86,17 @@ public class LanguageSetting {
 
       if (node instanceof Label) {
         Label label = (Label) node;
-        label.setText(dictionary.smartTranslate(label.getText()));
+        label.setText(dictionary.translate(label.getText()));
       }
 
       if (node instanceof TextField) {
         TextField textField = (TextField) node;
-        textField.setPromptText(dictionary.smartTranslate(textField.getPromptText()));
+        textField.setPromptText(dictionary.translate(textField.getPromptText()));
       }
 
       if (node instanceof PasswordField) {
         PasswordField passwordField = (PasswordField) node;
-        passwordField.setPromptText(dictionary.smartTranslate(passwordField.getPromptText()));
+        passwordField.setPromptText(dictionary.translate(passwordField.getPromptText()));
       }
 
       if (node instanceof ListView<?>) {
@@ -113,7 +114,7 @@ public class LanguageSetting {
                 protected void updateItem(String item, boolean empty) {
                   super.updateItem(item, empty);
                   if (!empty && item != null) {
-                    setText(dictionary.smartTranslate(item));
+                    setText(dictionary.translate(item));
                   }
                 }
               };
@@ -129,27 +130,17 @@ public class LanguageSetting {
           XYChart<?, ?> xyChart = (XYChart<?, ?>) chart;
 
           if (xyChart.getXAxis() != null) {
-            xyChart.getXAxis().setLabel(dictionary.smartTranslate(xyChart.getXAxis().getLabel()));
+            xyChart.getXAxis().setLabel(dictionary.translate(xyChart.getXAxis().getLabel()));
           }
           if (xyChart.getYAxis() != null) {
-            xyChart.getYAxis().setLabel(dictionary.smartTranslate(xyChart.getYAxis().getLabel()));
+            xyChart.getYAxis().setLabel(dictionary.translate(xyChart.getYAxis().getLabel()));
           }
         }
       }
 
-      // if (node instanceof Button) {
-      // Button button = (Button) node;
-      // button.setText(dictionary.translate(button.getText()));
-      // }
-
-      // Translates custom buttons
       if (node instanceof Button) {
-        Node graphic = ((Button) node).getGraphic();
-        if (graphic instanceof Parent) {
-          updateAllLabels((Parent) graphic);
-        }
         Button button = (Button) node;
-        button.setText(dictionary.smartTranslate(button.getText()));
+        button.setText(dictionary.translate(button.getText()));
       }
 
       if (node instanceof Parent) {

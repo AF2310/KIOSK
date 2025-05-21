@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -184,29 +185,28 @@ public class AdminOrdHistoryScreen {
     layout.setBottom(bottomContainer);
     BorderPane.setMargin(bottomContainer, new Insets(40, 0, 0, 0));
 
-    // Translate the whole layout before creation
+    // Translate all the text
     langButton.addAction(event -> {
       LanguageSetting lang = LanguageSetting.getInstance();
-      String newLang;
-      if (lang.getSelectedLanguage().equals("en")) {
-        newLang = "sv";
-      } else {
-        newLang = "en";
-      }
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
       lang.changeLanguage(newLang);
       lang.updateAllLabels(layout);
     });
-
-    // Update Language of the whole layout before creation
-    LanguageSetting lang = LanguageSetting.getInstance();
-    lang.registerRoot(layout);
-    lang.updateAllLabels(layout);
 
     LanguageSetting.getInstance().updateAllLabels(layout);
 
     Scene historyScene = new Scene(layout, 1920, 1080);
 
+    // Update the language for the scene upon creation
+    Parent root = historyScene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
+
     return historyScene;
 
   }
+
+  // Query for the orders
+
 }

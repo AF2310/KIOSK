@@ -4,8 +4,16 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
+import org.example.buttons.BackBtnWithTxt;
+import org.example.buttons.LangBtn;
+import org.example.buttons.SearchBar;
+import org.example.kiosk.LanguageSetting;
+import org.example.menu.Product;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,11 +25,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.example.buttons.BackBtnWithTxt;
-import org.example.buttons.LangBtn;
-import org.example.buttons.SearchBar;
-import org.example.kiosk.LanguageSetting;
-import org.example.menu.Product;
 
 /**
  * This is the product deletion scene.
@@ -64,10 +67,10 @@ public class DeleteProductScene {
             productTable.getItems().add(product);
           }*/
           boolean alreadyExists = productTable.getItems().stream()
-              .anyMatch(p -> p.getId() == product.getId());
+            .anyMatch(p -> p.getId() == product.getId());
 
           if (!alreadyExists) {
-            productTable.getItems().add(product);
+              productTable.getItems().add(product);
           }
 
         }
@@ -223,25 +226,21 @@ public class DeleteProductScene {
     layout.setTop(topContainer);
     layout.setBottom(bottomContainer);
     
-    // Translate the whole layout before creation
+    // Translate all the text
     langButton.addAction(event -> {
       LanguageSetting lang = LanguageSetting.getInstance();
-      String newLang;
-      if (lang.getSelectedLanguage().equals("en")) {
-        newLang = "sv";
-      } else {
-        newLang = "en";
-      }
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
       lang.changeLanguage(newLang);
       lang.updateAllLabels(layout);
     });
 
-    // Update Language of the whole layout before creation
-    LanguageSetting lang = LanguageSetting.getInstance();
-    lang.registerRoot(layout);
-    lang.updateAllLabels(layout);
-
     Scene deleteProdScene = new Scene(layout, 1920, 1080);
+
+    // Update the language for the scene upon creation
+    Parent root = deleteProdScene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
 
     return deleteProdScene;
   }

@@ -2,8 +2,6 @@ package org.example.kiosk;
 
 import java.util.HashMap;
 import java.util.Map;
-// import java.util.regex.Matcher;
-// import java.util.regex.Pattern;
 
 /**
  * This class represents a Dictionary.
@@ -32,13 +30,14 @@ public class Dictionary {
     addTranslation("Drinks", "Drycker");
     addTranslation("Desserts", "Desserter");
     addTranslation("Meals", "Kombomenyer");
-    addTranslation("Special\nOffers", "Speciala\nErbjudanden");
+    addTranslation("Special Offers", "Specialerbjudanden");
     addTranslation("Cancel", "Avbryt");
     addTranslation("Filter Items", "Filtrera artiklar");
     addTranslation("Filter", "Filter");
     addTranslation("Item", "Artikel");
-    // addTranslation("Special", "Special");
-    // addTranslation("Offers", "Erbjudanden");
+    addTranslation("Special", "Special");
+    addTranslation("Offers", "Erbjudanden");
+
 
     // Admin login vocabulary
     addTranslation("Admin Menu", "Adminmeny");
@@ -159,12 +158,11 @@ public class Dictionary {
     addTranslation("Total", "Totalt");
     addTranslation("Enter Promo Code", "Ange Kampanjkod");
     addTranslation("Total", "Totalt");
-    addTranslation("Page", "Sida");
-    addTranslation("of", "av");
-    // addTranslation("Page 0 of 0", "Sida 0 av 0");
-    // addTranslation("Page 1 of 1", "Sida 1 av 1");
-    // addTranslation("Page 1 of 2", "Sida 1 av 2");
-    // addTranslation("Page 2 of 2", "Sida 2 av 2");
+    // TODO: Fix the page counter label
+    addTranslation("Page 0 of 0", "Sida 0 av 0");
+    addTranslation("Page 1 of 1", "Sida 1 av 1");
+    addTranslation("Page 1 of 2", "Sida 1 av 2");
+    addTranslation("Page 2 of 2", "Sida 2 av 2");
 
     // Sales statistics vocabulary
     addTranslation("Sales Statistics:", "Försäljningsstatistik:");
@@ -190,26 +188,19 @@ public class Dictionary {
     addTranslation("pending", "väntande");
     addTranslation("PAID", "Betald");
 
-    // Timer Editor vocabulary
+    // Timer Editor
     addTranslation("Timer Editor:", "Timerredigerare");
+    addTranslation("Kiosk ", "Kiosk ");  //TODO maybe unnecessary
+    addTranslation("Popup ", "Popup ");  //TODO maybe unnecessary
     addTranslation("Timer:", "Tidtagare:");
     addTranslation("Current inactivity timer: ", "Nuvarande inaktivitetstimer: ");
     addTranslation(" seconds", " sekunder");
-    addTranslation("New timer value (in seconds)", "Nytt timervärde (i sekunder)");
-    addTranslation("Update Timer", "Uppdatera Timer");
-    addTranslation("Popup Timer:", "Timer för Popup:");
+    addTranslation("New timer value (in seconds)", "Ny timervärde (i sekunder)");
+    addTranslation("Update Timer", "Uppdatera timer");
     addTranslation("Please enter a value >= 5 seconds.", "Vänligen ange ett värde >= 5 sekunder.");
     addTranslation("Timer updated successfully!", "Timern har uppdaterats!");
     addTranslation(
         "Invalid input! Please enter a number.", "Ogiltig inmatning! Vänligen ange ett nummer.");
-    addTranslation("Current", "Aktuell");
-    addTranslation("inactivity", "inaktivitet");
-    addTranslation("seconds", "sekunder");
-    addTranslation("New", "Nytt");
-    addTranslation("value", "värde");
-    addTranslation("in", "i");
-    addTranslation("Are you still there?", "Är du fortfarande där?");
-
 
     // Delete/Edit vocabulary
     addTranslation("Edit Product Data", "Redigera produktdata");
@@ -236,7 +227,7 @@ public class Dictionary {
     addTranslation("Yes", "Ja");
     addTranslation("No", "Nej");
 
-    // product
+    // TODO: Make the string recomp method for total in checkout and deletition of product
     // For the deletion confirmation line
     addTranslation("Product '", "Produkt '");
     addTranslation(" should be deleted?", " ska tas bort?");
@@ -246,10 +237,6 @@ public class Dictionary {
     // Meal Screen vocabulary
     addTranslation("Pick a Side for your Meal", "Välj ett tillbehör till din måltid");
     addTranslation("Pick a Drink for your Meal", "Välj en dryck till din måltid");
-    addTranslation("Do you want to make it a meal?", "Vill du göra det till en måltid?");
-
-    // Order Confirmation Screen vocabulary
-    addTranslation("Ordered Successfully!", "Beställning slutförd!");
 
   }
 
@@ -276,67 +263,4 @@ public class Dictionary {
       return swedishToEnglish.getOrDefault(word, word);
     }
   }
-
-  /**
-   * Attempts to translate a full sentence; if no direct translation is found,
-   * translates each word individually and preserves punctuation.
-   *
-   * @param sentence the sentence to translate
-   * @return the translated sentence or word-by-word translation if no full match
-   */
-  public String smartTranslate(String sentence) {
-    String fullTranslation = translate(sentence);
-    if (!fullTranslation.equals(sentence)) {
-      return fullTranslation;
-    }
-
-    String[] words = sentence.split("\\s+");
-    StringBuilder result = new StringBuilder();
-
-    for (String word : words) {
-      String cleanedWord = word.replaceAll("[^\\p{L}\\p{Nd}]", "");
-      String punctuation = word.replaceAll("[\\p{L}\\p{Nd}]", "");
-
-      String translatedWord = translate(cleanedWord);
-      result.append(translatedWord).append(punctuation).append(" ");
-    }
-
-    return result.toString().trim();
-  }
-  // public String smartTranslate(String sentence) {
-  // var currentLang = LanguageSetting.getInstance().getSelectedLanguage();
-  // boolean toEnglish = currentLang == "sv";
-
-  // Map<String, String> dictionary = toEnglish ? swedishToEnglish :
-  // englishToSwedish;
-
-  // // Try partial replacements first (phrases/fragments)
-  // String fullTranslation = sentence;
-  // for (Map.Entry<String, String> entry : dictionary.entrySet()) {
-  // fullTranslation = fullTranslation.replace(entry.getKey(), entry.getValue());
-  // }
-
-  // if (!fullTranslation.equals(sentence)) {
-  // return fullTranslation;
-  // }
-
-  // StringBuilder result = new StringBuilder();
-
-  // // Match words, numbers, punctuation, and whitespace separately
-  // Matcher matcher =
-  // Pattern.compile("\\p{L}+|\\d+|\\s+|\\p{P}").matcher(sentence);
-
-  // while (matcher.find()) {
-  // String token = matcher.group();
-
-  // if (token.matches("\\p{L}+")) {
-  // result.append(dictionary.getOrDefault(token, token));
-  // } else {
-  // result.append(token); // Preserve numbers, whitespace, punctuation
-  // }
-  // }
-
-  // return result.toString();
-  // }
-
 }

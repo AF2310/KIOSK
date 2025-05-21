@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -159,25 +160,21 @@ public class CustomizationScreen {
     mainBorderPane.setCenter(centerGrid);
     mainBorderPane.setBottom(bottomLayout);
 
-    // Translate the whole layout before creation
+    // Translate all the text
     langButton.addAction(event -> {
       LanguageSetting lang = LanguageSetting.getInstance();
-      String newLang;
-      if (lang.getSelectedLanguage().equals("en")) {
-        newLang = "sv";
-      } else {
-        newLang = "en";
-      }
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
       lang.changeLanguage(newLang);
       lang.updateAllLabels(mainBorderPane);
     });
 
-    // Update Language of the whole layout before creation
-    LanguageSetting lang = LanguageSetting.getInstance();
-    lang.registerRoot(mainBorderPane);
-    lang.updateAllLabels(mainBorderPane);
-
     var customizationScene = new CustomScene(mainBorderPane, windowWidth, windowHeight);
+
+    // Update the language for the scene upon creation
+    Parent root = customizationScene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
 
     // Reads and applies the customized background color
     Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();

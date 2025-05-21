@@ -3,6 +3,7 @@ package org.example.screens;
 import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -136,6 +137,14 @@ public class WelcomeScreen {
     var langButton = new LangBtn();
     langButton.updateImage();
 
+    // Translate all the text
+    langButton.addAction(event -> {
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(mainWindow);
+    });
+
     // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
     StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
@@ -151,24 +160,6 @@ public class WelcomeScreen {
     // Put everythng in a stackpane
     StackPane mainPane = new StackPane(mainWindow, langButton);
     mainPane.setPrefSize(windowWidth, windowHeight);
-
-    // Translate all the text if click the translate button
-    langButton.addAction(event -> {
-      LanguageSetting lang = LanguageSetting.getInstance();
-      String newLang;
-      if (lang.getSelectedLanguage().equals("en")) {
-        newLang = "sv";
-      } else {
-        newLang = "en";
-      }
-      lang.changeLanguage(newLang);
-      lang.updateAllLabels(mainPane);
-    });
-
-    // Update Language of the whole layout before creation
-    LanguageSetting lang = LanguageSetting.getInstance();
-    lang.registerRoot(mainPane);
-    lang.updateAllLabels(mainPane);
 
     CustomScene scene = new CustomScene(mainPane, windowWidth, windowHeight);
 
@@ -247,6 +238,14 @@ public class WelcomeScreen {
     burgerButton.setOnAction(e -> {
       primaryStage.setScene(adminMenuScene);
     });
+
+    // Update the language for the scene upon creation
+    Parent root = scene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(mainWindow);
+    // LanguageSetting.getInstance().updateAllLabels(eatHereBtn);
+    // LanguageSetting.getInstance().updateAllLabels(takeAwayBtn);
 
     return scene;
   }

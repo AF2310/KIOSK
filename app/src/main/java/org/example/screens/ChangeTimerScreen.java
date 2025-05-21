@@ -2,6 +2,7 @@ package org.example.screens;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -83,25 +84,21 @@ public class ChangeTimerScreen {
     layout.setCenter(timerEditor);
     layout.setBottom(bottomContainer);
 
-    // Translate the whole layout before creation
+    // Translate all the text
     langButton.addAction(event -> {
       LanguageSetting lang = LanguageSetting.getInstance();
-      String newLang;
-      if (lang.getSelectedLanguage().equals("en")) {
-        newLang = "sv";
-      } else {
-        newLang = "en";
-      }
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
       lang.changeLanguage(newLang);
       lang.updateAllLabels(layout);
     });
 
-    // Update Language of the whole layout before creation
-    LanguageSetting lang = LanguageSetting.getInstance();
-    lang.registerRoot(layout);
-    lang.updateAllLabels(layout);
-
     var scene = new Scene(layout, 1920, 1080);
+
+    // Update the language for the scene upon creation
+    Parent root = scene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
 
     return scene;
   }
@@ -215,11 +212,6 @@ public class ChangeTimerScreen {
         updateButton,
         consoleOutput);
     timer.setAlignment(Pos.TOP_LEFT);
-
-    // Update Language of the whole layout before creation
-    LanguageSetting lang = LanguageSetting.getInstance();
-    lang.registerRoot(timer);
-    lang.updateAllLabels(timer);
 
     return timer;
   }

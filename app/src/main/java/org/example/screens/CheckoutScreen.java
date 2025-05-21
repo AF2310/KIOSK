@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -90,6 +91,7 @@ public class CheckoutScreen {
     checkoutLabel.setPadding(new Insets(50, 100, 50, 50));
     checkoutLabel.setMinWidth(500); // Gives label space to breathe
 
+
     // Promo code section
     TextField promoField = new TextField();
     promoField.setPromptText("Enter Promo Code");
@@ -149,7 +151,8 @@ public class CheckoutScreen {
           windowWidth,
           windowHeight,
           welcomeScrScene,
-          orderId);
+          orderId
+      );
       this.primaryStage.setScene(ordConfirmScene);
 
       // Creating fading animation
@@ -194,7 +197,7 @@ public class CheckoutScreen {
     Region spacer = new Region();
     HBox.setHgrow(topspacer, Priority.ALWAYS);
 
-    // Language button
+    //Language button
     var langButton = new LangBtn();
 
     // Combine all; 300px spacing between each child
@@ -236,10 +239,7 @@ public class CheckoutScreen {
       lang.updateAllLabels(layout);
     });
 
-    // Update Language of the whole layout before creation
-    LanguageSetting lang = LanguageSetting.getInstance();
-    lang.registerRoot(layout);
-    lang.updateAllLabels(layout);
+    LanguageSetting.getInstance().updateAllLabels(layout);
 
     // Create final scene result
     CustomScene scene = new CustomScene(layout, windowWidth, windowHeight);
@@ -252,6 +252,12 @@ public class CheckoutScreen {
       scene.setBackgroundColor(bgColor);
 
     }
+
+    // Update the language for the scene upon creation
+    Parent root = scene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
 
     return scene;
   }

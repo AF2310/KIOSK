@@ -9,10 +9,22 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.example.buttons.DropBoxWithLabel;
+import org.example.buttons.LangBtn;
+import org.example.buttons.RectangleTextFieldWithLabel;
+import org.example.buttons.SqrBtnWithOutline;
+import org.example.buttons.SquareButtonWithImg;
+import org.example.buttons.TickBoxWithLabel;
+import org.example.kiosk.LanguageSetting;
+import org.example.sql.DatabaseManager;
+import org.example.sql.SqlQueries;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -26,16 +38,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.example.buttons.DropBoxWithLabel;
-import org.example.buttons.LangBtn;
-import org.example.buttons.RectangleTextFieldWithLabel;
-import org.example.buttons.SqrBtnWithOutline;
-import org.example.buttons.SquareButtonWithImg;
-import org.example.buttons.TickBoxWithLabel;
-import org.example.kiosk.LanguageSetting;
-import org.example.sql.DatabaseManager;
-import org.example.sql.SqlQueries;
-
 
 /**
  * Scene in the admin menu for adding products to the menu.
@@ -290,6 +292,13 @@ public class AddProductScene {
     // Language Button
     var langButton = new LangBtn();
 
+    langButton.addAction(event -> {
+      LanguageSetting lang = LanguageSetting.getInstance();
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
+      lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
+    });
+
     // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
     StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
@@ -297,25 +306,13 @@ public class AddProductScene {
     // put everything into a stackpane
     StackPane mainPane = new StackPane(layout, langButton);
 
-    // Translate the whole layout before creation
-    langButton.addAction(event -> {
-      LanguageSetting lang = LanguageSetting.getInstance();
-      String newLang;
-      if (lang.getSelectedLanguage().equals("en")) {
-        newLang = "sv";
-      } else {
-        newLang = "en";
-      }
-      lang.changeLanguage(newLang);
-      lang.updateAllLabels(mainPane);
-    });
-
-    // Update Language of the whole layout before creation
-    LanguageSetting lang = LanguageSetting.getInstance();
-    lang.registerRoot(mainPane);
-    lang.updateAllLabels(mainPane);
-
     Scene addProductScene = new Scene(mainPane, 1920, 1080);
+
+    // Update the language for the scene upon creation
+    Parent root = addProductScene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
 
     return addProductScene;
   }

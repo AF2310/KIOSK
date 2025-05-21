@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -162,25 +163,23 @@ public class AdminMenuScreen {
     StackPane layout = new StackPane(mainBorderPane, customBtn);
     layout.setPrefSize(windowWidth, windowHeight);
 
-    // Translate the whole layout before creation
+    // Translate all the text
     langButton.addAction(event -> {
       LanguageSetting lang = LanguageSetting.getInstance();
-      String newLang;
-      if (lang.getSelectedLanguage().equals("en")) {
-        newLang = "sv";
-      } else {
-        newLang = "en";
-      }
+      String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
       lang.changeLanguage(newLang);
+      lang.updateAllLabels(layout);
+
       lang.updateAllLabels(layout);
     });
 
-    // Update Language of the whole layout before creation
-    LanguageSetting lang = LanguageSetting.getInstance();
-    lang.registerRoot(layout);
-    lang.updateAllLabels(layout);
-
     Scene adminMenuScene = new Scene(layout, windowWidth, windowHeight);
+
+    // Update the language for the scene upon creation
+    Parent root = adminMenuScene.getRoot();
+
+    LanguageSetting.getInstance().registerRoot(root);
+    LanguageSetting.getInstance().updateAllLabels(root);
 
     return adminMenuScene;
   }
