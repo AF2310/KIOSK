@@ -488,5 +488,29 @@ public class SqlQueries {
     }
     return -1; // or throw an exception if not found
   }
+
+  /**
+   * Query method to change the name of a product.
+   * Used in product table getter method.
+   *
+   * @param newName    String new name of product
+   * @param productId  int product id that gets name-change
+   * @throws SQLException Database error
+   */
+  public void updateProductName(
+      String newName,
+      int productId) throws SQLException {
+
+    String sql = "UPDATE product "
+        + "SET name = ? "
+        + "WHERE product_id = ?";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setString(1, newName);
+      stmt.setInt(2, productId);
+      stmt.executeUpdate();
+    }
+  }
 } 
 

@@ -29,6 +29,7 @@ import org.example.buttons.SearchBar;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
 import org.example.menu.Type;
+import org.example.sql.SqlQueries;
 
 
 /**
@@ -258,18 +259,10 @@ public class UpdateMenuItems {
           // Update product name locally
           product.setName(newName);
 
-          // TODO: This will be moved later
+          SqlQueries queries = new SqlQueries();
           try {
-            Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-                    + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-                    + "?user=u5urh19mtnnlgmog"
-                    + "&password=zPgqf8o6na6pv8j8AX8r"
-                    + "&useSSL=true"
-                    + "&allowPublicKeyRetrieval=true");
-
             // Update newly inserted activity value of product in database
-            updateProductName(newName, productId, conn);
+            queries.updateProductName(newName, productId);
 
           } catch (SQLException e) {
             e.printStackTrace();
@@ -472,31 +465,6 @@ public class UpdateMenuItems {
   }
 
   // TODO DATABASE/QUERY METHODS BELOW
-
-  /**
-   * Query method to change the name of a product.
-   * Used in product table getter method.
-   *
-   * @param newName    String new name of product
-   * @param productId  int product id that gets name-change
-   * @param connection Database connection
-   * @throws SQLException Database error
-   */
-  private void updateProductName(
-      String newName,
-      int productId,
-      Connection connection) throws SQLException {
-
-    String sql = "UPDATE product "
-        + "SET name = ? "
-        + "WHERE product_id = ?";
-
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-      stmt.setString(1, newName);
-      stmt.setInt(2, productId);
-      stmt.executeUpdate();
-    }
-  }
 
   /**
    * Query method to change the description of a product.
