@@ -37,6 +37,7 @@ import org.example.sql.SqlQueries;
  */
 public class UpdateMenuItems {
   private Connection con;
+  private SqlQueries queries = new SqlQueries();
 
   /**
    * Creates a scene for updating menu items in the admin interface.
@@ -259,7 +260,6 @@ public class UpdateMenuItems {
           // Update product name locally
           product.setName(newName);
 
-          SqlQueries queries = new SqlQueries();
           try {
             // Update newly inserted activity value of product in database
             queries.updateProductName(newName, productId);
