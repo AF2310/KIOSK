@@ -33,6 +33,7 @@ import org.example.kiosk.InactivityTimer;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
 import org.example.orders.Cart;
+import org.example.orders.Order;
 import org.example.sql.DatabaseManager;
 import org.example.users.Customer;
 
@@ -47,6 +48,7 @@ public class CheckoutScreen {
   private Stage primaryStage;
   private Boolean discountApplied;
   private int discountFactor;
+  private Order order = new Order();
 
   /**
    * Creating a scene for the checkout menu.
@@ -61,6 +63,7 @@ public class CheckoutScreen {
    * @param conn            the database connection
    * @return scene containing all the order details
    */
+
   public CustomScene createCheckoutScreen(
       Stage primaryStage,
       double windowWidth,
@@ -156,22 +159,36 @@ public class CheckoutScreen {
         }
 
         String promoCodeSql = "SELECT name, discount_type, discount_value, promo_code "
-                    + "FROM promotion";
+            + "FROM promotion";
 
         PreparedStatement promoStmt = connection.prepareStatement(promoCodeSql);
         ResultSet promoCodeResults = promoStmt.executeQuery();
+
+        boolean valid = false;
         while (promoCodeResults.next()) {
           String currentCode = promoCodeResults.getString("promo_code");
-          if (userPromoCode == currentCode) {
-            discountFactor = promoCodeResults.getInt("discount_value");
-            discountApplied = true;
+          if (userPromoCode.equals(currentCode)) {
+            int discountFactor = promoCodeResults.getInt("discount_value");
+            order.applyDiscount(discountFactor);
+            promoCodeLabel.setText("Promo code applied " + discountFactor + "% off");
+            promoCodeLabel.setVisible(true);
+            valid = true;
             break;
           }
         }
+
+        if (!valid) {
+          promoCodeLabel.setText("Invalid promo code");
+          promoCodeLabel.setVisible(true);
+        }
+
       } catch (SQLException e1) {
         e1.printStackTrace();
       }
 
+      for (ConfirmOrderButton button : ConfirmOrderButton.getInstances()) {
+        button.updatePriceLabel();
+      }
     });
 
     HBox topBox = new HBox();
@@ -188,7 +205,7 @@ public class CheckoutScreen {
     bottomButtons.setPadding(new Insets(10));
 
     // Create confirm order button instance
-    ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton();
+    ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton(order);
 
     // Add confirmation button to listeners of cart changes
     // -> so price label of button updates when cart changes
