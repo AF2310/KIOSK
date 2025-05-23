@@ -512,5 +512,29 @@ public class SqlQueries {
       stmt.executeUpdate();
     }
   }
+
+  /**
+   * Query method to change the description of a product.
+   * Used in product table getter method.
+   *
+   * @param newDescription String new description of product
+   * @param productId      int product id that gets new description
+   * @throws SQLException Database error
+   */
+  public void updateProductDescription(
+      String newDescription,
+      int productId) throws SQLException {
+
+    String sql = "UPDATE product "
+        + "SET description = ? "
+        + "WHERE product_id = ?";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setString(1, newDescription);
+      stmt.setInt(2, productId);
+      stmt.executeUpdate();
+    }
+  }
 } 
 

@@ -37,7 +37,7 @@ import org.example.sql.SqlQueries;
  */
 public class UpdateMenuItems {
   private Connection con;
-  private SqlQueries queries = new SqlQueries();
+  private SqlQueries pool = new SqlQueries();
 
   /**
    * Creates a scene for updating menu items in the admin interface.
@@ -262,7 +262,7 @@ public class UpdateMenuItems {
 
           try {
             // Update newly inserted activity value of product in database
-            queries.updateProductName(newName, productId);
+            pool.updateProductName(newName, productId);
 
           } catch (SQLException e) {
             e.printStackTrace();
@@ -293,18 +293,9 @@ public class UpdateMenuItems {
         // Update product name locally
         product.setDescription(newDescription);
 
-        // TODO: This will be moved later
         try {
-          Connection conn = DriverManager.getConnection(
-              "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-                  + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-                  + "?user=u5urh19mtnnlgmog"
-                  + "&password=zPgqf8o6na6pv8j8AX8r"
-                  + "&useSSL=true"
-                  + "&allowPublicKeyRetrieval=true");
-
           // Update newly inserted activity value of product in database
-          updateProductDescription(newDescription, productId, conn);
+          pool.updateProductDescription(newDescription, productId);
 
         } catch (SQLException e) {
           e.printStackTrace();
@@ -465,31 +456,6 @@ public class UpdateMenuItems {
   }
 
   // TODO DATABASE/QUERY METHODS BELOW
-
-  /**
-   * Query method to change the description of a product.
-   * Used in product table getter method.
-   *
-   * @param newDescription String new description of product
-   * @param productId      int product id that gets new description
-   * @param connection     Database connection
-   * @throws SQLException Database error
-   */
-  private void updateProductDescription(
-      String newDescription,
-      int productId,
-      Connection connection) throws SQLException {
-
-    String sql = "UPDATE product "
-        + "SET description = ? "
-        + "WHERE product_id = ?";
-
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-      stmt.setString(1, newDescription);
-      stmt.setInt(2, productId);
-      stmt.executeUpdate();
-    }
-  }
 
   /**
    * Query method to update is_active value of a product.
