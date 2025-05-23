@@ -266,7 +266,6 @@ public class Dictionary {
     }
   }
 
-<<<<<<< app/src/main/java/org/example/kiosk/Dictionary.java
   /**
    * Attempts to translate a full sentence; if not found, translates word by word.
    * Handles dynamic sentences like: "Current inactivity timer: 60 seconds"
@@ -306,41 +305,5 @@ public class Dictionary {
     return result.toString().trim();
   }
 
-=======
-public String smartTranslate(String sentence) {
-  String fullTranslation = translate(sentence);
-  if (!fullTranslation.equals(sentence)) {
-    return fullTranslation;
-  }
-
-  String[] words = sentence.split("\\s+");
-  StringBuilder result = new StringBuilder();
-
-  for (String word : words) {
-    // Detect word boundaries with punctuation (e.g., "Total:", "1.23", "kr.")
-    String prefix = "";
-    String suffix = "";
-
-    // Extract leading punctuation (e.g., quotes, parentheses)
-    while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(0))) {
-      prefix += word.charAt(0);
-      word = word.substring(1);
-    }
-
-    // Extract trailing punctuation
-    while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(word.length() - 1))) {
-      suffix = word.charAt(word.length() - 1) + suffix;
-      word = word.substring(0, word.length() - 1);
-    }
-
-    // Now 'word' should be clean — like "Total", "1.23", or "kr"
-    String translated = translate(word);
-    result.append(prefix).append(translated).append(suffix).append(" ");
-  }
-
-  return result.toString().trim();
-}
-
->>>>>>> app/src/main/java/org/example/kiosk/Dictionary.java
 
 }

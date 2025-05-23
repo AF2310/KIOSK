@@ -16,10 +16,15 @@ public class Customer implements User {
    *
    * @throws SQLException SQL Database errors
    */
-  public int placeOrder(Connection conn) throws SQLException {
+  public int placeOrder(Connection conn, boolean discountApplied,
+         int discountFactor) throws SQLException {
     // Calculate total order price
     Order order = new Order();
     double price = order.calculatePrice();
+
+    if (discountApplied) {
+      price = price * (1 - discountFactor);
+    }
 
     // SQL Query as string statement
     String s = "INSERT INTO `order` "
