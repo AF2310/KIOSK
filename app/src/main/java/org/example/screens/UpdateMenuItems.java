@@ -378,18 +378,9 @@ public class UpdateMenuItems {
         int productId = product.getId();
         product.setPreparationTime(newTime);
 
-        // TODO: This will be moved later
         try {
-          Connection connection = DriverManager.getConnection(
-              "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-                  + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-                  + "?user=u5urh19mtnnlgmog"
-                  + "&password=zPgqf8o6na6pv8j8AX8r"
-                  + "&useSSL=true"
-                  + "&allowPublicKeyRetrieval=true");
-
           // update the newly inserted price in database
-          updateProductPreptime(newTime, productId, connection);
+          pool.updateProductPreptime(newTime, productId);
 
         } catch (SQLException e) {
           e.printStackTrace();
@@ -492,31 +483,5 @@ public class UpdateMenuItems {
     }
 
     return products;
-  }
-
-  /**
-   * This method updates the preparation time of a specific product in
-   * the database.
-   * This method is used in the update price section of the admin menu.
-   *
-   * @param newTime    int new preparation time of the product
-   * @param productId  int product id of product that will be updated
-   * @param connection database connection
-   * @throws SQLException database error
-   */
-  private void updateProductPreptime(
-      int newTime,
-      int productId,
-      Connection connection) throws SQLException {
-
-    String sql = "UPDATE product "
-        + "SET preparation_time = ? "
-        + "WHERE product_id = ?";
-
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-      stmt.setDouble(1, newTime);
-      stmt.setInt(2, productId);
-      stmt.executeUpdate();
-    }
   }
 }
