@@ -29,6 +29,7 @@ import org.example.buttons.SearchBar;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
 import org.example.menu.Type;
+import org.example.sql.DatabaseManager;
 import org.example.sql.SqlQueries;
 
 
@@ -327,18 +328,9 @@ public class UpdateMenuItems {
           // Updating value locally
           product.setActivity(newActivityValue);
 
-          // TODO: This will be moved later
           try {
-            Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-                    + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-                    + "?user=u5urh19mtnnlgmog"
-                    + "&password=zPgqf8o6na6pv8j8AX8r"
-                    + "&useSSL=true"
-                    + "&allowPublicKeyRetrieval=true");
-
             // Update newly inserted activity value in database
-            updateActivityValue(newActivityValue, productId, conn);
+            pool.updateActivityValue(newActivityValue, productId);
 
           } catch (SQLException e) {
             e.printStackTrace();
@@ -456,31 +448,6 @@ public class UpdateMenuItems {
   }
 
   // TODO DATABASE/QUERY METHODS BELOW
-
-  /**
-   * Query method to update is_active value of a product.
-   * Used in product table getter method.
-   *
-   * @param newActivityValue int new is_active value (1 or 0)
-   * @param productId        int id of product that will be changed
-   * @param connection       Connection to database
-   * @throws SQLException Database error
-   */
-  private void updateActivityValue(
-      int newActivityValue,
-      int productId,
-      Connection connection) throws SQLException {
-
-    String sql = "UPDATE product "
-        + "SET is_active = ? "
-        + "WHERE product_id = ?";
-
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-      stmt.setInt(1, newActivityValue);
-      stmt.setInt(2, productId);
-      stmt.executeUpdate();
-    }
-  }
 
   /**
    * This method fetches all necessary product data from the

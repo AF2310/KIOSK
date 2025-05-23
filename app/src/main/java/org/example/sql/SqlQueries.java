@@ -536,5 +536,29 @@ public class SqlQueries {
       stmt.executeUpdate();
     }
   }
+
+  /**
+   * Query method to update is_active value of a product.
+   * Used in product table getter method.
+   *
+   * @param newActivityValue int new is_active value (1 or 0)
+   * @param productId        int id of product that will be changed
+   * @throws SQLException Database error
+   */
+  public void updateActivityValue(
+      int newActivityValue,
+      int productId) throws SQLException {
+
+    String sql = "UPDATE product "
+        + "SET is_active = ? "
+        + "WHERE product_id = ?";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, newActivityValue);
+      stmt.setInt(2, productId);
+      stmt.executeUpdate();
+    }
+  }
 } 
 
