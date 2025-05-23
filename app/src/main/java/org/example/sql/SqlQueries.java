@@ -560,5 +560,30 @@ public class SqlQueries {
       stmt.executeUpdate();
     }
   }
+
+    /**
+   * This method updates the price of a specific product in
+   * the database.
+   * This method is used in the update price section of the admin menu.
+   *
+   * @param newPrice   int new price of the product
+   * @param productId  int product id of product that will be updated
+   * @throws SQLException database error
+   */
+  public void updateProductPrice(
+      double newPrice,
+      int productId) throws SQLException {
+
+    String sql = "UPDATE product "
+        + "SET price = ? "
+        + "WHERE product_id = ?";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setDouble(1, newPrice);
+      stmt.setInt(2, productId);
+      stmt.executeUpdate();
+    }
+  }
 } 
 

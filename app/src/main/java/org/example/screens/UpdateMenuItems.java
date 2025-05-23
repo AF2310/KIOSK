@@ -354,18 +354,9 @@ public class UpdateMenuItems {
         int productId = product.getId();
         product.setPrice(newPrice);
 
-        // TODO: This will be moved later
         try {
-          Connection conn = DriverManager.getConnection(
-              "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-                  + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-                  + "?user=u5urh19mtnnlgmog"
-                  + "&password=zPgqf8o6na6pv8j8AX8r"
-                  + "&useSSL=true"
-                  + "&allowPublicKeyRetrieval=true");
-
           // update the newly inserted price in database
-          updateProductPrice(newPrice, productId, conn);
+          pool.updateProductPrice(newPrice, productId);
 
         } catch (SQLException e) {
           e.printStackTrace();
@@ -501,32 +492,6 @@ public class UpdateMenuItems {
     }
 
     return products;
-  }
-
-  /**
-   * This method updates the price of a specific product in
-   * the database.
-   * This method is used in the update price section of the admin menu.
-   *
-   * @param newPrice   int new price of the product
-   * @param productId  int product id of product that will be updated
-   * @param connection database connection
-   * @throws SQLException database error
-   */
-  private void updateProductPrice(
-      double newPrice,
-      int productId,
-      Connection connection) throws SQLException {
-
-    String sql = "UPDATE product "
-        + "SET price = ? "
-        + "WHERE product_id = ?";
-
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-      stmt.setDouble(1, newPrice);
-      stmt.setInt(2, productId);
-      stmt.executeUpdate();
-    }
   }
 
   /**
