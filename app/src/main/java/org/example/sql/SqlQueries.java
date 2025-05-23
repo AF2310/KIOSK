@@ -610,5 +610,59 @@ public class SqlQueries {
       stmt.executeUpdate();
     }
   }
+
+  /**
+   * This method fetches all necessary product data from the
+   * database and returns an array of products that contain
+   * all that fetched data.
+   * This method is used in the price update section of the
+   * admin menu.
+   *
+   * @return array containing all products with data from database
+   * @throws SQLException database error
+   */
+  public ArrayList<Product> fetchAllProductData() throws SQLException {
+
+    // ArrayList to store product data
+    ArrayList<Product> products = new ArrayList<>();
+
+    // SQL query to fetch needed data from database
+    String sql = "SELECT p.product_id, p.`name`, p.description, "
+        + "c.`name` AS type, p.is_active, p.price, p.preparation_time "
+        + "FROM product p "
+        + "JOIN category c ON p.category_id = c.category_id";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();) {
+      while (rs.next()) {
+
+        // Fetch all product data from database
+        int productId = rs.getInt("product_id");
+        String name = rs.getString("name");
+        String description = rs.getString("description");
+        Type type = Type.valueOf(rs.getString("type").toUpperCase());
+        int isActive = rs.getInt("is_active");
+        double price = rs.getDouble("price");
+        int prepTime = rs.getInt("preparation_time");
+
+        // Make new product with all fetched database data
+        Product product = new Product() {
+        };
+        product.setId(productId);
+        product.setName(name);
+        product.setType(type);
+        product.setDescription(description);
+        product.setActivity(isActive);
+        product.setPrice(price);
+        product.setPreparationTime(prepTime);
+
+        // Add completed product to array
+        products.add(product);
+      }
+    }
+
+    return products;
+  }
 } 
 
