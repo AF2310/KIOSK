@@ -6,8 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import org.example.sql.SqlQueries;
 
 
 /**
@@ -87,27 +89,18 @@ public class Single extends Product {
   /**
    * The function retrieves all singles data from a database table and returns a
    * list of objects.
+   *
+   * @throws SQLException if database error occurs
    */
-  public List<Single> getAllSingles(Connection conn) throws SQLException {
-    List<Single> list = new ArrayList<>();
-    String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type "
-        + "FROM product p "
-        + "JOIN category c ON p.category_id = c.category_id";
+  public List<Single> getAllSingles() throws SQLException {
+    try {
+      SqlQueries pool = new SqlQueries();
+      return pool.getAllSingles();
 
-    Statement stmt = conn.createStatement();
-    ResultSet rs = stmt.executeQuery(sql);
-
-    while (rs.next()) {
-      list.add(new Single(
-          rs.getInt("id"),
-          rs.getString("name"),
-          rs.getFloat("price"),
-          Type.valueOf(rs.getString("type")),
-          rs.getString("image_url")));
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return Collections.emptyList();
     }
-    rs.close();
-    stmt.close();
-    return list;
   }
 
   /**

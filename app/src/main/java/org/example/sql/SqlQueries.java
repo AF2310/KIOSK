@@ -249,16 +249,16 @@ public class SqlQueries {
   /**
    * Retrieves all Single products from the database.
    *
-   * @param conn database connection
    * @return list of Single products
    * @throws SQLException if database access error occurs
    */
 
-  public List<Single> getAllSingles(Connection conn) throws SQLException {
+  public List<Single> getAllSingles() throws SQLException {
     List<Single> list = new ArrayList<>();
     String sql = "SELECT product_id, name, price, image_url FROM product";
 
-    try (PreparedStatement stmt = conn.prepareStatement(sql);
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql);
         ResultSet rs = stmt.executeQuery()) {
 
       while (rs.next()) {
