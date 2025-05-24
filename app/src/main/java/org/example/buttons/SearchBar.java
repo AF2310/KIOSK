@@ -25,6 +25,7 @@ import org.example.menu.Single;
  * in a list view and interacts with a database connection to fetch data.
  */
 public class SearchBar extends VBox {
+
   private final TextField nameField;
   private final TextField priceField;
   private final CheckBox ingredientCheckbox;
@@ -105,16 +106,18 @@ public class SearchBar extends VBox {
           Ingredient ingredientDummy = new Ingredient(0, "");
           boolean hasName = !name.isEmpty();
           boolean hasPrice = !priceText.isEmpty();
-
           List<Ingredient> ingredients;
+
           if (!hasName && !hasPrice) {
             // resultList.getItems().add("Please enter name or price.");
-            ingredients = ingredientDummy.getAllIngredients(conn);
+            ingredients = ingredientDummy.getAllIngredients();
+
           } else if (hasName && hasPrice) {
-            float price = Float.parseFloat(priceText);
-            ingredients = ingredientDummy.searchIngredientByNameAndPrice(conn, name, price);
+            double price = Double.parseDouble(priceText);
+            ingredients = ingredientDummy.searchIngredientByNameAndPrice(name, price);
+          
           } else if (!name.isEmpty()) {
-            ingredients = ingredientDummy.searchIngredientsByName(name, conn);
+            ingredients = ingredientDummy.searchIngredientsByName(name);
             /*
              * for (Ingredient ing : ingredients) {
              * resultList.getItems().add("Ingredient: " + ing.getName());
@@ -122,11 +125,13 @@ public class SearchBar extends VBox {
              */
 
           } else {
-            float price = Float.parseFloat(priceText);
-            ingredients = ingredientDummy.searchIngredientsByPrice(price, conn);
+            double price = Double.parseDouble(priceText);
+            ingredients = ingredientDummy.searchIngredientsByPrice(price);
           }
+
           if (ingredients.isEmpty()) {
             resultList.getItems().add("No ingredients found.");
+
           } else {
             for (Ingredient ing : ingredients) {
               resultList.getItems().add("Ingredient: " + ing.getName());
@@ -185,10 +190,10 @@ public class SearchBar extends VBox {
         boolean hasPrice = !priceText.isEmpty();
         // boolean hasCategory = selectedCategory != null &&
         // !selectedCategory.equals("-- Any --");
-        Float priceLimit = Float.MAX_VALUE;
+        Double priceLimit = Double.MAX_VALUE;
         if (hasPrice) {
           try {
-            priceLimit = Float.parseFloat(priceText);
+            priceLimit = Double.parseDouble(priceText);
           } catch (NumberFormatException ex) {
             resultList.getItems().add("Invalid price input.");
             return;
