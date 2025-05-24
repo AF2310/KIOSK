@@ -21,6 +21,20 @@ import org.example.orders.Order;
  * Class for all queries related to the DB.
  */
 public class SqlQueries {
+
+  private Connection conn;
+
+  /**
+   * This is the class that holds all sql queries.
+   * This constructor is to set the database connection in one line
+   * to reduce code.
+   *
+   * @throws SQLException sql issues
+   */
+  public SqlQueries() throws SQLException {
+    this.conn = DatabaseManager.getConnection();
+  }
+
   /**
    * Order query method.
    *
