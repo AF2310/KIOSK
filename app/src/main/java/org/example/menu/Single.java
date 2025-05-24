@@ -433,5 +433,10 @@ public class Single extends Product {
       return options;
     }*/
 
-    
+  /**
+   * The toString method.
+   */
+  public String toString() {
+    return getName();
+  }
 }
