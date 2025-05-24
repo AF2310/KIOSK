@@ -252,7 +252,6 @@ public class SqlQueries {
    * @return list of Single products
    * @throws SQLException if database access error occurs
    */
-
   public List<Single> getAllSingles() throws SQLException {
     List<Single> list = new ArrayList<>();
     String sql = "SELECT product_id, name, price, image_url FROM product";
@@ -276,16 +275,16 @@ public class SqlQueries {
   /**
    * Saves a Single product to the database.
    *
-   * @param conn   database connection
    * @param single the Single product to save
    * @throws SQLException if database access error occurs
    */
-  public void saveSingleToDb(Connection conn, Single single) throws SQLException {
+  public void saveSingleToDb(Single single) throws SQLException {
     String sql = "INSERT INTO product "
         + "(name, price, category_id, image_url) VALUES (?, ?, ?, ?)";
 
-    try (PreparedStatement stmt = conn.prepareStatement(sql,
-        PreparedStatement.RETURN_GENERATED_KEYS)) {
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql,
+            PreparedStatement.RETURN_GENERATED_KEYS)) {
       stmt.setString(1, single.getName());
       stmt.setDouble(2, single.getPrice());
       stmt.setInt(3, getCategoryIdForType(single.getType())); // Helper method needed

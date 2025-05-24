@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -108,10 +107,9 @@ public class Single extends Product {
    * Assumes category name maps to valid category in DB.
    */
   public void saveToDb(Connection conn) throws SQLException {
-    // Get the category_id from the category name (enum)
+    /* // Get the category_id from the category name (enum)
     String categoryQuery = "SELECT category_id FROM category WHERE name = ?";
     int categoryId;
-
     try (PreparedStatement categoryStmt = conn.prepareStatement(categoryQuery)) {
       // assumes enum name matches DB name
       categoryStmt.setString(1, getType().name());
@@ -126,7 +124,6 @@ public class Single extends Product {
         }
       }
     }
-
     // Insert product in database with query and needed data
     String insertSql = "INSERT INTO product "
         + "(name, description, price, category_id, is_active) "
@@ -146,6 +143,13 @@ public class Single extends Product {
           setId(rs.getInt(1));
         }
       }
+    } */
+    try {
+      SqlQueries pool = new SqlQueries();
+      pool.saveSingleToDb(this);
+
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
   }
 
