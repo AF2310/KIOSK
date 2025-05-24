@@ -5,11 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.example.menu.Ingredient;
 import org.example.menu.Meal;
 import org.example.menu.Product;
 import org.example.menu.Single;
+import org.example.menu.Type;
 
 /**
  * The cart class implemented as a singleton.
@@ -248,5 +251,68 @@ public class Cart {
         quantity.add(quant);
       }
     }
+  }
+
+  /**
+   * Method to calculate the estimated preparation time of the customer's
+   * order.
+   * There are two different ways of calculations:
+   * DAYTIME: A full staff team is present and therefore, each different
+   * Type of item can be made simultaniously.
+   * NIGHTTIME: Barely any staff is currently working. Therefore, all items
+   * are made individually.
+   * The meals get converted into singles after the confirm order
+   * button is pressed. Hence, there is no meal time calculation
+   * needed.
+   *
+   * @return total estimated preparation time of the order
+   */
+  public int getEstimateTime() {
+
+    // Set starting values for each type-specific preparation time
+    int timeBurgers = 0;
+    int timeSides = 0;
+    int timeDrinks = 0;
+    int timeExtra = 0;
+    int timeDesserts = 0;
+    int totalTime = 0;
+    List<Integer> allTimes = new ArrayList<>();
+
+    // DAYTIME calculation
+
+    // Go through all products
+    for (Product product : items) {
+
+      // Adding prep times depending on their type
+      if (product.getType() == Type.BURGERS) {
+        timeBurgers += product.getPreparationTime();
+
+      } else if (product.getType() == Type.SIDES) {
+        timeSides += product.getPreparationTime();
+
+      } else if (product.getType() == Type.DRINKS) {
+        timeDrinks += product.getPreparationTime();
+
+      } else if (product.getType() == Type.EXTRA) {
+        timeExtra += product.getPreparationTime();
+
+      } else if (product.getType() == Type.DESSERTS) {
+        timeDesserts += product.getPreparationTime();
+      }
+    }
+
+    // Add all times to array
+    allTimes.add(timeBurgers);
+    allTimes.add(timeSides);
+    allTimes.add(timeDrinks);
+    allTimes.add(timeExtra);
+    allTimes.add(timeDesserts);
+
+    // Sort times from small to big
+    Collections.sort(allTimes);
+
+    totalTime = allTimes.get(allTimes.size() - 1);
+
+    return totalTime;
   }
 }
