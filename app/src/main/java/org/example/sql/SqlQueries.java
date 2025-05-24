@@ -488,5 +488,222 @@ public class SqlQueries {
     }
     return -1; // or throw an exception if not found
   }
+
+  /**
+   * Query method to change the name of a product.
+   * Used in product table getter method.
+   *
+   * @param newName    String new name of product
+   * @param productId  int product id that gets name-change
+   * @throws SQLException Database error
+   */
+  public void updateProductName(
+      String newName,
+      int productId) throws SQLException {
+
+    String sql = "UPDATE product "
+        + "SET name = ? "
+        + "WHERE product_id = ?";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setString(1, newName);
+      stmt.setInt(2, productId);
+      stmt.executeUpdate();
+    }
+  }
+
+  /**
+   * Query method to change the description of a product.
+   * Used in product table getter method.
+   *
+   * @param newDescription String new description of product
+   * @param productId      int product id that gets new description
+   * @throws SQLException Database error
+   */
+  public void updateProductDescription(
+      String newDescription,
+      int productId) throws SQLException {
+
+    String sql = "UPDATE product "
+        + "SET description = ? "
+        + "WHERE product_id = ?";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setString(1, newDescription);
+      stmt.setInt(2, productId);
+      stmt.executeUpdate();
+    }
+  }
+
+  /**
+   * Query method to update is_active value of a product.
+   * Used in product table getter method.
+   *
+   * @param newActivityValue int new is_active value (1 or 0)
+   * @param productId        int id of product that will be changed
+   * @throws SQLException Database error
+   */
+  public void updateActivityValue(
+      int newActivityValue,
+      int productId) throws SQLException {
+
+    String sql = "UPDATE product "
+        + "SET is_active = ? "
+        + "WHERE product_id = ?";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, newActivityValue);
+      stmt.setInt(2, productId);
+      stmt.executeUpdate();
+    }
+  }
+
+  /**
+   * This method updates the price of a specific product in
+   * the database.
+   * This method is used in the update price section of the admin menu.
+   *
+   * @param newPrice   int new price of the product
+   * @param productId  int product id of product that will be updated
+   * @throws SQLException database error
+   */
+  public void updateProductPrice(
+      double newPrice,
+      int productId) throws SQLException {
+
+    String sql = "UPDATE product "
+        + "SET price = ? "
+        + "WHERE product_id = ?";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setDouble(1, newPrice);
+      stmt.setInt(2, productId);
+      stmt.executeUpdate();
+    }
+  }
+
+  /**
+   * This method updates the preparation time of a specific product in
+   * the database.
+   * This method is used in the update price section of the admin menu.
+   *
+   * @param newTime    int new preparation time of the product
+   * @param productId  int product id of product that will be updated
+   * @throws SQLException database error
+   */
+  public void updateProductPreptime(
+      int newTime,
+      int productId) throws SQLException {
+
+    String sql = "UPDATE product "
+        + "SET preparation_time = ? "
+        + "WHERE product_id = ?";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setDouble(1, newTime);
+      stmt.setInt(2, productId);
+      stmt.executeUpdate();
+    }
+  }
+
+  /**
+   * This method fetches all necessary product data from the
+   * database and returns an array of products that contain
+   * all that fetched data.
+   * This method is used in the price update section of the
+   * admin menu.
+   *
+   * @return array containing all products with data from database
+   * @throws SQLException database error
+   */
+  public ArrayList<Product> fetchAllProductData() throws SQLException {
+
+    // ArrayList to store product data
+    ArrayList<Product> products = new ArrayList<>();
+
+    // SQL query to fetch needed data from database
+    String sql = "SELECT p.product_id, p.`name`, p.description, "
+        + "c.`name` AS type, p.is_active, p.price, p.preparation_time "
+        + "FROM product p "
+        + "JOIN category c ON p.category_id = c.category_id";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();) {
+      while (rs.next()) {
+
+        // Fetch all product data from database
+        int productId = rs.getInt("product_id");
+        String name = rs.getString("name");
+        String description = rs.getString("description");
+        Type type = Type.valueOf(rs.getString("type").toUpperCase());
+        int isActive = rs.getInt("is_active");
+        double price = rs.getDouble("price");
+        int prepTime = rs.getInt("preparation_time");
+
+        // Make new product with all fetched database data
+        Product product = new Product() {
+        };
+        product.setId(productId);
+        product.setName(name);
+        product.setType(type);
+        product.setDescription(description);
+        product.setActivity(isActive);
+        product.setPrice(price);
+        product.setPreparationTime(prepTime);
+
+        // Add completed product to array
+        products.add(product);
+      }
+    }
+    return products;
+  }
+
+  /**
+   * Setter for the product preparation times.
+   * It iterates through the given product array list,
+   * fetches the needed preparation times and sets them
+   * for the current product in the list.
+   *
+   * @param products Array List of products who's prep time should be set
+   * @throws SQLException Database error
+   */
+  public void setProductPrepTime(ArrayList<Product> products) throws SQLException {
+
+    // SQL query to fetch needed data from database
+    String sql = "SELECT preparation_time "
+        + "FROM product "
+        + "WHERE product_id = ?";
+            
+    // Build connection and prepare query
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+  
+      // Go through each product
+      for (int index = 0; index < products.size(); index++) {
+            
+        // Set value of product id to current product's id
+        stmt.setInt(1, products.get(index).getId());
+          
+        // Execute query with inserted value (product id)
+        try (ResultSet rs = stmt.executeQuery()) {
+
+          if (rs.next()) {
+    
+            // Fetch all product preparation times from database
+            int prepTime = rs.getInt("preparation_time");
+    
+            // Set fetched prep time as time for product
+            products.get(index).setPreparationTime(prepTime);
+          }
+        }
+      }
+    }
+  }
 } 
 

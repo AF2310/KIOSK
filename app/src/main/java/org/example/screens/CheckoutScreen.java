@@ -39,7 +39,6 @@ public class CheckoutScreen {
 
   /**
    * Creating a scene for the checkout menu.
-   * TODO: We still need the other database variables etc..
    * Most likely not all the variables that are needed.
    *
    * @param primaryStage    the primary stage of this scene
@@ -132,7 +131,6 @@ public class CheckoutScreen {
       try {
         orderId = customer.placeOrder(conn);
       } catch (SQLException err) {
-        // TODO Auto-generated catch block
         err.printStackTrace();
       }
       Cart.getInstance().convertMealsIntoSingles();

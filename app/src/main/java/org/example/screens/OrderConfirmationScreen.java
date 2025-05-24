@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;
+import org.example.orders.Cart;
 
 
 /**
@@ -54,11 +55,21 @@ public class OrderConfirmationScreen {
     );
     LabelManager.register(orderIdLabel);
 
+    // Label for Estimate time of Order 
+    Label estimateTimeLabel = new Label(
+        "Estimate preparation time: " + Cart.getInstance().getEstimateTime());
+    estimateTimeLabel.setStyle(
+        "-fx-font-size: 30px;"
+        + "-fx-font-weight: normal;"
+    );
+    LabelManager.register(estimateTimeLabel);
+
     // Combining both labels
     VBox screenLabelBox = new VBox();
     screenLabelBox.setAlignment(Pos.CENTER);
     screenLabelBox.getChildren().addAll(
         orderConfirmationLabel,
+        estimateTimeLabel,
         orderIdLabel
     );
 
