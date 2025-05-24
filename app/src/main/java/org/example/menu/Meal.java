@@ -175,4 +175,15 @@ public class Meal extends Product {
     rs.close();
     return list;
   }
+
+  /**
+   * The toString method.
+   */
+  public String toString() {
+    String output = getName();
+    output = output + "\n    " + main.getName();
+    output = output + "\n    " + side.getName();
+    output = output + "\n    " + drink.getName();
+    return output;
+  }
 }
