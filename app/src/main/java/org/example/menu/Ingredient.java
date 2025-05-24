@@ -103,26 +103,18 @@ public class Ingredient {
    * Searching ingredients by name.
    *
    * @param name name of the desired ingredient
-   * @param conn database connection
    * @return List containing all ingredients that match the input string name
    * @throws SQLException SQL errors
    */
-  public List<Ingredient> searchIngredientsByName(
-      String name, Connection conn) throws SQLException {
+  public List<Ingredient> searchIngredientsByName(String name) throws SQLException {
+    try {
+      SqlQueries pool = new SqlQueries();
+      return pool.searchIngredientsByName(name);
 
-    List<Ingredient> list = new ArrayList<>();
-    String sql = "SELECT ingredient_id AS id, ingredient_name AS name "
-        + "FROM ingredient "
-        + "WHERE LOWER(ingredient_name) LIKE ?";
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setString(1, "%" + name.toLowerCase() + "%");
-      ResultSet rs = stmt.executeQuery();
-      while (rs.next()) {
-        list.add(new Ingredient(rs.getInt("id"), rs.getString("name")));
-      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return Collections.emptyList();
     }
-    return list;
-
   }
 
   /**

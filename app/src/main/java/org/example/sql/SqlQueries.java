@@ -632,6 +632,7 @@ public class SqlQueries {
     try (Connection conn = DatabaseManager.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql);
         ResultSet rs = stmt.executeQuery();) {
+
       while (rs.next()) {
 
         // Fetch all product data from database
@@ -739,6 +740,34 @@ public class SqlQueries {
     try (Connection conn = DatabaseManager.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql);
         ResultSet rs = stmt.executeQuery();) {
+
+      while (rs.next()) {
+        list.add(new Ingredient(rs.getInt("id"), rs.getString("name")));
+      }
+    }
+    return list;
+  }
+
+  /**
+   * Searching ingredients by name.
+   *
+   * @param name name of the desired ingredient
+   * @return List containing all ingredients that match the input string name
+   * @throws SQLException SQL errors
+   */
+  public List<Ingredient> searchIngredientsByName(String name) throws SQLException {
+
+    List<Ingredient> list = new ArrayList<>();
+
+    String sql = "SELECT ingredient_id AS id, ingredient_name AS name "
+        + "FROM ingredient "
+        + "WHERE LOWER(ingredient_name) LIKE ?";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+      stmt.setString(1, "%" + name.toLowerCase() + "%");
+      ResultSet rs = stmt.executeQuery();
 
       while (rs.next()) {
         list.add(new Ingredient(rs.getInt("id"), rs.getString("name")));
