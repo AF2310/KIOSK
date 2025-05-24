@@ -180,7 +180,7 @@ public class Meal extends Product {
    * The toString method.
    */
   public String toString() {
-    String output = getName() + "    " + getPrice();
+    String output = getName() + "    " + getPrice() + "kr";
     output = output + "\n      " + main.getName();
     output = output + "\n        " + side.getName();
     output = output + "\n        " + drink.getName();
