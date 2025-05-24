@@ -195,40 +195,15 @@ public class Single extends Product {
    * @return list of Singles that are under the specified price
    * @throws SQLException if database access error occurs
    */
-  public List<Single> getSinglesUnder(float priceLimit, Connection conn) throws SQLException {
+  public List<Single> getSinglesUnder(double priceLimit, Connection conn) throws SQLException {
+    try {
+      SqlQueries pool = new SqlQueries();
+      return pool.getSinglesUnder(priceLimit);
 
-    // list to store resulting Singles in
-    List<Single> list = new ArrayList<>();
-
-    // SQL query to select all specified singles
-    String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type "
-        + "FROM product p "
-        + "JOIN category c ON p.category_id = c.category_id "
-        + "WHERE p.price < ? AND p.is_active = 1";
-
-    // Prepare SQL statement with current connection
-    // Try with this statement ensures the statement is closed automatically
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-
-      // Bind priceLimit to SQL query
-      ps.setFloat(1, priceLimit);
-
-      // Execute query to retrieve wanted singles
-      try (ResultSet rs = ps.executeQuery()) {
-
-        // Iterate over result set and construct Single objects from each row
-        while (rs.next()) {
-          list.add(new Single(
-              rs.getInt("id"),
-              rs.getString("name"),
-              rs.getFloat("price"),
-              Type.valueOf(rs.getString("type").toUpperCase()),
-              rs.getString("image_url")));
-        }
-      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return Collections.emptyList();
     }
-
-    return list;
   }
 
   /**

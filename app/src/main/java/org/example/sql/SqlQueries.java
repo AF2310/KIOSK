@@ -357,33 +357,45 @@ public class SqlQueries {
    * @return list of Single products matching the type
    * @throws SQLException if database access error occurs
    */
-  public List<Single> getOptionsByTypeName(Connection conn, String typeName) throws SQLException {
+  public List<Single> getOptionsByTypeName(String typeName) throws SQLException {
     return getOptionsByType(Type.valueOf(typeName.toUpperCase()));
   }
 
   /**
-   * Retrieves Single products under a specified price.
+   * Retrieves list of Single food items from the database
+   * that are priced under a specific price limit.
    *
-   * @param priceLimit the maximum price
-   * @param conn       database connection
-   * @return list of Single products under the price limit
+   * @param priceLimit maximum price to filter the food items
+   * @return list of Singles that are under the specified price
    * @throws SQLException if database access error occurs
    */
-  public List<Single> getSinglesUnder(double priceLimit, Connection conn) throws SQLException {
+  public List<Single> getSinglesUnder(double priceLimit) throws SQLException {
+
+    // list to store resulting Singles in
     List<Single> list = new ArrayList<>();
+
+    // SQL query to select all specified singles
     String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type "
         + "FROM product p "
         + "JOIN category c ON p.category_id = c.category_id "
-        + "WHERE price < ?";
+        + "WHERE p.price < ?";
 
+    // Prepare SQL statement with current connection
+    // Try with this statement ensures the statement is closed automatically
     try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+      // Bind priceLimit to SQL query
       ps.setDouble(1, priceLimit);
+
+      // Execute query to retrieve wanted singles
       try (ResultSet rs = ps.executeQuery()) {
+
+        // Iterate over result set and construct Single objects from each row
         while (rs.next()) {
           list.add(new Single(
               rs.getInt("id"),
               rs.getString("name"),
-              rs.getDouble("price"),
+              rs.getFloat("price"),
               Type.valueOf(rs.getString("type").toUpperCase()),
               rs.getString("image_url")));
         }
