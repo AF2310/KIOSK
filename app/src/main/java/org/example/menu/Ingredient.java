@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import org.example.sql.SqlQueries;
 
 /**
  * The class represents an ingredient with properties like id and name,
@@ -90,19 +92,15 @@ public class Ingredient {
    * The method is responsible for retrieving all ingredients from the database
    * table in a list.
    */
-  public List<Ingredient> getAllIngredients(Connection conn) throws SQLException {
-    List<Ingredient> list = new ArrayList<>();
-    String sql = "SELECT ingredient_id AS id, ingredient_name AS name FROM ingredient";
+  public List<Ingredient> getAllIngredients() throws SQLException {
+    try {
+      SqlQueries pool = new SqlQueries();
+      return pool.getAllIngredients();
 
-    try (Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(sql)) {
-
-      while (rs.next()) {
-        list.add(new Ingredient(rs.getInt("id"), rs.getString("name")));
-      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return Collections.emptyList();
     }
-
-    return list;
   }
 
   /**

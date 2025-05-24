@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -700,5 +701,25 @@ public class SqlQueries {
         }
       }
     }
+  }
+
+  /**
+   * The method is responsible for retrieving all ingredients from the database
+   * table in a list.
+   */
+  public List<Ingredient> getAllIngredients() throws SQLException {
+
+    List<Ingredient> list = new ArrayList<>();
+    String sql = "SELECT ingredient_id AS id, ingredient_name AS name FROM ingredient";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();) {
+
+      while (rs.next()) {
+        list.add(new Ingredient(rs.getInt("id"), rs.getString("name")));
+      }
+    }
+    return list;
   }
 }
