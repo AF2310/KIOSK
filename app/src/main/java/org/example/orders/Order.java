@@ -37,6 +37,19 @@ public class Order {
 
   }
 
+  /**
+   * Empty constructor.
+   */
+  public Order() {
+  }
+
+  /**
+   * Method to add a listener that gets later on notified,
+   * about changes in the Order class.
+   *
+   * @param listener Listener that should follow changes of
+   *                 the Order class
+   */
   public void addListener(Runnable listener) {
     listeners.add(listener);
   }
@@ -51,12 +64,6 @@ public class Order {
   }
 
   /**
-   * Empty constructor.
-   */
-  public Order() {
-  }
-
-  /**
    * apply discount method.
    *
    * @param percentage percentage of the discount
@@ -64,7 +71,7 @@ public class Order {
   public void applyDiscount(int percentage) {
     if (percentage < 0 || percentage > 100) {
       throw new IllegalArgumentException("Invalid discount percentage");
-    } 
+    }
 
     this.discountFactor = 1 - (percentage / 100.0);
     notifyListeners();
@@ -76,11 +83,9 @@ public class Order {
    */
   public double calculatePrice() {
 
-    Cart theCart = Cart.getInstance();
-
     // Get items and their quantities
-    Product[] theItems = theCart.getItems();
-    int[] theQuantities = theCart.getQuantity();
+    Product[] theItems = Cart.getInstance().getItems();
+    int[] theQuantities = Cart.getInstance().getQuantity();
 
     // Get total price
     double total = 0.0;
