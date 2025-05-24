@@ -121,27 +121,18 @@ public class Ingredient {
    * Serching ingredients by price.
    *
    * @param maxPrice total maximum price that is searched for
-   * @param conn     database connection
    * @return List containing all ingredients that are below input price
    * @throws SQLException SQL error
    */
-  public List<Ingredient> searchIngredientsByPrice(
-      float maxPrice, Connection conn) throws SQLException {
+  public List<Ingredient> searchIngredientsByPrice(double maxPrice) throws SQLException {
+    try {
+      SqlQueries pool = new SqlQueries();
+      return pool.searchIngredientsByPrice(maxPrice);
 
-    List<Ingredient> list = new ArrayList<>();
-    String sql = "SELECT DISTINCT i.ingredient_id AS id, i.ingredient_name AS name "
-        + "FROM ingredient i "
-        + "JOIN productingredients pi ON i.ingredient_id = pi.ingredient_id "
-        + "JOIN product p ON pi.product_id = p.product_id "
-        + "WHERE p.price < ?";
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setFloat(1, maxPrice);
-      ResultSet rs = stmt.executeQuery();
-      while (rs.next()) {
-        list.add(new Ingredient(rs.getInt("id"), rs.getString("name")));
-      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return Collections.emptyList();
     }
-    return list;
   }
 
   /**
