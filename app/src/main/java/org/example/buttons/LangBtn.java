@@ -9,7 +9,6 @@ import javafx.scene.control.TextInputControl;
 import org.example.kiosk.Dictionary;
 import org.example.kiosk.LanguageSetting;
 
-
 /**
  * LangBtn is a button that represents a language selection option.
  * It updates its image automatically based on the current global language

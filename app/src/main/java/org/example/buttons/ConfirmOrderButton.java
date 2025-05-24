@@ -12,8 +12,10 @@ import javafx.scene.paint.Color;
 import org.example.orders.Order;
 
 /**
- * This button will confirm the order in the checkout screen. The button will be used only in the
- * checkout screen. It will display the total price of the order and its functionality
+ * This button will confirm the order in the checkout screen. The button will be
+ * used only in the
+ * checkout screen. It will display the total price of the order and its
+ * functionality
  * ("Confirm Order") as a label.
  */
 public class ConfirmOrderButton extends Button {
@@ -64,8 +66,8 @@ public class ConfirmOrderButton extends Button {
   }
 
   /**
-   * Updates the full price label when initially called and also in case of events such as quantity
-   * updates.
+   * Updates the full price label when initially called and also in case of events
+   * such as quantity updates.
    */
   public void updatePriceLabel() {
     Order order = new Order();

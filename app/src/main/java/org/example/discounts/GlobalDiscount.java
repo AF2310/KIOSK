@@ -25,7 +25,7 @@ public class GlobalDiscount implements IdiscountStrategy {
 
       PreparedStatement selectStmt = connection.prepareStatement(selectItemsSql);
       PreparedStatement updateStmt = connection.prepareStatement(updatingItemsSql);
-        {
+      {
 
         connection.setAutoCommit(false);
         ResultSet selectRs = selectStmt.executeQuery();
@@ -45,7 +45,7 @@ public class GlobalDiscount implements IdiscountStrategy {
         updateStmt.executeBatch();
         connection.commit();
 
-        }
+      }
     } catch (SQLException e) {
       e.printStackTrace();
     }

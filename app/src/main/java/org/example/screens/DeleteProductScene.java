@@ -23,7 +23,6 @@ import org.example.buttons.SearchBar;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
 
-
 /**
  * This is the product deletion scene.
  * Used in the admin menu in 'UpdateMenuItems.java'.

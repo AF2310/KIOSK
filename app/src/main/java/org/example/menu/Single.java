@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Abstract base class for all single items on the menu.
  */
@@ -42,8 +41,7 @@ public class Single extends Product {
       double price,
       Type type,
       String imgPath,
-      List<Ingredient> ingredients
-  ) {
+      List<Ingredient> ingredients) {
     setId(id);
     setName(name);
     setPrice(price);
@@ -135,13 +133,12 @@ public class Single extends Product {
     }
 
     // Insert product in database with query and needed data
-    String insertSql = "INSERT INTO product " 
+    String insertSql = "INSERT INTO product "
         + "(name, description, price, category_id, is_active) "
         + "VALUES (?, ?, ?, ?, ?)";
 
     try (PreparedStatement stmt = conn.prepareStatement(
-        insertSql, Statement.RETURN_GENERATED_KEYS
-    )) {
+        insertSql, Statement.RETURN_GENERATED_KEYS)) {
       stmt.setString(1, getName());
       stmt.setString(2, getDescription());
       stmt.setDouble(3, getPrice());
@@ -226,10 +223,10 @@ public class Single extends Product {
     List<Single> list = new ArrayList<>();
 
     // SQL query to select all specified singles
-    String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type " 
-            + "FROM product p " 
-            + "JOIN category c ON p.category_id = c.category_id " 
-            + "WHERE p.price < ? AND p.is_active = 1";
+    String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type "
+        + "FROM product p "
+        + "JOIN category c ON p.category_id = c.category_id "
+        + "WHERE p.price < ? AND p.is_active = 1";
 
     // Prepare SQL statement with current connection
     // Try with this statement ensures the statement is closed automatically
@@ -269,7 +266,6 @@ public class Single extends Product {
     try (PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setInt(1, id);
       stmt.executeUpdate();
-
     }
   }
 
@@ -409,29 +405,29 @@ public class Single extends Product {
     }
   }
 
+  /*
+   * public List<Single> getOptionsByCategoryName(Connection conn,
+   * String categoryName) throws SQLException {
+   * List<Single> options = new ArrayList<>();
+   * String sql = "SELECT i.id, i.name, i.price, c.name AS category_name " +
+   * "FROM item i " +
+   * "JOIN category c ON i.category_id = c.category_id " +
+   * "WHERE c.name = ?";
+   * try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+   * stmt.setString(1, categoryName);
+   * ResultSet rs = stmt.executeQuery();
+   * while (rs.next()) {
+   * options.add(new Single(
+   * rs.getInt("id"),
+   * rs.getString("name"),
+   * rs.getFloat("price"),
+   * rs.getString("category_name")
+   * ));
+   * }
+   * rs.close();
+   * }
+   * return options;
+   * }
+   */
 
-  /*public List<Single> getOptionsByCategoryName(Connection conn,
-                          String categoryName) throws SQLException {
-      List<Single> options = new ArrayList<>();
-      String sql = "SELECT i.id, i.name, i.price, c.name AS category_name " +
-      "FROM item i " +
-      "JOIN category c ON i.category_id = c.category_id " +
-      "WHERE c.name = ?";
-      try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setString(1, categoryName);
-        ResultSet rs = stmt.executeQuery();
-        while (rs.next()) {
-          options.add(new Single(
-                rs.getInt("id"),
-                rs.getString("name"),
-                rs.getFloat("price"),
-                rs.getString("category_name")
-            ));
-        }
-        rs.close();
-      }
-      return options;
-    }*/
-
-    
 }

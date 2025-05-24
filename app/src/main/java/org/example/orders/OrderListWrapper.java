@@ -9,5 +9,5 @@ import java.util.ArrayList;
 public class OrderListWrapper {
 
   public ArrayList<Order> orders = new ArrayList<>();
-    
+
 }

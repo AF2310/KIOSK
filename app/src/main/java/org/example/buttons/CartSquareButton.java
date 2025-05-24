@@ -20,7 +20,8 @@ public class CartSquareButton extends Button {
   private ImageView cartIcon;
 
   /**
-   * Constructs a new CartSquareButton, initializes the cart icon, and sets up the button style.
+   * Constructs a new CartSquareButton, initializes the cart icon, and sets up the
+   * button style.
    */
   public CartSquareButton() {
     instances.add(this);

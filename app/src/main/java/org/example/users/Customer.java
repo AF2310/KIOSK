@@ -25,7 +25,7 @@ public class Customer implements User {
     String s = "INSERT INTO `order` "
         + "(kiosk_ID, customer_ID, order_date, amount_total, status)"
         + "VALUES (123, 1, NOW(), ?, 'pending')";
-    
+
     // Prepare statement to be actual query
     PreparedStatement ps = conn.prepareStatement(s);
 
@@ -73,7 +73,7 @@ public class Customer implements User {
     // Prepare statement to be actual query
     // Using try to save ressources and close process automatically
     try (PreparedStatement ps = conn.prepareStatement(s)) {
-      
+
       // Open result set to fetch order id (execute query)
       ResultSet rs = ps.executeQuery();
 
@@ -112,7 +112,7 @@ public class Customer implements User {
    * Browses the menu implementation.
    */
   @Override
-   public void browseMenu() {
+  public void browseMenu() {
 
   }
 
@@ -122,6 +122,6 @@ public class Customer implements User {
   @Override
   public void searchProduct(String name) {
 
-  }    
-    
+  }
+
 }

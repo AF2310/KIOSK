@@ -22,7 +22,7 @@ public class ColorPickersPane extends HBox {
   private ColorPicker sceneColorPicker;
 
   /**
-   * Constructs a ColorPickersPane with 
+   * Constructs a ColorPickersPane with
    * three color pickers for primary, secondary, and background colors.
    */
   public ColorPickersPane(
@@ -74,7 +74,7 @@ public class ColorPickersPane extends HBox {
       Double windowHeight,
       Scene welcomeScrScene,
       Connection conn) {
-        
+
     primClrPicker.setOnAction(e -> {
       Color selectedColor = primClrPicker.getValue();
       BlackButtonWithImage.setButtonBackgroundColor(selectedColor);
@@ -85,7 +85,8 @@ public class ColorPickersPane extends HBox {
       ArrowButton.setButtonColor(selectedColor);
       ConfirmOrderButton.setButtonBackgroundColor(selectedColor);
       CircleButtonWithSign.setPlusColor(selectedColor);
-      CircleButtonWithSign.setMinusBorder(selectedColor);;
+      CircleButtonWithSign.setMinusBorder(selectedColor);
+      ;
 
       LabelManager.setTextColor(selectedColor);
     });

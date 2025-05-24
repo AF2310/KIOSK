@@ -56,7 +56,6 @@ import org.example.menu.Type;
 import org.example.orders.Cart;
 import org.example.sql.DatabaseManager;
 
-
 /**
  * The main menu screen.
  */

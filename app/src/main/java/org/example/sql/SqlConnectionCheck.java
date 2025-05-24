@@ -26,10 +26,10 @@ public class SqlConnectionCheck {
       mysql.setText("An error has occurred: " + e.getMessage());
       mysql.setStyle(
           "-fx-background-color: transparent;"
-          + "-fx-text-fill: black;"
-          + "-fx-font-size: 10;"
-          + "-fx-padding: 5 10;"
-          + "-fx-background-radius: 10;");
+              + "-fx-text-fill: black;"
+              + "-fx-font-size: 10;"
+              + "-fx-padding: 5 10;"
+              + "-fx-background-radius: 10;");
     }
     // End of SQL Section
   }

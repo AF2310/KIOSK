@@ -59,8 +59,8 @@ public class Ingredient {
       return false;
     }
     Ingredient ingredient = (Ingredient) obj;
-    return getName() != null 
-        ? getName().equals(ingredient.getName()) 
+    return getName() != null
+        ? getName().equals(ingredient.getName())
         : ingredient.getName() == null;
   }
 
@@ -135,7 +135,7 @@ public class Ingredient {
    * Serching ingredients by price.
    *
    * @param maxPrice total maximum price that is searched for
-   * @param conn database connection
+   * @param conn     database connection
    * @return List containing all ingredients that are below input price
    * @throws SQLException SQL error
    */
@@ -161,10 +161,11 @@ public class Ingredient {
   /**
    * Searching ingredients by name and price.
    *
-   * @param conn database connection
-   * @param name string name of the desired ingredient
+   * @param conn     database connection
+   * @param name     string name of the desired ingredient
    * @param maxPrice maximum price value that is searched for
-   * @return List containing all ingredients that fall below input max price and match input name
+   * @return List containing all ingredients that fall below input max price and
+   *         match input name
    * @throws SQLException SQL error
    */
   public List<Ingredient> searchIngredientByNameAndPrice(

@@ -2,9 +2,9 @@ package org.example.menu;
 
 import java.util.List;
 
-
 /**
- * The interface declares several methods that define the behavior of a menu system.
+ * The interface declares several methods that define the behavior of a menu
+ * system.
  *
  */
 
@@ -43,7 +43,7 @@ public interface Imenu {
    * @return extra dishes as single
    */
   List<Single> getExtras();
-  
+
   /**
    * To get all currently searched for products.
    *

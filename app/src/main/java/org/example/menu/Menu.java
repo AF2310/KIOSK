@@ -15,10 +15,9 @@ public class Menu implements Imenu {
   private final List<Single> drinks;
   private final List<Single> extras;
   private final List<Single> desserts;
-  
+
   // TODO: needs fixing do add actual image path
   Single singleHelper = new Single(0, "", 0.0f, Type.EXTRA, "dummy_path");
-  
 
   /**
    * Constructor of Meal class.
@@ -27,7 +26,7 @@ public class Menu implements Imenu {
    * @throws SQLException sql connection issues
    */
   public Menu(Connection conn) throws SQLException {
-    
+
     this.mains = queries.getOptionsByType(conn, Type.BURGERS);
     this.sides = queries.getOptionsByType(conn, Type.SIDES);
     this.drinks = queries.getOptionsByType(conn, Type.DRINKS);

@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
  */
 public class BackgroundColorStore {
 
-  private static Color currentBackgroundColor =  Color.WHITE;
+  private static Color currentBackgroundColor = Color.WHITE;
 
   /**
    * Getter for the currently chosen color.
@@ -31,5 +31,5 @@ public class BackgroundColorStore {
     currentBackgroundColor = color;
 
   }
-    
+
 }

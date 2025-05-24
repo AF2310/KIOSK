@@ -4,7 +4,7 @@ package org.example.users;
  * Interface for user actions.
  */
 public interface User {
-  
+
   /**
    * Lets user browse the menu.
    */

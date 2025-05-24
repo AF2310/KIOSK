@@ -89,7 +89,6 @@ public class CheckoutScreen {
     checkoutLabel.setPadding(new Insets(50, 100, 50, 50));
     checkoutLabel.setMinWidth(500); // Gives label space to breathe
 
-
     // Promo code section
     TextField promoField = new TextField();
     promoField.setPromptText("Enter Promo Code");
@@ -148,8 +147,7 @@ public class CheckoutScreen {
           windowWidth,
           windowHeight,
           welcomeScrScene,
-          orderId
-      );
+          orderId);
       this.primaryStage.setScene(ordConfirmScene);
 
       // Creating fading animation
@@ -194,7 +192,7 @@ public class CheckoutScreen {
     Region spacer = new Region();
     HBox.setHgrow(topspacer, Priority.ALWAYS);
 
-    //Language button
+    // Language button
     var langButton = new LangBtn();
 
     // Combine all; 300px spacing between each child
@@ -229,7 +227,7 @@ public class CheckoutScreen {
         bottomPart);
 
     LanguageSetting.getInstance().smartTranslate(layout);
-    
+
     // Translate button action
     langButton.addAction(event -> {
       LanguageSetting lang = LanguageSetting.getInstance();

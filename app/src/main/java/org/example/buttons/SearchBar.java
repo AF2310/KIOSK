@@ -19,7 +19,6 @@ import org.example.menu.Menu;
 import org.example.menu.Product;
 import org.example.menu.Single;
 
-
 /**
  * The SearchBar class provides a user interface component for searching items
  * by name, price, ingredients, and category. It displays the search results
@@ -79,19 +78,17 @@ public class SearchBar extends VBox {
     searchButton = new Button("Search");
     searchButton.setStyle(
         "-fx-background-color: #4285f4;"
-        + "-fx-text-fill: white;"
-        + "-fx-font-weight: bold;"
-        + "-fx-padding: 4px 12px;"
-        + "-fx-background-radius: 4px;"
-    );
+            + "-fx-text-fill: white;"
+            + "-fx-font-weight: bold;"
+            + "-fx-padding: 4px 12px;"
+            + "-fx-background-radius: 4px;");
 
     resultList = new ListView<>();
     resultList.setPrefHeight(100);
     resultList.setStyle(
         "-fx-font-size: 12px;"
-        + "-fx-padding: 2px;"
-        + "-fx-cell-size: 25px;"
-    );
+            + "-fx-padding: 2px;"
+            + "-fx-cell-size: 25px;");
 
     HBox inputFields = new HBox(
         10, nameField, priceField, ingredientCheckbox, categoryCombo, searchButton);
@@ -273,27 +270,26 @@ public class SearchBar extends VBox {
         Comparator<Single> nameComparator = new Comparator<Single>() {
           public int compare(Single p1, Single p2) {
             String n1 = p1.getName().toLowerCase();
-    
+
             String n2 = p2.getName().toLowerCase();
-    
+
             boolean s1Starts = n1.startsWith(searchTerm);
-    
+
             boolean s2Starts = n2.startsWith(searchTerm);
-    
+
             if (s1Starts && !s2Starts) {
               return -1;
             }
-    
+
             if (!s1Starts && s2Starts) {
               return 1;
             }
-    
+
             return n1.compareTo(n2);
-    
-    
+
           }
         };
-    
+
         if (!searchTerm.isEmpty()) {
           filtered.sort(nameComparator);
         }
@@ -302,18 +298,13 @@ public class SearchBar extends VBox {
         if (nameFilterActive && !priceFilterActive) {
           filtered.sort(nameComparator);
 
-        } else if  (!nameFilterActive && priceFilterActive) {
+        } else if (!nameFilterActive && priceFilterActive) {
           filtered.sort(priceComparator.reversed());
 
         } else if (nameFilterActive && priceFilterActive) {
           filtered.sort(nameComparator.thenComparing(priceComparator));
 
-
         }
-
-
-
-
 
         if (filtered.isEmpty()) {
           resultList.getItems().add("No items found.");
@@ -323,7 +314,6 @@ public class SearchBar extends VBox {
           }
         }
         filteredSingles = filtered;
-
 
       } catch (SQLException ex) {
         resultList.getItems().add("SQL Error: " + ex.getMessage());

@@ -9,5 +9,5 @@ public interface IdiscountStrategy {
    * applying discount.
    */
   void applyDiscount(double percentage);
-    
+
 }

@@ -16,7 +16,6 @@ import org.example.menu.Single;
 import org.example.menu.Type;
 import org.example.orders.Order;
 
-
 /**
  * Class for all queries related to the DB.
  */
@@ -38,7 +37,7 @@ public class SqlQueries {
     try (Connection connection = DatabaseManager.getConnection()) {
       PreparedStatement stmt = connection.prepareStatement(querySql);
       ResultSet results = stmt.executeQuery();
-    
+
       // Creates Orders from queried data
       while (results.next()) {
         int orderId = results.getInt("order_ID");
@@ -64,13 +63,13 @@ public class SqlQueries {
   public void queryOrderItemsFor(ArrayList<Order> orders) throws SQLException {
 
     String itemQuery = "SELECT oi.order_id, oi.product_id, p.name, p.price, oi.quantity "
-          + "FROM order_item oi "
-          + "JOIN product p ON oi.product_id = p.product_id";
+        + "FROM order_item oi "
+        + "JOIN product p ON oi.product_id = p.product_id";
 
     try (Connection connection = DatabaseManager.getConnection()) {
       PreparedStatement stmt = connection.prepareStatement(itemQuery);
       ResultSet rs = stmt.executeQuery();
-     
+
       while (rs.next()) {
         int orderId = rs.getInt("order_id");
         int productId = rs.getInt("product_id");
@@ -81,7 +80,8 @@ public class SqlQueries {
         for (Order order : orders) {
 
           if (order.getOrderId() == orderId) {
-            Product product = new Product() {};
+            Product product = new Product() {
+            };
             product.setId(productId);
             product.setName(name);
             product.setPrice(price);
@@ -107,7 +107,7 @@ public class SqlQueries {
   public Map<String, Integer> getAllCategories() throws SQLException {
     Map<String, Integer> categoryMap = new HashMap<>();
     String sql = "SELECT category_id, name FROM category";
-        
+
     try (Connection connection = DatabaseManager.getConnection()) {
       PreparedStatement stmt = connection.prepareStatement(sql);
       ResultSet rs = stmt.executeQuery();
@@ -130,11 +130,11 @@ public class SqlQueries {
    */
   public List<String> getIngredientsByCategory(String categoryName) throws SQLException {
     List<String> ingredients = new ArrayList<>();
-    String sql = "SELECT i.ingredient_id, i.ingredient_name " 
-                    + "FROM ingredient i "
-                    + "JOIN categoryingredients ci ON i.ingredient_id = ci.ingredient_id " 
-                    + "JOIN category c ON ci.category_id = c.category_id " 
-                    + "WHERE c.name = ?";
+    String sql = "SELECT i.ingredient_id, i.ingredient_name "
+        + "FROM ingredient i "
+        + "JOIN categoryingredients ci ON i.ingredient_id = ci.ingredient_id "
+        + "JOIN category c ON ci.category_id = c.category_id "
+        + "WHERE c.name = ?";
     try (Connection connection = DatabaseManager.getConnection()) {
       PreparedStatement stmt = connection.prepareStatement(sql);
       stmt.setString(1, categoryName);
@@ -150,22 +150,22 @@ public class SqlQueries {
   /**
    * Query for adding product into database.
    *
-   * @param name name of product
+   * @param name        name of product
    * @param description description
-   * @param price price
-   * @param categoryId category ID
-   * @param isActive boolean
-   * @param isLimited boolean
-   * @param imageUrl image url.
+   * @param price       price
+   * @param categoryId  category ID
+   * @param isActive    boolean
+   * @param isLimited   boolean
+   * @param imageUrl    image url.
    * @throws SQLException error handling.
    */
-  public int addProduct(String name, String description, double price, int categoryId, 
-                         byte isActive, byte isLimited, String imageUrl) throws SQLException {
+  public int addProduct(String name, String description, double price, int categoryId,
+      byte isActive, byte isLimited, String imageUrl) throws SQLException {
 
     String sql = "INSERT INTO product (name, description, price, category_id, "
-                   + "is_active, is_limited, image_url) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        
+        + "is_active, is_limited, image_url) "
+        + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
     try (Connection connection = DatabaseManager.getConnection();
         PreparedStatement stmt = connection
             .prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -177,13 +177,12 @@ public class SqlQueries {
       stmt.setByte(5, isActive);
       stmt.setByte(6, isLimited);
       stmt.setString(7, imageUrl);
-        
-            
+
       int affectedRows = stmt.executeUpdate();
       if (affectedRows == 0) {
         throw new SQLException("Creating product failed, no rows affected.");
       }
-            
+
       try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
         if (generatedKeys.next()) {
           return generatedKeys.getInt(1);
@@ -195,17 +194,17 @@ public class SqlQueries {
   }
 
   /**
-  * Query for adding products ingredients.
+   * Query for adding products ingredients.
    *
-   * @param productId product ID
+   * @param productId   product ID
    * @param ingredients ingredients of the product
    * @throws SQLException error handling.
    */
-  public void addProductIngredients(int productId, Map<String, Integer> ingredients) 
-       throws SQLException {
+  public void addProductIngredients(int productId, Map<String, Integer> ingredients)
+      throws SQLException {
     String sql = "INSERT INTO productingredients (product_id, ingredient_id, ingredientCount) "
-                + "VALUES (?, (SELECT ingredient_id FROM ingredient WHERE ingredient_name = ?), ?)";
-    
+        + "VALUES (?, (SELECT ingredient_id FROM ingredient WHERE ingredient_name = ?), ?)";
+
     Connection connection = null;
     try {
       connection = DatabaseManager.getConnection();
@@ -245,6 +244,7 @@ public class SqlQueries {
       }
     }
   }
+
   /**
    * Retrieves all Single products from the database.
    *
@@ -258,7 +258,7 @@ public class SqlQueries {
     String sql = "SELECT product_id, name, price, image_url FROM product";
 
     try (PreparedStatement stmt = conn.prepareStatement(sql);
-         ResultSet rs = stmt.executeQuery()) {
+        ResultSet rs = stmt.executeQuery()) {
 
       while (rs.next()) {
         list.add(new Single(
@@ -266,8 +266,7 @@ public class SqlQueries {
             rs.getString("name"),
             rs.getDouble("price"),
             Type.EXTRA, // Default type, can be modified as needed
-            rs.getString("image_url")
-        ));
+            rs.getString("image_url")));
       }
     }
     return list;
@@ -276,7 +275,7 @@ public class SqlQueries {
   /**
    * Saves a Single product to the database.
    *
-   * @param conn database connection
+   * @param conn   database connection
    * @param single the Single product to save
    * @throws SQLException if database access error occurs
    */
@@ -285,7 +284,7 @@ public class SqlQueries {
         + "(name, price, category_id, image_url) VALUES (?, ?, ?, ?)";
 
     try (PreparedStatement stmt = conn.prepareStatement(sql,
-         PreparedStatement.RETURN_GENERATED_KEYS)) {
+        PreparedStatement.RETURN_GENERATED_KEYS)) {
       stmt.setString(1, single.getName());
       stmt.setDouble(2, single.getPrice());
       stmt.setInt(3, getCategoryIdForType(single.getType())); // Helper method needed
@@ -324,8 +323,7 @@ public class SqlQueries {
               rs.getString("name"),
               rs.getDouble("price"),
               Type.valueOf(rs.getString("type").toUpperCase()),
-              rs.getString("image_url")
-          ));
+              rs.getString("image_url")));
         }
       }
     }
@@ -335,7 +333,7 @@ public class SqlQueries {
   /**
    * Retrieves Single products by type name.
    *
-   * @param conn database connection
+   * @param conn     database connection
    * @param typeName the name of the type
    * @return list of Single products matching the type
    * @throws SQLException if database access error occurs
@@ -348,7 +346,7 @@ public class SqlQueries {
    * Retrieves Single products under a specified price.
    *
    * @param priceLimit the maximum price
-   * @param conn database connection
+   * @param conn       database connection
    * @return list of Single products under the price limit
    * @throws SQLException if database access error occurs
    */
@@ -368,8 +366,7 @@ public class SqlQueries {
               rs.getString("name"),
               rs.getDouble("price"),
               Type.valueOf(rs.getString("type").toUpperCase()),
-              rs.getString("image_url")
-          ));
+              rs.getString("image_url")));
         }
       }
     }
@@ -380,7 +377,7 @@ public class SqlQueries {
    * Deletes a Single product by its ID.
    *
    * @param conn database connection
-   * @param id the ID of the product to delete
+   * @param id   the ID of the product to delete
    * @throws SQLException if database access error occurs
    */
   public void deleteSingleById(Connection conn, int id) throws SQLException {
@@ -394,8 +391,8 @@ public class SqlQueries {
   /**
    * Reduces the quantity of a product.
    *
-   * @param conn database connection
-   * @param id the product ID
+   * @param conn   database connection
+   * @param id     the product ID
    * @param amount the amount to reduce
    * @throws SQLException if database access error occurs
    */
@@ -413,7 +410,7 @@ public class SqlQueries {
   /**
    * Retrieves Single products by category ID.
    *
-   * @param conn database connection
+   * @param conn       database connection
    * @param categoryId the category ID
    * @return list of Single products in the category
    * @throws SQLException if database access error occurs
@@ -434,8 +431,7 @@ public class SqlQueries {
               rs.getString("name"),
               rs.getDouble("price"),
               Type.valueOf(rs.getString("type").toUpperCase()),
-              rs.getString("image_url")
-          ));
+              rs.getString("image_url")));
         }
       }
     }
@@ -445,7 +441,7 @@ public class SqlQueries {
   /**
    * Sets the ingredients for a Single product.
    *
-   * @param conn database connection
+   * @param conn   database connection
    * @param single the Single product to set ingredients for
    * @throws SQLException if database access error occurs
    */
@@ -460,7 +456,7 @@ public class SqlQueries {
       try (ResultSet rs = stmt.executeQuery()) {
         while (rs.next()) {
           single.addIngredient(new Ingredient(
-              rs.getInt("ingredient_id"), 
+              rs.getInt("ingredient_id"),
               rs.getString("ingredient_name")));
           single.quantity.add(rs.getInt("ingredientCount"));
         }
@@ -478,7 +474,7 @@ public class SqlQueries {
   private int getCategoryIdForType(Type type) throws SQLException {
     String sql = "SELECT category_id FROM category WHERE name = ?";
     try (Connection conn = DatabaseManager.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setString(1, type.name());
       try (ResultSet rs = stmt.executeQuery()) {
         if (rs.next()) {
@@ -493,8 +489,8 @@ public class SqlQueries {
    * Query method to change the name of a product.
    * Used in product table getter method.
    *
-   * @param newName    String new name of product
-   * @param productId  int product id that gets name-change
+   * @param newName   String new name of product
+   * @param productId int product id that gets name-change
    * @throws SQLException Database error
    */
   public void updateProductName(
@@ -566,8 +562,8 @@ public class SqlQueries {
    * the database.
    * This method is used in the update price section of the admin menu.
    *
-   * @param newPrice   int new price of the product
-   * @param productId  int product id of product that will be updated
+   * @param newPrice  int new price of the product
+   * @param productId int product id of product that will be updated
    * @throws SQLException database error
    */
   public void updateProductPrice(
@@ -591,8 +587,8 @@ public class SqlQueries {
    * the database.
    * This method is used in the update price section of the admin menu.
    *
-   * @param newTime    int new preparation time of the product
-   * @param productId  int product id of product that will be updated
+   * @param newTime   int new preparation time of the product
+   * @param productId int product id of product that will be updated
    * @throws SQLException database error
    */
   public void updateProductPreptime(
@@ -679,25 +675,25 @@ public class SqlQueries {
     String sql = "SELECT preparation_time "
         + "FROM product "
         + "WHERE product_id = ?";
-            
+
     // Build connection and prepare query
     try (Connection conn = DatabaseManager.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql)) {
-  
+
       // Go through each product
       for (int index = 0; index < products.size(); index++) {
-            
+
         // Set value of product id to current product's id
         stmt.setInt(1, products.get(index).getId());
-          
+
         // Execute query with inserted value (product id)
         try (ResultSet rs = stmt.executeQuery()) {
 
           if (rs.next()) {
-    
+
             // Fetch all product preparation times from database
             int prepTime = rs.getInt("preparation_time");
-    
+
             // Set fetched prep time as time for product
             products.get(index).setPreparationTime(prepTime);
           }
@@ -705,5 +701,4 @@ public class SqlQueries {
       }
     }
   }
-} 
-
+}

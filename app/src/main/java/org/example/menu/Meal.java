@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The class represents a meal with a name, a list of items, and methods to add items,
- *  calculate total price, and retrieve contents.
+ * The class represents a meal with a name, a list of items, and methods to add
+ * items, calculate total price, and retrieve contents.
  */
 public class Meal extends Product {
   private Single main;
@@ -47,7 +47,7 @@ public class Meal extends Product {
   public Single getMain() {
     return main;
   }
-    
+
   /**
    * The method is responsible for retrieving all meals from a database.
    */
@@ -70,7 +70,7 @@ public class Meal extends Product {
     stmt.close();
 
     return list;
-    
+
   }
 
   /**
@@ -103,8 +103,7 @@ public class Meal extends Product {
           rs2.getString("name"),
           rs2.getFloat("price"),
           Type.valueOf("MEAL"),
-          rs2.getString("image_url")
-      );
+          rs2.getString("image_url"));
     }
     rs2.close();
     stmt.close();
@@ -116,7 +115,7 @@ public class Meal extends Product {
    * Retrieves a list of meals from the database that are
    * under the input price limit.
    *
-   * @param conn database connection
+   * @param conn       database connection
    * @param priceLimit maximum price for filtering meals
    * @return list of meals priced under the input limit
    * @throws SQLException if a database access error occurs

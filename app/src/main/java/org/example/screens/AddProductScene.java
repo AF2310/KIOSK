@@ -36,7 +36,6 @@ import org.example.kiosk.LanguageSetting;
 import org.example.sql.DatabaseManager;
 import org.example.sql.SqlQueries;
 
-
 /**
  * Scene in the admin menu for adding products to the menu.
  */

@@ -17,7 +17,6 @@ import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.TitleLabel;
 import org.example.discounts.GlobalDiscount;
 
-
 /**
  * Class for making the scene for global discounts.
  */
@@ -27,18 +26,18 @@ public class GlobalDiscountScreen {
   private double discountPercentage;
   private Label currentDiscountLabel;
 
-
   /**
    * Constructor for the scene.
    *
    * @param primaryStage The screen itself.
-   * @param prevScene Previous screen.
+   * @param prevScene    Previous screen.
    */
   public GlobalDiscountScreen(Stage primaryStage, Scene prevScene) {
     this.primaryStage = primaryStage;
     this.prevScene = prevScene;
 
   }
+
   /**
    * Global discount screen.
    *
@@ -53,21 +52,19 @@ public class GlobalDiscountScreen {
     topHbox.getChildren().add(title);
     topHbox.setPadding(new Insets(0, 0, 75, 0));
 
-
     // Create main content area
     HBox content = new HBox(100); // Space between the two sections
     currentDiscountLabel = new Label("Current discount " + discountPercentage + "%");
     currentDiscountLabel.setStyle(
-        "-fx-background-color: transparent;" 
-        + "-fx-border-color: red;" 
-        + "-fx-border-width: 3;"
-        + "-fx-border-radius: 12;"
-        + "-fx-padding: 10;"
-        + "-fx-background-radius: 12;"
-        + "-fx-text-fill: red;" 
-        + "-fx-font-weight: bold;"
-        + "-fx-font-size: 20px"
-    );
+        "-fx-background-color: transparent;"
+            + "-fx-border-color: red;"
+            + "-fx-border-width: 3;"
+            + "-fx-border-radius: 12;"
+            + "-fx-padding: 10;"
+            + "-fx-background-radius: 12;"
+            + "-fx-text-fill: red;"
+            + "-fx-font-weight: bold;"
+            + "-fx-font-size: 20px");
 
     // Create discount sections
     VBox itemDiscounts = createDiscountSection("Item Discounts");
@@ -79,7 +76,7 @@ public class GlobalDiscountScreen {
     BackBtnWithTxt backButton = new BackBtnWithTxt();
     backButton.setOnAction(e -> primaryStage.setScene(prevScene));
     SqrBtnWithOutline applyDiscount = new SqrBtnWithOutline("Apply",
-           "/green_tick.png", "rgb(81, 173, 86)");
+        "/green_tick.png", "rgb(81, 173, 86)");
 
     // Applying the global discount on clicking "apply"
     applyDiscount.setOnAction(e -> {
@@ -97,21 +94,21 @@ public class GlobalDiscountScreen {
     layout.setTop(topHbox);
     layout.setCenter(content);
     layout.setBottom(bottomBox);
-    
+
     return new Scene(layout, 1920, 1080);
   }
 
   /**
- * Creates a discount section with title and percentage buttons.
- *
- * @param title The title for the section
- * @return VBox containing the complete discount section
- */
+   * Creates a discount section with title and percentage buttons.
+   *
+   * @param title The title for the section
+   * @return VBox containing the complete discount section
+   */
   private VBox createDiscountSection(String title) {
     // Create and style the title button
     MidButton titleButton = new MidButton(title, "rgb(255, 255, 255)", 45);
     titleButton.setPadding(new Insets(0, 0, 0, 10));
-    
+
     // Textfield for custom percentage input
     TextField customInput = new TextField();
     customInput.setPromptText("Enter percentage (e.g. 15 for 15%)");
@@ -131,12 +128,11 @@ public class GlobalDiscountScreen {
     RectangleButtonWithText customPercentButton = new RectangleButtonWithText("Custom");
 
     percentageButtons.getChildren().addAll(
-        fivePercentButton, 
+        fivePercentButton,
         tenPercentButton,
-        twentyPercentButton, 
+        twentyPercentButton,
         customPercentButton,
-        inputContainer
-    );
+        inputContainer);
     percentageButtons.setAlignment(Pos.CENTER);
     fivePercentButton.setOnAction(e -> {
       this.discountPercentage = 5;
@@ -169,11 +165,10 @@ public class GlobalDiscountScreen {
           updateCurrentDiscountLabel();
 
         } else {
-        //TODO: Error handling
+          // TODO: Error handling
         }
       } catch (NumberFormatException ex) {
-        //TODO: Error handling
-
+        // TODO: Error handling
       }
     });
 
@@ -181,7 +176,7 @@ public class GlobalDiscountScreen {
     VBox section = new VBox(20);
     section.setAlignment(Pos.TOP_CENTER);
     section.getChildren().addAll(titleButton, percentageButtons);
-    
+
     return section;
   }
 
@@ -191,5 +186,3 @@ public class GlobalDiscountScreen {
     }
   }
 }
-
-

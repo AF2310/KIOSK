@@ -21,17 +21,16 @@ public class RectangleButtonWithText extends Button {
     this.setPrefSize(175, 100);
     this.setMaxSize(175, 100);
     this.setMinSize(80, 40);
-    
+
     // Common style properties for both buttons
     this.setStyle(
-        "-fx-background-radius: 5;"  // Smaller radius for rectangular look
-        + "-fx-border-radius: 5;"
-        + "-fx-border-width: 2;"
-        + "-fx-font-weight: bold;"
-        + "-fx-content-display: center;"
-        + "-fx-padding: 0;"
-    );
-    
+        "-fx-background-radius: 5;" // Smaller radius for rectangular look
+            + "-fx-border-radius: 5;"
+            + "-fx-border-width: 2;"
+            + "-fx-font-weight: bold;"
+            + "-fx-content-display: center;"
+            + "-fx-padding: 0;");
+
     if (buttonSign.equals("+")) {
       this.setTextFill(Color.WHITE);
       this.setStyle(this.getStyle()
@@ -54,7 +53,7 @@ public class RectangleButtonWithText extends Button {
     this.setDisable(disabled);
 
     if (disabled) {
-      this.setOpacity(0.5); 
+      this.setOpacity(0.5);
     } else {
       this.setOpacity(1);
     }

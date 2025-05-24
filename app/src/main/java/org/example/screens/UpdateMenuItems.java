@@ -28,7 +28,6 @@ import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
 import org.example.sql.SqlQueries;
 
-
 /**
  * Updating menu class.
  */
@@ -109,7 +108,7 @@ public class UpdateMenuItems {
 
     addMealButton.setOnAction(e -> {
       AddMealScene addMealScene = new AddMealScene(primaryStage, prevScene);
-      
+
       primaryStage.setScene(addMealScene.getAddMealScene());
     });
 
@@ -119,7 +118,7 @@ public class UpdateMenuItems {
       GlobalDiscountScreen globalDiscountScreen = new GlobalDiscountScreen(
           primaryStage,
           prevScene);
-      
+
       primaryStage.setScene(globalDiscountScreen.getGlobalDiscountScreen());
     });
 
@@ -129,7 +128,7 @@ public class UpdateMenuItems {
       GlobalDiscountScreen globalDiscountScreen = new GlobalDiscountScreen(
           primaryStage,
           prevScene);
-      
+
       primaryStage.setScene(globalDiscountScreen.getGlobalDiscountScreen());
     });
 
@@ -169,7 +168,7 @@ public class UpdateMenuItems {
     layout.setPadding(new Insets(50));
     layout.setCenter(gridPane);
     layout.setBottom(bottomContainer);
-    
+
     // Translate button action
     langButton.addAction(event -> {
       LanguageSetting lang = LanguageSetting.getInstance();
