@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 
 /**
  * Abstract base class for all single items on the menu.
@@ -365,29 +367,28 @@ public class Single extends Product {
    */
   @Override
   public boolean equals(Object obj) {
+    //Single other = (Single) obj;
     if (this == obj) {
       return true;
     }
     if (obj == null || getClass() != obj.getClass()) {
       return false;
     }
-
     Single other = (Single) obj;
-
-    if (this.getId() == other.getId()) {
-      /* System.out.println("Sizes:");
-      System.out.println(other.quantity.size());
-      System.out.println(this.quantity.size()); */
-      for (int i = 0; i < other.quantity.size(); i++) {
-        if (this.quantity.get(i) != (other.quantity.get(i))) {
-          return false;
-        }
-      }
-      return true;
-
-    } else {
+    
+    if (this.getId() != other.getId()) {
       return false;
     }
+    if (this.quantity.size() != other.quantity.size()) {
+      return false;
+    }
+
+    for (int i = 0; i < other.quantity.size(); i++) {
+      if (!Objects.equals(this.quantity.get(i), other.quantity.get(i))) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**

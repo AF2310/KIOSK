@@ -2,6 +2,7 @@ package org.example.orders;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.example.menu.OrderItem;
 import org.example.menu.Product;
@@ -18,6 +19,8 @@ public class Order {
   private double amountTotal;
   private String status;
   private ArrayList<OrderItem> items = new ArrayList<>();
+  private double discountFactor = 1.0;
+  private final List<Runnable> listeners = new ArrayList<>();
 
   /**
    * Constructor for orderes queried from the db.
@@ -34,10 +37,37 @@ public class Order {
 
   }
 
+  public void addListener(Runnable listener) {
+    listeners.add(listener);
+  }
+
+  /**
+   * Notifying when changing the total with the discount.
+   */
+  public void notifyListeners() {
+    for (Runnable listener : listeners) {
+      listener.run();
+    }
+  }
+
   /**
    * Empty constructor.
    */
   public Order() {
+  }
+
+  /**
+   * apply discount method.
+   *
+   * @param percentage percentage of the discount
+   */
+  public void applyDiscount(int percentage) {
+    if (percentage < 0 || percentage > 100) {
+      throw new IllegalArgumentException("Invalid discount percentage");
+    } 
+
+    this.discountFactor = 1 - (percentage / 100.0);
+    notifyListeners();
   }
 
   /**
@@ -63,7 +93,7 @@ public class Order {
       total += theItems[index].getPrice() * theQuantities[index];
     }
 
-    return total;
+    return total * discountFactor;
 
   }
 

@@ -1,17 +1,23 @@
 package org.example.screens;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.example.animations.FadingAnimation;
 import org.example.boxes.CheckoutGridWithButtons;
 import org.example.buttons.BackBtnWithTxt;
@@ -19,12 +25,16 @@ import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.ConfirmOrderButton;
 import org.example.buttons.EatHereButton;
 import org.example.buttons.LangBtn;
+import org.example.buttons.RectangleTextFieldWithLabel;
+import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.TakeAwayButton;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.InactivityTimer;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
 import org.example.orders.Cart;
+import org.example.orders.Order;
+import org.example.sql.DatabaseManager;
 import org.example.users.Customer;
 
 /**
@@ -36,6 +46,9 @@ import org.example.users.Customer;
 public class CheckoutScreen {
 
   private Stage primaryStage;
+  private Boolean discountApplied;
+  private int discountFactor;
+  private Order order = new Order();
 
   /**
    * Creating a scene for the checkout menu.
@@ -49,6 +62,7 @@ public class CheckoutScreen {
    * @param conn            the database connection
    * @return scene containing all the order details
    */
+
   public CustomScene createCheckoutScreen(
       Stage primaryStage,
       double windowWidth,
@@ -89,18 +103,92 @@ public class CheckoutScreen {
     checkoutLabel.setPadding(new Insets(50, 100, 50, 50));
     checkoutLabel.setMinWidth(500); // Gives label space to breathe
 
+    var promoCodeLabel = new Label();
+    promoCodeLabel.setStyle(
+        "-fx-text-fill: black;"
+            + "-fx-font-weight: lighter;"
+            + "-fx-font-size: 15;"
+            + "-fx-background-radius: 10;");
+
+    // Initially hidden
+    promoCodeLabel.setVisible(false);
+
     // Promo code section
-    TextField promoField = new TextField();
-    promoField.setPromptText("Enter Promo Code");
-    promoField.setStyle(
-        "-fx-background-color: white;"
-            + "-fx-text-fill: white;"
-            + "-fx-font-size: 24px;"
-            + "-fx-font-weight: bold;"
-            + "-fx-background-radius: 15;"
-            + "-fx-alignment: center;");
-    promoField.setMaxWidth(300);
-    promoField.setMaxHeight(100);
+    RectangleTextFieldWithLabel promoField = new RectangleTextFieldWithLabel("Enter Code:",
+        "rgb(255, 255, 255)");
+
+    SqrBtnWithOutline applyPromoCode = new SqrBtnWithOutline("Apply",
+        "green_tick.png", "rgb(81, 173, 86)");
+
+    promoField.setPadding(new Insets(0, 0, 30, 0));
+
+    applyPromoCode.setPrefWidth(80);
+    applyPromoCode.setPrefHeight(50);
+    HBox topRightPromoBox = new HBox(20);
+    topRightPromoBox.getChildren().addAll(promoField, applyPromoCode);
+
+    VBox topRightBox = new VBox(topRightPromoBox, promoCodeLabel);
+
+    applyPromoCode.setOnAction(e -> {
+      try (Connection connection = DatabaseManager.getConnection()) {
+        String userPromoCode = promoField.getText();
+        if (userPromoCode.isEmpty()) {
+          // Creates an image icon for an incorrect login so that the image changes
+          // upon correct or incorrect promo code.
+          Image errorIcon = new Image(getClass().getResourceAsStream("/errorLogin.png"));
+          ImageView errorIconView = new ImageView(errorIcon);
+          errorIconView.setFitWidth(40);
+          errorIconView.setFitHeight(40);
+          errorIconView.setPreserveRatio(true);
+
+          promoCodeLabel.setGraphic(errorIconView);
+          promoCodeLabel.setGraphicTextGap(10);
+
+          promoCodeLabel.setText("Invalid promo code entered!");
+          promoCodeLabel.setVisible(true);
+          // Using the class pause transition so the user can temp. see the
+          // error message and its then removed and set to null.
+          PauseTransition pause = new PauseTransition(Duration.seconds(2));
+          pause.setOnFinished(event -> {
+            promoCodeLabel.setVisible(false);
+            promoCodeLabel.setText(null);
+            promoCodeLabel.setGraphic(null); // removes all fields of the label
+          });
+          pause.play();
+        }
+
+        String promoCodeSql = "SELECT name, discount_type, discount_value, promo_code "
+            + "FROM promotion";
+
+        PreparedStatement promoStmt = connection.prepareStatement(promoCodeSql);
+        ResultSet promoCodeResults = promoStmt.executeQuery();
+
+        boolean valid = false;
+        while (promoCodeResults.next()) {
+          String currentCode = promoCodeResults.getString("promo_code");
+          if (userPromoCode.equals(currentCode)) {
+            int discountFactor = promoCodeResults.getInt("discount_value");
+            order.applyDiscount(discountFactor);
+            promoCodeLabel.setText("Promo code applied " + discountFactor + "% off");
+            promoCodeLabel.setVisible(true);
+            valid = true;
+            break;
+          }
+        }
+
+        if (!valid) {
+          promoCodeLabel.setText("Invalid promo code");
+          promoCodeLabel.setVisible(true);
+        }
+
+      } catch (SQLException e1) {
+        e1.printStackTrace();
+      }
+
+      for (ConfirmOrderButton button : ConfirmOrderButton.getInstances()) {
+        button.updatePriceLabel();
+      }
+    });
 
     HBox topBox = new HBox();
     topBox.setAlignment(Pos.TOP_LEFT);
@@ -108,7 +196,7 @@ public class CheckoutScreen {
         checkoutLabel,
         modeIndicatorBox,
         topspacer,
-        promoField);
+        topRightBox);
 
     // Bottom buttons
 
@@ -116,7 +204,7 @@ public class CheckoutScreen {
     bottomButtons.setPadding(new Insets(10));
 
     // Create confirm order button instance
-    ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton();
+    ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton(order);
 
     // Add confirmation button to listeners of cart changes
     // -> so price label of button updates when cart changes
@@ -128,7 +216,7 @@ public class CheckoutScreen {
 
       Customer customer = new Customer();
       try {
-        orderId = customer.placeOrder(conn);
+        orderId = customer.placeOrder(conn, discountApplied, discountFactor);
       } catch (SQLException err) {
         err.printStackTrace();
       }
