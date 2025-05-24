@@ -46,7 +46,7 @@ import org.example.users.Customer;
 public class CheckoutScreen {
 
   private Stage primaryStage;
-  private Boolean discountApplied;
+  private Boolean discountApplied = false; //TODO Temporary quickfix; remove later!!
   private int discountFactor;
   private Order order = new Order();
 
