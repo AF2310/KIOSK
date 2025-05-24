@@ -167,7 +167,7 @@ public class Cart {
    * Turning cart items into string.
    */
   public String toString() {
-    return items.toString() + quantity.toString();
+    return "";
   }
 
   /**
@@ -356,5 +356,20 @@ public class Cart {
       totalTime += product.getPreparationTime();
     }
     return totalTime;
+  }
+
+  /**
+   * Method to get the total Price.
+   *
+   * @return the totalprice.
+   */
+  public double getTotalPrice() {
+    double total = 0;
+    for (int i = 0; i < items.size(); i++) {
+      double price = items.get(i).getPrice();
+      int quant = quantity.get(i);
+      total = total + (price * quant);
+    }
+    return total;
   }
 }
