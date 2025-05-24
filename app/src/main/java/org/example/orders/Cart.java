@@ -1,14 +1,11 @@
 package org.example.orders;
 
-import java.io.IOError;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.example.menu.Ingredient;
@@ -24,7 +21,7 @@ import org.example.sql.SqlQueries;
  * making multiple instances.
  */
 public class Cart {
-  
+
   private static Cart instance;
   private ArrayList<Product> items;
   private ArrayList<Integer> quantity;
@@ -115,7 +112,7 @@ public class Cart {
   /**
    * to save quantity to database.
    *
-   * @param conn database connection
+   * @param conn    database connection
    * @param orderId order id from database
    * @throws SQLException database error
    */
@@ -133,10 +130,10 @@ public class Cart {
       int productId = items.get(i).getId();
 
       // Insert values into prepared statement
-      ps.setInt(1, orderId); 
+      ps.setInt(1, orderId);
       ps.setInt(2, productId);
       ps.setInt(3, quantity.get(i));
-      
+
       // Execute query
       ps.executeUpdate();
       int orderItemid = receiveOrderId(conn);
@@ -149,15 +146,15 @@ public class Cart {
         for (int j = 0; j < ingrediets.size(); j++) {
           // System.out.println("DEBUG: ingrediets:" + ingrediets.get(j));
           String query = "INSERT INTO orderitemingredients "
-                + "(order_item_id, ingredient_id, ingredientCount)"
-                + "VALUES (?, ?, ?)";
-            
+              + "(order_item_id, ingredient_id, ingredientCount)"
+              + "VALUES (?, ?, ?)";
+
           PreparedStatement ps2 = conn.prepareStatement(query);
           ps2.setInt(1, orderItemid);
           ps2.setInt(2, ingrediets.get(j).getId());
-          ps2.setInt(3, quantitys.get(j));     // TODO: error index out of bounds
+          ps2.setInt(3, quantitys.get(j)); // TODO: error index out of bounds
           // Error cause if 2 same burgers with different ingredients
-            
+
           ps2.executeUpdate();
         }
       } else {
@@ -165,7 +162,6 @@ public class Cart {
       }
     }
   }
-  
 
   /**
    * Turning cart items into string.
@@ -186,7 +182,7 @@ public class Cart {
   /**
    * Add a listener for later notifications when the
    * cart updates.
-   * Since cart is a singleton and other classes aren't or 
+   * Since cart is a singleton and other classes aren't or
    * things like scene components, that cannot be made into
    * a singleton at all, it is simpler to notify all other
    * listeners by adding them here.
@@ -274,11 +270,10 @@ public class Cart {
    */
   public int getEstimateTime() {
 
+    // Set preparation times for products (current times from database)
     try {
-      // Set preparation times for products (current times from database)
       SqlQueries pool = new SqlQueries();
       pool.setProductPrepTime(items);
-
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -289,12 +284,11 @@ public class Cart {
     int timeDrinks = 0;
     int timeExtra = 0;
     int timeDesserts = 0;
-    int totalTime = 0;
     ArrayList<Integer> allTimes = new ArrayList<>();
 
     // Get time to make proper calculation
     LocalTime currenTime = LocalTime.now();
-    // Daytime shift 07:00
+    // Daytime shift start 07:00
     LocalTime dayTime = LocalTime.of(7, 0);
     // Nighttime shift start 22:00
     LocalTime nightTime = LocalTime.of(22, 0);
@@ -302,46 +296,65 @@ public class Cart {
     // DAYTIME calculation - time between 07:00 and 22:00
     if (currenTime.isBefore(nightTime) && currenTime.isAfter(dayTime)) {
 
-      // Go through all products
-      for (Product product : items) {
-  
-        // Adding prep times depending on their type
-        if (product.getType() == Type.BURGERS) {
-          timeBurgers += product.getPreparationTime();
-  
-        } else if (product.getType() == Type.SIDES) {
-          timeSides += product.getPreparationTime();
-  
-        } else if (product.getType() == Type.DRINKS) {
-          timeDrinks += product.getPreparationTime();
-  
-        } else if (product.getType() == Type.EXTRA) {
-          timeExtra += product.getPreparationTime();
-  
-        } else if (product.getType() == Type.DESSERTS) {
-          timeDesserts += product.getPreparationTime();
-        }
-      }
-  
-      // Add all times to array
-      allTimes.add(timeBurgers);
-      allTimes.add(timeSides);
-      allTimes.add(timeDrinks);
-      allTimes.add(timeExtra);
-      allTimes.add(timeDesserts);
-  
-      // Sort times from small to big
-      Collections.sort(allTimes);
-  
-      totalTime = allTimes.get(allTimes.size() - 1);
+      return dayTimeCalculation(allTimes, timeBurgers, timeSides,
+          timeDrinks, timeExtra, timeDesserts);
 
-    // NIGHTTIME calculation
+      // NIGHTTIME calculation
     } else {
-      for (Product product : items) {
-        totalTime += product.getPreparationTime();
+
+      return nightTimeCalculation(allTimes, timeBurgers, timeSides,
+          timeDrinks, timeExtra, timeDesserts);
+    }
+  }
+
+  // Helper method for daytime calculation
+  private int dayTimeCalculation(
+      ArrayList<Integer> allTimes, int timeBurgers, int timeSides,
+      int timeDrinks, int timeExtra, int timeDesserts) {
+
+    // Go through all products
+    for (Product product : items) {
+
+      // Adding prep times depending on their type
+      if (product.getType() == Type.BURGERS) {
+        timeBurgers += product.getPreparationTime();
+
+      } else if (product.getType() == Type.SIDES) {
+        timeSides += product.getPreparationTime();
+
+      } else if (product.getType() == Type.DRINKS) {
+        timeDrinks += product.getPreparationTime();
+
+      } else if (product.getType() == Type.EXTRA) {
+        timeExtra += product.getPreparationTime();
+
+      } else if (product.getType() == Type.DESSERTS) {
+        timeDesserts += product.getPreparationTime();
       }
     }
 
+    // Add all times to array
+    allTimes.add(timeBurgers);
+    allTimes.add(timeSides);
+    allTimes.add(timeDrinks);
+    allTimes.add(timeExtra);
+    allTimes.add(timeDesserts);
+
+    // Sort times from small to big
+    Collections.sort(allTimes);
+
+    return allTimes.get(allTimes.size() - 1);
+  }
+
+  // Helper method for nighttime calculation
+  private int nightTimeCalculation(
+      ArrayList<Integer> allTimes, int timeBurgers, int timeSides,
+      int timeDrinks, int timeExtra, int timeDesserts) {
+
+    int totalTime = 0;
+    for (Product product : items) {
+      totalTime += product.getPreparationTime();
+    }
     return totalTime;
   }
 }
