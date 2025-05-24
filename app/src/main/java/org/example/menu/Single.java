@@ -176,15 +176,14 @@ public class Single extends Product {
    * Converts string input to a SingleType enum and hands it down to the
    * overloaded method.
    *
-   * @param conn database connection
    * @param type name of the SingleType
    * @return list of Singles matching the input type
    * @throws SQLException             if database access error occurs
    * @throws IllegalArgumentException if type string doesn't match any SingleType
    */
-  public List<Single> getOptionsByType(Connection conn, String type) throws SQLException {
+  public List<Single> getOptionsByType(String type) throws SQLException {
     // Convert input string to uppercase and map it to the enum and hand it down
-    return getOptionsByType(conn, Type.valueOf(type.toUpperCase()));
+    return getOptionsByType(Type.valueOf(type.toUpperCase()));
   }
 
   /**
