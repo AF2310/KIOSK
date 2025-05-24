@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -75,16 +74,13 @@ public class Ingredient {
    * The function inserts an ingredient name
    * into a database table and retrieves the generated ID from the database.
    */
-  public void saveToDb(Connection conn) throws SQLException {
-    String sql = "INSERT INTO ingredients (name) VALUES (?)";
-    PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-    pstmt.setString(1, getName());
-    pstmt.executeUpdate();
+  public void saveToDb() throws SQLException {
+    try {
+      SqlQueries pool = new SqlQueries();
+      this.id = pool.saveToDb(this);
 
-    try (ResultSet rs = pstmt.getGeneratedKeys()) {
-      if (rs.next()) {
-        this.id = rs.getInt(1); // setting ID from DB
-      }
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
   }
 

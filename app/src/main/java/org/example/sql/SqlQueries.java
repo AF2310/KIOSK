@@ -704,6 +704,30 @@ public class SqlQueries {
   }
 
   /**
+   * The function inserts an ingredient name
+   * into a database table and retrieves the generated ID from the database.
+   */
+  public int saveToDb(Ingredient ingredient) throws SQLException {
+
+    int id = -1;
+
+    String sql = "INSERT INTO ingredients (name) VALUES (?)";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        ResultSet rs = stmt.getGeneratedKeys();) {
+
+      stmt.setString(1, ingredient.getName());
+      stmt.executeUpdate();
+
+      if (rs.next()) {
+        id = rs.getInt(1); // setting ID from DB
+      }
+    }
+    return id;
+  }
+
+  /**
    * The method is responsible for retrieving all ingredients from the database
    * table in a list.
    */
