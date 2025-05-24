@@ -407,11 +407,10 @@ public class SqlQueries {
   /**
    * Deletes a Single product by its ID.
    *
-   * @param conn database connection
    * @param id   the ID of the product to delete
    * @throws SQLException if database access error occurs
    */
-  public void deleteSingleById(Connection conn, int id) throws SQLException {
+  public void deleteSingleById(int id) throws SQLException {
     String sql = "DELETE FROM product WHERE product_id = ?";
     try (PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setInt(1, id);
@@ -422,14 +421,15 @@ public class SqlQueries {
   /**
    * Reduces the quantity of a product.
    *
-   * @param conn   database connection
    * @param id     the product ID
    * @param amount the amount to reduce
    * @throws SQLException if database access error occurs
    */
-  public void reduceProductQuantity(Connection conn, int id, int amount) throws SQLException {
+  public void reduceProductQuantity(int id, int amount) throws SQLException {
+
     String sql = "UPDATE product SET quantity = quantity - ? "
         + "WHERE product_id = ? AND quantity >= ?";
+
     try (PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setInt(1, amount);
       stmt.setInt(2, id);
@@ -441,13 +441,13 @@ public class SqlQueries {
   /**
    * Retrieves Single products by category ID.
    *
-   * @param conn       database connection
    * @param categoryId the category ID
    * @return list of Single products in the category
    * @throws SQLException if database access error occurs
    */
-  public List<Single> getOptionsByCategoryId(Connection conn, int categoryId) throws SQLException {
+  public List<Single> getOptionsByCategoryId(int categoryId) throws SQLException {
     List<Single> options = new ArrayList<>();
+
     String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type "
         + "FROM product p "
         + "JOIN category c ON p.category_id = c.category_id "
@@ -455,6 +455,7 @@ public class SqlQueries {
 
     try (PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setInt(1, categoryId);
+
       try (ResultSet rs = stmt.executeQuery()) {
         while (rs.next()) {
           options.add(new Single(
@@ -472,11 +473,11 @@ public class SqlQueries {
   /**
    * Sets the ingredients for a Single product.
    *
-   * @param conn   database connection
    * @param single the Single product to set ingredients for
    * @throws SQLException if database access error occurs
    */
-  public void setIngredientsForSingle(Connection conn, Single single) throws SQLException {
+  public void setIngredientsForSingle(Single single) throws SQLException {
+
     String sql = "SELECT pi.ingredient_id, pi.ingredientCount, i.ingredient_name "
         + "FROM productingredients pi "
         + "JOIN ingredient i ON pi.ingredient_id = i.ingredient_id "
@@ -484,12 +485,37 @@ public class SqlQueries {
 
     try (PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setInt(1, single.getId());
+
       try (ResultSet rs = stmt.executeQuery()) {
         while (rs.next()) {
           single.addIngredient(new Ingredient(
               rs.getInt("ingredient_id"),
               rs.getString("ingredient_name")));
           single.quantity.add(rs.getInt("ingredientCount"));
+        }
+      }
+    }
+  }
+
+  /**
+   * Method that checks if the product is in a meal.
+   *
+   * @param conn the connection to the databse
+   * @return if the product is in the meal
+   * @throws SQLException if databse error
+   */
+  public boolean isInMeal(Single single, boolean inMeal) throws SQLException {
+    String sql = "SELECT meal_id FROM meal WHERE product_id = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, single.getId());
+
+      try (ResultSet rs = stmt.executeQuery()) {
+        if (rs.next()) {
+          inMeal = true;
+          return inMeal;
+        } else {
+          inMeal = false;
+          return inMeal;
         }
       }
     }

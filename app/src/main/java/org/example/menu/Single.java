@@ -1,8 +1,6 @@
 package org.example.menu;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -210,15 +208,16 @@ public class Single extends Product {
    * Lets you delete a single item from the database
    * by using the single's id.
    *
-   * @param conn remote server connection
    * @param id   id of the product (single)
    * @throws SQLException if server issues arise
    */
-  public void deleteSingleById(Connection conn, int id) throws SQLException {
-    String sql = "DELETE FROM product WHERE product_id = ?";
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setInt(1, id);
-      stmt.executeUpdate();
+  public void deleteSingleById(int id) throws SQLException {
+    try {
+      SqlQueries pool = new SqlQueries();
+      pool.deleteSingleById(id);
+
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
   }
 
@@ -226,21 +225,17 @@ public class Single extends Product {
    * Lets you reduce the product quantity inside
    * the database.
    *
-   * @param conn   remote server connection
    * @param id     id of the product (single)
    * @param amount new amount of this product
    * @throws SQLException if server issues arise
    */
-  public void reduceProductQuantity(Connection conn, int id, int amount) throws SQLException {
+  public void reduceProductQuantity(int id, int amount) throws SQLException {
+    try {
+      SqlQueries pool = new SqlQueries();
+      pool.reduceProductQuantity(id, amount);
 
-    String sql = "UPDATE product SET quantity = quantity - ? "
-        + "WHERE product_id = ? AND quantity >= ?";
-
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setInt(1, amount);
-      stmt.setInt(2, id);
-      stmt.setInt(3, amount);
-      stmt.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
   }
 
@@ -249,38 +244,19 @@ public class Single extends Product {
    * If the category name does not map to a valid SingleType enum, defaults to
    * SingleType.EXTRA.
    *
-   * @param conn       database connection
    * @param categoryId id of the category to filter by
    * @return list of Singles belonging to the filtered category
    * @throws SQLException if database access error occurs
    */
-  public List<Single> getOptionsByCategoryId(Connection conn, int categoryId) throws SQLException {
-    List<Single> options = new ArrayList<>();
+  public List<Single> getOptionsByCategoryId(int categoryId) throws SQLException {
+    try {
+      SqlQueries pool = new SqlQueries();
+      return pool.getOptionsByCategoryId(categoryId);
 
-    // SQL query to retrieve items + their category names
-    String sql = "SELECT p.product_id, p.name, p.price, p.image_url, c.name AS type "
-        + "FROM product p "
-        + "JOIN category c ON p.category_id = c.category_id "
-        + "WHERE p.category_id = ?";
-
-    try (
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        ResultSet rs = stmt.executeQuery();) {
-
-      while (rs.next()) {
-
-        // Create and add new Single to the list
-        options.add(new Single(
-            rs.getInt("product_id"),
-            rs.getString("name"),
-            rs.getDouble("price"),
-            Type.valueOf(rs.getString("type").toUpperCase()),
-            rs.getString("image_url")));
-      }
-      // Close result set
-      rs.close();
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return Collections.emptyList();
     }
-    return options;
   }
 
   /**
@@ -289,24 +265,12 @@ public class Single extends Product {
    * @param conn database connection
    */
   public void setIngredients(Connection conn) throws SQLException {
+    try {
+      SqlQueries pool = new SqlQueries();
+      pool.setIngredientsForSingle(this);
 
-    String sql = "SELECT pi.ingredient_id, pi.ingredientCount, i.ingredient_name "
-        + "FROM productingredients pi "
-        + "JOIN ingredient i ON pi.ingredient_id = i.ingredient_id "
-        + "WHERE product_id = ?";
-
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setInt(1, getId());
-
-      ResultSet rs = stmt.executeQuery();
-
-      while (rs.next()) {
-        ingredients.add(new Ingredient(
-            rs.getInt("ingredient_id"),
-            rs.getString("ingredient_name")));
-        quantity.add(rs.getInt("ingredientCount"));
-      }
-      rs.close();
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
   }
 
@@ -345,24 +309,18 @@ public class Single extends Product {
   /**
    * Method that checks if the product is in a meal.
    *
-   * @param conn the connection to the databse
    * @return if the product is in the meal
    * @throws SQLException if databse error
    */
-  public boolean isInMeal(Connection conn) throws SQLException {
-    String sql = "SELECT meal_id FROM meal WHERE product_id = ?";
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setInt(1, getId());
+  public boolean isInMeal() throws SQLException {
+    try {
+      SqlQueries pool = new SqlQueries();
+      this.inMeal = pool.isInMeal(this, inMeal);
+      return this.inMeal;
 
-      try (ResultSet rs = stmt.executeQuery()) {
-        if (rs.next()) {
-          this.inMeal = true;
-          return this.inMeal;
-        } else {
-          this.inMeal = false;
-          return this.inMeal;
-        }
-      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return this.inMeal;
     }
   }
 
