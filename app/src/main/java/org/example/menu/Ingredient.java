@@ -1,10 +1,6 @@
 package org.example.menu;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.example.sql.SqlQueries;
@@ -145,7 +141,7 @@ public class Ingredient {
    * @throws SQLException SQL error
    */
   public List<Ingredient> searchIngredientByNameAndPrice(
-      String name, float maxPrice) throws SQLException {
+      String name, double maxPrice) throws SQLException {
     try {
       SqlQueries pool = new SqlQueries();
       return pool.searchIngredientByNameAndPrice(name, maxPrice);
