@@ -805,4 +805,38 @@ public class SqlQueries {
     }
     return list;
   }
+
+  /**
+   * Searching ingredients by name and price.
+   *
+   * @param name     string name of the desired ingredient
+   * @param maxPrice maximum price value that is searched for
+   * @return List containing all ingredients that fall below input max price and
+   *         match input name
+   * @throws SQLException SQL error
+   */
+  public List<Ingredient> searchIngredientByNameAndPrice(
+      String name, double maxPrice)throws SQLException {
+
+    List<Ingredient> list = new ArrayList<>();
+
+    String sql = "SELECT DISTINCT i.ingredient_id AS id, i.ingredient_name AS name "
+        + "FROM ingredient i "
+        + "JOIN productingredients pi ON i.ingredient_id = pi.ingredient_id "
+        + "JOIN product p ON pi.product_id = p.product_id "
+        + "WHERE LOWER(i.ingredient_name) LIKE ? AND p.price <= ?";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+      stmt.setString(1, "%" + name.toLowerCase() + "%");
+      stmt.setDouble(2, maxPrice);
+      ResultSet rs = stmt.executeQuery();
+
+      while (rs.next()) {
+        list.add(new Ingredient(rs.getInt("id"), rs.getString("name")));
+      }
+    }
+    return list;
+  }
 }
