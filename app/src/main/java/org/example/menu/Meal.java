@@ -181,9 +181,9 @@ public class Meal extends Product {
    */
   public String toString() {
     String output = getName() + "    " + getPrice();
-    output = output + "\n    " + main.getName();
-    output = output + "\n    " + side.getName();
-    output = output + "\n    " + drink.getName();
+    output = output + "\n      " + main.getName();
+    output = output + "\n        " + side.getName();
+    output = output + "\n        " + drink.getName();
     return output;
   }
 }
