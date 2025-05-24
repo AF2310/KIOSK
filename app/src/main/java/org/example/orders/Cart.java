@@ -164,10 +164,20 @@ public class Cart {
   }
 
   /**
-   * Turning cart items into string.
+   * Turning the cart into a string.
+   *
+   * @param orderId the order id
+   * @return the string
    */
-  public String toString() {
-    return "";
+  public String printCart(int orderId) {
+    String output = "------------------------------------------------------------\n\n";
+    output = output + "ID: " + orderId + "\n\n";
+    output = output + "Total: " + getTotalPrice() + "kr\n\n";
+
+    for (int i = 0; i < items.size(); i++) {
+      output = output + "x" + quantity.get(i) + "  " + items.get(i) + "\n\n"; 
+    }
+    return output;
   }
 
   /**

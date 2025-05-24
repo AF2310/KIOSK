@@ -126,13 +126,13 @@ public class CheckoutScreen {
     // User confirms order
     confirmOrderButton.setOnAction(e -> {
       int orderId = -1;
-
       Customer customer = new Customer();
       try {
         orderId = customer.placeOrder(conn);
       } catch (SQLException err) {
         err.printStackTrace();
       }
+      System.out.println(Cart.getInstance().printCart(orderId));
       Cart.getInstance().convertMealsIntoSingles();
       try {
         Cart.getInstance().saveQuantityToDb(conn, orderId);
