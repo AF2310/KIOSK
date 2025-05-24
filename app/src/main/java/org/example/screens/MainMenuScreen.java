@@ -56,7 +56,6 @@ import org.example.menu.Type;
 import org.example.orders.Cart;
 import org.example.sql.DatabaseManager;
 
-
 /**
  * The main menu screen.
  */
@@ -678,16 +677,8 @@ public class MainMenuScreen {
         for (String cat : categories) {
           if (cat.equals("Meals")) {
             // Load meals from database
-            try (PreparedStatement ps = conn.prepareStatement(
-                "SELECT meal_id, name, price, image_url FROM meal");
-                ResultSet rs = ps.executeQuery()) {
-              while (rs.next()) {
-                Meal meal = new Meal(rs.getString("name"), conn);
-                meal.setId(rs.getInt("meal_id"));
-                meal.setPrice(rs.getFloat("price"));
-                meal.setImagePath(rs.getString("image_url"));
-                items.add(meal);
-              }
+            try {
+              items.addAll(fetchMealsFromDatabase());
             } catch (SQLException e) {
               e.printStackTrace();
             }
@@ -700,16 +691,8 @@ public class MainMenuScreen {
         String targetCat = currentSearchCategory;
         if (targetCat.equals("Meals")) {
           // Load meals from database
-          try (PreparedStatement ps = conn.prepareStatement(
-              "SELECT meal_id, name, price, image_url FROM meal");
-              ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-              Meal meal = new Meal(rs.getString("name"), conn);
-              meal.setId(rs.getInt("meal_id"));
-              meal.setPrice(rs.getFloat("price"));
-              meal.setImagePath(rs.getString("image_url"));
-              items.add(meal);
-            }
+          try {
+            items.addAll(fetchMealsFromDatabase());
           } catch (SQLException e) {
             e.printStackTrace();
           }
@@ -720,15 +703,8 @@ public class MainMenuScreen {
       }
     } else {
       if (currentCategory.equals("Meals")) {
-        try (PreparedStatement ps = conn.prepareStatement(
-            "SELECT meal_id, name, price, image_url FROM meal"); ResultSet rs = ps.executeQuery()) {
-          while (rs.next()) {
-            Meal meal = new Meal(rs.getString("name"), conn);
-            meal.setId(rs.getInt("meal_id"));
-            meal.setPrice(rs.getFloat("price"));
-            meal.setImagePath(rs.getString("image_url"));
-            items.add(meal);
-          }
+        try {
+          items.addAll(fetchMealsFromDatabase());
         } catch (SQLException e) {
           e.printStackTrace();
         }
@@ -915,6 +891,24 @@ public class MainMenuScreen {
     LanguageSetting.getInstance().smartTranslate(itemGrid);
 
     updateCategoryButtonStyles();
+  }
+
+  // Helper method
+  // fetches all relevant info about a meal from the db
+  private List<Meal> fetchMealsFromDatabase() throws SQLException {
+    List<Meal> meals = new ArrayList<>();
+    try (PreparedStatement ps = conn.prepareStatement(
+        "SELECT meal_id, name, price, image_url FROM meal");
+        ResultSet rs = ps.executeQuery()) {
+      while (rs.next()) {
+        Meal meal = new Meal(rs.getString("name"), conn);
+        meal.setId(rs.getInt("meal_id"));
+        meal.setPrice(rs.getFloat("price"));
+        meal.setImagePath(rs.getString("image_url"));
+        meals.add(meal);
+      }
+    }
+    return meals;
   }
 
   /**
