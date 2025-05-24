@@ -302,22 +302,27 @@ public class SqlQueries {
   /**
    * Retrieves Single products by their type.
    *
-   * @param conn database connection
    * @param type the type of Single products to retrieve
    * @return list of Single products matching the type
    * @throws SQLException if database access error occurs
    */
-  public List<Single> getOptionsByType(Connection conn, Type type) throws SQLException {
+  public List<Single> getOptionsByType(Type type) throws SQLException {
+
     List<Single> options = new ArrayList<>();
+
     String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type "
         + "FROM product p "
         + "JOIN category c ON p.category_id = c.category_id "
         + "WHERE c.name = ?";
 
     try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
       stmt.setString(1, type.name());
+
       try (ResultSet rs = stmt.executeQuery()) {
+
         while (rs.next()) {
+
           options.add(new Single(
               rs.getInt("id"),
               rs.getString("name"),
@@ -339,7 +344,7 @@ public class SqlQueries {
    * @throws SQLException if database access error occurs
    */
   public List<Single> getOptionsByTypeName(Connection conn, String typeName) throws SQLException {
-    return getOptionsByType(conn, Type.valueOf(typeName.toUpperCase()));
+    return getOptionsByType(Type.valueOf(typeName.toUpperCase()));
   }
 
   /**

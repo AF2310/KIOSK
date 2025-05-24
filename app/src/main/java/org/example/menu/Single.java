@@ -156,39 +156,19 @@ public class Single extends Product {
   /**
    * Retrieving all options by type.
    *
-   * @param conn database connection
    * @param type type of single food item
    * @return options by type
    * @throws SQLException error with sql
    */
-  public List<Single> getOptionsByType(Connection conn, Type type) throws SQLException {
-    // List to store product data
-    List<Single> options = new ArrayList<>();
+  public List<Single> getOptionsByType(Type type) throws SQLException {
+    try {
+      SqlQueries pool = new SqlQueries();
+      return pool.getOptionsByType(type);
 
-    // SQL query to fetch needed data from database
-    String sql = "SELECT p.product_id AS id, p.name, p.price, p.image_url, c.name AS type "
-        + "FROM product p "
-        + "JOIN category c ON p.category_id = c.category_id "
-        + "WHERE c.name = ?";
-
-    // Trying with ressources colses statements and sets autmatically
-
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setString(1, type.name());
-
-      try (ResultSet rs = stmt.executeQuery()) {
-        while (rs.next()) {
-          options.add(new Single(
-              rs.getInt("id"),
-              rs.getString("name"),
-              rs.getFloat("price"),
-              Type.valueOf(rs.getString("type").toUpperCase()),
-              rs.getString("image_url")));
-        }
-      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return Collections.emptyList();
     }
-
-    return options;
   }
 
   /**
