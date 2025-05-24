@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -261,8 +263,9 @@ public class Cart {
    * There are two different ways of calculations:
    * DAYTIME: A full staff team is present and therefore, each different
    * Type of item can be made simultaniously.
-   * NIGHTTIME: Barely any staff is currently working. Therefore, all items
-   * are made individually.
+   * NIGHTTIME: Barely any staff is currently working (worst case:
+   * 1 worker in the kitchen). Therefore, all items are made
+   * individually.
    * The meals get converted into singles after the confirm order
    * button is pressed. Hence, there is no meal time calculation
    * needed.
@@ -289,40 +292,55 @@ public class Cart {
     int totalTime = 0;
     ArrayList<Integer> allTimes = new ArrayList<>();
 
-    // DAYTIME calculation
+    // Get time to make proper calculation
+    LocalTime currenTime = LocalTime.now();
+    // Daytime shift 07:00
+    LocalTime dayTime = LocalTime.of(7, 0);
+    // Nighttime shift start 22:00
+    LocalTime nightTime = LocalTime.of(22, 0);
 
-    // Go through all products
-    for (Product product : items) {
+    // DAYTIME calculation - time between 07:00 and 22:00
+    if (currenTime.isBefore(nightTime) && currenTime.isAfter(dayTime)) {
 
-      // Adding prep times depending on their type
-      if (product.getType() == Type.BURGERS) {
-        timeBurgers += product.getPreparationTime();
+      // Go through all products
+      for (Product product : items) {
+  
+        // Adding prep times depending on their type
+        if (product.getType() == Type.BURGERS) {
+          timeBurgers += product.getPreparationTime();
+  
+        } else if (product.getType() == Type.SIDES) {
+          timeSides += product.getPreparationTime();
+  
+        } else if (product.getType() == Type.DRINKS) {
+          timeDrinks += product.getPreparationTime();
+  
+        } else if (product.getType() == Type.EXTRA) {
+          timeExtra += product.getPreparationTime();
+  
+        } else if (product.getType() == Type.DESSERTS) {
+          timeDesserts += product.getPreparationTime();
+        }
+      }
+  
+      // Add all times to array
+      allTimes.add(timeBurgers);
+      allTimes.add(timeSides);
+      allTimes.add(timeDrinks);
+      allTimes.add(timeExtra);
+      allTimes.add(timeDesserts);
+  
+      // Sort times from small to big
+      Collections.sort(allTimes);
+  
+      totalTime = allTimes.get(allTimes.size() - 1);
 
-      } else if (product.getType() == Type.SIDES) {
-        timeSides += product.getPreparationTime();
-
-      } else if (product.getType() == Type.DRINKS) {
-        timeDrinks += product.getPreparationTime();
-
-      } else if (product.getType() == Type.EXTRA) {
-        timeExtra += product.getPreparationTime();
-
-      } else if (product.getType() == Type.DESSERTS) {
-        timeDesserts += product.getPreparationTime();
+    // NIGHTTIME calculation
+    } else {
+      for (Product product : items) {
+        totalTime += product.getPreparationTime();
       }
     }
-
-    // Add all times to array
-    allTimes.add(timeBurgers);
-    allTimes.add(timeSides);
-    allTimes.add(timeDrinks);
-    allTimes.add(timeExtra);
-    allTimes.add(timeDesserts);
-
-    // Sort times from small to big
-    Collections.sort(allTimes);
-
-    totalTime = allTimes.get(allTimes.size() - 1);
 
     return totalTime;
   }
