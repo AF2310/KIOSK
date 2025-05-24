@@ -1,5 +1,6 @@
 package org.example.orders;
 
+import java.io.IOError;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +14,7 @@ import org.example.menu.Meal;
 import org.example.menu.Product;
 import org.example.menu.Single;
 import org.example.menu.Type;
+import org.example.sql.SqlQueries;
 
 /**
  * The cart class implemented as a singleton.
@@ -269,6 +271,15 @@ public class Cart {
    */
   public int getEstimateTime() {
 
+    try {
+      // Set preparation times for products (current times from database)
+      SqlQueries pool = new SqlQueries();
+      pool.setProductPrepTime(items);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
     // Set starting values for each type-specific preparation time
     int timeBurgers = 0;
     int timeSides = 0;
@@ -276,7 +287,7 @@ public class Cart {
     int timeExtra = 0;
     int timeDesserts = 0;
     int totalTime = 0;
-    List<Integer> allTimes = new ArrayList<>();
+    ArrayList<Integer> allTimes = new ArrayList<>();
 
     // DAYTIME calculation
 

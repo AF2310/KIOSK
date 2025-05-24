@@ -661,8 +661,49 @@ public class SqlQueries {
         products.add(product);
       }
     }
-
     return products;
+  }
+
+  /**
+   * Setter for the product preparation times.
+   * It iterates through the given product array list,
+   * fetches the needed preparation times and sets them
+   * for the current product in the list.
+   *
+   * @param products Array List of products who's prep time should be set
+   * @throws SQLException Database error
+   */
+  public void setProductPrepTime(ArrayList<Product> products) throws SQLException {
+
+    // SQL query to fetch needed data from database
+    String sql = "SELECT preparation_time "
+        + "FROM product "
+        + "WHERE product_id = ?";
+            
+    // Build connection and prepare query
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+  
+      // Go through each product
+      for (int index = 0; index < products.size(); index++) {
+            
+        // Set value of product id to current product's id
+        stmt.setInt(1, products.get(index).getId());
+          
+        // Execute query with inserted value (product id)
+        try (ResultSet rs = stmt.executeQuery()) {
+
+          if (rs.next()) {
+    
+            // Fetch all product preparation times from database
+            int prepTime = rs.getInt("preparation_time");
+    
+            // Set fetched prep time as time for product
+            products.get(index).setPreparationTime(prepTime);
+          }
+        }
+      }
+    }
   }
 } 
 
