@@ -191,7 +191,10 @@ public class MealCustomizationScreen {
     Label mealLabel = new Label(meal.getName());
     mealLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
     LabelManager.register(mealLabel);
-    mealDisplay.getChildren().addAll(mealImage, mealLabel);
+    Label mealPrice = new Label(String.format("%.0f kr", meal.getPrice()));
+    mealPrice.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+    LabelManager.register(mealPrice);
+    mealDisplay.getChildren().addAll(mealImage, mealLabel, mealPrice);
     centerBox.getChildren().addAll(sideOptionsGrid, mealDisplay);
     layout.setCenter(centerBox);
 
@@ -358,7 +361,9 @@ public class MealCustomizationScreen {
     Label mealLabel = new Label(meal.getName());
     LabelManager.register(mealLabel);
     mealLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-    mealDisplay.getChildren().addAll(mealImage, mealLabel);
+    Label mealPrice = new Label(String.format("%.0f kr", meal.getPrice()));
+    mealPrice.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+    mealDisplay.getChildren().addAll(mealImage, mealLabel, mealPrice);
     centerBox.getChildren().addAll(drinkOptionsGrid, mealDisplay);
     layout.setCenter(centerBox);
 
