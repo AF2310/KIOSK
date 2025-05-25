@@ -341,7 +341,6 @@ public class SqlQueries {
   /**
    * Retrieves Single products by type name.
    *
-   * @param conn     database connection
    * @param typeName the name of the type
    * @return list of Single products matching the type
    * @throws SQLException if database access error occurs
@@ -397,7 +396,7 @@ public class SqlQueries {
   /**
    * Deletes a Single product by its ID.
    *
-   * @param id   the ID of the product to delete
+   * @param id the ID of the product to delete
    * @throws SQLException if database access error occurs
    */
   public void deleteSingleById(int id) throws SQLException {
@@ -422,7 +421,7 @@ public class SqlQueries {
         + "WHERE product_id = ? AND quantity >= ?";
 
     try (Connection conn = DatabaseManager.getConnection();
-      PreparedStatement stmt = conn.prepareStatement(sql)) {
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setInt(1, amount);
       stmt.setInt(2, id);
       stmt.setInt(3, amount);
@@ -446,7 +445,7 @@ public class SqlQueries {
         + "WHERE p.category_id = ?";
 
     try (Connection conn = DatabaseManager.getConnection();
-      PreparedStatement stmt = conn.prepareStatement(sql)) {
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setInt(1, categoryId);
 
       try (ResultSet rs = stmt.executeQuery()) {
@@ -477,7 +476,7 @@ public class SqlQueries {
         + "WHERE product_id = ?";
 
     try (Connection conn = DatabaseManager.getConnection();
-      PreparedStatement stmt = conn.prepareStatement(sql)) {
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setInt(1, single.getId());
 
       try (ResultSet rs = stmt.executeQuery()) {
@@ -494,14 +493,13 @@ public class SqlQueries {
   /**
    * Method that checks if the product is in a meal.
    *
-   * @param conn the connection to the databse
    * @return if the product is in the meal
    * @throws SQLException if databse error
    */
   public boolean isInMeal(Single single, boolean inMeal) throws SQLException {
     String sql = "SELECT meal_id FROM meal WHERE product_id = ?";
     try (Connection conn = DatabaseManager.getConnection();
-      PreparedStatement stmt = conn.prepareStatement(sql)) {
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setInt(1, single.getId());
 
       try (ResultSet rs = stmt.executeQuery()) {
@@ -867,7 +865,7 @@ public class SqlQueries {
    * @throws SQLException SQL error
    */
   public List<Ingredient> searchIngredientByNameAndPrice(
-      String name, double maxPrice)throws SQLException {
+      String name, double maxPrice) throws SQLException {
 
     List<Ingredient> list = new ArrayList<>();
 
@@ -893,18 +891,21 @@ public class SqlQueries {
 
   /**
    * loads a meal object from the db using the given product id.
-   * This method queries the meal table and finds a meal associated with the specified product
+   * This method queries the meal table and finds a meal associated with the
+   * specified product
    *
-   * @param productId the product id of the product to find a corresponding meal for
+   * @param productId the product id of the product to find a corresponding meal
+   *                  for
    * @return either the meal if its found or null if no meal is linked
-   * @throws SQLException we get an exception if a db access error occurs or sql is invalid
+   * @throws SQLException we get an exception if a db access error occurs or sql
+   *                      is invalid
    */
   public Meal loadMealByProductId(int productId) throws SQLException {
 
     String sql = "SELECT meal_id, name, price, image_url FROM meal WHERE product_id = ?";
 
     try (Connection conn = DatabaseManager.getConnection();
-      PreparedStatement ps = conn.prepareStatement(sql)) {
+        PreparedStatement ps = conn.prepareStatement(sql)) {
       ps.setInt(1, productId);
 
       try (ResultSet rs = ps.executeQuery()) {
@@ -926,9 +927,10 @@ public class SqlQueries {
    *
    * @param discountApplied true if a discount was applied
    *                        false if no discount was applied
-   * @param discountFactor integer value of how much of a discount the customer gets
+   * @param discountFactor  integer value of how much of a discount the customer
+   *                        gets
    * @return newly generated order id from the database (auto increment)
-   * @throws SQLException
+   * @throws SQLException sql errors
    */
   public int placeOrder(boolean discountApplied, int discountFactor) throws SQLException {
     // Calculate total order price
@@ -949,7 +951,7 @@ public class SqlQueries {
         PreparedStatement ps = conn.prepareStatement(s);) {
       // Insert price variable
       ps.setObject(1, price);
-  
+
       // Execute query
       ps.executeUpdate();
 
@@ -999,7 +1001,7 @@ public class SqlQueries {
    * @throws SQLException database error
    */
   public void saveQuantityToDb(int orderId, ArrayList<Product> items,
-    ArrayList<Integer> quantity) throws SQLException {
+      ArrayList<Integer> quantity) throws SQLException {
 
     for (int i = 0; i < items.size(); i++) {
 
@@ -1009,7 +1011,7 @@ public class SqlQueries {
 
       // Prepare statement to be actual query
       try (Connection conn = DatabaseManager.getConnection();
-        PreparedStatement ps = conn.prepareStatement(s);) {
+          PreparedStatement ps = conn.prepareStatement(s);) {
 
         // Get product ID from the item
         int productId = items.get(i).getId();
