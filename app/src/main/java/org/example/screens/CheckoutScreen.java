@@ -109,11 +109,13 @@ public class CheckoutScreen {
     promoCodeLabel.setStyle(
         "-fx-text-fill: black;"
             + "-fx-font-weight: lighter;"
-            + "-fx-font-size: 15;"
+            + "-fx-font-size: 13;"
             + "-fx-background-radius: 10;");
-
+    promoCodeLabel.setMinHeight(40);
+    promoCodeLabel.setPrefHeight(40);;
     // Initially hidden
-    promoCodeLabel.setVisible(false);
+    promoCodeLabel.setOpacity(0);
+    promoCodeLabel.setManaged(true);
 
     // Promo code section
     RectangleTextFieldWithLabel promoField = new RectangleTextFieldWithLabel("Enter Promo Code:",
@@ -147,16 +149,16 @@ public class CheckoutScreen {
           errorIconView.setFitHeight(40);
           errorIconView.setPreserveRatio(true);
 
+          promoCodeLabel.setText("Invalid promo code entered!");
           promoCodeLabel.setGraphic(errorIconView);
           promoCodeLabel.setGraphicTextGap(10);
+          promoCodeLabel.setOpacity(1);
 
-          promoCodeLabel.setText("Invalid promo code entered!");
-          promoCodeLabel.setVisible(true);
           // Using the class pause transition so the user can temp. see the
           // error message and its then removed and set to null.
           PauseTransition pause = new PauseTransition(Duration.seconds(2));
           pause.setOnFinished(event -> {
-            promoCodeLabel.setVisible(false);
+            promoCodeLabel.setOpacity(0);
             promoCodeLabel.setText(null);
             promoCodeLabel.setGraphic(null); // removes all fields of the label
           });
@@ -182,7 +184,7 @@ public class CheckoutScreen {
             order.applyDiscount(discountFactor);
             promoCodeLabel.setText("Promo code applied " + discountFactor + "% off");
             promoCodeLabel.setGraphic(null);
-            promoCodeLabel.setVisible(true);
+            promoCodeLabel.setOpacity(1);
             valid = true;
             break;
           }
