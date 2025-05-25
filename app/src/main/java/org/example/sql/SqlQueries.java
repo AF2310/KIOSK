@@ -920,4 +920,132 @@ public class SqlQueries {
     }
     return null;
   }
+
+  /**
+   * Creates a new order.
+   *
+   * @param discountApplied true if a discount was applied
+   *                        false if no discount was applied
+   * @param discountFactor integer value of how much of a discount the customer gets
+   * @return newly generated order id from the database (auto increment)
+   * @throws SQLException
+   */
+  public int placeOrder(boolean discountApplied, int discountFactor) throws SQLException {
+    // Calculate total order price
+    Order order = new Order();
+    double price = order.calculatePrice();
+
+    if (discountApplied) {
+      price = price * (1 - discountFactor);
+    }
+
+    // SQL Query as string statement
+    String s = "INSERT INTO `order` "
+        + "(kiosk_ID, customer_ID, order_date, amount_total, status)"
+        + "VALUES (123, 1, NOW(), ?, 'pending')";
+
+    // Prepare statement to be actual query
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement ps = conn.prepareStatement(s);) {
+      // Insert price variable
+      ps.setObject(1, price);
+  
+      // Execute query
+      ps.executeUpdate();
+
+      // immediately fetch the auto generated order id
+      return receiveOrderId(conn);
+    }
+  }
+
+  /**
+   * Helper method.
+   * Generates or shows the order ID.
+   * This has to be used right after order creation.
+   * To not get false IDs on wrong usage, this is private
+   * and used in the place order method only.
+   *
+   * @param conn The current connection, that you are on
+   *             (it HAS to be current connection!)
+   * @throws SQLException SQL Database errors
+   */
+  private int receiveOrderId(Connection conn) throws SQLException {
+    // Set default order id
+    int id = -1;
+
+    // SQL Query as string statement
+    String s = "SELECT LAST_INSERT_ID()";
+
+    // Prepare statement to be actual query
+    // Using try to save ressources and close process automatically
+    try (PreparedStatement ps = conn.prepareStatement(s)) {
+
+      // Open result set to fetch order id (execute query)
+      ResultSet rs = ps.executeQuery();
+
+      // if there is a result
+      if (rs.next()) {
+        // store result as order id integer
+        id = rs.getInt(1);
+      }
+    }
+    return id;
+  }
+
+  /**
+   * to save quantity to database.
+   *
+   * @param orderId order id from database
+   * @throws SQLException database error
+   */
+  public void saveQuantityToDb(int orderId, ArrayList<Product> items,
+    ArrayList<Integer> quantity) throws SQLException {
+
+    for (int i = 0; i < items.size(); i++) {
+
+      String s = "INSERT INTO order_item "
+          + "(order_id, product_id, quantity)"
+          + "VALUES (?, ?, ?)";
+
+      // Prepare statement to be actual query
+      try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement ps = conn.prepareStatement(s);) {
+
+        // Get product ID from the item
+        int productId = items.get(i).getId();
+
+        // Insert values into prepared statement
+        ps.setInt(1, orderId);
+        ps.setInt(2, productId);
+        ps.setInt(3, quantity.get(i));
+
+        // Execute query
+        ps.executeUpdate();
+        int orderItemid = receiveOrderId(conn);
+
+        if (items.get(i) instanceof Single) {
+          // System.out.println("DEBUG: items:" + items.get(i));
+          List<Ingredient> ingrediets = ((Single) items.get(i)).ingredients;
+          List<Integer> quantitys = ((Single) items.get(i)).quantity;
+
+          for (int j = 0; j < ingrediets.size(); j++) {
+            // System.out.println("DEBUG: ingrediets:" + ingrediets.get(j));
+            String query = "INSERT INTO orderitemingredients "
+                + "(order_item_id, ingredient_id, ingredientCount)"
+                + "VALUES (?, ?, ?)";
+
+            PreparedStatement ps2 = conn.prepareStatement(query);
+            ps2.setInt(1, orderItemid);
+            ps2.setInt(2, ingrediets.get(j).getId());
+            ps2.setInt(3, quantitys.get(j)); // TODO: error index out of bounds
+            // Error cause if 2 same burgers with different ingredients
+
+            ps2.executeUpdate();
+          }
+        } else {
+          System.out.println("Item is not an instance of Single: " + items.get(i));
+        }
+      }
+    }
+  }
 }

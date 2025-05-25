@@ -107,7 +107,7 @@ public class Meal extends Product {
     }
     rs2.close();
     stmt.close();
-    main.setIngredients(conn);
+    main.setIngredients();
     System.out.println(this.main);
   }
 

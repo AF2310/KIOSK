@@ -216,13 +216,13 @@ public class CheckoutScreen {
 
       Customer customer = new Customer();
       try {
-        orderId = customer.placeOrder(conn, discountApplied, discountFactor);
+        orderId = customer.placeOrder(discountApplied, discountFactor);
       } catch (SQLException err) {
         err.printStackTrace();
       }
       Cart.getInstance().convertMealsIntoSingles();
       try {
-        Cart.getInstance().saveQuantityToDb(conn, orderId);
+        Cart.getInstance().saveQuantityToDb(orderId);
       } catch (SQLException e1) {
         e1.printStackTrace();
       }

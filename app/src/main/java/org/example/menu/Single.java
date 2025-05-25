@@ -1,6 +1,5 @@
 package org.example.menu;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -104,7 +103,7 @@ public class Single extends Product {
    * Inserts this product into the database and sets the generated product ID.
    * Assumes category name maps to valid category in DB.
    */
-  public void saveToDb(Connection conn) throws SQLException {
+  public void saveToDb() throws SQLException {
     /* // Get the category_id from the category name (enum)
     String categoryQuery = "SELECT category_id FROM category WHERE name = ?";
     int categoryId;
@@ -189,11 +188,10 @@ public class Single extends Product {
    * that are priced under a specific price limit.
    *
    * @param priceLimit maximum price to filter the food items
-   * @param conn       database connection to use for the query
    * @return list of Singles that are under the specified price
    * @throws SQLException if database access error occurs
    */
-  public List<Single> getSinglesUnder(double priceLimit, Connection conn) throws SQLException {
+  public List<Single> getSinglesUnder(double priceLimit) throws SQLException {
     try {
       SqlQueries pool = new SqlQueries();
       return pool.getSinglesUnder(priceLimit);
@@ -261,10 +259,8 @@ public class Single extends Product {
 
   /**
    * Method to set the ingredients to them in the database.
-   *
-   * @param conn database connection
    */
-  public void setIngredients(Connection conn) throws SQLException {
+  public void setIngredients() throws SQLException {
     try {
       SqlQueries pool = new SqlQueries();
       pool.setIngredientsForSingle(this);
