@@ -131,12 +131,13 @@ public class CheckoutScreen {
     HBox topRightPromoBox = new HBox(20);
     topRightPromoBox.getChildren().addAll(promoField, applyPromoCode);
 
-    VBox topRightBox = new VBox(topRightPromoBox, promoCodeLabel);
-
+    
     applyPromoCode.setOnMousePressed(e -> 
-      animateButtonPress(applyPromoCode, 0.95));
+        animateButtonPress(applyPromoCode, 0.95));
     applyPromoCode.setOnMouseReleased(e ->
-      animateButtonPress(applyPromoCode, 1.0));
+        animateButtonPress(applyPromoCode, 1.0));
+
+
     applyPromoCode.setOnAction(e -> {
       try (Connection connection = DatabaseManager.getConnection()) {
         String userPromoCode = promoField.getText();
@@ -202,6 +203,8 @@ public class CheckoutScreen {
         button.updatePriceLabel();
       }
     });
+    
+    VBox topRightBox = new VBox(topRightPromoBox, promoCodeLabel);
 
     HBox topBox = new HBox();
     topBox.setAlignment(Pos.TOP_LEFT);

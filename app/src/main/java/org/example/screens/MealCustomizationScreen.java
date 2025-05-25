@@ -25,7 +25,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.CancelButtonWithText;
-import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
 import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.TitleLabel;
@@ -136,6 +135,10 @@ public class MealCustomizationScreen {
     List<Product> sideOptions = getSideOptionsForMeal(meal.getId());
     final ImageView[] selectedImage = { null };
 
+    SqrBtnWithOutline confirmButton = new SqrBtnWithOutline("Confirm",
+        "green_tick.png", "rgb(81, 173, 86)");
+    confirmButton.setDisable(true);
+
     for (int i = 0; i < sideOptions.size(); i++) {
       Product side = sideOptions.get(i);
 
@@ -168,6 +171,7 @@ public class MealCustomizationScreen {
         sideImage.setEffect(glowEffect);
         selectedImage[0] = sideImage;
         meal.setSide(side);
+        confirmButton.setDisable(false);
       });
 
       sideOptionsGrid.add(sideBox, i % 2, i / 2);
@@ -193,7 +197,6 @@ public class MealCustomizationScreen {
     LabelManager.register(mealLabel);
     Label mealPrice = new Label(String.format("%.0f kr", meal.getPrice()));
     mealPrice.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-    LabelManager.register(mealPrice);
     mealDisplay.getChildren().addAll(mealImage, mealLabel, mealPrice);
     centerBox.getChildren().addAll(sideOptionsGrid, mealDisplay);
     layout.setCenter(centerBox);
@@ -208,8 +211,6 @@ public class MealCustomizationScreen {
     HBox.setHgrow(leftSpacer, Priority.ALWAYS);
     HBox.setHgrow(rightSpacer, Priority.ALWAYS);
 
-    SqrBtnWithOutline confirmButton = new SqrBtnWithOutline("Confirm",
-        "green_tick.png", "rgb(81, 173, 86)");
     CancelButtonWithText cancelBtn = new CancelButtonWithText();
     HBox confirmBox = new HBox(confirmButton);
     confirmBox.setAlignment(Pos.BOTTOM_CENTER);
@@ -315,6 +316,9 @@ public class MealCustomizationScreen {
     List<Product> drinkOptions = getDrinkOptionsForMeal(meal.getId());
     final ImageView[] selectedImage = { null };
 
+    SqrBtnWithOutline confirmButton = new SqrBtnWithOutline("Confirm",
+        "green_tick.png", "rgb(81, 173, 86)");
+    confirmButton.setDisable(true);
     for (int i = 0; i < drinkOptions.size(); i++) {
       Product drink = drinkOptions.get(i);
 
@@ -345,6 +349,7 @@ public class MealCustomizationScreen {
         drinkImage.setEffect(glowEffect);
         selectedImage[0] = drinkImage;
         meal.setDrink(drink);
+        confirmButton.setDisable(false);
       });
       drinkOptionsGrid.add(drinkBox, i % 2, i / 2);
     }
@@ -368,8 +373,8 @@ public class MealCustomizationScreen {
     layout.setCenter(centerBox);
 
     var langButton = new LangBtn();
-    var confirmBtn = new ColorSquareButtonWithImage("Confirm", "green_tick.png");
-    var cancelBtn = new ColorSquareButtonWithImage("Cancel", "/cancel.png");
+
+    CancelButtonWithText cancelBtn = new CancelButtonWithText();
     var backButton = new BackBtnWithTxt();
 
     Region spacer1 = new Region();
@@ -377,7 +382,8 @@ public class MealCustomizationScreen {
     HBox.setHgrow(spacer1, Priority.ALWAYS);
     HBox.setHgrow(spacer2, Priority.ALWAYS);
 
-    HBox bottomBar = new HBox(20, langButton, spacer1, confirmBtn, spacer2, backButton, cancelBtn);
+    HBox bottomBar = new HBox(20, langButton, spacer1,
+        confirmButton, spacer2, backButton, cancelBtn);
     bottomBar.setPadding(new Insets(20));
     layout.setBottom(bottomBar);
 
@@ -392,7 +398,7 @@ public class MealCustomizationScreen {
     });
 
     // Onclick for the confirm button (loading meal confirmation scene)
-    confirmBtn.setOnMouseClicked(e -> {
+    confirmButton.setOnMouseClicked(e -> {
       Cart cart = Cart.getInstance();
       cart.addProduct(meal);
       stage.setScene(mainScene);
