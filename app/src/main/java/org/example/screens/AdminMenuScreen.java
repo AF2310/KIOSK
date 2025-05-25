@@ -122,10 +122,15 @@ public class AdminMenuScreen {
     bottomRightBox.setAlignment(Pos.BOTTOM_RIGHT);
 
     updateMenuBtn.setOnAction(e -> {
-      Scene updateMenuScene = new UpdateMenuItems().adminUpdateMenuItems(
-          primaryStage,
-          adminMenuLayout.getScene());
-      primaryStage.setScene(updateMenuScene);
+      Scene updateMenuScene;
+      try {
+        updateMenuScene = new UpdateMenuItems().adminUpdateMenuItems(
+            primaryStage,
+            adminMenuLayout.getScene());
+        primaryStage.setScene(updateMenuScene);
+      } catch (SQLException e1) {
+        e1.printStackTrace();
+      }
     });
 
     // go back to the main screen if clicked

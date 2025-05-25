@@ -27,7 +27,16 @@ import org.example.sql.SqlQueries;
  * Order History class.
  */
 public class AdminOrdHistoryScreen {
-  private SqlQueries queries = new SqlQueries();
+
+  private SqlQueries queries;
+
+  /**
+   * This is the constructor of the order history.
+   * (Used only for assigning variables.)
+   */
+  public AdminOrdHistoryScreen() {
+    queries = new SqlQueries();
+  }
 
   /**
    * Scene to display the order history.

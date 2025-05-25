@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.example.menu.Ingredient;
+import org.example.menu.Meal;
 import org.example.menu.OrderItem;
 import org.example.menu.Product;
 import org.example.menu.Single;
@@ -21,19 +22,6 @@ import org.example.orders.Order;
  * Class for all queries related to the DB.
  */
 public class SqlQueries {
-
-  private Connection conn;
-
-  /**
-   * This is the class that holds all sql queries.
-   * This constructor is to set the database connection in one line
-   * to reduce code.
-   *
-   * @throws SQLException sql issues
-   */
-  public SqlQueries() throws SQLException {
-    this.conn = DatabaseManager.getConnection();
-  }
 
   /**
    * Order query method.
@@ -329,7 +317,8 @@ public class SqlQueries {
         + "JOIN category c ON p.category_id = c.category_id "
         + "WHERE c.name = ?";
 
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
 
       stmt.setString(1, type.name());
 
@@ -382,7 +371,8 @@ public class SqlQueries {
 
     // Prepare SQL statement with current connection
     // Try with this statement ensures the statement is closed automatically
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql)) {
 
       // Bind priceLimit to SQL query
       ps.setDouble(1, priceLimit);
@@ -412,7 +402,8 @@ public class SqlQueries {
    */
   public void deleteSingleById(int id) throws SQLException {
     String sql = "DELETE FROM product WHERE product_id = ?";
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setInt(1, id);
       stmt.executeUpdate();
     }
@@ -430,7 +421,8 @@ public class SqlQueries {
     String sql = "UPDATE product SET quantity = quantity - ? "
         + "WHERE product_id = ? AND quantity >= ?";
 
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+    try (Connection conn = DatabaseManager.getConnection();
+      PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setInt(1, amount);
       stmt.setInt(2, id);
       stmt.setInt(3, amount);
@@ -453,7 +445,8 @@ public class SqlQueries {
         + "JOIN category c ON p.category_id = c.category_id "
         + "WHERE p.category_id = ?";
 
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+    try (Connection conn = DatabaseManager.getConnection();
+      PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setInt(1, categoryId);
 
       try (ResultSet rs = stmt.executeQuery()) {
@@ -483,7 +476,8 @@ public class SqlQueries {
         + "JOIN ingredient i ON pi.ingredient_id = i.ingredient_id "
         + "WHERE product_id = ?";
 
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+    try (Connection conn = DatabaseManager.getConnection();
+      PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setInt(1, single.getId());
 
       try (ResultSet rs = stmt.executeQuery()) {
@@ -506,7 +500,8 @@ public class SqlQueries {
    */
   public boolean isInMeal(Single single, boolean inMeal) throws SQLException {
     String sql = "SELECT meal_id FROM meal WHERE product_id = ?";
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+    try (Connection conn = DatabaseManager.getConnection();
+      PreparedStatement stmt = conn.prepareStatement(sql)) {
       stmt.setInt(1, single.getId());
 
       try (ResultSet rs = stmt.executeQuery()) {
@@ -894,5 +889,35 @@ public class SqlQueries {
       }
     }
     return list;
+  }
+
+  /**
+   * loads a meal object from the db using the given product id.
+   * This method queries the meal table and finds a meal associated with the specified product
+   *
+   * @param productId the product id of the product to find a corresponding meal for
+   * @return either the meal if its found or null if no meal is linked
+   * @throws SQLException we get an exception if a db access error occurs or sql is invalid
+   */
+  public Meal loadMealByProductId(int productId) throws SQLException {
+
+    String sql = "SELECT meal_id, name, price, image_url FROM meal WHERE product_id = ?";
+
+    try (Connection conn = DatabaseManager.getConnection();
+      PreparedStatement ps = conn.prepareStatement(sql)) {
+      ps.setInt(1, productId);
+
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          Meal meal = new Meal(rs.getString("name"), conn);
+          meal.setId(rs.getInt("meal_id"));
+          meal.setPrice(rs.getFloat("price"));
+          meal.setImagePath(rs.getString("image_url"));
+          meal.setType(Type.MEAL);
+          return meal;
+        }
+      }
+    }
+    return null;
   }
 }

@@ -1,6 +1,5 @@
 package org.example.buttons;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -38,10 +37,8 @@ public class SearchBar extends VBox {
 
   /**
    * Constructs a SearchBar instance with the specified database connection.
-   *
-   * @param conn the database connection used for fetching data
    */
-  public SearchBar(Connection conn) {
+  public SearchBar() {
 
     this.setPadding(new Insets(10));
     this.setSpacing(10);
@@ -200,7 +197,7 @@ public class SearchBar extends VBox {
           }
         }
 
-        Menu menu = new Menu(conn);
+        Menu menu = new Menu();
         List<Single> allSingles = new ArrayList<>();
         if (selectedCategory.equals("MAIN") || selectedCategory.equals("BURGERS")) {
           allSingles.addAll(menu.getMains());
@@ -339,7 +336,7 @@ public class SearchBar extends VBox {
         return;
       }
       try {
-        Menu menu = new Menu(conn);
+        Menu menu = new Menu();
         List<Single> allSingles = new ArrayList<>();
         allSingles.addAll(menu.getMains());
         allSingles.addAll(menu.getSides());

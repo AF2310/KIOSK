@@ -106,9 +106,9 @@ public class AddProductScene {
       productCategoryDropBox.getComboBox().setOnAction(e -> {
         // Gets selected category
         String selectedCategory = productCategoryDropBox.getSelectedItem();
-        SqlQueries queries = new SqlQueries();
         if (selectedCategory != null) {
           try {
+            SqlQueries queries = new SqlQueries();
             List<String> ingredients = queries.getIngredientsByCategory(selectedCategory);
             ingredientListView.setItems(FXCollections.observableArrayList(ingredients));
 
