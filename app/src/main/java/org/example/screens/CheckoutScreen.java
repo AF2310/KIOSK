@@ -5,9 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.animation.PauseTransition;
+import javafx.animation.ScaleTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -114,7 +116,7 @@ public class CheckoutScreen {
     promoCodeLabel.setVisible(false);
 
     // Promo code section
-    RectangleTextFieldWithLabel promoField = new RectangleTextFieldWithLabel("Enter Code:",
+    RectangleTextFieldWithLabel promoField = new RectangleTextFieldWithLabel("Enter Promo Code:",
         "rgb(255, 255, 255)");
 
     SqrBtnWithOutline applyPromoCode = new SqrBtnWithOutline("Apply",
@@ -129,10 +131,14 @@ public class CheckoutScreen {
 
     VBox topRightBox = new VBox(topRightPromoBox, promoCodeLabel);
 
+    applyPromoCode.setOnMousePressed(e -> 
+      animateButtonPress(applyPromoCode, 0.95));
+    applyPromoCode.setOnMouseReleased(e ->
+      animateButtonPress(applyPromoCode, 1.0));
     applyPromoCode.setOnAction(e -> {
       try (Connection connection = DatabaseManager.getConnection()) {
         String userPromoCode = promoField.getText();
-        if (userPromoCode.isEmpty()) {
+        Runnable showError = () -> {
           // Creates an image icon for an incorrect login so that the image changes
           // upon correct or incorrect promo code.
           Image errorIcon = new Image(getClass().getResourceAsStream("/errorLogin.png"));
@@ -155,6 +161,11 @@ public class CheckoutScreen {
             promoCodeLabel.setGraphic(null); // removes all fields of the label
           });
           pause.play();
+        };
+
+        if (userPromoCode.isEmpty()) {
+          showError.run();
+          return;
         }
 
         String promoCodeSql = "SELECT name, discount_type, discount_value, promo_code "
@@ -170,6 +181,7 @@ public class CheckoutScreen {
             int discountFactor = promoCodeResults.getInt("discount_value");
             order.applyDiscount(discountFactor);
             promoCodeLabel.setText("Promo code applied " + discountFactor + "% off");
+            promoCodeLabel.setGraphic(null);
             promoCodeLabel.setVisible(true);
             valid = true;
             break;
@@ -177,8 +189,7 @@ public class CheckoutScreen {
         }
 
         if (!valid) {
-          promoCodeLabel.setText("Invalid promo code");
-          promoCodeLabel.setVisible(true);
+          showError.run();
         }
 
       } catch (SQLException e1) {
@@ -347,5 +358,12 @@ public class CheckoutScreen {
     }
 
     return scene;
+  }
+
+  private void animateButtonPress(Button button, double scale) {
+    ScaleTransition st = new ScaleTransition(Duration.millis(100), button);
+    st.setToX(scale);
+    st.setToY(scale);
+    st.play();
   }
 }
