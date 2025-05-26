@@ -12,9 +12,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import org.example.EmailSender;
-import org.example.animations.FadingAnimation;
 import org.example.boxes.CheckoutGridWithButtons;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.ColorSquareButtonWithImage;
@@ -91,7 +88,6 @@ public class CheckoutScreen {
     checkoutLabel.setPadding(new Insets(50, 100, 50, 50));
     checkoutLabel.setMinWidth(500); // Gives label space to breathe
 
-
     // Promo code section
     TextField promoField = new TextField();
     promoField.setPromptText("Enter Promo Code");
@@ -134,13 +130,7 @@ public class CheckoutScreen {
       } catch (SQLException err) {
         err.printStackTrace();
       }
-      EmailSender es = new EmailSender();
       String subject = "Reciept for order: " + orderId;
-      try {
-        es.sendMail("jakihin@gmail.com", subject, Cart.getInstance().printCart(orderId));
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
       Cart.getInstance().convertMealsIntoSingles();
       try {
         Cart.getInstance().saveQuantityToDb(conn, orderId);
@@ -148,26 +138,20 @@ public class CheckoutScreen {
         e1.printStackTrace();
       }
 
-      // Create order confirmation screen
-      OrderConfirmationScreen ordConfirmation = new OrderConfirmationScreen();
+      // // Create order confirmation screen
+      // OrderConfirmationScreen ordConfirmation = new OrderConfirmationScreen();
+      var recieptScreen = new SendReceiptScreen();
 
-      Scene ordConfirmScene = ordConfirmation.createOrderConfirmationScreen(
+      Scene recieptScene = recieptScreen.createSendReceiptScreen(
           this.primaryStage,
           windowWidth,
           windowHeight,
           welcomeScrScene,
-          orderId
+          orderId,
+          subject,
+          Cart.getInstance().printCart(orderId)
       );
-      this.primaryStage.setScene(ordConfirmScene);
-
-      // Creating fading animation
-      // to transition smoothly to welcome screen after order confirmation
-      FadingAnimation fadingAnimation = new FadingAnimation(primaryStage);
-      // Fading out of current scene
-      fadingAnimation.fadeOutAnimation(
-          "white",
-          ordConfirmScene,
-          welcomeScrScene);
+      this.primaryStage.setScene(recieptScene);
 
       // Clear cart and stop timer after order has been done
       InactivityTimer.getInstance().stopTimer();
@@ -202,7 +186,7 @@ public class CheckoutScreen {
     Region spacer = new Region();
     HBox.setHgrow(topspacer, Priority.ALWAYS);
 
-    //Language button
+    // Language button
     var langButton = new LangBtn();
 
     // Combine all; 300px spacing between each child
@@ -237,7 +221,7 @@ public class CheckoutScreen {
         bottomPart);
 
     LanguageSetting.getInstance().smartTranslate(layout);
-    
+
     // Translate button action
     langButton.addAction(event -> {
       LanguageSetting lang = LanguageSetting.getInstance();
