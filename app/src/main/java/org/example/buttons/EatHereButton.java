@@ -29,12 +29,11 @@ public class EatHereButton extends VBox {
     button.setGraphic(icon);
     button.setStyle(
         "-fx-background-color: transparent;"
-        + "-fx-border-color: black;"
-        + "-fx-border-width: 3;"
-        + "-fx-border-radius: 15;"
-        + "-fx-background-radius: 15;"
-        + "-fx-padding: 15;"
-    );
+            + "-fx-border-color: black;"
+            + "-fx-border-width: 3;"
+            + "-fx-border-radius: 15;"
+            + "-fx-background-radius: 15;"
+            + "-fx-padding: 15;");
 
     button.setMinSize(100, 100);
 
@@ -52,5 +51,5 @@ public class EatHereButton extends VBox {
   public Button getButton() {
     return button;
   }
-  
+
 }

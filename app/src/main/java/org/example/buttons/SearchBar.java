@@ -1,6 +1,5 @@
 package org.example.buttons;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -19,13 +18,13 @@ import org.example.menu.Menu;
 import org.example.menu.Product;
 import org.example.menu.Single;
 
-
 /**
  * The SearchBar class provides a user interface component for searching items
  * by name, price, ingredients, and category. It displays the search results
  * in a list view and interacts with a database connection to fetch data.
  */
 public class SearchBar extends VBox {
+
   private final TextField nameField;
   private final TextField priceField;
   private final CheckBox ingredientCheckbox;
@@ -38,10 +37,8 @@ public class SearchBar extends VBox {
 
   /**
    * Constructs a SearchBar instance with the specified database connection.
-   *
-   * @param conn the database connection used for fetching data
    */
-  public SearchBar(Connection conn) {
+  public SearchBar() {
 
     this.setPadding(new Insets(10));
     this.setSpacing(10);
@@ -79,19 +76,17 @@ public class SearchBar extends VBox {
     searchButton = new Button("Search");
     searchButton.setStyle(
         "-fx-background-color: #4285f4;"
-        + "-fx-text-fill: white;"
-        + "-fx-font-weight: bold;"
-        + "-fx-padding: 4px 12px;"
-        + "-fx-background-radius: 4px;"
-    );
+            + "-fx-text-fill: white;"
+            + "-fx-font-weight: bold;"
+            + "-fx-padding: 4px 12px;"
+            + "-fx-background-radius: 4px;");
 
     resultList = new ListView<>();
     resultList.setPrefHeight(100);
     resultList.setStyle(
         "-fx-font-size: 12px;"
-        + "-fx-padding: 2px;"
-        + "-fx-cell-size: 25px;"
-    );
+            + "-fx-padding: 2px;"
+            + "-fx-cell-size: 25px;");
 
     HBox inputFields = new HBox(
         10, nameField, priceField, ingredientCheckbox, categoryCombo, searchButton);
@@ -108,16 +103,18 @@ public class SearchBar extends VBox {
           Ingredient ingredientDummy = new Ingredient(0, "");
           boolean hasName = !name.isEmpty();
           boolean hasPrice = !priceText.isEmpty();
-
           List<Ingredient> ingredients;
+
           if (!hasName && !hasPrice) {
             // resultList.getItems().add("Please enter name or price.");
-            ingredients = ingredientDummy.getAllIngredients(conn);
+            ingredients = ingredientDummy.getAllIngredients();
+
           } else if (hasName && hasPrice) {
-            float price = Float.parseFloat(priceText);
-            ingredients = ingredientDummy.searchIngredientByNameAndPrice(conn, name, price);
+            double price = Double.parseDouble(priceText);
+            ingredients = ingredientDummy.searchIngredientByNameAndPrice(name, price);
+          
           } else if (!name.isEmpty()) {
-            ingredients = ingredientDummy.searchIngredientsByName(name, conn);
+            ingredients = ingredientDummy.searchIngredientsByName(name);
             /*
              * for (Ingredient ing : ingredients) {
              * resultList.getItems().add("Ingredient: " + ing.getName());
@@ -125,11 +122,13 @@ public class SearchBar extends VBox {
              */
 
           } else {
-            float price = Float.parseFloat(priceText);
-            ingredients = ingredientDummy.searchIngredientsByPrice(price, conn);
+            double price = Double.parseDouble(priceText);
+            ingredients = ingredientDummy.searchIngredientsByPrice(price);
           }
+
           if (ingredients.isEmpty()) {
             resultList.getItems().add("No ingredients found.");
+
           } else {
             for (Ingredient ing : ingredients) {
               resultList.getItems().add("Ingredient: " + ing.getName());
@@ -188,17 +187,17 @@ public class SearchBar extends VBox {
         boolean hasPrice = !priceText.isEmpty();
         // boolean hasCategory = selectedCategory != null &&
         // !selectedCategory.equals("-- Any --");
-        Float priceLimit = Float.MAX_VALUE;
+        Double priceLimit = Double.MAX_VALUE;
         if (hasPrice) {
           try {
-            priceLimit = Float.parseFloat(priceText);
+            priceLimit = Double.parseDouble(priceText);
           } catch (NumberFormatException ex) {
             resultList.getItems().add("Invalid price input.");
             return;
           }
         }
 
-        Menu menu = new Menu(conn);
+        Menu menu = new Menu();
         List<Single> allSingles = new ArrayList<>();
         if (selectedCategory.equals("MAIN") || selectedCategory.equals("BURGERS")) {
           allSingles.addAll(menu.getMains());
@@ -273,27 +272,26 @@ public class SearchBar extends VBox {
         Comparator<Single> nameComparator = new Comparator<Single>() {
           public int compare(Single p1, Single p2) {
             String n1 = p1.getName().toLowerCase();
-    
+
             String n2 = p2.getName().toLowerCase();
-    
+
             boolean s1Starts = n1.startsWith(searchTerm);
-    
+
             boolean s2Starts = n2.startsWith(searchTerm);
-    
+
             if (s1Starts && !s2Starts) {
               return -1;
             }
-    
+
             if (!s1Starts && s2Starts) {
               return 1;
             }
-    
+
             return n1.compareTo(n2);
-    
-    
+
           }
         };
-    
+
         if (!searchTerm.isEmpty()) {
           filtered.sort(nameComparator);
         }
@@ -302,18 +300,13 @@ public class SearchBar extends VBox {
         if (nameFilterActive && !priceFilterActive) {
           filtered.sort(nameComparator);
 
-        } else if  (!nameFilterActive && priceFilterActive) {
+        } else if (!nameFilterActive && priceFilterActive) {
           filtered.sort(priceComparator.reversed());
 
         } else if (nameFilterActive && priceFilterActive) {
           filtered.sort(nameComparator.thenComparing(priceComparator));
 
-
         }
-
-
-
-
 
         if (filtered.isEmpty()) {
           resultList.getItems().add("No items found.");
@@ -323,7 +316,6 @@ public class SearchBar extends VBox {
           }
         }
         filteredSingles = filtered;
-
 
       } catch (SQLException ex) {
         resultList.getItems().add("SQL Error: " + ex.getMessage());
@@ -344,7 +336,7 @@ public class SearchBar extends VBox {
         return;
       }
       try {
-        Menu menu = new Menu(conn);
+        Menu menu = new Menu();
         List<Single> allSingles = new ArrayList<>();
         allSingles.addAll(menu.getMains());
         allSingles.addAll(menu.getSides());

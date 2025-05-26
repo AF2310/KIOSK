@@ -12,7 +12,8 @@ public class SqrBtnImgOnly extends Button {
 
   /**
    * Constructs a square button with an image only.
-   * The button has a fixed size, a transparent background, and displays a cart icon.
+   * The button has a fixed size, a transparent background, and displays a cart
+   * icon.
    */
   public SqrBtnImgOnly() {
     // Load image and fit it within button

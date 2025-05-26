@@ -12,13 +12,14 @@ import javafx.scene.layout.VBox;
  */
 public class RectangleTextFieldWithLabel extends VBox {
   private TextField textField;
-    
+
   /**
-  * Textfield "button" for inputting various data such as prices, names, descriptions etc.
-  *
-  * @param labelText Text for the label.
-  * @param buttonColor color of the button.
-  */
+   * Textfield "button" for inputting various data such as prices, names,
+   * descriptions etc.
+   *
+   * @param labelText   Text for the label.
+   * @param buttonColor color of the button.
+   */
   public RectangleTextFieldWithLabel(String labelText, String buttonColor) {
     this.setAlignment(Pos.TOP_CENTER);
     this.setSpacing(10);
@@ -28,10 +29,10 @@ public class RectangleTextFieldWithLabel extends VBox {
     // Label setup
     label = new Label(labelText);
     label.setStyle("-fx-background-color: transparent;"
-            + "-fx-font-weight: normal;"
-            + "-fx-font-size: 38;"
-            + "-fx-padding: 5 10;"
-            + "-fx-background-radius: 10;");
+        + "-fx-font-weight: normal;"
+        + "-fx-font-size: 38;"
+        + "-fx-padding: 5 10;"
+        + "-fx-background-radius: 10;");
 
     // TextField setup
     textField = new TextField();
@@ -43,27 +44,27 @@ public class RectangleTextFieldWithLabel extends VBox {
     // Set the white button
     if (buttonColor.equals("rgb(255, 255, 255)")) {
       label.setStyle(label.getStyle() + "-fx-text-fill: black;");
-      textField.setStyle(textField.getStyle()  
-                + "-fx-background-color: rgb(255, 255, 255);"
-                + "-fx-border-color: black;"
-                + "-fx-border-width: 2;"
-                + "-fx-border-radius: 30;"
-                + "-fx-background-radius: 30;");
-    // Set the non-white button
+      textField.setStyle(textField.getStyle()
+          + "-fx-background-color: rgb(255, 255, 255);"
+          + "-fx-border-color: black;"
+          + "-fx-border-width: 2;"
+          + "-fx-border-radius: 30;"
+          + "-fx-background-radius: 30;");
+      // Set the non-white button
     } else {
       label.setStyle(label.getStyle() + "-fx-text-fill: white;");
-      textField.setStyle(textField.getStyle() 
-                + "-fx-background-color: " + buttonColor + ";"
-                + "-fx-border-radius: 30;"
-                + "-fx-background-radius: 30;");
+      textField.setStyle(textField.getStyle()
+          + "-fx-background-color: " + buttonColor + ";"
+          + "-fx-border-radius: 30;"
+          + "-fx-background-radius: 30;");
     }
 
     HBox textFieldContainer = new HBox(textField);
     textFieldContainer.setAlignment(Pos.CENTER);
-    textField.setPrefWidth(300);  
+    textField.setPrefWidth(300);
     this.getChildren().addAll(label, textField);
   }
-    
+
   public String getText() {
     return textField.getText();
   }
@@ -82,5 +83,5 @@ public class RectangleTextFieldWithLabel extends VBox {
       label.setText(text);
     }
   }
-    
+
 }

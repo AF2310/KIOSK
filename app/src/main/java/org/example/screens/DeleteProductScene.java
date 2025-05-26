@@ -23,7 +23,6 @@ import org.example.buttons.SearchBar;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
 
-
 /**
  * This is the product deletion scene.
  * Used in the admin menu in 'UpdateMenuItems.java'.
@@ -249,7 +248,8 @@ public class DeleteProductScene {
 
   // TODO will be moved later to Query file
   /**
-   * Helper method to delete a product from the database.
+   * Helper method to FULLY delete a product from the database.
+   * This also deletes the product from the order history to prevent errors.
    * Used for admin menu in product deletion section.
    *
    * @param productId  int Id of the product that should be deleted
@@ -257,11 +257,43 @@ public class DeleteProductScene {
    * @throws SQLException Database error
    */
   private void removeProductFromDb(int productId, Connection connection) throws SQLException {
-    String s = "DELETE FROM product WHERE product_id = ?";
+    // Turning temprorarely off to do all deletions at once
+    // To prevent half deleted products if issues mid-way occur
+    connection.setAutoCommit(false);
 
-    try (PreparedStatement stmt = connection.prepareStatement(s)) {
-      stmt.setInt(1, productId);
-      stmt.executeUpdate();
+    try {
+      // Delete from orderitemingredients using a subquery
+      String deleteOrderItemIngredientsSql = "DELETE FROM orderitemingredients "
+          + "WHERE order_item_id IN (SELECT order_item_id FROM order_item WHERE product_id = ?)";
+      try (PreparedStatement stmt = connection.prepareStatement(deleteOrderItemIngredientsSql)) {
+        stmt.setInt(1, productId);
+        stmt.executeUpdate();
+      }
+
+      // Delete from order_item
+      String deleteOrderItemSql = "DELETE FROM order_item WHERE product_id = ?";
+      try (PreparedStatement stmt = connection.prepareStatement(deleteOrderItemSql)) {
+        stmt.setInt(1, productId);
+        stmt.executeUpdate();
+      }
+
+      // Delete from product
+      String deleteProductSql = "DELETE FROM product WHERE product_id = ?";
+      try (PreparedStatement stmt = connection.prepareStatement(deleteProductSql)) {
+        stmt.setInt(1, productId);
+        stmt.executeUpdate();
+      }
+
+      // Do all deletions at once
+      connection.commit();
+
+    } catch (SQLException e) {
+      connection.rollback();
+      throw e;
+
+      // Turning back on
+    } finally {
+      connection.setAutoCommit(true);
     }
   }
 }

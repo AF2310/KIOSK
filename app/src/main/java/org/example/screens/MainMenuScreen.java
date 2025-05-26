@@ -2,8 +2,6 @@ package org.example.screens;
 
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -54,8 +52,7 @@ import org.example.menu.Product;
 import org.example.menu.Single;
 import org.example.menu.Type;
 import org.example.orders.Cart;
-import org.example.sql.DatabaseManager;
-
+import org.example.sql.SqlQueries;
 
 /**
  * The main menu screen.
@@ -102,8 +99,6 @@ public class MainMenuScreen {
     this.primaryStage = primaryStage;
     this.mode = mode;
 
-    this.conn = DatabaseManager.getConnection();
-
     ImageView modeIcon = new ImageView();
     Label modeLabel = new Label();
     if ("takeaway".equalsIgnoreCase(mode)) {
@@ -130,7 +125,7 @@ public class MainMenuScreen {
     top.setAlignment(Pos.CENTER);
 
     // SEARCH BAR STUFF START
-    SearchBar mainSearch = new SearchBar(this.conn);
+    SearchBar mainSearch = new SearchBar();
     mainSearch.setMaxWidth(1000);
     mainSearch.setMinWidth(600);
 
@@ -179,7 +174,11 @@ public class MainMenuScreen {
         currentSearchCategory = "";
       }
 
-      updateGrid();
+      try {
+        updateGrid();
+      } catch (SQLException e1) {
+        e1.printStackTrace();
+      }
 
     });
 
@@ -272,7 +271,11 @@ public class MainMenuScreen {
           gridSearchField.clear();
           priceFilterField.clear();
           gridCategoryBox.getSelectionModel().clearSelection();
-          updateGrid();
+          try {
+            updateGrid();
+          } catch (SQLException e1) {
+            e1.printStackTrace();
+          }
         }
       }
     });
@@ -434,7 +437,11 @@ public class MainMenuScreen {
         currentSearchCategory = "";
         currentSearchPrice = -1;
         // currentSearchCategory = "";
-        updateGrid();
+        try {
+          updateGrid();
+        } catch (SQLException e1) {
+          e1.printStackTrace();
+        }
         updateCategoryButtonStyles();
       });
 
@@ -462,10 +469,18 @@ public class MainMenuScreen {
     leftArrowButton.setOnMouseClicked(e -> {
       if (currentCategoryIndex > 0) {
         currentCategoryIndex--;
-        updateGrid();
+        try {
+          updateGrid();
+        } catch (SQLException e1) {
+          e1.printStackTrace();
+        }
       } else {
         currentCategoryIndex = categoryButtons.size() - 1;
-        updateGrid();
+        try {
+          updateGrid();
+        } catch (SQLException e1) {
+          e1.printStackTrace();
+        }
       }
     });
 
@@ -478,10 +493,18 @@ public class MainMenuScreen {
       if (currentCategoryIndex < categories.length - 1
           && !categories[currentCategoryIndex].equals("Special Offers")) {
         currentCategoryIndex++;
-        updateGrid();
+        try {
+          updateGrid();
+        } catch (SQLException e1) {
+          e1.printStackTrace();
+        }
       } else {
         currentCategoryIndex = 0;
-        updateGrid();
+        try {
+          updateGrid();
+        } catch (SQLException e1) {
+          e1.printStackTrace();
+        }
       }
     });
 
@@ -625,7 +648,7 @@ public class MainMenuScreen {
     return scene;
   }
 
-  private List<Product> convert(Connection conn, List<Single> items) throws SQLException {
+  private List<Product> convert(List<Single> items) {
     List<Product> result = new ArrayList<>();
 
     for (Single item : items) {
@@ -645,12 +668,12 @@ public class MainMenuScreen {
    * items for the menu one by one for now, not through the database.
    */
   private void setupMenuData() throws SQLException {
-    Imenu menu = new Menu(conn);
+    Imenu menu = new Menu();
 
-    categoryItems.put("Burgers", convert(conn, (menu.getMains())));
-    categoryItems.put("Sides", convert(conn, menu.getSides()));
-    categoryItems.put("Drinks", convert(conn, menu.getDrinks()));
-    categoryItems.put("Desserts", convert(conn, menu.getDesserts()));
+    categoryItems.put("Burgers", convert((menu.getMains())));
+    categoryItems.put("Sides", convert(menu.getSides()));
+    categoryItems.put("Drinks", convert(menu.getDrinks()));
+    categoryItems.put("Desserts", convert(menu.getDesserts()));
     categoryItems.put("Special Offers", List.of());
     categoryItems.put("Meals", new ArrayList<>());
 
@@ -658,8 +681,10 @@ public class MainMenuScreen {
 
   /**
    * Loading all items into the menu's item grid.
+   *
+   * @throws SQLException possible sql error
    */
-  private void updateGrid() {
+  private void updateGrid() throws SQLException {
     itemGrid.getChildren().clear();
     itemGrid.setHgap(20);
     itemGrid.setVgap(20);
@@ -678,16 +703,9 @@ public class MainMenuScreen {
         for (String cat : categories) {
           if (cat.equals("Meals")) {
             // Load meals from database
-            try (PreparedStatement ps = conn.prepareStatement(
-                "SELECT meal_id, name, price, image_url FROM meal");
-                ResultSet rs = ps.executeQuery()) {
-              while (rs.next()) {
-                Meal meal = new Meal(rs.getString("name"), conn);
-                meal.setId(rs.getInt("meal_id"));
-                meal.setPrice(rs.getFloat("price"));
-                meal.setImagePath(rs.getString("image_url"));
-                items.add(meal);
-              }
+            try {
+              SqlQueries pool = new SqlQueries();
+              items.addAll(pool.fetchMealsFromDatabase());
             } catch (SQLException e) {
               e.printStackTrace();
             }
@@ -700,16 +718,9 @@ public class MainMenuScreen {
         String targetCat = currentSearchCategory;
         if (targetCat.equals("Meals")) {
           // Load meals from database
-          try (PreparedStatement ps = conn.prepareStatement(
-              "SELECT meal_id, name, price, image_url FROM meal");
-              ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-              Meal meal = new Meal(rs.getString("name"), conn);
-              meal.setId(rs.getInt("meal_id"));
-              meal.setPrice(rs.getFloat("price"));
-              meal.setImagePath(rs.getString("image_url"));
-              items.add(meal);
-            }
+          try {
+            SqlQueries pool = new SqlQueries();
+            items.addAll(pool.fetchMealsFromDatabase());
           } catch (SQLException e) {
             e.printStackTrace();
           }
@@ -720,15 +731,9 @@ public class MainMenuScreen {
       }
     } else {
       if (currentCategory.equals("Meals")) {
-        try (PreparedStatement ps = conn.prepareStatement(
-            "SELECT meal_id, name, price, image_url FROM meal"); ResultSet rs = ps.executeQuery()) {
-          while (rs.next()) {
-            Meal meal = new Meal(rs.getString("name"), conn);
-            meal.setId(rs.getInt("meal_id"));
-            meal.setPrice(rs.getFloat("price"));
-            meal.setImagePath(rs.getString("image_url"));
-            items.add(meal);
-          }
+        try {
+          SqlQueries pool = new SqlQueries();
+          items.addAll(pool.fetchMealsFromDatabase());
         } catch (SQLException e) {
           e.printStackTrace();
         }

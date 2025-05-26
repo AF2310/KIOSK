@@ -15,6 +15,7 @@ public class GlobalDiscount implements IdiscountStrategy {
 
   /**
    * Applying discount on ALL items.
+   * TODO move method to sql queries class
    */
   public void applyDiscount(double percentage) {
     double discountFactor = (1 - (percentage / 100));
@@ -25,7 +26,7 @@ public class GlobalDiscount implements IdiscountStrategy {
 
       PreparedStatement selectStmt = connection.prepareStatement(selectItemsSql);
       PreparedStatement updateStmt = connection.prepareStatement(updatingItemsSql);
-        {
+      {
 
         connection.setAutoCommit(false);
         ResultSet selectRs = selectStmt.executeQuery();
@@ -45,7 +46,7 @@ public class GlobalDiscount implements IdiscountStrategy {
         updateStmt.executeBatch();
         connection.commit();
 
-        }
+      }
     } catch (SQLException e) {
       e.printStackTrace();
     }

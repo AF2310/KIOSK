@@ -16,7 +16,6 @@ public class FadingAnimation {
 
   private Stage primaryStage;
 
-
   /**
    * This is the constructor of the fade out animation class.
    * Adding this, will just create the instance. This doesn't
@@ -35,10 +34,10 @@ public class FadingAnimation {
    * bother adding specific fading animations for specific
    * elements of the scene.
    *
-   * @param color color of the overlay (if background of scene is
-   *              white, you sould use white here)
+   * @param color        color of the overlay (if background of scene is
+   *                     white, you sould use white here)
    * @param currentScene current scene youre in (before animation)
-   * @param nextScene next scene it should show (after animation)
+   * @param nextScene    next scene it should show (after animation)
    */
   public void fadeOutAnimation(String color, Scene currentScene, Scene nextScene) {
     // Create window the size of the scene, as overlay to use for fading
@@ -49,7 +48,7 @@ public class FadingAnimation {
 
     // overlay will be invisible at first
     overlay.setOpacity(0);
-    
+
     // Get stack pane of (root) of scene
     StackPane fadingPane = (StackPane) currentScene.getRoot();
     // Combine transparent overlay with scene to cover screen
@@ -58,8 +57,7 @@ public class FadingAnimation {
     // Create fading animation that lasts for 3 seconds
     FadeTransition fadeTransition = new FadeTransition(
         Duration.seconds(3),
-        overlay
-    );
+        overlay);
 
     // Make the fading go from transparent to fully white
     fadeTransition.setFromValue(0);
@@ -81,12 +79,12 @@ public class FadingAnimation {
 
     // Have a small delay before the animation starts
     PauseTransition delayBeforeTransition = new PauseTransition(Duration.seconds(3));
-    
+
     // Play animation after this delay
     delayBeforeTransition.setOnFinished(event -> {
       fadeTransition.play();
     });
-    
+
     // Start with delay (then the rest will play since it's all connected now)
     delayBeforeTransition.play();
   }

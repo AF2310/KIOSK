@@ -36,7 +36,6 @@ import org.example.kiosk.LanguageSetting;
 import org.example.sql.DatabaseManager;
 import org.example.sql.SqlQueries;
 
-
 /**
  * Scene in the admin menu for adding products to the menu.
  */
@@ -107,9 +106,9 @@ public class AddProductScene {
       productCategoryDropBox.getComboBox().setOnAction(e -> {
         // Gets selected category
         String selectedCategory = productCategoryDropBox.getSelectedItem();
-        SqlQueries queries = new SqlQueries();
         if (selectedCategory != null) {
           try {
+            SqlQueries queries = new SqlQueries();
             List<String> ingredients = queries.getIngredientsByCategory(selectedCategory);
             ingredientListView.setItems(FXCollections.observableArrayList(ingredients));
 
@@ -130,10 +129,10 @@ public class AddProductScene {
     // Textfields for the information to put into the SQL query
     RectangleTextFieldWithLabel productName = new RectangleTextFieldWithLabel("Product Name:",
         "rgb(255, 255, 255)");
-    RectangleTextFieldWithLabel productPrice = new RectangleTextFieldWithLabel("Product Price:",
-        "rgb(255, 255, 255)");
     RectangleTextFieldWithLabel productDescription = new RectangleTextFieldWithLabel(
         "Product Description:", "rgb(255, 255, 255)");
+    RectangleTextFieldWithLabel productPrice = new RectangleTextFieldWithLabel("Product Price:",
+        "rgb(255, 255, 255)");
     TickBoxWithLabel productIsActive = new TickBoxWithLabel("Is active?");
     TickBoxWithLabel productIsLimited = new TickBoxWithLabel("Is limited?");
 
@@ -254,7 +253,7 @@ public class AddProductScene {
     menuTitle.setPadding(new Insets(70, 0, 20, 0));
 
     // Setting the name, description and price to left of the screen
-    VBox menuLayoutLeft = new VBox(20, productName, productDescription, productPrice);
+    VBox menuLayoutLeft = new VBox(productName, productDescription, productPrice);
     menuLayoutLeft.setAlignment(Pos.BASELINE_LEFT);
 
     // Active and limited tick boxes are center but to the left and

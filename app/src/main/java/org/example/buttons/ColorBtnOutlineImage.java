@@ -62,18 +62,18 @@ public class ColorBtnOutlineImage extends Button {
   private void applyStyle() {
     setStyle(
         "-fx-background-color: white;"
-        + "-fx-border-color: " + buttonColor + ";"
-        + "-fx-border-width: 2;"
-        + "-fx-border-radius: 30;"
-        + "-fx-background-radius: 30;"
-        + "-fx-padding: 10 20;");
+            + "-fx-border-color: " + buttonColor + ";"
+            + "-fx-border-width: 2;"
+            + "-fx-border-radius: 30;"
+            + "-fx-background-radius: 30;"
+            + "-fx-padding: 10 20;");
 
     buttonLabel.setStyle(
         "-fx-background-color: transparent;"
-        + "-fx-font-weight: normal;"
-        + "-fx-font-size: 38;"
-        + "-fx-padding: 5 10;"
-        + "-fx-text-fill: " + buttonColor + ";");
+            + "-fx-font-weight: normal;"
+            + "-fx-font-size: 38;"
+            + "-fx-padding: 5 10;"
+            + "-fx-text-fill: " + buttonColor + ";");
 
     imageView.setStyle(
         "-fx-effect: innershadow(gaussian, " + buttonColor + ", 100, 0.0, 0, 0);");

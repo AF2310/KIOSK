@@ -13,7 +13,7 @@ public class DatabaseManager {
   static {
     dataSource = new BasicDataSource();
     dataSource.setUrl("jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-          + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd");
+        + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd");
     dataSource.setUsername("u5urh19mtnnlgmog");
     dataSource.setPassword("zPgqf8o6na6pv8j8AX8r");
     dataSource.setMinIdle(5);
@@ -22,7 +22,7 @@ public class DatabaseManager {
     dataSource.setMaxWaitMillis(-1);
     dataSource.setTestOnBorrow(true);
     dataSource.setValidationQuery("SELECT 1");
-    
+
   }
 
   /**

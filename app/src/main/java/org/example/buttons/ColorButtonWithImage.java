@@ -26,8 +26,8 @@ public class ColorButtonWithImage extends Button {
   /**
    * Creates a new ColorButtonWithImage.
    *
-   * @param buttonText  the text to display on the button
-   * @param imageName   the path to the image file
+   * @param buttonText the text to display on the button
+   * @param imageName  the path to the image file
    */
   public ColorButtonWithImage(String buttonText, String imageName) {
     setPrefSize(460, 140);

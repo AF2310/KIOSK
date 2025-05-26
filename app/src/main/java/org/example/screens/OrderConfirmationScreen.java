@@ -12,7 +12,6 @@ import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;
 import org.example.orders.Cart;
 
-
 /**
  * This screen displays the confirmation of the order
  * after the user has clicked on confirm order.
@@ -24,16 +23,16 @@ import org.example.orders.Cart;
  * resetting all data again.
  */
 public class OrderConfirmationScreen {
-  
+
   /**
    * This is the constructor of the order confirmation
    * screen. It will screate a scene for it.
    *
-   * @param primaryStage the primary stage of this scene
-   * @param windowWidth width of window
-   * @param windowHeight height of window
+   * @param primaryStage    the primary stage of this scene
+   * @param windowWidth     width of window
+   * @param windowHeight    height of window
    * @param welcomeScrScene the welcome screen
-   * @param orderId the id of the order (database)
+   * @param orderId         the id of the order (database)
    * @return scene containing the order confirmation
    */
   public CustomScene createOrderConfirmationScreen(
@@ -51,17 +50,15 @@ public class OrderConfirmationScreen {
     Label orderIdLabel = new Label("Order number: " + orderId);
     orderIdLabel.setStyle(
         "-fx-font-size: 30px;"
-        + "-fx-font-weight: normal;"
-    );
+            + "-fx-font-weight: normal;");
     LabelManager.register(orderIdLabel);
 
-    // Label for Estimate time of Order 
+    // Label for Estimate time of Order
     Label estimateTimeLabel = new Label(
         "Estimate preparation time: " + Cart.getInstance().getEstimateTime());
     estimateTimeLabel.setStyle(
         "-fx-font-size: 30px;"
-        + "-fx-font-weight: normal;"
-    );
+            + "-fx-font-weight: normal;");
     LabelManager.register(estimateTimeLabel);
 
     // Combining both labels
@@ -70,8 +67,7 @@ public class OrderConfirmationScreen {
     screenLabelBox.getChildren().addAll(
         orderConfirmationLabel,
         estimateTimeLabel,
-        orderIdLabel
-    );
+        orderIdLabel);
 
     // Making layout into a stackpane to create fade overlay later on
     StackPane oconfirmStack = new StackPane();
@@ -81,7 +77,7 @@ public class OrderConfirmationScreen {
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(oconfirmStack);
     lang.smartTranslate(oconfirmStack);
-    
+
     // Create final scene result
     CustomScene scene = new CustomScene(oconfirmStack, windowWidth, windowHeight);
 

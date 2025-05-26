@@ -1,10 +1,6 @@
 package org.example.screens;
 
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 // import java.util.HashSet;
@@ -36,9 +32,7 @@ import org.example.kiosk.LanguageSetting;
 import org.example.menu.Ingredient;
 import org.example.menu.Meal;
 import org.example.menu.Single;
-import org.example.menu.Type;
 import org.example.orders.Cart;
-import org.example.sql.DatabaseManager;
 import org.example.sql.SqlQueries;
 
 /**
@@ -47,7 +41,18 @@ import org.example.sql.SqlQueries;
  * (add, remove ingredients and such).
  */
 public class ItemDetails {
-  SqlQueries queries = new SqlQueries();
+
+  SqlQueries queries;
+
+  /**
+   * This is the constructor of Item details scene.
+   * (Only used for assigning variables.)
+   *
+   * @throws SQLException sql errors
+   */
+  public ItemDetails() throws SQLException {
+    queries = new SqlQueries();
+  }
 
   /**
    * Creating a scene for a specific item, displaying all item details.
@@ -61,8 +66,11 @@ public class ItemDetails {
    */
   public CustomScene create(Stage primaryStage, Scene prevScene, Single item, Cart cart)
       throws SQLException {
-    try (Connection connection = DatabaseManager.getConnection()) {
-      item.setIngredients(connection);
+    try {
+      // TODO getter for needs ingredients in single class
+      queries.setIngredientsForSingle(item, true);
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
     List<Ingredient> ingredients = item.ingredients;
     // Make a deep copy of ingredients to avoid reusing the original list
@@ -256,21 +264,9 @@ public class ItemDetails {
 
     addToCartButton.setOnAction(e -> {
       try {
-        if (item.isInMeal(DriverManager.getConnection(
-            "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-                + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-                + "?user=u5urh19mtnnlgmog"
-                + "&password=zPgqf8o6na6pv8j8AX8r"
-                + "&useSSL=true"
-                + "&allowPublicKeyRetrieval=true"))) {
+        if (item.isInMeal()) {
           primaryStage.setScene(createMealUpsell(primaryStage, prevScene, item,
-              blocks, quantities, DriverManager.getConnection(
-                  "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-                      + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-                      + "?user=u5urh19mtnnlgmog"
-                      + "&password=zPgqf8o6na6pv8j8AX8r"
-                      + "&useSSL=true"
-                      + "&allowPublicKeyRetrieval=true")));
+              blocks, quantities));
         } else {
           // Making a new product with the modified ingredients.
           Single newProduct = new Single(item.getId(), item.getName(), item.getPrice(),
@@ -373,11 +369,10 @@ public class ItemDetails {
    * @param item         the product
    * @param blocks       the list of quantity change blocks
    * @param quantities   the base quantities
-   * @param conn         the connection to the database
    * @return the scene
    */
   public CustomScene createMealUpsell(Stage primaryStage, Scene mainMenu, Single item,
-      List<AddRemoveBlock> blocks, List<Integer> quantities, Connection conn) {
+      List<AddRemoveBlock> blocks, List<Integer> quantities) {
     var mainText = new TitleLabel("Do you want to make it a meal?");
 
     LabelManager.register(mainText);
@@ -391,25 +386,17 @@ public class ItemDetails {
     buttonBox.getChildren().addAll(yesButton, noButton);
 
     yesButton.setOnMouseClicked(e -> {
-      String sql = "SELECT meal_id, name, price, image_url FROM meal WHERE product_id = ?";
-
-      try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, item.getId());
-        try (ResultSet rs = ps.executeQuery()) {
-          while (rs.next()) {
-            Meal meal = new Meal(rs.getString("name"), conn);
-            meal.setId(rs.getInt("meal_id"));
-            meal.setName(rs.getString("name"));
-            meal.setPrice(rs.getFloat("price"));
-            meal.setImagePath(rs.getString("image_url"));
-            meal.setType(Type.MEAL);
-            MealCustomizationScreen mealScreen = new MealCustomizationScreen();
-            Scene sideScene = mealScreen.createSideSelectionScene(
-                primaryStage,
-                mainMenu,
-                meal);
-            primaryStage.setScene(sideScene);
-          }
+      try {
+        Meal meal = loadMealByProductId(item.getId());
+        if (meal != null) {
+          MealCustomizationScreen mealScreen = new MealCustomizationScreen();
+          Scene sideScene = mealScreen.createSideSelectionScene(
+              primaryStage,
+              mainMenu,
+              meal);
+          primaryStage.setScene(sideScene);
+        } else {
+          System.err.println("couldnt load meal for prod id - " + item.getId());
         }
       } catch (SQLException ex) {
         ex.printStackTrace(); // Handle the exception (e.g., log it or show an error message)
@@ -447,5 +434,18 @@ public class ItemDetails {
     }
 
     return scene;
+  }
+
+  /**
+   * loads a meal object from the db using the given product id.
+   * This method queries the meal table and finds a meal associated with the specified product
+   *
+   * @param productId the product id of the product to find a corresponding meal for
+   * @return either the meal if its found or null if no meal is linked
+   * @throws SQLException we get an exception if a db access error occurs or sql is invalid
+   */
+  public Meal loadMealByProductId(int productId) throws SQLException {
+    SqlQueries pool = new SqlQueries();
+    return pool.loadMealByProductId(productId);
   }
 }

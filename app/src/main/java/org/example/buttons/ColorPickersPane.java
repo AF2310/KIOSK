@@ -1,6 +1,5 @@
 package org.example.buttons;
 
-import java.sql.Connection;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.ColorPicker;
@@ -22,7 +21,7 @@ public class ColorPickersPane extends HBox {
   private ColorPicker sceneColorPicker;
 
   /**
-   * Constructs a ColorPickersPane with 
+   * Constructs a ColorPickersPane with
    * three color pickers for primary, secondary, and background colors.
    */
   public ColorPickersPane(
@@ -30,7 +29,6 @@ public class ColorPickersPane extends HBox {
       Double windowWidth,
       Double windowHeight,
       Scene welcomeScrScene,
-      Connection conn,
       Color initialPrimeColor,
       Color initialSecColor,
       Color initialBackgrounColor) {
@@ -65,16 +63,15 @@ public class ColorPickersPane extends HBox {
     getChildren().addAll(primColorVbox, secColorVbox, sceneColorVbox);
 
     // Setup color change listeners
-    setupListeners(primaryStage, windowWidth, windowHeight, welcomeScrScene, conn);
+    setupListeners(primaryStage, windowWidth, windowHeight, welcomeScrScene);
   }
 
   private void setupListeners(
       Stage primaryStage,
       Double windowWidth,
       Double windowHeight,
-      Scene welcomeScrScene,
-      Connection conn) {
-        
+      Scene welcomeScrScene) {
+
     primClrPicker.setOnAction(e -> {
       Color selectedColor = primClrPicker.getValue();
       BlackButtonWithImage.setButtonBackgroundColor(selectedColor);
@@ -85,7 +82,8 @@ public class ColorPickersPane extends HBox {
       ArrowButton.setButtonColor(selectedColor);
       ConfirmOrderButton.setButtonBackgroundColor(selectedColor);
       CircleButtonWithSign.setPlusColor(selectedColor);
-      CircleButtonWithSign.setMinusBorder(selectedColor);;
+      CircleButtonWithSign.setMinusBorder(selectedColor);
+      ;
 
       LabelManager.setTextColor(selectedColor);
     });
@@ -101,7 +99,7 @@ public class ColorPickersPane extends HBox {
       BackgroundColorStore.setCurrentBackgroundColor(selectedColor);
 
       Scene statsScene = new CustomizationScreen().showCustomizationScreen(
-          primaryStage, windowWidth, windowHeight, welcomeScrScene, conn);
+          primaryStage, windowWidth, windowHeight, welcomeScrScene);
       primaryStage.setScene(statsScene);
 
     });

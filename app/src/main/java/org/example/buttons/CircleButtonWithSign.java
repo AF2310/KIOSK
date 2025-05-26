@@ -22,7 +22,7 @@ public class CircleButtonWithSign extends Button {
   /**
    * Construtor that creates either a + or a - button with its own settings.
    *
-   * @param buttonSign  The symbol to display ("+" or "-")
+   * @param buttonSign The symbol to display ("+" or "-")
    */
   public CircleButtonWithSign(String buttonSign) {
 
@@ -39,16 +39,16 @@ public class CircleButtonWithSign extends Button {
     this.setPrefSize(50, 50);
     this.setMaxSize(50, 50);
     this.setMinSize(50, 50);
-    // Both buttons have almost everything the same except the colors of the background, border,
-    //and the text fill.
+    // Both buttons have almost everything the same except the colors of the
+    // background, border,
+    // and the text fill.
     this.setStyle(
         "-fx-background-radius: 25;"
-        + "-fx-border-radius: 25;"
-        + "-fx-border-width: 2;"
-        + "-fx-font-weight: bold;"
-        + "-fx-content-display: center;"
-        + "-fx-padding: 0;"
-    );
+            + "-fx-border-radius: 25;"
+            + "-fx-border-width: 2;"
+            + "-fx-font-weight: bold;"
+            + "-fx-content-display: center;"
+            + "-fx-padding: 0;");
     if (buttonSign.equals("+")) {
       this.setTextFill(Color.WHITE);
       this.setStyle(this.getStyle()
@@ -69,7 +69,7 @@ public class CircleButtonWithSign extends Button {
     this.setDisable(disabled);
 
     if (disabled) {
-      this.setOpacity(0.5); 
+      this.setOpacity(0.5);
     } else {
       this.setOpacity(1);
     }
@@ -139,7 +139,7 @@ public class CircleButtonWithSign extends Button {
     PlusBackground = toRgbString("-fx-background-color", color);
     PlusBorder = toRgbString("-fx-border-color", color);
     updateAllStyles();
-    
+
   }
 
   private static String toRgbString(String key, Color color) {
