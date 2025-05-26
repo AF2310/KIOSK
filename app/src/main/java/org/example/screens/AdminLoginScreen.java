@@ -2,6 +2,7 @@ package org.example.screens;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -131,7 +132,6 @@ public class AdminLoginScreen {
 
         }
       } catch (SQLException e1) {
-        // TODO Auto-generated catch block
         e1.printStackTrace();
       }
     });
@@ -170,14 +170,20 @@ public class AdminLoginScreen {
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
     StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
 
+    // Keyboard functionality for username and password fields
     usernameField.setOnMouseClicked(e -> {
       keyboard.setTargetInput(usernameField);
       keyboard.show();
+      Platform.runLater(() -> {
+        usernameField.requestFocus();
+        usernameField.positionCaret(usernameField.getText().length()); // or .getCaretPosition()
+      });
     });
 
     passwordField.setOnMouseClicked(e -> {
       keyboard.setTargetInput(passwordField);
       keyboard.show();
+      Platform.runLater(() -> passwordField.requestFocus());
     });
 
     // put everything into a stackpane

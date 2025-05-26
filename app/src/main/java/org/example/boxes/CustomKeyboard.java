@@ -6,6 +6,7 @@ import java.util.Map;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextInputControl;
@@ -15,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -219,8 +221,20 @@ public class CustomKeyboard {
    * Displays the custom keyboard if it is not already visible.
    */
   public void show() {
+    // if (!keyboardStage.isShowing()) {
+    // keyboardStage.show();
+    // }
     if (!keyboardStage.isShowing()) {
       keyboardStage.show();
+
+      // Position after rendering to get correct dimensions
+      Platform.runLater(() -> {
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        double x = (screenBounds.getWidth() - keyboardStage.getWidth()) / 2;
+        double y = screenBounds.getHeight() - keyboardStage.getHeight() - 140;
+        keyboardStage.setX(x);
+        keyboardStage.setY(y);
+      });
     }
   }
 
