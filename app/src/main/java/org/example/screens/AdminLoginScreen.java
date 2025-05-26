@@ -2,6 +2,7 @@ package org.example.screens;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.boxes.CustomKeyboard;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
 import org.example.buttons.MidButtonWithImage;
@@ -90,6 +92,9 @@ public class AdminLoginScreen {
     // Initially hidden
     errorLabel.setVisible(false);
 
+    // Custom keyboard for username and password fields
+    CustomKeyboard keyboard = new CustomKeyboard(primaryStage, usernameField);
+
     var loginButton = new MidButton(
         "Login",
         "rgb(0, 0, 0)",
@@ -108,6 +113,10 @@ public class AdminLoginScreen {
           AdminMenuScreen adminMenuScreen = new AdminMenuScreen();
           Scene adminMenuScene = adminMenuScreen.createAdminMenuScreen(primaryStage,
               windowWidth, windowHeight, welcomeScrScene, connection);
+
+          // Close the keyboard when switching scenes
+          keyboard.close();
+
           primaryStage.setScene(adminMenuScene);
         } else {
           var currLang = LanguageSetting.getInstance();
@@ -123,7 +132,6 @@ public class AdminLoginScreen {
 
         }
       } catch (SQLException e1) {
-        // TODO Auto-generated catch block
         e1.printStackTrace();
       }
     });
@@ -142,6 +150,9 @@ public class AdminLoginScreen {
     // Set action for back button (to go back to the welcome screen)
     backButton.setOnAction(e -> {
       primaryStage.setScene(welcomeScrScene);
+
+      // Close the keyboard when going back to the welcome screen
+      keyboard.close();
     });
 
     adminMenuLayout.getChildren().addAll(
@@ -158,6 +169,22 @@ public class AdminLoginScreen {
     // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
     StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
+
+    // Keyboard functionality for username and password fields
+    usernameField.setOnMouseClicked(e -> {
+      keyboard.setTargetInput(usernameField);
+      keyboard.show();
+      Platform.runLater(() -> {
+        usernameField.requestFocus();
+        usernameField.positionCaret(usernameField.getText().length()); // or .getCaretPosition()
+      });
+    });
+
+    passwordField.setOnMouseClicked(e -> {
+      keyboard.setTargetInput(passwordField);
+      keyboard.show();
+      Platform.runLater(() -> passwordField.requestFocus());
+    });
 
     // put everything into a stackpane
     StackPane mainPane = new StackPane(adminMenuLayout, langButton);

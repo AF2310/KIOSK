@@ -1,5 +1,8 @@
 package org.example.menu;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +19,7 @@ public class Single extends Product {
   public List<Integer> quantity;
   private boolean modified;
   private boolean inMeal;
+  private boolean needsIngredients;
 
   /**
    * This constructor is used to create instances of the Single class with the
@@ -30,6 +34,7 @@ public class Single extends Product {
     this.quantity = new ArrayList<>();
     setType(type);
     setImagePath(imgPath);
+    needsIngredients = true;
   }
 
   /**
@@ -50,6 +55,7 @@ public class Single extends Product {
     setType(type);
     setImagePath(imgPath);
     this.ingredients = ingredients;
+    needsIngredients = true;
   }
 
   public void setModefied(boolean modified) {
@@ -263,7 +269,7 @@ public class Single extends Product {
   public void setIngredients() throws SQLException {
     try {
       SqlQueries pool = new SqlQueries();
-      pool.setIngredientsForSingle(this);
+      pool.setIngredientsForSingle(this, needsIngredients);
 
     } catch (SQLException e) {
       e.printStackTrace();
@@ -278,8 +284,26 @@ public class Single extends Product {
    */
   @Override
   public boolean equals(Object obj) {
+    if (obj instanceof Single) {
+      Single other = (Single) obj;
+      if (this.getId() == other.getId()) {
+        System.out.println("Sizes:");
+        System.out.println(other.quantity.size());
+        System.out.println(this.quantity.size());
+        for (int i = 0; i < other.quantity.size(); i++) {
+          if (this.quantity.get(i) != (other.quantity.get(i))) {
+            return false;
+          }
+        }
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
+    
     //Single other = (Single) obj;
-    if (this == obj) {
+    /* if (this == obj) {
       return true;
     }
     if (obj == null || getClass() != obj.getClass()) {
@@ -299,7 +323,7 @@ public class Single extends Product {
         return false;
       }
     }
-    return true;
+    return true; */
   }
 
   /**
@@ -320,29 +344,51 @@ public class Single extends Product {
     }
   }
 
-  /*
-   * public List<Single> getOptionsByCategoryName(Connection conn,
-   * String categoryName) throws SQLException {
-   * List<Single> options = new ArrayList<>();
-   * String sql = "SELECT i.id, i.name, i.price, c.name AS category_name " +
-   * "FROM item i " +
-   * "JOIN category c ON i.category_id = c.category_id " +
-   * "WHERE c.name = ?";
-   * try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-   * stmt.setString(1, categoryName);
-   * ResultSet rs = stmt.executeQuery();
-   * while (rs.next()) {
-   * options.add(new Single(
-   * rs.getInt("id"),
-   * rs.getString("name"),
-   * rs.getFloat("price"),
-   * rs.getString("category_name")
-   * ));
-   * }
-   * rs.close();
-   * }
-   * return options;
-   * }
-   */
+  /* public boolean isInMeal(Connection conn) throws SQLException {
+    String sql = "SELECT meal_id FROM meal WHERE product_id = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, getId());
 
+      try (ResultSet rs = stmt.executeQuery()) {
+        if (rs.next()) {
+          this.inMeal = true;
+          return this.inMeal;
+        } else {
+          this.inMeal = false;
+          return this.inMeal;
+        }
+      }
+    }
+  } */
+
+
+  /*public List<Single> getOptionsByCategoryName(Connection conn,
+                          String categoryName) throws SQLException {
+      List<Single> options = new ArrayList<>();
+      String sql = "SELECT i.id, i.name, i.price, c.name AS category_name " +
+      "FROM item i " +
+      "JOIN category c ON i.category_id = c.category_id " +
+      "WHERE c.name = ?";
+      try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, categoryName);
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+          options.add(new Single(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getFloat("price"),
+                rs.getString("category_name")
+            ));
+        }
+        rs.close();
+      }
+      return options;
+    }*/
+
+  /**
+   * The toString method.
+   */
+  public String toString() {
+    return getName() + "    " + getPrice() + "kr";
+  }
 }

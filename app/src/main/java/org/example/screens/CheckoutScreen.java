@@ -213,13 +213,13 @@ public class CheckoutScreen {
     // User confirms order
     confirmOrderButton.setOnAction(e -> {
       int orderId = -1;
-
       Customer customer = new Customer();
       try {
         orderId = customer.placeOrder(discountApplied, discountFactor);
       } catch (SQLException err) {
         err.printStackTrace();
       }
+      String subject = "Reciept for order: " + orderId;
       Cart.getInstance().convertMealsIntoSingles();
       try {
         Cart.getInstance().saveQuantityToDb(orderId);
@@ -227,25 +227,20 @@ public class CheckoutScreen {
         e1.printStackTrace();
       }
 
-      // Create order confirmation screen
-      OrderConfirmationScreen ordConfirmation = new OrderConfirmationScreen();
+      // // Create order confirmation screen
+      // OrderConfirmationScreen ordConfirmation = new OrderConfirmationScreen();
+      var recieptScreen = new SendReceiptScreen();
 
-      Scene ordConfirmScene = ordConfirmation.createOrderConfirmationScreen(
+      Scene recieptScene = recieptScreen.createSendReceiptScreen(
           this.primaryStage,
           windowWidth,
           windowHeight,
           welcomeScrScene,
-          orderId);
-      this.primaryStage.setScene(ordConfirmScene);
-
-      // Creating fading animation
-      // to transition smoothly to welcome screen after order confirmation
-      FadingAnimation fadingAnimation = new FadingAnimation(primaryStage);
-      // Fading out of current scene
-      fadingAnimation.fadeOutAnimation(
-          "white",
-          ordConfirmScene,
-          welcomeScrScene);
+          orderId,
+          subject,
+          Cart.getInstance().printCart(orderId)
+      );
+      this.primaryStage.setScene(recieptScene);
 
       // Clear cart and stop timer after order has been done
       InactivityTimer.getInstance().stopTimer();

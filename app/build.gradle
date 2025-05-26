@@ -42,6 +42,7 @@ dependencies {
 
 dependencies {
     implementation 'org.apache.commons:commons-dbcp2:2.9.0'
+    implementation 'com.sun.mail:jakarta.mail:2.0.1'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
