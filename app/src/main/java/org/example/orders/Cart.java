@@ -212,6 +212,7 @@ public class Cart {
    * @return total estimated preparation time of the order
    */
   public int getEstimateTime() {
+    System.out.println("DEBUG GET ESTIMATE TIME METHOD ENTERED");
 
     // Set preparation times for products (current times from database)
     try {
@@ -239,11 +240,15 @@ public class Cart {
     // DAYTIME calculation - time between 07:00 and 22:00
     if (currenTime.isBefore(nightTime) && currenTime.isAfter(dayTime)) {
 
+      System.out.println("DEBUG: DAYTIME");
+
       return dayTimeCalculation(allTimes, timeBurgers, timeSides,
           timeDrinks, timeExtra, timeDesserts);
 
       // NIGHTTIME calculation
     } else {
+
+      System.out.println("DEBUG: NIGHTTIME");
 
       return nightTimeCalculation(allTimes, timeBurgers, timeSides,
           timeDrinks, timeExtra, timeDesserts);
@@ -258,21 +263,34 @@ public class Cart {
     // Go through all products
     for (Product product : items) {
 
+      System.out.println("DEBUG: product type = " + product.getType());
+      System.out.println("DEBUG: for loop product " + product.getName());
+
       // Adding prep times depending on their type
       if (product.getType() == Type.BURGERS) {
         timeBurgers += product.getPreparationTime();
 
+        System.out.println("DEBUG: burger time: " + timeBurgers);
+
       } else if (product.getType() == Type.SIDES) {
         timeSides += product.getPreparationTime();
+
+        System.out.println("DEBUG: side time: " + timeSides);
 
       } else if (product.getType() == Type.DRINKS) {
         timeDrinks += product.getPreparationTime();
 
+        System.out.println("DEBUG: drink time: " + timeDrinks);
+
       } else if (product.getType() == Type.EXTRA) {
         timeExtra += product.getPreparationTime();
 
+        System.out.println("DEBUG: extra time: " + timeExtra);
+
       } else if (product.getType() == Type.DESSERTS) {
         timeDesserts += product.getPreparationTime();
+
+        System.out.println("DEBUG: dessert time: " + timeDesserts);
       }
     }
 
@@ -285,6 +303,14 @@ public class Cart {
 
     // Sort times from small to big
     Collections.sort(allTimes);
+
+    System.out.println("DEBUG: all times: ");
+
+    for (int t : allTimes) {
+      System.out.println("DEBUG: time " + t);
+    }
+
+    System.out.println("DEBUG: RETURN " + allTimes.get(allTimes.size() - 1));
 
     return allTimes.get(allTimes.size() - 1);
   }

@@ -468,24 +468,29 @@ public class SqlQueries {
    * @param single the Single product to set ingredients for
    * @throws SQLException if database access error occurs
    */
-  public void setIngredientsForSingle(Single single) throws SQLException {
+  public void setIngredientsForSingle(Single single, boolean needsIngredients) throws SQLException {
 
-    String sql = "SELECT pi.ingredient_id, pi.ingredientCount, i.ingredient_name "
-        + "FROM productingredients pi "
-        + "JOIN ingredient i ON pi.ingredient_id = i.ingredient_id "
-        + "WHERE product_id = ?";
+    if (needsIngredients) {
+      String sql = "SELECT pi.ingredient_id, pi.ingredientCount, i.ingredient_name "
+          + "FROM productingredients pi "
+          + "JOIN ingredient i ON pi.ingredient_id = i.ingredient_id "
+          + "WHERE product_id = ?";
+  
+      try (Connection conn = DatabaseManager.getConnection();
+          PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    try (Connection conn = DatabaseManager.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setInt(1, single.getId());
+        stmt.setInt(1, single.getId());
 
-      try (ResultSet rs = stmt.executeQuery()) {
+        ResultSet rs = stmt.executeQuery();
+
         while (rs.next()) {
           single.addIngredient(new Ingredient(
               rs.getInt("ingredient_id"),
               rs.getString("ingredient_name")));
           single.quantity.add(rs.getInt("ingredientCount"));
         }
+        needsIngredients = false;
+        rs.close();
       }
     }
   }
@@ -744,6 +749,7 @@ public class SqlQueries {
 
             // Fetch all product preparation times from database
             int prepTime = rs.getInt("preparation_time");
+            System.out.println("DEBUG PREPTIME: " + prepTime);
 
             // Set fetched prep time as time for product
             products.get(index).setPreparationTime(prepTime);

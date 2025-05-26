@@ -18,7 +18,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.example.animations.FadingAnimation;
 import org.example.boxes.CheckoutGridWithButtons;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.ColorSquareButtonWithImage;
@@ -243,8 +242,8 @@ public class CheckoutScreen {
       this.primaryStage.setScene(recieptScene);
 
       // Clear cart and stop timer after order has been done
-      InactivityTimer.getInstance().stopTimer();
-      Cart.getInstance().clearCart();
+      /* InactivityTimer.getInstance().stopTimer();
+      Cart.getInstance().clearCart(); */
     });
 
     // Back button
