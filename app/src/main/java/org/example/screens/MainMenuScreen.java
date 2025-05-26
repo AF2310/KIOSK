@@ -2,6 +2,8 @@ package org.example.screens;
 
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -52,7 +54,7 @@ import org.example.menu.Product;
 import org.example.menu.Single;
 import org.example.menu.Type;
 import org.example.orders.Cart;
-import org.example.sql.SqlQueries;
+import org.example.sql.DatabaseManager;
 
 /**
  * The main menu screen.
@@ -704,8 +706,7 @@ public class MainMenuScreen {
           if (cat.equals("Meals")) {
             // Load meals from database
             try {
-              SqlQueries pool = new SqlQueries();
-              items.addAll(pool.fetchMealsFromDatabase());
+              items.addAll(fetchMealsFromDatabase());
             } catch (SQLException e) {
               e.printStackTrace();
             }
@@ -719,8 +720,7 @@ public class MainMenuScreen {
         if (targetCat.equals("Meals")) {
           // Load meals from database
           try {
-            SqlQueries pool = new SqlQueries();
-            items.addAll(pool.fetchMealsFromDatabase());
+            items.addAll(fetchMealsFromDatabase());
           } catch (SQLException e) {
             e.printStackTrace();
           }
@@ -732,8 +732,7 @@ public class MainMenuScreen {
     } else {
       if (currentCategory.equals("Meals")) {
         try {
-          SqlQueries pool = new SqlQueries();
-          items.addAll(pool.fetchMealsFromDatabase());
+          items.addAll(fetchMealsFromDatabase());
         } catch (SQLException e) {
           e.printStackTrace();
         }
@@ -920,6 +919,25 @@ public class MainMenuScreen {
     LanguageSetting.getInstance().smartTranslate(itemGrid);
 
     updateCategoryButtonStyles();
+  }
+
+  // Helper method
+  // fetches all relevant info about a meal from the db
+  private List<Meal> fetchMealsFromDatabase() throws SQLException {
+    List<Meal> meals = new ArrayList<>();
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement ps = conn.prepareStatement(
+            "SELECT meal_id, name, price, image_url FROM meal");
+        ResultSet rs = ps.executeQuery()) {
+      while (rs.next()) {
+        Meal meal = new Meal(rs.getString("name"));
+        meal.setId(rs.getInt("meal_id"));
+        meal.setPrice(rs.getFloat("price"));
+        meal.setImagePath(rs.getString("image_url"));
+        meals.add(meal);
+      }
+    }
+    return meals;
   }
 
   /**

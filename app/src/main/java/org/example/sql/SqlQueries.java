@@ -1265,30 +1265,4 @@ public class SqlQueries {
       return list;
     }
   }
-
-  /**
-   * Helper method that fetches all relevant info about a meal
-   * from the database.
-   *
-   * @return list of all relevant meals
-   * @throws SQLException database error
-   */
-  public List<Meal> fetchMealsFromDatabase() throws SQLException {
-    List<Meal> meals = new ArrayList<>();
-
-    try (Connection conn = DatabaseManager.getConnection();
-        PreparedStatement ps = conn.prepareStatement(
-            "SELECT meal_id, name, price, image_url FROM meal");
-        ResultSet rs = ps.executeQuery()) {
-
-      while (rs.next()) {
-        Meal meal = new Meal(rs.getString("name"));
-        meal.setId(rs.getInt("meal_id"));
-        meal.setPrice(rs.getFloat("price"));
-        meal.setImagePath(rs.getString("image_url"));
-        meals.add(meal);
-      }
-    }
-    return meals;
-  }
 }
