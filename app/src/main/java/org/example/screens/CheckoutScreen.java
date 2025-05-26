@@ -12,6 +12,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import org.example.EmailSender;
 import org.example.animations.FadingAnimation;
 import org.example.boxes.CheckoutGridWithButtons;
 import org.example.buttons.BackBtnWithTxt;
@@ -132,7 +134,13 @@ public class CheckoutScreen {
       } catch (SQLException err) {
         err.printStackTrace();
       }
-      System.out.println(Cart.getInstance().printCart(orderId));
+      EmailSender es = new EmailSender();
+      String subject = "Reciept for order: " + orderId;
+      try {
+        es.sendMail("jakihin@gmail.com", subject, Cart.getInstance().printCart(orderId));
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
       Cart.getInstance().convertMealsIntoSingles();
       try {
         Cart.getInstance().saveQuantityToDb(conn, orderId);
