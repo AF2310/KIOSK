@@ -440,6 +440,6 @@ public class Single extends Product {
    * The toString method.
    */
   public String toString() {
-    return getName() + "    " + getPrice();
+    return getName() + "    " + getPrice() + "kr";
   }
 }
