@@ -1,11 +1,6 @@
 package org.example.screens;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,9 +28,9 @@ import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
 import org.example.kiosk.LanguageSetting;
 import org.example.menu.OrderItem;
-import org.example.menu.Product;
 import org.example.orders.Order;
 import org.example.orders.OrderListWrapper;
+import org.example.sql.SqlQueries;
 
 /**
  * Admin screen for sales stats.
@@ -67,12 +62,14 @@ public class SalesStatsScreen {
 
     // Had to somehow make List final, so a wrapper class is being used
     final OrderListWrapper wrapper = new OrderListWrapper();
+    
+    SqlQueries queries = new SqlQueries();
 
     try {
 
       // Populates the list wrapper
-      wrapper.orders = queryOrders();
-      queryOrderItemsFor(wrapper.orders);
+      wrapper.orders = queries.queryOrders();
+      queries.queryOrderItemsFor(wrapper.orders);
 
     } catch (SQLException e) {
 
@@ -203,107 +200,6 @@ public class SalesStatsScreen {
     Scene scene = new Scene(layout, 1920, 1080);
 
     return scene;
-
-  }
-
-  // Query for the orders
-  private ArrayList<Order> queryOrders() throws SQLException {
-
-    // ArrayList to hold all orders queried from the db
-    ArrayList<Order> history = new ArrayList<>();
-
-    String querySql = "SELECT order_ID, kiosk_ID, customer_ID, order_date, amount_total, status "
-        + "FROM `order`";
-
-    try (
-
-        Connection conn = DriverManager.getConnection(
-              "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-              + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-              + "?user=u5urh19mtnnlgmog"
-              + "&password=zPgqf8o6na6pv8j8AX8r"
-              + "&useSSL=true"
-              + "&allowPublicKeyRetrieval=true"
-        );
-
-        PreparedStatement stmt = conn.prepareStatement(querySql);
-        ResultSet results = stmt.executeQuery()
-
-    ) {
-      // Creates Orders from queried data
-      while (results.next()) {
-
-        int orderId = results.getInt("order_ID");
-        int kioskId = results.getInt("kiosk_ID");
-        int customerId = results.getInt("customer_ID");
-        Timestamp orderDate = results.getTimestamp("order_date");
-        double amountTotal = results.getDouble("amount_total");
-        String status = results.getString("status");
-
-        Order order = new Order(orderId, kioskId, customerId, orderDate, amountTotal, status);
-        history.add(order);
-
-      }
-
-    }
-
-    return history;
-
-  }
-
-  // Query for the Products belonging to each queried order
-  private void queryOrderItemsFor(ArrayList<Order> orders) throws SQLException {
-
-    String itemQuery = "SELECT oi.order_id, oi.product_id, p.name, p.price, oi.quantity "
-          + "FROM order_item oi "
-          + "JOIN product p ON oi.product_id = p.product_id";
-
-    try (
-
-        Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-            + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-            + "?user=u5urh19mtnnlgmog"
-            + "&password=zPgqf8o6na6pv8j8AX8r"
-            + "&useSSL=true"
-            + "&allowPublicKeyRetrieval=true"
-        );
-
-        PreparedStatement stmt = conn.prepareStatement(itemQuery);
-        ResultSet rs = stmt.executeQuery()
-
-    ) {
-
-      while (rs.next()) {
-
-        int orderId = rs.getInt("order_id");
-        int productId = rs.getInt("product_id");
-        String name = rs.getString("name");
-        double price = rs.getDouble("price");
-        int quantity = rs.getInt("quantity");
-
-        for (Order order : orders) {
-
-          if (order.getOrderId() == orderId) {
-
-            Product product = new Product() {};
-            product.setId(productId);
-            product.setName(name);
-            product.setPrice(price);
-
-            OrderItem orderItem = new OrderItem(product, quantity, price);
-
-            order.getProducts().add(orderItem);
-
-            break;
-
-          }
-
-        }
-
-      }
-
-    }
 
   }
 
