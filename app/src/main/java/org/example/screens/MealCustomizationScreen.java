@@ -3,7 +3,6 @@ package org.example.screens;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,17 +15,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.CancelButtonWithText;
 import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.LangBtn;
-import org.example.buttons.MidButton;
 import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.LabelManager;
@@ -185,15 +180,8 @@ public class MealCustomizationScreen {
 
     // Goes to the next scene which is the drink options scene
     confirmButton.setOnMouseClicked(e -> {
-      if (meal.getSide() == null) {
-        if (meal.getSide() == null) {
-          showWarning("Please select a side option!");
-          return;
-        }
-      } else {
-        Scene drinkScene = createDrinkSelectionScene(stage, returnScene, meal, stage.getScene());
-        stage.setScene(drinkScene);
-      }
+      Scene drinkScene = createDrinkSelectionScene(stage, returnScene, meal, stage.getScene());
+      stage.setScene(drinkScene);
     });
 
 
@@ -332,16 +320,9 @@ public class MealCustomizationScreen {
 
     // Onclick for the confirm button (loading meal confirmation scene)
     confirmBtn.setOnMouseClicked(e -> {
-      if (meal.getDrink() == null) {
-        if (meal.getDrink() == null) {
-          showWarning("Please select a drink option!");
-          return;
-        }
-      } else {
-        Cart cart = Cart.getInstance();
-        cart.addProduct(meal);
-        stage.setScene(mainScene);
-      }
+      Cart cart = Cart.getInstance();
+      cart.addProduct(meal);
+      stage.setScene(mainScene);
     });
 
     // Translate button action
@@ -398,58 +379,5 @@ public class MealCustomizationScreen {
 
     }
     return scene;
-  }
-
-  /**
-   * Helper method to show a popup that the user MUST
-   * select a drink/side before clicking continue.
-   *
-   * @param warning String message that will be in the popup
-   */
-  private void showWarning(String warning) {
-    Platform.runLater(() -> {
-      Stage popupStage = new Stage();
-      popupStage.initOwner(null); // or pass the main stage if needed
-      popupStage.initModality(Modality.APPLICATION_MODAL);
-      popupStage.initStyle(StageStyle.TRANSPARENT);
-
-      Label label = new Label(warning);
-      label.setWrapText(true);
-      label.setStyle(
-          "-fx-font-weight: bold;"
-              + "-fx-font-size: 20px;"
-              + "-fx-text-alignment: center;"
-              + "-fx-alignment: center;"
-      );
-
-      MidButton okButton = new MidButton("OK", "green", 40);
-      okButton.setOnAction(e -> popupStage.close());
-
-      VBox layout = new VBox(20, label, okButton);
-      layout.setAlignment(Pos.CENTER);
-      layout.setStyle(
-          "-fx-background-color: white;"
-              + "-fx-border-color: black;"
-              + "-fx-border-width: 3px;"
-              + "-fx-border-radius: 20;"
-              + "-fx-background-radius: 20;"
-              + "-fx-padding: 30;"
-      );
-
-      StackPane root = new StackPane(layout);
-      root.setStyle("-fx-background-color: transparent;");
-      root.setPrefSize(400, 200);
-
-      // Optional language support
-      LanguageSetting lang = LanguageSetting.getInstance();
-      lang.registerRoot(root);
-      lang.smartTranslate(root);
-
-      Scene scene = new Scene(root);
-      scene.setFill(Color.TRANSPARENT);
-
-      popupStage.setScene(scene);
-      popupStage.show();
-    });
   }
 }
