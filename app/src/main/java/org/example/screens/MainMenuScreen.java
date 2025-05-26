@@ -930,7 +930,7 @@ public class MainMenuScreen {
             "SELECT meal_id, name, price, image_url FROM meal");
         ResultSet rs = ps.executeQuery()) {
       while (rs.next()) {
-        Meal meal = new Meal(rs.getString("name"), conn);
+        Meal meal = new Meal(rs.getString("name"));
         meal.setId(rs.getInt("meal_id"));
         meal.setPrice(rs.getFloat("price"));
         meal.setImagePath(rs.getString("image_url"));
