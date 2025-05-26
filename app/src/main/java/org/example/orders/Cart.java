@@ -290,4 +290,8 @@ public class Cart {
     }
     return totalTime;
   }
+
+  public boolean isEmpty() {
+    return getItems().length == 0;
+  }
 }

@@ -221,10 +221,13 @@ public class CheckoutScreen {
 
     // Create confirm order button instance
     ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton(order);
-
+    confirmOrderButton.setDisable(Cart.getInstance().isEmpty());
     // Add confirmation button to listeners of cart changes
     // -> so price label of button updates when cart changes
-    Cart.getInstance().addListener(() -> confirmOrderButton.updatePriceLabel());
+    Cart.getInstance().addListener(() -> {
+      confirmOrderButton.updatePriceLabel();
+      confirmOrderButton.setDisable(Cart.getInstance().isEmpty());
+    });
 
     // User confirms order
     confirmOrderButton.setOnAction(e -> {
