@@ -170,7 +170,7 @@ public class Cart {
    * @return the string
    */
   public String printCart(int orderId) {
-    String output = "------------------------------------------------------------\n\n";
+    String output = "\n\n";
     output = output + "ID: " + orderId + "\n\n";
     output = output + "Total: " + getTotalPrice() + "kr\n\n";
 
