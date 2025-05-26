@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import org.example.sql.SqlQueries;
 
 
@@ -106,43 +107,6 @@ public class Single extends Product {
    * Assumes category name maps to valid category in DB.
    */
   public void saveToDb() throws SQLException {
-    /* // Get the category_id from the category name (enum)
-    String categoryQuery = "SELECT category_id FROM category WHERE name = ?";
-    int categoryId;
-    try (PreparedStatement categoryStmt = conn.prepareStatement(categoryQuery)) {
-      // assumes enum name matches DB name
-      categoryStmt.setString(1, getType().name());
-
-      try (ResultSet rs = categoryStmt.executeQuery()) {
-        if (rs.next()) {
-          categoryId = rs.getInt("category_id");
-
-          // For debugging
-        } else {
-          throw new SQLException("ERROR no type in DB found named: " + getType().name());
-        }
-      }
-    }
-    // Insert product in database with query and needed data
-    String insertSql = "INSERT INTO product "
-        + "(name, description, price, category_id, is_active) "
-        + "VALUES (?, ?, ?, ?, ?)";
-
-    try (PreparedStatement stmt = conn.prepareStatement(
-        insertSql, Statement.RETURN_GENERATED_KEYS)) {
-      stmt.setString(1, getName());
-      stmt.setString(2, getDescription());
-      stmt.setDouble(3, getPrice());
-      stmt.setInt(4, categoryId);
-      stmt.setInt(5, getActivity()); // stored as Tinyint (1 or 0)
-      stmt.executeUpdate();
-
-      try (ResultSet rs = stmt.getGeneratedKeys()) {
-        if (rs.next()) {
-          setId(rs.getInt(1));
-        }
-      }
-    } */
     try {
       SqlQueries pool = new SqlQueries();
       pool.saveSingleToDb(this);
@@ -280,26 +244,9 @@ public class Single extends Product {
    */
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof Single) {
-      Single other = (Single) obj;
-      if (this.getId() == other.getId()) {
-        System.out.println("Sizes:");
-        System.out.println(other.quantity.size());
-        System.out.println(this.quantity.size());
-        for (int i = 0; i < other.quantity.size(); i++) {
-          if (this.quantity.get(i) != (other.quantity.get(i))) {
-            return false;
-          }
-        }
-        return true;
-      } else {
-        return false;
-      }
-    }
-    return false;
     
     //Single other = (Single) obj;
-    /* if (this == obj) {
+    if (this == obj) {
       return true;
     }
     if (obj == null || getClass() != obj.getClass()) {
@@ -319,7 +266,7 @@ public class Single extends Product {
         return false;
       }
     }
-    return true; */
+    return true;
   }
 
   /**
@@ -339,24 +286,6 @@ public class Single extends Product {
       return this.inMeal;
     }
   }
-
-  /* public boolean isInMeal(Connection conn) throws SQLException {
-    String sql = "SELECT meal_id FROM meal WHERE product_id = ?";
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setInt(1, getId());
-
-      try (ResultSet rs = stmt.executeQuery()) {
-        if (rs.next()) {
-          this.inMeal = true;
-          return this.inMeal;
-        } else {
-          this.inMeal = false;
-          return this.inMeal;
-        }
-      }
-    }
-  } */
-
 
   /*public List<Single> getOptionsByCategoryName(Connection conn,
                           String categoryName) throws SQLException {

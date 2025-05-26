@@ -240,10 +240,6 @@ public class CheckoutScreen {
           Cart.getInstance().printCart(orderId)
       );
       this.primaryStage.setScene(recieptScene);
-
-      // Clear cart and stop timer after order has been done
-      /* InactivityTimer.getInstance().stopTimer();
-      Cart.getInstance().clearCart(); */
     });
 
     // Back button
@@ -335,9 +331,7 @@ public class CheckoutScreen {
     Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
 
     if (bgColor != null) {
-
       scene.setBackgroundColor(bgColor);
-
     }
 
     return scene;
