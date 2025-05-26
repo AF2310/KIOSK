@@ -1,6 +1,7 @@
 package org.example.screens;
 
 import java.sql.SQLException;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.example.EmailSender;
 import org.example.animations.FadingAnimation;
 import org.example.boxes.CustomKeyboard;
@@ -81,12 +83,15 @@ public class SendReceiptScreen {
 
       if (email.isEmpty()) {
         feedbackLabel.setText("Please enter an email address.");
+        feedbackLabel.setStyle("-fx-text-fill: red; -fx-font-size: 20;");
         feedbackLabel.setVisible(true);
         return;
       }
+
       // Basic email format check
       if (!email.contains("@") || !email.contains(".")) {
         feedbackLabel.setText("Invalid email format.");
+        feedbackLabel.setStyle("-fx-text-fill: red; -fx-font-size: 20;");
         feedbackLabel.setVisible(true);
         return;
       }
@@ -98,15 +103,22 @@ public class SendReceiptScreen {
         feedbackLabel.setText("Receipt sent successfully!");
         feedbackLabel.setStyle("-fx-text-fill: green; -fx-font-size: 20;");
         feedbackLabel.setVisible(true);
-        emailField.clear(); // Clear field after sending
+        // Clear field after sending
+        emailField.clear();
+
+        // Add a delay before moving to confirmation screen
+        PauseTransition pause = new PauseTransition(Duration.seconds(2));
+        pause.setOnFinished(event -> {
+          goToOrderConfirmation(primaryStage, windowWidth, windowHeight, orderId, keyboard);
+        });
+        pause.play();
+
       } catch (Exception ex) {
         feedbackLabel.setText("Failed to send receipt. Try again.");
         feedbackLabel.setStyle("-fx-text-fill: red; -fx-font-size: 20;");
         feedbackLabel.setVisible(true);
         ex.printStackTrace();
       }
-
-      goToOrderConfirmation(primaryStage, windowWidth, windowHeight, orderId, keyboard);
     });
 
     // No thanks button action
