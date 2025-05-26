@@ -2,6 +2,7 @@ package org.example.boxes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -26,6 +27,10 @@ public class CustomKeyboard {
   private boolean[] isShiftPressed = { false };
   private TextInputControl targetInput;
   private List<Button> allKeyButtons = new ArrayList<>();
+
+  private static final Map<String, String> shiftMap = Map.of(
+      "1", "!", "2", "@", "3", "#", "4", "$", "5", "%",
+      "6", ".", "7", ",", "8", "-", "9", "(", "0", ")");
 
   // Make the keyboard movable
   private double dragOffsetX;
@@ -55,18 +60,17 @@ public class CustomKeyboard {
     keyboardLayout.setAlignment(Pos.CENTER);
     keyboardLayout.setStyle(
         "-fx-background-color: white;"
-        + "-fx-border-color: black;"
-        + "-fx-border-width: 3px;"
-        + "-fx-border-radius: 20;"
-        + "-fx-background-radius: 20;"
-    );
+            + "-fx-border-color: black;"
+            + "-fx-border-width: 3px;"
+            + "-fx-border-radius: 20;"
+            + "-fx-background-radius: 20;");
 
     List<String[]> keyRows = List.of(
-        new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" },
-        new String[] { "q", "w", "e", "r", "t", "y", "u", "i", "o", "p" },
-        new String[] { "a", "s", "d", "f", "g", "h", "j", "k", "l" },
-        new String[] { "z", "x", "c", "v", "b", "n", "m" },
-        new String[] { "Shift", "Space", "Backspace", "Done" });
+        new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "⌫" },
+        new String[] { "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "å" },
+        new String[] { "a", "s", "d", "f", "g", "h", "j", "k", "l", "ö", "ä" },
+        new String[] { "Shift", "z", "x", "c", "v", "b", "n", "m", "Done" },
+        new String[] { "Space" });
 
     for (String[] row : keyRows) {
       HBox rowBox = new HBox(5);
@@ -104,11 +108,29 @@ public class CustomKeyboard {
     Button button = new Button(key);
     button.setFont(Font.font("Arial", 18));
     button.setMinSize(60, 40);
+
+    switch (key) {
+      case "Space":
+        // Make space button larger
+        button.setMinWidth(400);
+        break;
+      case "⌫":
+        // Make backspace button slightly larger
+        button.setMinWidth(80);
+        break;
+      case "Shift":
+      case "Done":
+        button.setMinWidth(80);
+        break;
+      default:
+        // no special sizing for other keys
+        break;
+    }
+
     button.setStyle(
         "-fx-background-color: lightgray;"
-        + "-fx-border-radius: 5;"
-        + "-fx-background-radius: 5;"
-    );
+            + "-fx-border-radius: 5;"
+            + "-fx-background-radius: 5;");
 
     button.setOnAction(e -> handleKeyPress(key));
     button.setOnMousePressed(e -> button.setStyle("-fx-background-color: darkgray;"));
@@ -131,7 +153,7 @@ public class CustomKeyboard {
         targetInput.insertText(caretPosition, " ");
         break;
 
-      case "Backspace":
+      case "⌫":
         if (caretPosition > 0) {
           targetInput.deleteText(caretPosition - 1, caretPosition);
         }
@@ -153,17 +175,42 @@ public class CustomKeyboard {
         break;
 
       default:
-        String toInsert = isShiftPressed[0] ? key.toUpperCase() : key.toLowerCase();
+        String toInsert;
+        if (isShiftPressed[0]) {
+          toInsert = shiftMap.getOrDefault(key, key.toUpperCase());
+        } else {
+          toInsert = key.toLowerCase();
+        }
         targetInput.insertText(caretPosition, toInsert);
         break;
+
     }
   }
 
   private void updateKeyLabels() {
     for (Button button : allKeyButtons) {
       String text = button.getText();
-      if (text.length() == 1 && Character.isLetter(text.charAt(0))) {
-        button.setText(isShiftPressed[0] ? text.toUpperCase() : text.toLowerCase());
+      if (text.length() == 1) {
+        if (Character.isLetter(text.charAt(0))) {
+          button.setText(isShiftPressed[0] ? text.toUpperCase() : text.toLowerCase());
+        } else if (shiftMap.containsKey(text) || shiftMap.containsValue(text)) {
+          // Reverse mapping for visual toggle
+          if (isShiftPressed[0]) {
+            for (Map.Entry<String, String> entry : shiftMap.entrySet()) {
+              if (entry.getKey().equals(text)) {
+                button.setText(entry.getValue());
+                break;
+              }
+            }
+          } else {
+            for (Map.Entry<String, String> entry : shiftMap.entrySet()) {
+              if (entry.getValue().equals(text)) {
+                button.setText(entry.getKey());
+                break;
+              }
+            }
+          }
+        }
       }
     }
   }
