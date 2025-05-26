@@ -62,7 +62,7 @@ public class ItemDetails {
   public CustomScene create(Stage primaryStage, Scene prevScene, Single item, Cart cart)
       throws SQLException {
     try (Connection connection = DatabaseManager.getConnection()) {
-      queries.setIngredientsForSingle(connection, item);
+      item.setIngredients(connection);
     }
     List<Ingredient> ingredients = item.ingredients;
     // Make a deep copy of ingredients to avoid reusing the original list

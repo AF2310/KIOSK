@@ -17,6 +17,7 @@ public class Single extends Product {
   public List<Integer> quantity;
   private boolean modified;
   private boolean inMeal;
+  private boolean needsIngredients;
 
   /**
    * This constructor is used to create instances of the Single class with the
@@ -31,6 +32,7 @@ public class Single extends Product {
     this.quantity = new ArrayList<>();
     setType(type);
     setImagePath(imgPath);
+    needsIngredients = true;
   }
 
   /**
@@ -52,6 +54,7 @@ public class Single extends Product {
     setType(type);
     setImagePath(imgPath);
     this.ingredients = ingredients;
+    needsIngredients = true;
   }
 
   public void setModefied(boolean modified) {
@@ -341,23 +344,26 @@ public class Single extends Product {
    */
   public void setIngredients(Connection conn) throws SQLException {
 
-    String sql = "SELECT pi.ingredient_id, pi.ingredientCount, i.ingredient_name "
-        + "FROM productingredients pi "
-        + "JOIN ingredient i ON pi.ingredient_id = i.ingredient_id "
-        + "WHERE product_id = ?";
+    if (needsIngredients) {
+      String sql = "SELECT pi.ingredient_id, pi.ingredientCount, i.ingredient_name "
+          + "FROM productingredients pi "
+          + "JOIN ingredient i ON pi.ingredient_id = i.ingredient_id "
+          + "WHERE product_id = ?";
 
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setInt(1, getId());
+      try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, getId());
 
-      ResultSet rs = stmt.executeQuery();
+        ResultSet rs = stmt.executeQuery();
 
-      while (rs.next()) {
-        ingredients.add(new Ingredient(
-            rs.getInt("ingredient_id"),
-            rs.getString("ingredient_name")));
-        quantity.add(rs.getInt("ingredientCount"));
+        while (rs.next()) {
+          ingredients.add(new Ingredient(
+              rs.getInt("ingredient_id"),
+              rs.getString("ingredient_name")));
+          quantity.add(rs.getInt("ingredientCount"));
+        }
+        needsIngredients = false;
+        rs.close();
       }
-      rs.close();
     }
   }
 
