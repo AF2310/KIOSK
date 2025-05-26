@@ -127,6 +127,15 @@ public class UpdateMenuItems {
       primaryStage.setScene(globalDiscountScreen.getGlobalDiscountScreen());
     });
 
+    MidButton addIngredientsButton = makeMidButton("Add Ingredients to DB");
+
+    addIngredientsButton.setOnAction(e -> {
+      AddIngredientsToDatabase addIngredientScreen = new AddIngredientsToDatabase(
+          primaryStage,
+          prevScene);
+      primaryStage.setScene(addIngredientScreen.addIngredientToDb());
+    });
+
     // Back button -> user goes to previous screen
     var backButton = new BackBtnWithTxt();
     backButton.setOnAction(e -> {
@@ -153,6 +162,7 @@ public class UpdateMenuItems {
     gridPane.add(editProductButton, 0, 1);
     gridPane.add(removeProductButton, 0, 2);
     gridPane.add(globalDiscountButton, 0, 3);
+    gridPane.add(addIngredientsButton, 0, 4);
 
     // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
