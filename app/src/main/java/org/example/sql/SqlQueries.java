@@ -749,7 +749,6 @@ public class SqlQueries {
 
             // Fetch all product preparation times from database
             int prepTime = rs.getInt("preparation_time");
-            System.out.println("DEBUG PREPTIME: " + prepTime);
 
             // Set fetched prep time as time for product
             products.get(index).setPreparationTime(prepTime);
@@ -1032,12 +1031,10 @@ public class SqlQueries {
         int orderItemid = receiveOrderId(conn);
 
         if (items.get(i) instanceof Single) {
-          // System.out.println("DEBUG: items:" + items.get(i));
           List<Ingredient> ingrediets = ((Single) items.get(i)).ingredients;
           List<Integer> quantitys = ((Single) items.get(i)).quantity;
 
           for (int j = 0; j < ingrediets.size(); j++) {
-            // System.out.println("DEBUG: ingrediets:" + ingrediets.get(j));
             String query = "INSERT INTO orderitemingredients "
                 + "(order_item_id, ingredient_id, ingredientCount)"
                 + "VALUES (?, ?, ?)";
