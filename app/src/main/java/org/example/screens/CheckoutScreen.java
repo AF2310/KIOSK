@@ -219,6 +219,7 @@ public class CheckoutScreen {
         err.printStackTrace();
       }
       String subject = "Reciept for order: " + orderId;
+      String messageBody = Cart.getInstance().printCart(orderId);
       Cart.getInstance().convertMealsIntoSingles();
       try {
         Cart.getInstance().saveQuantityToDb(orderId);
@@ -237,7 +238,7 @@ public class CheckoutScreen {
           welcomeScrScene,
           orderId,
           subject,
-          Cart.getInstance().printCart(orderId)
+          messageBody
       );
       this.primaryStage.setScene(recieptScene);
     });
