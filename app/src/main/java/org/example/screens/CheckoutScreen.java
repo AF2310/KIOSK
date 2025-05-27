@@ -5,9 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.animation.PauseTransition;
+import javafx.animation.ScaleTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -106,14 +108,16 @@ public class CheckoutScreen {
     promoCodeLabel.setStyle(
         "-fx-text-fill: black;"
             + "-fx-font-weight: lighter;"
-            + "-fx-font-size: 15;"
+            + "-fx-font-size: 13;"
             + "-fx-background-radius: 10;");
-
+    promoCodeLabel.setMinHeight(40);
+    promoCodeLabel.setPrefHeight(40);;
     // Initially hidden
-    promoCodeLabel.setVisible(false);
+    promoCodeLabel.setOpacity(0);
+    promoCodeLabel.setManaged(true);
 
     // Promo code section
-    RectangleTextFieldWithLabel promoField = new RectangleTextFieldWithLabel("Enter Code:",
+    RectangleTextFieldWithLabel promoField = new RectangleTextFieldWithLabel("Enter Promo Code:",
         "rgb(255, 255, 255)");
 
     SqrBtnWithOutline applyPromoCode = new SqrBtnWithOutline("Apply",
@@ -126,12 +130,17 @@ public class CheckoutScreen {
     HBox topRightPromoBox = new HBox(20);
     topRightPromoBox.getChildren().addAll(promoField, applyPromoCode);
 
-    VBox topRightBox = new VBox(topRightPromoBox, promoCodeLabel);
+    
+    applyPromoCode.setOnMousePressed(e -> 
+        animateButtonPress(applyPromoCode, 0.95));
+    applyPromoCode.setOnMouseReleased(e ->
+        animateButtonPress(applyPromoCode, 1.0));
+
 
     applyPromoCode.setOnAction(e -> {
       try (Connection connection = DatabaseManager.getConnection()) {
         String userPromoCode = promoField.getText();
-        if (userPromoCode.isEmpty()) {
+        Runnable showError = () -> {
           // Creates an image icon for an incorrect login so that the image changes
           // upon correct or incorrect promo code.
           Image errorIcon = new Image(getClass().getResourceAsStream("/errorLogin.png"));
@@ -140,20 +149,25 @@ public class CheckoutScreen {
           errorIconView.setFitHeight(40);
           errorIconView.setPreserveRatio(true);
 
+          promoCodeLabel.setText("Invalid promo code entered!");
           promoCodeLabel.setGraphic(errorIconView);
           promoCodeLabel.setGraphicTextGap(10);
+          promoCodeLabel.setOpacity(1);
 
-          promoCodeLabel.setText("Invalid promo code entered!");
-          promoCodeLabel.setVisible(true);
           // Using the class pause transition so the user can temp. see the
           // error message and its then removed and set to null.
           PauseTransition pause = new PauseTransition(Duration.seconds(2));
           pause.setOnFinished(event -> {
-            promoCodeLabel.setVisible(false);
+            promoCodeLabel.setOpacity(0);
             promoCodeLabel.setText(null);
             promoCodeLabel.setGraphic(null); // removes all fields of the label
           });
           pause.play();
+        };
+
+        if (userPromoCode.isEmpty()) {
+          showError.run();
+          return;
         }
 
         String promoCodeSql = "SELECT name, discount_type, discount_value, promo_code "
@@ -169,15 +183,15 @@ public class CheckoutScreen {
             int discountFactor = promoCodeResults.getInt("discount_value");
             order.applyDiscount(discountFactor);
             promoCodeLabel.setText("Promo code applied " + discountFactor + "% off");
-            promoCodeLabel.setVisible(true);
+            promoCodeLabel.setGraphic(null);
+            promoCodeLabel.setOpacity(1);
             valid = true;
             break;
           }
         }
 
         if (!valid) {
-          promoCodeLabel.setText("Invalid promo code");
-          promoCodeLabel.setVisible(true);
+          showError.run();
         }
 
       } catch (SQLException e1) {
@@ -188,6 +202,8 @@ public class CheckoutScreen {
         button.updatePriceLabel();
       }
     });
+    
+    VBox topRightBox = new VBox(topRightPromoBox, promoCodeLabel);
 
     HBox topBox = new HBox();
     topBox.setAlignment(Pos.TOP_LEFT);
@@ -204,10 +220,13 @@ public class CheckoutScreen {
 
     // Create confirm order button instance
     ConfirmOrderButton confirmOrderButton = new ConfirmOrderButton(order);
-
+    confirmOrderButton.setDisable(Cart.getInstance().isEmpty());
     // Add confirmation button to listeners of cart changes
     // -> so price label of button updates when cart changes
-    Cart.getInstance().addListener(() -> confirmOrderButton.updatePriceLabel());
+    Cart.getInstance().addListener(() -> {
+      confirmOrderButton.updatePriceLabel();
+      confirmOrderButton.setDisable(Cart.getInstance().isEmpty());
+    });
 
     // User confirms order
     confirmOrderButton.setOnAction(e -> {
@@ -336,5 +355,12 @@ public class CheckoutScreen {
     }
 
     return scene;
+  }
+
+  private void animateButtonPress(Button button, double scale) {
+    ScaleTransition st = new ScaleTransition(Duration.millis(100), button);
+    st.setToX(scale);
+    st.setToY(scale);
+    st.play();
   }
 }
