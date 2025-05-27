@@ -1,9 +1,23 @@
 package org.example;
 
+import java.io.IOException;
 import javafx.application.Application;
-import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.example.buttons.ArrowButton;
+import org.example.buttons.BlackButtonWithImage;
+import org.example.buttons.CartSquareButton;
+import org.example.buttons.CircleButtonWithSign;
+import org.example.buttons.ColorBtnOutlineImage;
+import org.example.buttons.ColorButtonWithImage;
+import org.example.buttons.ColorSettingManager;
+import org.example.buttons.ColorSquareButtonWithImage;
+import org.example.buttons.ConfirmOrderButton;
+import org.example.buttons.TitleLabel;
 import org.example.kiosk.InactivityTimer;
+import org.example.kiosk.LabelManager;
+import org.example.screens.BackgroundColorStore;
+import org.example.screens.CustomScene;
 import org.example.screens.WelcomeScreen;
 
 /**
@@ -17,10 +31,47 @@ public class App extends Application {
     double windowWidth = 1920;
     double windowHeight = 1080;
 
+    // Instantiates List to load color scheme
+    Color[] savedColors = null;
+    
+    try {
+      
+      // Loads colors
+      savedColors = ColorSettingManager.loadColors();
+      
+    } catch (IOException e) {
+      
+      e.printStackTrace();
+      
+    }
+    
+    // Sets loaded color scheme
+    if (savedColors != null) {
+      
+      LabelManager.setTextColor(savedColors[0]);
+      TitleLabel.setTextColor(savedColors[0]);
+      BlackButtonWithImage.setButtonBackgroundColor(savedColors[0]);
+      ColorSquareButtonWithImage.setButtonColor(savedColors[0]);
+      CartSquareButton.setButtonColor(savedColors[0]);
+      ColorBtnOutlineImage.setButtonColor(savedColors[0]);
+      ArrowButton.setButtonColor(savedColors[0]);
+      ConfirmOrderButton.setButtonBackgroundColor(savedColors[0]);
+      CircleButtonWithSign.setPlusColor(savedColors[0]);
+      CircleButtonWithSign.setMinusBorder(savedColors[0]);;
+      ColorButtonWithImage.setButtonBackgroundColor(savedColors[1]);
+      CircleButtonWithSign.setMinusBackground(savedColors[1]);
+      BackgroundColorStore.setCurrentBackgroundColor(savedColors[2]);
+      
+    }
+
     // Create the WelcomeScreen object and get the scene
     WelcomeScreen welcomeScreen = new WelcomeScreen();
-    Scene welcomeScene = welcomeScreen.createWelcomeScreen(primaryStage, windowWidth, windowHeight);
-
+    CustomScene welcomeScene = welcomeScreen.createWelcomeScreen(
+        primaryStage,
+        windowWidth,
+        windowHeight
+      );
+    
     // Get welcome scene to stop timer every time on this scene and for later use
     InactivityTimer.getInstance().setWelcomeScene(welcomeScene);
 
