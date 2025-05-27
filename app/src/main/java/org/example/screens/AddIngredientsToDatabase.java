@@ -6,25 +6,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.LangBtn;
 import org.example.buttons.RectangleTextFieldWithLabel;
 import org.example.buttons.SqrBtnWithOutline;
+import org.example.buttons.TitleLabel;
 import org.example.kiosk.LanguageSetting;
 import org.example.sql.DatabaseManager;
 
@@ -34,8 +34,7 @@ import org.example.sql.DatabaseManager;
 public class AddIngredientsToDatabase {
   private Stage primaryStage;
   private Scene prevScene;
-  private ListView<HBox> categoryListView;
-  private ObservableList<HBox> categories = FXCollections.observableArrayList();
+  private Label errorLabel;
 
   /**
    * Constructor for the AddIngredientsToDatabase scene.
@@ -55,31 +54,45 @@ public class AddIngredientsToDatabase {
    */
   public Scene addIngredientToDb() {
 
-    Label titleLabel = new Label("Add New Ingredient");
-    titleLabel.setStyle("-fx-font-size: 40; -fx-font-weight: bold;");
+    TitleLabel titleLabel = new TitleLabel("Add Ingredients to the Database");
 
     HBox titleBox = new HBox(titleLabel);
     titleBox.setAlignment(Pos.CENTER);
     titleBox.setPadding(new Insets(30));
 
+    errorLabel = new Label();
+    errorLabel.setStyle(
+        "-fx-text-fill: black;"
+            + "-fx-font-weight: lighter;"
+            + "-fx-font-size: 13;"
+            + "-fx-background-radius: 10;");
+    errorLabel.setMinHeight(40);
+    errorLabel.setPrefHeight(40);
+    ;
+    // Initially hidden
+    errorLabel.setOpacity(0);
+    errorLabel.setManaged(true);
+
     // Input fields
     RectangleTextFieldWithLabel nameField = new RectangleTextFieldWithLabel(
         "Ingredient Name:", "rgb(255, 255, 255)");
 
-    VBox categoryBox = new VBox(5); 
+    VBox categoryBox = new VBox(5);
     categoryBox.setPrefHeight(500);
     categoryBox.setPrefWidth(250);
-    loadCategories(categoryBox); 
+    categoryBox.setAlignment(Pos.TOP_CENTER);
+    loadCategories(categoryBox);
 
-    categoryBox.setAlignment(Pos.CENTER);
+    var checkBoxLabel = new Label("Select Categories which will have this ingredient:");
+    checkBoxLabel.setStyle("-fx-font-family: Tahoma;"
+        + "-fx-font-size: 20 px;"
+        + "-fx-font-weight: bolder;"
+        + "-fx-text-alignment: center;"
+        + "-fx-text-fill: rgb(0, 0, 0);");
 
-    VBox inputFields = new VBox(20, nameField, 
-        new Label("Select Categories which will have this ingredient:"), categoryBox);
-    inputFields.setAlignment(Pos.CENTER);
-    inputFields.setPadding(new Insets(20));
     // Buttons
     SqrBtnWithOutline confirmButton = new SqrBtnWithOutline(
-        "Add Ingredient", "green_tick.png", "rgb(81, 173, 86)");
+        "Add", "green_tick.png", "rgb(81, 173, 86)");
     confirmButton.setOnAction(e -> addIngredientToDatabase(
         nameField.getText(),
         getSelectedCategories(categoryBox)));
@@ -88,8 +101,13 @@ public class AddIngredientsToDatabase {
     backButton.setOnAction(e -> primaryStage.setScene(prevScene));
 
     HBox buttonBox = new HBox(20, confirmButton, backButton);
-    buttonBox.setAlignment(Pos.CENTER);
+    buttonBox.setAlignment(Pos.TOP_CENTER);
     buttonBox.setPadding(new Insets(20));
+
+    VBox inputFields = new VBox(20, nameField, checkBoxLabel,
+        categoryBox, buttonBox, errorLabel);
+    inputFields.setAlignment(Pos.CENTER);
+    inputFields.setPadding(new Insets(20, 0, 0, 0));
 
     // Language button
     LangBtn langButton = new LangBtn();
@@ -99,7 +117,8 @@ public class AddIngredientsToDatabase {
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
     // Bottom layout
-    HBox bottomBox = new HBox(langButton, spacer, buttonBox);
+    HBox bottomBox = new HBox(langButton);
+    bottomBox.setAlignment(Pos.BOTTOM_LEFT);
     bottomBox.setPadding(new Insets(20));
 
     // Main layout
@@ -134,10 +153,9 @@ public class AddIngredientsToDatabase {
         CheckBox checkBox = new CheckBox(rs.getString("name"));
         checkBox.setUserData(rs.getInt("category_id"));
         checkBox.setStyle("-fx-font-size: 16px;"
-            + "-fx-padding: 8px;"   
-            + "-fx-scale-x: 1.2;"     
-            + "-fx-scale-y: 1.2;"
-        );
+            + "-fx-padding: 8px;"
+            + "-fx-scale-x: 1.2;"
+            + "-fx-scale-y: 1.2;");
 
         // Add directly to the VBox instead of creating HBoxes
         categoryBox.getChildren().add(checkBox);
@@ -162,6 +180,13 @@ public class AddIngredientsToDatabase {
 
   private void addIngredientToDatabase(String name, List<Integer> categoryIds) {
     if (name.isEmpty()) {
+      showError("Ingredient field cannot be empty", errorLabel);
+      return;
+    }
+    List<String> existingIngredients = getIngredients();
+
+    if (existingIngredients.contains(name.toLowerCase())) {
+      showError("This ingredient is already in the database", errorLabel);
       return;
     }
 
@@ -189,20 +214,33 @@ public class AddIngredientsToDatabase {
 
       // Insert category associations
       if (!categoryIds.isEmpty()) {
-        String categorySql = "INSERT INTO ingredient_category"
+        String checkSql = "SELECT 1 FROM categoryingredients "
+            + "WHERE ingredient_id = ? AND category_id = ?";
+        String insertSql = "INSERT INTO categoryingredients "
             + "(ingredient_id, category_id) VALUES (?, ?)";
 
-        PreparedStatement categoryStmt = connection.prepareStatement(categorySql);
+        PreparedStatement checkStmt = connection.prepareStatement(checkSql);
+        PreparedStatement insertStmt = connection.prepareStatement(insertSql);
 
         for (int categoryId : categoryIds) {
-          categoryStmt.setInt(1, ingredientId);
-          categoryStmt.setInt(2, categoryId);
-          categoryStmt.addBatch();
+          // Check if relationship already exists
+          checkStmt.setInt(1, ingredientId);
+          checkStmt.setInt(2, categoryId);
+          try (ResultSet rs = checkStmt.executeQuery()) {
+            if (!rs.next()) { // Only insert if relationship doesn't exist
+              insertStmt.setInt(1, ingredientId);
+              insertStmt.setInt(2, categoryId);
+              insertStmt.addBatch();
+            }
+          }
         }
-        categoryStmt.executeBatch();
+
+        insertStmt.executeBatch();
       }
 
       connection.commit();
+      changeLabelText("Ingredient has been successfully added!", errorLabel);
+
     } catch (SQLException e) {
       if (connection != null) {
         try {
@@ -211,6 +249,7 @@ public class AddIngredientsToDatabase {
           ex.printStackTrace();
         }
       }
+      showError("Error adding ingredient: " + e.getMessage(), errorLabel);
       e.printStackTrace();
     } finally {
       if (connection != null) {
@@ -224,8 +263,51 @@ public class AddIngredientsToDatabase {
     }
   }
 
+  private List<String> getIngredients() {
+    List<String> ingredients = new ArrayList<>();
+    try (Connection connection = DatabaseManager.getConnection()) {
+      String sql = "SELECT ingredient_name FROM ingredient";
+      PreparedStatement stmt = connection.prepareStatement(sql);
+      ResultSet rs = stmt.executeQuery();
+
+      while (rs.next()) {
+        ingredients.add(rs.getString("ingredient_name").toLowerCase());
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return ingredients;
+  }
+
   private void showError(String errorText, Label label) {
-    label.setStyle("-fx-text-fill: red; -fx-font-size: 14;");
-    label.setVisible(true);
+    if (label != null) {
+      label.setText(errorText);
+      label.setStyle("-fx-text-fill: red; -fx-font-size: 14;");
+      label.setOpacity(1);
+
+      PauseTransition pause = new PauseTransition(Duration.seconds(2));
+      pause.setOnFinished(event -> {
+        label.setOpacity(0);
+        label.setText(null);
+        label.setGraphic(null); // removes all fields of the label
+      });
+      pause.play();
+    }
+  }
+
+  private void changeLabelText(String errorText, Label label) {
+    if (label != null) {
+      label.setText(errorText);
+      label.setStyle("-fx-text-fill: green; -fx-font-size: 14;");
+      label.setOpacity(1);
+
+      PauseTransition pause = new PauseTransition(Duration.seconds(2));
+      pause.setOnFinished(event -> {
+        label.setOpacity(0);
+        label.setText(null);
+        label.setGraphic(null); // removes all fields of the label
+      });
+      pause.play();
+    }
   }
 }
