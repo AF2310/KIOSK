@@ -1,5 +1,6 @@
 package org.example.screens;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javafx.geometry.Insets;
@@ -20,6 +21,7 @@ import org.example.buttons.BlackButtonWithImage;
 import org.example.buttons.ColorBtnOutlineImage;
 import org.example.buttons.ColorButtonWithImage;
 import org.example.buttons.ColorPickersPane;
+import org.example.buttons.ColorSettingManager;
 import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.KioskName;
 import org.example.buttons.LangBtn;
@@ -76,9 +78,6 @@ public class CustomizationScreen {
     VBox nameBox = new VBox(10, promptInput, nameInput, saveNameButton);
     nameBox.setAlignment(Pos.CENTER);
 
-    // Making the title on top of the admin menu screen
-    Label adminMenuText = new TitleLabel("Set & Test Design");
-
     // Colopickers moved to a separate file
     var colorPickers = new ColorPickersPane(
         primaryStage,
@@ -89,9 +88,71 @@ public class CustomizationScreen {
         TitleLabel.getTextColor(),
         ColorButtonWithImage.getButtonColor(),
         BackgroundColorStore.getCurrentBackgroundColor());
+    
+    // Button to save selected color scheme
+    Button saveColorsBtn = new Button();
+    saveColorsBtn.setText("Save Color Scheme");
+    saveColorsBtn.setOnAction(e -> {
+          
+      try {
+        
+        // Gets current colors and saves to file
+        ColorSettingManager.saveColors(
+            colorPickers.getPrimaryColorPicker().getValue(),
+            colorPickers.getSecondaryColorPicker().getValue(),
+            colorPickers.getBackgroundColorPicker().getValue()
+        );
+          
+        System.out.println("Scheme saved");
+
+      } catch (IOException ex) {
+
+        ex.printStackTrace();
+          
+      }
+    
+    });
+    
+    // Button to reset saved color scheme to our baseline scheme
+    Button resetColorsBtn = new Button();
+    resetColorsBtn.setText("Reset Color Scheme");
+    resetColorsBtn.setOnAction(e -> {
+      
+      try {
+        
+        ColorSettingManager.resetToDefaults();
+        
+        Color[] defaults = ColorSettingManager.loadColors();
+        
+        if (defaults != null) {
+          
+          colorPickers.getPrimaryColorPicker().setValue(defaults[0]);
+          colorPickers.getSecondaryColorPicker().setValue(defaults[1]);
+          colorPickers.getBackgroundColorPicker().setValue(defaults[2]);
+          
+        }
+        
+        System.out.println("Scheme reset");
+        
+      } catch (IOException ex) {
+        
+        ex.printStackTrace();
+        
+      }
+      
+    });
+    
+    // Wraps the management buttons
+    HBox colorManagement = new HBox();
+    colorManagement.setSpacing(50);
+    colorManagement.setAlignment(Pos.CENTER);
+    colorManagement.getChildren().addAll(resetColorsBtn, saveColorsBtn);
+    
+    // Making the title on top of the admin menu screen
+    Label adminMenuText = new TitleLabel("Set & Test Design");
 
     // Wraps top part of the screen
-    adminMenuLayout.getChildren().addAll(adminMenuText, nameBox, colorPickers);
+    adminMenuLayout.getChildren().addAll(adminMenuText, nameBox, colorPickers, colorManagement);
 
     // this gridpane is used for all the middle buttons in the admin menu,
     // to align tem properly in rows and columns.
@@ -105,13 +166,11 @@ public class CustomizationScreen {
     var testBtn2 = new ColorButtonWithImage("With Image", "/eatHere.png");
     var testBtn3 = new BlackButtonWithImage("BlBtn", "/eatHere.png");
     var testBtn4 = new ColorSquareButtonWithImage("With Image", "/back.png");
-    // var testBtn5 = new MidButton("Filled", "rgb(1, 176, 51)", 30);
 
     centerGrid.add(testBtn1, 0, 0);
     centerGrid.add(testBtn4, 0, 1);
     centerGrid.add(testBtn2, 1, 0);
     centerGrid.add(testBtn3, 1, 1);
-    // centerGrid.add(testBtn5, 0, 2);
 
     // Adding the language button which already has the functionality of
     // changing the logo of the language
