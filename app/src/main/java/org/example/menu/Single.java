@@ -16,6 +16,7 @@ public class Single extends Product {
   public List<Integer> quantity;
   private boolean modified;
   private boolean inMeal;
+  private boolean needsIngredients;
 
   /**
    * This constructor is used to create instances of the Single class with the
@@ -30,6 +31,7 @@ public class Single extends Product {
     this.quantity = new ArrayList<>();
     setType(type);
     setImagePath(imgPath);
+    needsIngredients = true;
   }
 
   /**
@@ -50,6 +52,7 @@ public class Single extends Product {
     setType(type);
     setImagePath(imgPath);
     this.ingredients = ingredients;
+    needsIngredients = true;
   }
 
   public void setModefied(boolean modified) {
@@ -104,43 +107,6 @@ public class Single extends Product {
    * Assumes category name maps to valid category in DB.
    */
   public void saveToDb() throws SQLException {
-    /* // Get the category_id from the category name (enum)
-    String categoryQuery = "SELECT category_id FROM category WHERE name = ?";
-    int categoryId;
-    try (PreparedStatement categoryStmt = conn.prepareStatement(categoryQuery)) {
-      // assumes enum name matches DB name
-      categoryStmt.setString(1, getType().name());
-
-      try (ResultSet rs = categoryStmt.executeQuery()) {
-        if (rs.next()) {
-          categoryId = rs.getInt("category_id");
-
-          // For debugging
-        } else {
-          throw new SQLException("ERROR no type in DB found named: " + getType().name());
-        }
-      }
-    }
-    // Insert product in database with query and needed data
-    String insertSql = "INSERT INTO product "
-        + "(name, description, price, category_id, is_active) "
-        + "VALUES (?, ?, ?, ?, ?)";
-
-    try (PreparedStatement stmt = conn.prepareStatement(
-        insertSql, Statement.RETURN_GENERATED_KEYS)) {
-      stmt.setString(1, getName());
-      stmt.setString(2, getDescription());
-      stmt.setDouble(3, getPrice());
-      stmt.setInt(4, categoryId);
-      stmt.setInt(5, getActivity()); // stored as Tinyint (1 or 0)
-      stmt.executeUpdate();
-
-      try (ResultSet rs = stmt.getGeneratedKeys()) {
-        if (rs.next()) {
-          setId(rs.getInt(1));
-        }
-      }
-    } */
     try {
       SqlQueries pool = new SqlQueries();
       pool.saveSingleToDb(this);
@@ -263,7 +229,7 @@ public class Single extends Product {
   public void setIngredients() throws SQLException {
     try {
       SqlQueries pool = new SqlQueries();
-      pool.setIngredientsForSingle(this);
+      pool.setIngredientsForSingle(this, needsIngredients);
 
     } catch (SQLException e) {
       e.printStackTrace();
@@ -278,6 +244,7 @@ public class Single extends Product {
    */
   @Override
   public boolean equals(Object obj) {
+    
     //Single other = (Single) obj;
     if (this == obj) {
       return true;
@@ -320,29 +287,33 @@ public class Single extends Product {
     }
   }
 
-  /*
-   * public List<Single> getOptionsByCategoryName(Connection conn,
-   * String categoryName) throws SQLException {
-   * List<Single> options = new ArrayList<>();
-   * String sql = "SELECT i.id, i.name, i.price, c.name AS category_name " +
-   * "FROM item i " +
-   * "JOIN category c ON i.category_id = c.category_id " +
-   * "WHERE c.name = ?";
-   * try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-   * stmt.setString(1, categoryName);
-   * ResultSet rs = stmt.executeQuery();
-   * while (rs.next()) {
-   * options.add(new Single(
-   * rs.getInt("id"),
-   * rs.getString("name"),
-   * rs.getFloat("price"),
-   * rs.getString("category_name")
-   * ));
-   * }
-   * rs.close();
-   * }
-   * return options;
-   * }
-   */
+  /*public List<Single> getOptionsByCategoryName(Connection conn,
+                          String categoryName) throws SQLException {
+      List<Single> options = new ArrayList<>();
+      String sql = "SELECT i.id, i.name, i.price, c.name AS category_name " +
+      "FROM item i " +
+      "JOIN category c ON i.category_id = c.category_id " +
+      "WHERE c.name = ?";
+      try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, categoryName);
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+          options.add(new Single(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getFloat("price"),
+                rs.getString("category_name")
+            ));
+        }
+        rs.close();
+      }
+      return options;
+    }*/
 
+  /**
+   * The toString method.
+   */
+  public String toString() {
+    return getName() + "    " + getPrice() + "kr";
+  }
 }

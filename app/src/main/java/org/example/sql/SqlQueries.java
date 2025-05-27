@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.example.menu.Drink;
 import org.example.menu.Ingredient;
 import org.example.menu.Meal;
 import org.example.menu.OrderItem;
 import org.example.menu.Product;
+import org.example.menu.Side;
 import org.example.menu.Single;
 import org.example.menu.Type;
 import org.example.orders.Order;
@@ -468,24 +470,29 @@ public class SqlQueries {
    * @param single the Single product to set ingredients for
    * @throws SQLException if database access error occurs
    */
-  public void setIngredientsForSingle(Single single) throws SQLException {
+  public void setIngredientsForSingle(Single single, boolean needsIngredients) throws SQLException {
 
-    String sql = "SELECT pi.ingredient_id, pi.ingredientCount, i.ingredient_name "
-        + "FROM productingredients pi "
-        + "JOIN ingredient i ON pi.ingredient_id = i.ingredient_id "
-        + "WHERE product_id = ?";
+    if (needsIngredients) {
+      String sql = "SELECT pi.ingredient_id, pi.ingredientCount, i.ingredient_name "
+          + "FROM productingredients pi "
+          + "JOIN ingredient i ON pi.ingredient_id = i.ingredient_id "
+          + "WHERE product_id = ?";
+  
+      try (Connection conn = DatabaseManager.getConnection();
+          PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    try (Connection conn = DatabaseManager.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setInt(1, single.getId());
+        stmt.setInt(1, single.getId());
 
-      try (ResultSet rs = stmt.executeQuery()) {
+        ResultSet rs = stmt.executeQuery();
+
         while (rs.next()) {
           single.addIngredient(new Ingredient(
               rs.getInt("ingredient_id"),
               rs.getString("ingredient_name")));
           single.quantity.add(rs.getInt("ingredientCount"));
         }
+        needsIngredients = false;
+        rs.close();
       }
     }
   }
@@ -910,7 +917,7 @@ public class SqlQueries {
 
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
-          Meal meal = new Meal(rs.getString("name"), conn);
+          Meal meal = new Meal(rs.getString("name"));
           meal.setId(rs.getInt("meal_id"));
           meal.setPrice(rs.getFloat("price"));
           meal.setImagePath(rs.getString("image_url"));
@@ -1026,12 +1033,10 @@ public class SqlQueries {
         int orderItemid = receiveOrderId(conn);
 
         if (items.get(i) instanceof Single) {
-          // System.out.println("DEBUG: items:" + items.get(i));
           List<Ingredient> ingrediets = ((Single) items.get(i)).ingredients;
           List<Integer> quantitys = ((Single) items.get(i)).quantity;
 
           for (int j = 0; j < ingrediets.size(); j++) {
-            // System.out.println("DEBUG: ingrediets:" + ingrediets.get(j));
             String query = "INSERT INTO orderitemingredients "
                 + "(order_item_id, ingredient_id, ingredientCount)"
                 + "VALUES (?, ?, ?)";
@@ -1049,5 +1054,241 @@ public class SqlQueries {
         }
       }
     }
+  }
+
+  /**
+   * Method used for meal customization screen.
+   * Retrieves all side options for a specific meal.
+   *
+   * @param mealId int id of the specific meal
+   * @return list of side options from this meal
+   */
+  public List<Product> getSideOptionsForMeal(int mealId) {
+    List<Product> sideOptions = new ArrayList<>();
+    String sql = """
+        SELECT p.product_id, p.name, p.price, p.image_url
+        FROM meal_sideoptions mso
+        JOIN product p ON mso.product_id = p.product_id
+        WHERE mso.meal_id = ?
+        """;
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, mealId);
+      try (ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+          Side side = new Side(
+              rs.getInt("product_id"),
+              rs.getString("name"),
+              rs.getFloat("price"),
+              Type.SIDES,
+              rs.getString("image_url"));
+          sideOptions.add(side);
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    return sideOptions;
+  }
+
+  /**
+   * Method used for meal customization screen.
+   * Retrieves all drink options for a specific meal.
+   *
+   * @param mealId int id of the specific meal
+   * @return list of drink options from this meal
+   */
+  public List<Product> getDrinkOptionsForMeal(int mealId) {
+    List<Product> drinkOptions = new ArrayList<>();
+    String sql = """
+        SELECT p.product_id, p.name, p.price, p.image_url
+        FROM meal_drinkoptions mdo
+        JOIN product p ON mdo.product_id = p.product_id
+        WHERE mdo.meal_id = ?
+        """;
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, mealId);
+      try (ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+          Drink drink = new Drink(
+              rs.getInt("product_id"),
+              rs.getString("name"),
+              rs.getFloat("price"),
+              Type.DRINKS,
+              rs.getString("image_url"));
+          drinkOptions.add(drink);
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    return drinkOptions;
+  }
+
+  /**
+   * Method to set the main of the Meal.
+   *
+   * @throws SQLException if database fails
+   */
+  public void setMainOfDb(Meal meal) throws SQLException {
+
+    String sql = "SELECT product_id FROM meal WHERE meal_id = ?";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);) {
+
+      ps.setInt(1, meal.getId());
+      ResultSet rs = ps.executeQuery();
+      int productId = 0;
+      while (rs.next()) {
+        productId = rs.getInt("product_id");
+      }
+      ps.close();
+      rs.close();
+  
+      String sql2 = "SELECT name, price, image_url FROM product WHERE product_id = ?";
+  
+      PreparedStatement stmt = conn.prepareStatement(sql2);
+      stmt.setInt(1, productId);
+      ResultSet rs2 = stmt.executeQuery();
+  
+      while (rs2.next()) {
+        meal.setMainDb(new Single(
+              meal.getId(),
+              rs2.getString("name"),
+              rs2.getFloat("price"),
+              Type.valueOf("MEAL"),
+              rs2.getString("image_url")));
+      }
+      rs2.close();
+      stmt.close();
+      meal.getMain().setIngredients();
+    }
+    
+    System.out.println(meal.getMain());
+  }
+
+  /**
+   * Retrieves a list of meals from the database that are
+   * under the input price limit.
+   *
+   * @param priceLimit maximum price for filtering meals
+   * @return list of meals priced under the input limit
+   * @throws SQLException if a database access error occurs
+   */
+  public List<Meal> getMealsUnder(double priceLimit) throws SQLException {
+    List<Meal> list = new ArrayList<>();
+    String sql = "SELECT id, name, total_price FROM meals WHERE total_price < ?";
+    
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);) {
+
+      ps.setDouble(1, priceLimit);
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        Meal m = new Meal(rs.getString("name"));
+        m.setId(rs.getInt("id"));
+        list.add(m);
+      }
+      ps.close();
+      rs.close();
+      return list;
+    }
+  }
+  
+  /**
+   * Retrieves a list of meals from the database.
+   * The meals are filerted by the input meal type.
+   *
+   * @param type type of meal that is requested
+   * @return list of meals of the given type
+   * @throws SQLException if a database access error occurs
+   */
+  public List<Meal> getMealsbyType(String type) throws SQLException {
+
+    // list to store resulting Meals in
+    List<Meal> list = new ArrayList<>();
+
+    // SQL query to select all specified Meals
+    String sql = "SELECT id, name, total_price FROM meals WHERE type = ?";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);) {
+
+      // Bind type to SQL query
+      ps.setString(1, type);
+  
+      // Execute query to retrieve wanted Meals
+      ResultSet rs = ps.executeQuery();
+  
+      // Iterate over result set and construct Meal objects from each row
+      while (rs.next()) {
+        Meal m = new Meal(rs.getString("name"));
+        m.setId(rs.getInt("id"));
+        list.add(m);
+      }
+  
+      // Close result set and statement and return build list
+      ps.close();
+      rs.close();
+      return list;
+    }
+  }
+
+  /**
+   * The method is responsible for retrieving all meals from a database.
+   */
+  public List<Meal> getAllMeals() throws SQLException {
+
+    List<Meal> list = new ArrayList<>();
+
+    // TODO: how change meals to match database???
+    String sql = "SELECT id, name FROM meals";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        Statement stmt = conn.createStatement();) {
+
+      ResultSet rs = stmt.executeQuery(sql);
+  
+      while (rs.next()) {
+        Meal meal = new Meal(rs.getString("name"));
+        meal.setId(rs.getInt("id"));
+        list.add(meal);
+      }
+  
+      rs.close();
+      stmt.close();
+  
+      return list;
+    }
+  }
+
+  /**
+   * Helper method that fetches all relevant info about a meal
+   * from the database.
+   *
+   * @return list of all relevant meals
+   * @throws SQLException database error
+   */
+  public List<Meal> fetchMealsFromDatabase() throws SQLException {
+    List<Meal> meals = new ArrayList<>();
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement ps = conn.prepareStatement(
+            "SELECT meal_id, name, price, image_url FROM meal");
+        ResultSet rs = ps.executeQuery()) {
+
+      while (rs.next()) {
+        Meal meal = new Meal(rs.getString("name"));
+        meal.setId(rs.getInt("meal_id"));
+        meal.setPrice(rs.getFloat("price"));
+        meal.setImagePath(rs.getString("image_url"));
+        meals.add(meal);
+      }
+    }
+    return meals;
   }
 }

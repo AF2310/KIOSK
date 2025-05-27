@@ -1,12 +1,7 @@
 package org.example.screens;
 
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -30,64 +25,24 @@ import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;
-import org.example.menu.Drink;
 import org.example.menu.Meal;
 import org.example.menu.Product;
-import org.example.menu.Side;
-import org.example.menu.Type;
 import org.example.orders.Cart;
+import org.example.sql.SqlQueries;
 
 /**
  * A Class for picking side and drink option for the meal.
  */
 public class MealCustomizationScreen {
 
-  private Connection conn;
-
   /**
    * Constructor for connecting to the DB.
    */
-  public MealCustomizationScreen() {
-    try {
-      this.conn = DriverManager.getConnection(
-          "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-              + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-              + "?user=u5urh19mtnnlgmog"
-              + "&password=zPgqf8o6na6pv8j8AX8r"
-              + "&useSSL=true"
-              + "&allowPublicKeyRetrieval=true");
-    } catch (SQLException e) {
-      e.printStackTrace();
-      System.err.println("Failed to establish DB connection.");
-    }
-  }
+  public MealCustomizationScreen() {}
 
   private List<Product> getSideOptionsForMeal(int mealId) {
-    List<Product> sideOptions = new ArrayList<>();
-    String sql = """
-        SELECT p.product_id, p.name, p.price, p.image_url
-        FROM meal_sideoptions mso
-        JOIN product p ON mso.product_id = p.product_id
-        WHERE mso.meal_id = ?
-        """;
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setInt(1, mealId);
-      try (ResultSet rs = stmt.executeQuery()) {
-        while (rs.next()) {
-          Side side = new Side(
-              rs.getInt("product_id"),
-              rs.getString("name"),
-              rs.getFloat("price"),
-              Type.SIDES,
-              rs.getString("image_url"));
-          sideOptions.add(side);
-        }
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-
-    return sideOptions;
+    SqlQueries pool = new SqlQueries();
+    return pool.getSideOptionsForMeal(mealId);
   }
 
   /**
@@ -101,7 +56,7 @@ public class MealCustomizationScreen {
   public CustomScene createSideSelectionScene(Stage stage, Scene returnScene,
       Meal meal) {
     try {
-      meal.setMain(conn);
+      meal.setMain();
     } catch (SQLException e) {
       e.printStackTrace();
       System.err.println("Failed to set main for the meal.");
@@ -229,10 +184,10 @@ public class MealCustomizationScreen {
 
     // Goes to the next scene which is the drink options scene
     confirmButton.setOnMouseClicked(e -> {
-      Scene drinkScene = createDrinkSelectionScene(stage, returnScene, meal,
-          stage.getScene());
+      Scene drinkScene = createDrinkSelectionScene(stage, returnScene, meal, stage.getScene());
       stage.setScene(drinkScene);
     });
+
 
     CustomScene scene = new CustomScene(layout, 1920, 1080);
 
@@ -249,31 +204,8 @@ public class MealCustomizationScreen {
   }
 
   private List<Product> getDrinkOptionsForMeal(int mealId) {
-    List<Product> drinkOptions = new ArrayList<>();
-    String sql = """
-        SELECT p.product_id, p.name, p.price, p.image_url
-        FROM meal_drinkoptions mdo
-        JOIN product p ON mdo.product_id = p.product_id
-        WHERE mdo.meal_id = ?
-        """;
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setInt(1, mealId);
-      try (ResultSet rs = stmt.executeQuery()) {
-        while (rs.next()) {
-          Drink drink = new Drink(
-              rs.getInt("product_id"),
-              rs.getString("name"),
-              rs.getFloat("price"),
-              Type.DRINKS,
-              rs.getString("image_url"));
-          drinkOptions.add(drink);
-        }
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-
-    return drinkOptions;
+    SqlQueries pool = new SqlQueries();
+    return pool.getDrinkOptionsForMeal(mealId);
   }
 
   /**
@@ -457,7 +389,6 @@ public class MealCustomizationScreen {
       scene.setBackgroundColor(bgColor);
 
     }
-
     return scene;
   }
 }
