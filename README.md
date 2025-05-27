@@ -176,4 +176,12 @@ Vince cleaned up the sales statistics and moved some code into the sql class and
 He made the theme customization savable and so that they load on the appstart, also u can now reset the theme.
 Also the custom name is saveable now and loads on start of the app.
 
-Michelle corrected checkstyle issues throught out the whole project
+Michelle corrected checkstyle issues throught out the whole project. She also moved a lot of queries into the query file and ensured that the code is still working right.
+Also she worked on the worked on the estimated time calculation. Its takes now the real daytime into consideratoion.
+She also removed almost all of the handed down connection variables.
+Also she did some testing and fixed a lot of smaller bugs.
+
+We had a lot of meetings in smaller groups to do some brainstorming on the features and we had one big meeting on discord to wrap up the week. Through out the week we had communication via text on discord.
+
+The final class diagram and databse scema:
+![alt text](references/Clarke_db.png)
