@@ -1,10 +1,8 @@
 package org.example.users;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.example.orders.Order;
+import org.example.sql.SqlQueries;
 
 /**
  * Represents a customer using the Self Service Kiosk.
@@ -16,27 +14,15 @@ public class Customer implements User {
    *
    * @throws SQLException SQL Database errors
    */
-  public int placeOrder(Connection conn) throws SQLException {
-    // Calculate total order price
-    Order order = new Order();
-    double price = order.calculatePrice();
+  public int placeOrder(boolean discountApplied, int discountFactor) throws SQLException {
+    try {
+      SqlQueries pool = new SqlQueries();
+      return pool.placeOrder(discountApplied, discountFactor);
 
-    // SQL Query as string statement
-    String s = "INSERT INTO `order` "
-        + "(kiosk_ID, customer_ID, order_date, amount_total, status)"
-        + "VALUES (123, 1, NOW(), ?, 'pending')";
-    
-    // Prepare statement to be actual query
-    PreparedStatement ps = conn.prepareStatement(s);
-
-    // Insert price variable
-    ps.setObject(1, price);
-
-    // Execute query
-    ps.executeUpdate();
-
-    // immediately fetch the auto generated order id
-    return receiveOrderId(conn);
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return -1;
+    }
   }
 
   /**
@@ -53,38 +39,6 @@ public class Customer implements User {
    */
   public void viewOrderSummary() {
 
-  }
-
-  /**
-   * Generates or shows the order ID.
-   * This has to be used right after order creation.
-   * To not get false IDs on wrong usage, this is private
-   * and used in the place order method only.
-   *
-   * @throws SQLException SQL Database errors
-   */
-  private int receiveOrderId(Connection conn) throws SQLException {
-    // Set default order id
-    int id = -1;
-
-    // SQL Query as string statement
-    String s = "SELECT LAST_INSERT_ID()";
-
-    // Prepare statement to be actual query
-    // Using try to save ressources and close process automatically
-    try (PreparedStatement ps = conn.prepareStatement(s)) {
-      
-      // Open result set to fetch order id (execute query)
-      ResultSet rs = ps.executeQuery();
-
-      // if there is a result
-      if (rs.next()) {
-        // store result as order id integer
-        id = rs.getInt(1);
-      }
-    }
-
-    return id;
   }
 
   /**
@@ -112,7 +66,7 @@ public class Customer implements User {
    * Browses the menu implementation.
    */
   @Override
-   public void browseMenu() {
+  public void browseMenu() {
 
   }
 
@@ -122,6 +76,6 @@ public class Customer implements User {
   @Override
   public void searchProduct(String name) {
 
-  }    
-    
+  }
+
 }

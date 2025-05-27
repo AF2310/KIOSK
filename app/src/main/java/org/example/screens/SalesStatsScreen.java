@@ -24,12 +24,12 @@ import org.example.sql.SqlQueries;
  * Admin screen for sales stats.
  */
 public class SalesStatsScreen {
-    
+
   /**
    * Scene to display the order history.
    *
    * @param primaryStage this window
-   * @param prevScene pevious scene to go back to
+   * @param prevScene    pevious scene to go back to
    * @return the scene itself
    */
   public Scene showStatsScene(Stage primaryStage, Scene prevScene) {
@@ -45,8 +45,7 @@ public class SalesStatsScreen {
     Label pageLabel = new Label("Sales Statistics:");
     pageLabel.setStyle(
         "-fx-font-size: 45px;"
-        + "-fx-font-weight: bold;"
-    );
+            + "-fx-font-weight: bold;");
 
     // Had to somehow make List final, so a wrapper class is being used
     final OrderListWrapper wrapper = new OrderListWrapper();
@@ -149,7 +148,7 @@ public class SalesStatsScreen {
       primaryStage.setScene(prevScene);
 
     });
-    
+
     // Spacer for Bottom Row
     Region spacerBottom = new Region();
     HBox.setHgrow(spacerBottom, Priority.ALWAYS);
@@ -157,7 +156,7 @@ public class SalesStatsScreen {
     // Language Button
     // Functionality below VBox Layout
     var langButton = new LangBtn();
-    
+
     // Bottom row of the screen
     HBox bottomContainer = new HBox();
     bottomContainer.setPrefHeight(335);

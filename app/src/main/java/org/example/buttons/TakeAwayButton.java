@@ -7,13 +7,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
-
 /**
  * Takeaway button with icon and label.
  */
-public class TakeAwayButton extends VBox  {
+public class TakeAwayButton extends VBox {
   private final Button button;
-
 
   /**
    * Creates a button with an image and label for takeaway type.
@@ -31,12 +29,11 @@ public class TakeAwayButton extends VBox  {
     button.setGraphic(icon);
     button.setStyle(
         "-fx-background-color: transparent;"
-        + "-fx-border-color: black;"
-        + "-fx-border-width: 3;"
-        + "-fx-border-radius: 15;"
-        + "-fx-background-radius: 15;"
-        + "-fx-padding: 15;"
-    );
+            + "-fx-border-color: black;"
+            + "-fx-border-width: 3;"
+            + "-fx-border-radius: 15;"
+            + "-fx-background-radius: 15;"
+            + "-fx-padding: 15;");
 
     button.setMinSize(100, 100);
 
@@ -54,5 +51,5 @@ public class TakeAwayButton extends VBox  {
   public Button getButton() {
     return button;
   }
-  
+
 }

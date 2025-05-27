@@ -28,8 +28,8 @@ public class InactivityTimer {
   private Stage primaryStage;
   private Scene welcomeScene;
   private boolean isActive = false;
-  private int inactivityTimePopup = 5;
-  private int inactivityTimeShop = 10;
+  private int inactivityTimePopup = 10;
+  private int inactivityTimeShop = 20;
 
   /**
    * The timer constructor.

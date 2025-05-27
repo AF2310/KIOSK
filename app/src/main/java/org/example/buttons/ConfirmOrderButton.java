@@ -12,8 +12,10 @@ import javafx.scene.paint.Color;
 import org.example.orders.Order;
 
 /**
- * This button will confirm the order in the checkout screen. The button will be used only in the
- * checkout screen. It will display the total price of the order and its functionality
+ * This button will confirm the order in the checkout screen. The button will be
+ * used only in the
+ * checkout screen. It will display the total price of the order and its
+ * functionality
  * ("Confirm Order") as a label.
  */
 public class ConfirmOrderButton extends Button {
@@ -23,14 +25,15 @@ public class ConfirmOrderButton extends Button {
 
   private final Label priceLabel;
   private final Label confirmLabel;
-
+  private final Order order;
+  
   /**
    * Constructor for the confirm order button.
    */
-  public ConfirmOrderButton() {
+  public ConfirmOrderButton(Order order) {
     this.setPrefSize(590, 140);
     instances.add(this);
-
+    this.order = order;
     // Price label
     priceLabel = new Label();
     updatePriceLabel();
@@ -61,14 +64,15 @@ public class ConfirmOrderButton extends Button {
     // Set labels as graphic
     this.setGraphic(buttonLabel);
     applyStyle();
+
+    order.addListener(this::updatePriceLabel);
   }
 
   /**
-   * Updates the full price label when initially called and also in case of events such as quantity
-   * updates.
+   * Updates the full price label when initially called and also in case of events
+   * such as quantity updates.
    */
   public void updatePriceLabel() {
-    Order order = new Order();
     priceLabel.setText(
         "Total: " + String.format("%.2f", order.calculatePrice()) + "kr");
   }
@@ -121,5 +125,9 @@ public class ConfirmOrderButton extends Button {
     int g = (int) (color.getGreen() * 255);
     int b = (int) (color.getBlue() * 255);
     return "rgb(" + r + ", " + g + ", " + b + ")";
+  }
+
+  public static List<ConfirmOrderButton> getInstances() {
+    return instances;
   }
 }

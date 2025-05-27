@@ -4,28 +4,28 @@ package org.example.menu;
  * Class for querying prev orders content.
  */
 public class OrderItem {
-  
+
   private Product product;
   private int quantity;
   private double unitPrice;
   private double totalPrice;
-  
+
   /**
    * Constructor.
    *
-   * @param product the item is
-   * @param quantity of that product in the order
+   * @param product   the item is
+   * @param quantity  of that product in the order
    * @param unitPrice of the product
    */
   public OrderItem(Product product, int quantity, double unitPrice) {
-    
+
     this.product = product;
     this.quantity = quantity;
     this.unitPrice = unitPrice;
     this.totalPrice = unitPrice * quantity;
-    
+
   }
-  
+
   /**
    * Getter for the product name.
    */
@@ -37,11 +37,11 @@ public class OrderItem {
 
   /**
    * Getter for the product quantity.
-   */  
+   */
   public int getQuantity() {
 
     return quantity;
-    
+
   }
 
   /**
@@ -50,7 +50,7 @@ public class OrderItem {
   public double getUnitPrice() {
 
     return unitPrice;
-    
+
   }
 
   /**
@@ -59,7 +59,7 @@ public class OrderItem {
   public double getTotalPrice() {
 
     return totalPrice;
-    
+
   }
 
   /**
@@ -70,5 +70,5 @@ public class OrderItem {
 
     return quantity + "x " + product.getName() + " @ " + unitPrice + " = " + totalPrice + " SEK";
   }
-  
+
 }

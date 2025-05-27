@@ -6,8 +6,8 @@ import com.mysql.cj.x.protobuf.MysqlxCrud.Order;
  * Represents a Kiosk terminal.
  */
 public class Kiosk {
-  
-  // TODO: These should be changed to private.  
+
+  // TODO: These should be changed to private.
   public String location;
   public boolean isActive;
 
@@ -19,8 +19,8 @@ public class Kiosk {
   }
 
   /**
-  * Resets the terminal to its default state.
-  */
+   * Resets the terminal to its default state.
+   */
   public void resetTerminal() {
 
   }

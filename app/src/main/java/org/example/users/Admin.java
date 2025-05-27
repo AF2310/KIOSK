@@ -3,12 +3,11 @@ package org.example.users;
 import com.mysql.cj.x.protobuf.MysqlxCrud.Order;
 import java.util.ArrayList;
 
-
 /**
  * Represents an admin with privileges.
  */
 public class Admin implements User {
-  
+
   // These should be changed to private.
   public String password;
   public String username;
@@ -33,7 +32,7 @@ public class Admin implements User {
   public ArrayList<Order> viewSalesSummary() {
     return new ArrayList<>();
   }
-  
+
   /**
    * Sets the timer for the terminal.
    */
@@ -64,7 +63,7 @@ public class Admin implements User {
   }
 
   /**
-   *Searches for editing and analyzing. 
+   * Searches for editing and analyzing.
    */
   @Override
   public void searchProduct(String name) {

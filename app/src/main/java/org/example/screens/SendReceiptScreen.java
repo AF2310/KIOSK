@@ -20,9 +20,11 @@ import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
 import org.example.buttons.MidButtonWithImage;
 import org.example.buttons.TitleLabel;
+import org.example.kiosk.InactivityTimer;
 // import org.example.kiosk.InactivityTimer;
 import org.example.kiosk.LanguageSetting;
 // import org.example.orders.Cart;
+import org.example.orders.Cart;
 
 /**
  * Screen for sending a receipt via email.
@@ -203,8 +205,8 @@ public class SendReceiptScreen {
     keyboard.close();
 
     // // Clear cart and stop timer after order has been done
-    // InactivityTimer.getInstance().stopTimer();
-    // Cart.getInstance().clearCart();
+    InactivityTimer.getInstance().stopTimer();
+    Cart.getInstance().clearCart();
   }
 
 }

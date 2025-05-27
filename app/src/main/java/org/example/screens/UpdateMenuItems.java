@@ -1,7 +1,5 @@
 package org.example.screens;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.geometry.Insets;
@@ -28,13 +26,22 @@ import org.example.kiosk.LanguageSetting;
 import org.example.menu.Product;
 import org.example.sql.SqlQueries;
 
-
 /**
  * Updating menu class.
  */
 public class UpdateMenuItems {
-  private Connection con;
-  private SqlQueries pool = new SqlQueries();
+
+  private SqlQueries pool;
+
+  /**
+   * This is the update menu items constructor.
+   * (Only used for assigning variables.)
+   *
+   * @throws SQLException sql errors
+   */
+  public UpdateMenuItems() throws SQLException {
+    this.pool = new SqlQueries();
+  }
 
   /**
    * Creates a scene for updating menu items in the admin interface.
@@ -44,19 +51,6 @@ public class UpdateMenuItems {
    * @return The scene for updating menu items.
    */
   public Scene adminUpdateMenuItems(Stage primaryStage, Scene prevScene) {
-
-    try {
-      this.con = DriverManager.getConnection(
-          "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-              + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-              + "?user=u5urh19mtnnlgmog"
-              + "&password=zPgqf8o6na6pv8j8AX8r"
-              + "&useSSL=true"
-              + "&allowPublicKeyRetrieval=true");
-
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
 
     // All the buttons for updating menu items
     MidButton addProductButton = makeMidButton("Add Product to Menu");
@@ -79,7 +73,7 @@ public class UpdateMenuItems {
     editProductButton.setOnAction(e -> {
 
       // Get product editor scene
-      SearchBar searchBar = new SearchBar(con);
+      SearchBar searchBar = new SearchBar();
       ProductEditorScene productEditor = new ProductEditorScene(
           primaryStage,
           prevScene,
@@ -94,7 +88,7 @@ public class UpdateMenuItems {
     removeProductButton.setOnAction(e -> {
 
       // Get product deletion scene
-      SearchBar searchBar = new SearchBar(con);
+      SearchBar searchBar = new SearchBar();
       DeleteProductScene productDeletionScene = new DeleteProductScene(
           primaryStage,
           prevScene,
@@ -109,7 +103,7 @@ public class UpdateMenuItems {
 
     addMealButton.setOnAction(e -> {
       AddMealScene addMealScene = new AddMealScene(primaryStage, prevScene);
-      
+
       primaryStage.setScene(addMealScene.getAddMealScene());
     });
 
@@ -119,7 +113,7 @@ public class UpdateMenuItems {
       GlobalDiscountScreen globalDiscountScreen = new GlobalDiscountScreen(
           primaryStage,
           prevScene);
-      
+
       primaryStage.setScene(globalDiscountScreen.getGlobalDiscountScreen());
     });
 
@@ -129,7 +123,7 @@ public class UpdateMenuItems {
       GlobalDiscountScreen globalDiscountScreen = new GlobalDiscountScreen(
           primaryStage,
           prevScene);
-      
+
       primaryStage.setScene(globalDiscountScreen.getGlobalDiscountScreen());
     });
 
@@ -169,7 +163,7 @@ public class UpdateMenuItems {
     layout.setPadding(new Insets(50));
     layout.setCenter(gridPane);
     layout.setBottom(bottomContainer);
-    
+
     // Translate button action
     langButton.addAction(event -> {
       LanguageSetting lang = LanguageSetting.getInstance();

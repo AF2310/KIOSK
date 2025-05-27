@@ -99,8 +99,6 @@ public class CheckoutGridWithButtons extends HBox {
         rightSpacer, rightArrowButton);
   }
 
-  
-
   // Update grid content based on the current page
   private void updateGrid() {
     // Clear previous items

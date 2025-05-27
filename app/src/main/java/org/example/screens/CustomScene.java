@@ -8,17 +8,17 @@ import javafx.scene.paint.Color;
  * Scene subclass for scenes with customizable backround.
  */
 public class CustomScene extends Scene {
-  
+
   private Pane rootPane;
-  
+
   /**
    * Constructor.
    */
   public CustomScene(Pane root, double width, double height) {
-    
+
     super(root, width, height);
     this.rootPane = root;
-    
+
   }
 
   /**
@@ -35,5 +35,5 @@ public class CustomScene extends Scene {
     rootPane.setStyle("-fx-background-color: " + rgb + ";");
 
   }
-  
+
 }

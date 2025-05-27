@@ -151,12 +151,12 @@ public class ChangeTimerScreen {
     } else {
       currentTimerValue = InactivityTimer.getInstance().getInactivityTimerPopup();
     }
-    
+
     // Current timer value
     Label currentTimer = new Label(
         "Current inactivity timer: "
-        + currentTimerValue
-        + " seconds");
+            + currentTimerValue
+            + " seconds");
     currentTimer.setStyle("-fx-font-size: 20px;");
 
     // Input field to enter new value

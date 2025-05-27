@@ -18,14 +18,14 @@ public class InHouse extends Order {
     super(orderId, kioskId, customerId, orderDate, amountTotal, status);
 
   }
-  
+
   /**
    * Overrides Order.java method as to include the vat in the calculation.
    */
   public double calculatePrize(int vat) {
-  
+
     return 0.00;
-  
+
   }
 
 }

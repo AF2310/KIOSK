@@ -7,7 +7,7 @@ import java.time.LocalDate;
  * at checkout.
  */
 public class PromoCode {
-  
+
   private String code;
   private float discountAmount;
   private boolean percentage;
@@ -16,10 +16,10 @@ public class PromoCode {
   /**
    * This is the promocode constructor.
    *
-   * @param code the entered promocode
+   * @param code           the entered promocode
    * @param discountAmount how much discount in money
-   * @param percentage how much discount in percentage
-   * @param expiryDate expiration date of the promocode
+   * @param percentage     how much discount in percentage
+   * @param expiryDate     expiration date of the promocode
    */
   public PromoCode(String code, float discountAmount, boolean percentage, LocalDate expiryDate) {
     this.code = code;
@@ -45,5 +45,5 @@ public class PromoCode {
     return LocalDate.now().isBefore(expiryDate);
   }
 
-  //public  PromoCodeManager findPromoCode(String inputCode)
+  // public PromoCodeManager findPromoCode(String inputCode)
 }

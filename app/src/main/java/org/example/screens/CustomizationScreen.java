@@ -40,8 +40,7 @@ public class CustomizationScreen {
       Stage primaryStage,
       double windowWidth,
       double windowHeight,
-      Scene welcomeScrScene,
-      Connection conn) {
+      Scene welcomeScrScene) {
 
     // The mainlayout
     VBox adminMenuLayout = new VBox(20);
@@ -84,7 +83,6 @@ public class CustomizationScreen {
         windowWidth,
         windowHeight,
         welcomeScrScene,
-        conn,
         TitleLabel.getTextColor(),
         ColorButtonWithImage.getButtonColor(),
         BackgroundColorStore.getCurrentBackgroundColor());

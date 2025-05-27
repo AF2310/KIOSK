@@ -40,7 +40,8 @@ public class ArrowButton extends Button {
     // Default button sizes
     this.setPrefSize(100, 500);
 
-    // Border color depends on setGrey but will be updated later dynamically if needed
+    // Border color depends on setGrey but will be updated later dynamically if
+    // needed
     String borderColor = setGrey ? "grey" : buttonColor;
 
     // Set normal style of button

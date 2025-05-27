@@ -1,6 +1,5 @@
 package org.example.menu;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import org.example.sql.SqlQueries;
@@ -15,24 +14,22 @@ public class Menu implements Imenu {
   private final List<Single> drinks;
   private final List<Single> extras;
   private final List<Single> desserts;
-  
+
   // TODO: needs fixing do add actual image path
   Single singleHelper = new Single(0, "", 0.0f, Type.EXTRA, "dummy_path");
-  
 
   /**
    * Constructor of Meal class.
    *
-   * @param conn server connection
    * @throws SQLException sql connection issues
    */
-  public Menu(Connection conn) throws SQLException {
-    
-    this.mains = queries.getOptionsByType(conn, Type.BURGERS);
-    this.sides = queries.getOptionsByType(conn, Type.SIDES);
-    this.drinks = queries.getOptionsByType(conn, Type.DRINKS);
-    this.extras = queries.getOptionsByType(conn, Type.EXTRA);
-    this.desserts = queries.getOptionsByType(conn, Type.DESSERTS);
+  public Menu() throws SQLException {
+
+    this.mains = queries.getOptionsByType(Type.BURGERS);
+    this.sides = queries.getOptionsByType(Type.SIDES);
+    this.drinks = queries.getOptionsByType(Type.DRINKS);
+    this.extras = queries.getOptionsByType(Type.EXTRA);
+    this.desserts = queries.getOptionsByType(Type.DESSERTS);
   }
 
   @Override

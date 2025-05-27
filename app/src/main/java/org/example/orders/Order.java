@@ -2,6 +2,7 @@ package org.example.orders;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.example.menu.OrderItem;
 import org.example.menu.Product;
@@ -18,6 +19,8 @@ public class Order {
   private double amountTotal;
   private String status;
   private ArrayList<OrderItem> items = new ArrayList<>();
+  private double discountFactor = 1.0;
+  private final List<Runnable> listeners = new ArrayList<>();
 
   /**
    * Constructor for orderes queried from the db.
@@ -37,7 +40,42 @@ public class Order {
   /**
    * Empty constructor.
    */
-  public Order() {}
+  public Order() {
+  }
+
+  /**
+   * Method to add a listener that gets later on notified,
+   * about changes in the Order class.
+   *
+   * @param listener Listener that should follow changes of
+   *                 the Order class
+   */
+  public void addListener(Runnable listener) {
+    listeners.add(listener);
+  }
+
+  /**
+   * Notifying when changing the total with the discount.
+   */
+  public void notifyListeners() {
+    for (Runnable listener : listeners) {
+      listener.run();
+    }
+  }
+
+  /**
+   * apply discount method.
+   *
+   * @param percentage percentage of the discount
+   */
+  public void applyDiscount(int percentage) {
+    if (percentage < 0 || percentage > 100) {
+      throw new IllegalArgumentException("Invalid discount percentage");
+    }
+
+    this.discountFactor = 1 - (percentage / 100.0);
+    notifyListeners();
+  }
 
   /**
    * Will calculate the overall cost of the order
@@ -45,11 +83,9 @@ public class Order {
    */
   public double calculatePrice() {
 
-    Cart theCart = Cart.getInstance();
-
     // Get items and their quantities
-    Product[] theItems = theCart.getItems();
-    int[] theQuantities = theCart.getQuantity();
+    Product[] theItems = Cart.getInstance().getItems();
+    int[] theQuantities = Cart.getInstance().getQuantity();
 
     // Get total price
     double total = 0.0;
@@ -62,7 +98,7 @@ public class Order {
       total += theItems[index].getPrice() * theQuantities[index];
     }
 
-    return total;
+    return total * discountFactor;
 
   }
 

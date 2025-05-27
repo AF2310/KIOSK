@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
  * A tick box with a label on top of it.
  */
 public class TickBoxWithLabel extends VBox {
+
   private final CheckBox checkBox;
 
   /**
@@ -26,7 +27,7 @@ public class TickBoxWithLabel extends VBox {
     checkBox.setStyle("-fx-background-color: transparent;"
         + "-fx-min-width: 50px;"
         + "-fx-min-height: 50px;"
-        + "-fx-max-width: 50px;"        
+        + "-fx-max-width: 50px;"
         + "-fx-max-height: 50px;");
 
     checkBox.setScaleX(3.0);

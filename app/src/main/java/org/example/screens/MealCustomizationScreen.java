@@ -1,12 +1,7 @@
 package org.example.screens;
 
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -31,79 +26,38 @@ import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;
-import org.example.menu.Drink;
 import org.example.menu.Meal;
 import org.example.menu.Product;
-import org.example.menu.Side;
-import org.example.menu.Type;
 import org.example.orders.Cart;
+import org.example.sql.SqlQueries;
 
 /**
  * A Class for picking side and drink option for the meal.
  */
 public class MealCustomizationScreen {
 
-  private Connection conn;
-
   /**
    * Constructor for connecting to the DB.
    */
-  public MealCustomizationScreen() {
-    try {
-      this.conn = DriverManager.getConnection(
-          "jdbc:mysql://b8gwixcok22zuqr5tvdd-mysql.services"
-              + ".clever-cloud.com:21363/b8gwixcok22zuqr5tvdd"
-              + "?user=u5urh19mtnnlgmog"
-              + "&password=zPgqf8o6na6pv8j8AX8r"
-              + "&useSSL=true"
-              + "&allowPublicKeyRetrieval=true");
-    } catch (SQLException e) {
-      e.printStackTrace();
-      System.err.println("Failed to establish DB connection.");
-    }
-  }
+  public MealCustomizationScreen() {}
 
   private List<Product> getSideOptionsForMeal(int mealId) {
-    List<Product> sideOptions = new ArrayList<>();
-    String sql = """
-        SELECT p.product_id, p.name, p.price, p.image_url
-        FROM meal_sideoptions mso
-        JOIN product p ON mso.product_id = p.product_id
-        WHERE mso.meal_id = ?
-        """;
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setInt(1, mealId);
-      try (ResultSet rs = stmt.executeQuery()) {
-        while (rs.next()) {
-          Side side = new Side(
-              rs.getInt("product_id"),
-              rs.getString("name"),
-              rs.getFloat("price"),
-              Type.SIDES,
-              rs.getString("image_url")
-          );
-          sideOptions.add(side);
-        }
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-
-    return sideOptions;
+    SqlQueries pool = new SqlQueries();
+    return pool.getSideOptionsForMeal(mealId);
   }
 
   /**
    * Constructor for selecting the side option for a meal.
    *
-   * @param stage the primary stage
+   * @param stage       the primary stage
    * @param returnScene the scene to return to in this case if we click cancel
-   * @param meal the meal for which this side is picked
+   * @param meal        the meal for which this side is picked
    * @return returns a scene for side options.
    */
   public CustomScene createSideSelectionScene(Stage stage, Scene returnScene,
       Meal meal) {
     try {
-      meal.setMain(conn);
+      meal.setMain();
     } catch (SQLException e) {
       e.printStackTrace();
       System.err.println("Failed to set main for the meal.");
@@ -128,18 +82,18 @@ public class MealCustomizationScreen {
     sideOptionsGrid.setVgap(20);
     sideOptionsGrid.setAlignment(Pos.CENTER_LEFT);
     sideOptionsGrid.setPadding(new Insets(10));
-    
+
     DropShadow glowEffect = new DropShadow();
     glowEffect.setColor(Color.CORNFLOWERBLUE);
     glowEffect.setRadius(20);
     glowEffect.setSpread(0.6);
-    
+
     List<Product> sideOptions = getSideOptionsForMeal(meal.getId());
-    final ImageView[] selectedImage = {null};
+    final ImageView[] selectedImage = { null };
 
     for (int i = 0; i < sideOptions.size(); i++) {
       Product side = sideOptions.get(i);
-      
+
       VBox sideBox = new VBox(5);
       sideBox.setAlignment(Pos.CENTER);
       sideBox.setPadding(new Insets(10));
@@ -181,7 +135,7 @@ public class MealCustomizationScreen {
     InputStream imageStream = getClass().getResourceAsStream(meal.getImagePath());
     if (imageStream != null) {
       mealImage = new ImageView(new Image(imageStream));
-      
+
     } else {
       System.err.println("Could not load image: " + meal.getImagePath());
       mealImage = new ImageView();
@@ -205,7 +159,7 @@ public class MealCustomizationScreen {
     Region rightSpacer = new Region();
     HBox.setHgrow(leftSpacer, Priority.ALWAYS);
     HBox.setHgrow(rightSpacer, Priority.ALWAYS);
-  
+
     SqrBtnWithOutline confirmButton = new SqrBtnWithOutline("Confirm",
         "green_tick.png", "rgb(81, 173, 86)");
     CancelButtonWithText cancelBtn = new CancelButtonWithText();
@@ -226,10 +180,10 @@ public class MealCustomizationScreen {
 
     // Goes to the next scene which is the drink options scene
     confirmButton.setOnMouseClicked(e -> {
-      Scene drinkScene = createDrinkSelectionScene(stage, returnScene, meal,
-          stage.getScene());
+      Scene drinkScene = createDrinkSelectionScene(stage, returnScene, meal, stage.getScene());
       stage.setScene(drinkScene);
     });
+
 
     CustomScene scene = new CustomScene(layout, 1920, 1080);
 
@@ -246,40 +200,16 @@ public class MealCustomizationScreen {
   }
 
   private List<Product> getDrinkOptionsForMeal(int mealId) {
-    List<Product> drinkOptions = new ArrayList<>();
-    String sql = """
-        SELECT p.product_id, p.name, p.price, p.image_url
-        FROM meal_drinkoptions mdo
-        JOIN product p ON mdo.product_id = p.product_id
-        WHERE mdo.meal_id = ?
-        """;
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setInt(1, mealId);
-      try (ResultSet rs = stmt.executeQuery()) {
-        while (rs.next()) {
-          Drink drink = new Drink(
-              rs.getInt("product_id"),
-              rs.getString("name"),
-              rs.getFloat("price"),
-              Type.DRINKS,
-              rs.getString("image_url")
-          );
-          drinkOptions.add(drink);
-        }
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-
-    return drinkOptions;
+    SqlQueries pool = new SqlQueries();
+    return pool.getDrinkOptionsForMeal(mealId);
   }
 
   /**
    * This constructor creates the scene for selecting a drink for a meal.
    *
-   * @param stage primary stage
+   * @param stage     primary stage
    * @param mainScene goes back to the mainscreen
-   * @param meal the meal for which this drink goes to.
+   * @param meal      the meal for which this drink goes to.
    * @param sideScene goesback to the side scene
    * @return it returns the scene for drink options.
    */
@@ -305,18 +235,18 @@ public class MealCustomizationScreen {
     drinkOptionsGrid.setVgap(20);
     drinkOptionsGrid.setAlignment(Pos.CENTER_LEFT);
     drinkOptionsGrid.setPadding(new Insets(10));
-    
+
     DropShadow glowEffect = new DropShadow();
     glowEffect.setColor(Color.CORNFLOWERBLUE);
     glowEffect.setRadius(20);
     glowEffect.setSpread(0.6);
 
     List<Product> drinkOptions = getDrinkOptionsForMeal(meal.getId());
-    final ImageView[] selectedImage = {null};
+    final ImageView[] selectedImage = { null };
 
     for (int i = 0; i < drinkOptions.size(); i++) {
       Product drink = drinkOptions.get(i);
-      
+
       VBox drinkBox = new VBox(5);
       drinkBox.setAlignment(Pos.CENTER);
 
@@ -347,7 +277,7 @@ public class MealCustomizationScreen {
       });
       drinkOptionsGrid.add(drinkBox, i % 2, i / 2);
     }
-    
+
     VBox mealDisplay = new VBox(10);
     mealDisplay.setAlignment(Pos.CENTER);
     InputStream imageStream = getClass().getResourceAsStream(meal.getImagePath());
@@ -378,7 +308,7 @@ public class MealCustomizationScreen {
     bottomBar.setPadding(new Insets(20));
     layout.setBottom(bottomBar);
 
-    //Setting the onclick for the backbutton (going back to the side options)
+    // Setting the onclick for the backbutton (going back to the side options)
     backButton.setOnMouseClicked(e -> {
       stage.setScene(sideScene);
     });
@@ -388,7 +318,7 @@ public class MealCustomizationScreen {
       stage.setScene(mainScene);
     });
 
-    //Onclick for the confirm button (loading meal confirmation scene)
+    // Onclick for the confirm button (loading meal confirmation scene)
     confirmBtn.setOnMouseClicked(e -> {
       Cart cart = Cart.getInstance();
       cart.addProduct(meal);
@@ -431,7 +361,7 @@ public class MealCustomizationScreen {
   /**
    * Creates the meal confirmation scene after drink selection.
    *
-   * @param stage the primary stage
+   * @param stage               the primary stage
    * @param drinkSelectionScene the previous scene for drink selection
    * @return the meal confirmation CustomScene
    */
@@ -448,9 +378,6 @@ public class MealCustomizationScreen {
       scene.setBackgroundColor(bgColor);
 
     }
-
     return scene;
   }
 }
-
-
