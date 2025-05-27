@@ -150,3 +150,30 @@ Achilleas integrated the search bar into both the item edit and item remove scre
 Arseny worked with Vince on implementing kiosk customization options. He also worked on bug fixing and merging with Ignas and Vince.
 
 We had some brainstorming and colloborative sessions in small groups while working on stories and merging. We had one short meeting after the previous metting with TA in person and one long meeting on discord to wrap up the current sprint and plan the next one on Discord. During the sprint we were also actively communicating in Discord in text.
+
+
+
+Sprint 6 (Week 22)
+
+For the last sprint we focused on Bugfixing and adding two features.
+One of them was that the customer can send the reciept to his email if he wants.
+Arsney and Jakob worked on that. Jakob focused on the Logic of sending the actual e-mail. That means understanding how Jakarta mail works and also getting a reciept string.
+Arsney worked on the screen where the customer can input his email adress. For that we needed a keyboard on the screen because on the real kiosk a customer would not have a physical keyboard.
+JavaFX has a build in keyboard and we thought of using it, but it has two flaws. It does not work on a mac which is not that ideal because Arsney and Jakob both work with macs. And also it was not that easy to customize the keyboard so we could not let it fit our theme that easy. So Arsney made a custom one from scratch.
+
+Jakob also finally fixed the quantitys bug.
+
+The other feature was a box to enter a promocode. Ignas and vuk worked on that, and modified the database to store promocodes.
+Now its possible to put in promocode to get a certain precent off.
+
+Ignas also worked on a screen that makes it able to add a new ingredient to the database.
+
+Vuk fixed some bugs with converting singles into a meal, he also fixed a bug that the customer is now not able to add no drink or side to the meal. He also did some animations for the buttons.
+
+Achilleas worked on activ filtering in the search bar and autocomplete suggestions.
+
+Vince cleaned up the sales statistics and moved some code into the sql class and other separated classes.
+He made the theme customization savable and so that they load on the appstart, also u can now reset the theme.
+Also the custom name is saveable now and loads on start of the app.
+
+Michelle corrected checkstyle issues throught out the whole project
