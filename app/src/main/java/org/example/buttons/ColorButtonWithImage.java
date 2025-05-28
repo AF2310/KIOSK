@@ -2,6 +2,7 @@ package org.example.buttons;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.animation.ScaleTransition;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 /**
  * A custom JavaFX button that displays a label and an image,
@@ -58,6 +60,10 @@ public class ColorButtonWithImage extends Button {
     contentRow.setStyle("-fx-alignment: center;");
 
     setGraphic(contentRow);
+
+    // Add default press/release animation
+    setOnMousePressed(e -> animateButtonPress(this, 0.95));
+    setOnMouseReleased(e -> animateButtonPress(this, 1.0));
   }
 
   /**
@@ -132,6 +138,12 @@ public class ColorButtonWithImage extends Button {
       return Color.BLACK;
 
     }
+  }
 
+  private void animateButtonPress(Button button, double scale) {
+    ScaleTransition st = new ScaleTransition(Duration.millis(100), button);
+    st.setToX(scale);
+    st.setToY(scale);
+    st.play();
   }
 }

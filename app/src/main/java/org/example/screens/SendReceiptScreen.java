@@ -7,7 +7,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -16,14 +15,13 @@ import javafx.util.Duration;
 import org.example.EmailSender;
 import org.example.animations.FadingAnimation;
 import org.example.boxes.CustomKeyboard;
+import org.example.buttons.BlackButtonWithImage;
+import org.example.buttons.ColorSquareButtonWithImage;
+import org.example.buttons.ColorTextField;
 import org.example.buttons.LangBtn;
-import org.example.buttons.MidButton;
-import org.example.buttons.MidButtonWithImage;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.InactivityTimer;
-// import org.example.kiosk.InactivityTimer;
 import org.example.kiosk.LanguageSetting;
-// import org.example.orders.Cart;
 import org.example.orders.Cart;
 
 /**
@@ -46,28 +44,20 @@ public class SendReceiptScreen {
     VBox layout = new VBox(20);
     layout.setAlignment(Pos.CENTER);
 
-    TextField emailField = new TextField();
-    emailField.setMaxWidth(800);
-    emailField.setPromptText("Enter your email address");
-    emailField.setStyle(
-        "-fx-background-color: grey;"
-            + "-fx-text-fill: black;"
-            + "-fx-font-weight: lighter;"
-            + "-fx-font-size: 60;"
-            + "-fx-background-radius: 10;");
-
     Label feedbackLabel = new Label();
     feedbackLabel.setStyle("-fx-font-size: 30; -fx-text-fill: red;");
     feedbackLabel.setVisible(false);
 
-    MidButton sendButton = new MidButton("Send", "rgb(0, 0, 0)", 40);
-    MidButtonWithImage noThanksButton = new MidButtonWithImage(
+    var sendButton = new BlackButtonWithImage("Send", "/mail_wh.png");
+    var noThanksButton = new ColorSquareButtonWithImage(
         "No Thanks",
-        "/back.png",
-        "rgb(255, 255, 255)");
+        "/cancel.png"
+    );
 
     HBox buttonBox = new HBox(20, sendButton, noThanksButton);
     buttonBox.setAlignment(Pos.CENTER);
+
+    var emailField = new ColorTextField("Enter your email address");
 
     // Custom keyboard for username and password fields
     CustomKeyboard keyboard = new CustomKeyboard(primaryStage, emailField);
@@ -78,6 +68,10 @@ public class SendReceiptScreen {
       keyboard.setTargetInput(emailField);
       keyboard.show();
     });
+
+    // Get the instance of just initialized keyboard (to close in Timer if time runs
+    // out)
+    InactivityTimer.getInstance().getKeyboardInstance(keyboard);
 
     // Send button action
     sendButton.setOnAction(e -> {

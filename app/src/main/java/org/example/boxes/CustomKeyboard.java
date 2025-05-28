@@ -10,6 +10,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -19,6 +21,7 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.example.kiosk.InactivityTimer;
 
 /**
  * A custom on-screen keyboard for our app.
@@ -104,6 +107,10 @@ public class CustomKeyboard {
 
     // Set size based on contents
     keyboardStage.sizeToScene();
+
+    // Add event filters for inactivity timer reset
+    root.addEventFilter(MouseEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer());
+    root.addEventFilter(KeyEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer());
   }
 
   private Button createKeyButton(String key) {
@@ -133,10 +140,17 @@ public class CustomKeyboard {
         "-fx-background-color: lightgray;"
             + "-fx-border-radius: 5;"
             + "-fx-background-radius: 5;");
-
-    button.setOnAction(e -> handleKeyPress(key));
+    button.setOnAction(e -> {
+      handleKeyPress(key);
+      // reset inactivity timer on key press
+      InactivityTimer.getInstance().resetTimer();
+    });
     button.setOnMousePressed(e -> button.setStyle("-fx-background-color: darkgray;"));
     button.setOnMouseReleased(e -> button.setStyle("-fx-background-color: lightgray;"));
+
+    // Add event filters for inactivity timer reset
+    button.addEventFilter(MouseEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer());
+    button.addEventFilter(KeyEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer());
 
     allKeyButtons.add(button);
     return button;
@@ -221,9 +235,7 @@ public class CustomKeyboard {
    * Displays the custom keyboard if it is not already visible.
    */
   public void show() {
-    // if (!keyboardStage.isShowing()) {
-    // keyboardStage.show();
-    // }
+
     if (!keyboardStage.isShowing()) {
       keyboardStage.show();
 

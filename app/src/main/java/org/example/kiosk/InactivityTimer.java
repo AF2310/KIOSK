@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.example.boxes.CustomKeyboard;
 import org.example.buttons.MidButton;
 import org.example.orders.Cart;
 
@@ -30,6 +31,7 @@ public class InactivityTimer {
   private boolean isActive = false;
   private int inactivityTimePopup = 10;
   private int inactivityTimeShop = 20;
+  private CustomKeyboard keyboard;
 
   /**
    * The timer constructor.
@@ -246,6 +248,7 @@ public class InactivityTimer {
             inactivityPopup.close();
             Cart.getInstance().clearCart();
             primaryStage.setScene(welcomeScene);
+            keyboard.close();
             stopTimer();
             popupTimer.cancel();
             popupTimer.purge();
@@ -255,6 +258,16 @@ public class InactivityTimer {
     };
 
     return resetTask;
+  }
+
+  /**
+   * Get the keyboards instance to reset it later when
+   * the timer runs out.
+   *
+   * @param keyboard The custom keyboard
+   */
+  public void getKeyboardInstance(CustomKeyboard keyboard) {
+    this.keyboard = keyboard;
   }
 
   /**

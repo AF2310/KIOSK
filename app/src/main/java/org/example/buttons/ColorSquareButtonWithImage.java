@@ -2,6 +2,7 @@ package org.example.buttons;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.animation.ScaleTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -11,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 /**
  * Square button with image on top and label below.
@@ -45,6 +47,10 @@ public class ColorSquareButtonWithImage extends Button {
     this.setGraphic(stack);
 
     applyStyle();
+
+    // Add default press/release animation
+    setOnMousePressed(e -> animateButtonPress(this, 0.95));
+    setOnMouseReleased(e -> animateButtonPress(this, 1.0));
   }
 
   private void applyStyle() {
@@ -122,4 +128,10 @@ public class ColorSquareButtonWithImage extends Button {
     }
   }
 
+  private void animateButtonPress(Button button, double scale) {
+    ScaleTransition st = new ScaleTransition(Duration.millis(100), button);
+    st.setToX(scale);
+    st.setToY(scale);
+    st.play();
+  }
 }

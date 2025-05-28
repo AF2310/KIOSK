@@ -5,11 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.animation.PauseTransition;
-import javafx.animation.ScaleTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,7 +25,6 @@ import org.example.buttons.ConfirmOrderButton;
 import org.example.buttons.EatHereButton;
 import org.example.buttons.LangBtn;
 import org.example.buttons.RectangleTextFieldWithLabel;
-import org.example.buttons.SqrBtnWithOutline;
 import org.example.buttons.TakeAwayButton;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.InactivityTimer;
@@ -120,8 +117,8 @@ public class CheckoutScreen {
     RectangleTextFieldWithLabel promoField = new RectangleTextFieldWithLabel("Enter Promo Code:",
         "rgb(255, 255, 255)");
 
-    SqrBtnWithOutline applyPromoCode = new SqrBtnWithOutline("Apply",
-        "green_tick.png", "rgb(81, 173, 86)");
+    var applyPromoCode = new ColorSquareButtonWithImage("Apply",
+        "green_tick.png");
 
     promoField.setPadding(new Insets(0, 0, 30, 0));
 
@@ -131,10 +128,10 @@ public class CheckoutScreen {
     topRightPromoBox.getChildren().addAll(promoField, applyPromoCode);
 
     
-    applyPromoCode.setOnMousePressed(e -> 
-        animateButtonPress(applyPromoCode, 0.95));
-    applyPromoCode.setOnMouseReleased(e ->
-        animateButtonPress(applyPromoCode, 1.0));
+    // applyPromoCode.setOnMousePressed(e -> 
+    //     animateButtonPress(applyPromoCode, 0.95));
+    // applyPromoCode.setOnMouseReleased(e ->
+    //     animateButtonPress(applyPromoCode, 1.0));
 
 
     applyPromoCode.setOnAction(e -> {
@@ -357,10 +354,10 @@ public class CheckoutScreen {
     return scene;
   }
 
-  private void animateButtonPress(Button button, double scale) {
-    ScaleTransition st = new ScaleTransition(Duration.millis(100), button);
-    st.setToX(scale);
-    st.setToY(scale);
-    st.play();
-  }
+  // private void animateButtonPress(Button button, double scale) {
+  //   ScaleTransition st = new ScaleTransition(Duration.millis(100), button);
+  //   st.setToX(scale);
+  //   st.setToY(scale);
+  //   st.play();
+  // }
 }
