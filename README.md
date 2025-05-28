@@ -151,6 +151,7 @@ Arseny worked with Vince on implementing kiosk customization options. He also wo
 
 We had some brainstorming and colloborative sessions in small groups while working on stories and merging. We had one short meeting after the previous metting with TA in person and one long meeting on discord to wrap up the current sprint and plan the next one on Discord. During the sprint we were also actively communicating in Discord in text.
 
+![alt text](references/Class_Sp21.png)
 
 
 Sprint 6 (Week 22)
@@ -186,5 +187,5 @@ We had a lot of meetings in smaller groups to do some brainstorming on the featu
 The final class diagram and databse scema:
 ![alt text](references/Clarke_db.png)
 
-![alt text](references/Class_Sp21.png)
+![alt text](references/Class_Sp22.png)
 
