@@ -21,6 +21,7 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.example.buttons.KeyboardButton;
 import org.example.kiosk.InactivityTimer;
 
 /**
@@ -114,7 +115,7 @@ public class CustomKeyboard {
   }
 
   private Button createKeyButton(String key) {
-    Button button = new Button(key);
+    var button = new KeyboardButton(key);
     button.setFont(Font.font("Arial", 18));
     button.setMinSize(60, 40);
 
@@ -136,17 +137,13 @@ public class CustomKeyboard {
         break;
     }
 
-    button.setStyle(
-        "-fx-background-color: lightgray;"
-            + "-fx-border-radius: 5;"
-            + "-fx-background-radius: 5;");
     button.setOnAction(e -> {
       handleKeyPress(key);
       // reset inactivity timer on key press
       InactivityTimer.getInstance().resetTimer();
     });
-    button.setOnMousePressed(e -> button.setStyle("-fx-background-color: darkgray;"));
-    button.setOnMouseReleased(e -> button.setStyle("-fx-background-color: lightgray;"));
+    // button.setOnMousePressed(e -> button.setStyle("-fx-background-color: darkgray;"));
+    // button.setOnMouseReleased(e -> button.setStyle("-fx-background-color: lightgray;"));
 
     // Add event filters for inactivity timer reset
     button.addEventFilter(MouseEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer());

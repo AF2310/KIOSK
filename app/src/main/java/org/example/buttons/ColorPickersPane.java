@@ -92,6 +92,7 @@ public class ColorPickersPane extends HBox {
       Color selectedColor = secClrPicker.getValue();
       ColorButtonWithImage.setButtonBackgroundColor(selectedColor);
       CircleButtonWithSign.setMinusBackground(selectedColor);
+      KeyboardButton.setButtonBackgroundColor(selectedColor);
     });
 
     sceneColorPicker.setOnAction(e -> {
