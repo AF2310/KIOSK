@@ -185,3 +185,6 @@ We had a lot of meetings in smaller groups to do some brainstorming on the featu
 
 The final class diagram and databse scema:
 ![alt text](references/Clarke_db.png)
+
+![alt text](references/Class_Sp21.png)
+
