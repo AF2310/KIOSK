@@ -2,7 +2,6 @@ package org.example.buttons;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javafx.animation.ScaleTransition;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
