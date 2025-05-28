@@ -142,8 +142,6 @@ public class CustomKeyboard {
       // reset inactivity timer on key press
       InactivityTimer.getInstance().resetTimer();
     });
-    // button.setOnMousePressed(e -> button.setStyle("-fx-background-color: darkgray;"));
-    // button.setOnMouseReleased(e -> button.setStyle("-fx-background-color: lightgray;"));
 
     // Add event filters for inactivity timer reset
     button.addEventFilter(MouseEvent.ANY, ev -> InactivityTimer.getInstance().resetTimer());
