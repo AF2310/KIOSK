@@ -1,7 +1,6 @@
 package org.example.screens;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

@@ -131,7 +131,7 @@ public class Cart {
     output = output + "Total: " + getTotalPrice() + "kr\n\n";
 
     for (int i = 0; i < items.size(); i++) {
-      output = output + "x" + quantity.get(i) + "  " + items.get(i) + "\n\n"; 
+      output = output + "x" + quantity.get(i) + "  " + items.get(i) + "\n\n";
     }
     return output;
   }
@@ -315,4 +315,9 @@ public class Cart {
     }
     return total;
   }
+
+  public boolean isEmpty() {
+    return getItems().length == 0;
+  }
+
 }
