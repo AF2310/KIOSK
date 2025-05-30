@@ -939,14 +939,11 @@ public class SqlQueries {
    * @return newly generated order id from the database (auto increment)
    * @throws SQLException sql errors
    */
-  public int placeOrder(boolean discountApplied, int discountFactor) throws SQLException {
+  public int placeOrder(Order order) throws SQLException {
     // Calculate total order price
-    Order order = new Order();
+
     double price = order.calculatePrice();
 
-    if (discountApplied) {
-      price = price * (1 - discountFactor);
-    }
 
     // SQL Query as string statement
     String s = "INSERT INTO `order` "
@@ -957,8 +954,8 @@ public class SqlQueries {
     try (Connection conn = DatabaseManager.getConnection();
         PreparedStatement ps = conn.prepareStatement(s);) {
       // Insert price variable
-      ps.setObject(1, price);
-
+      ps.setDouble(1, price);
+      System.out.println("Saving order with discounted total: " + price);
       // Execute query
       ps.executeUpdate();
 

@@ -229,8 +229,11 @@ public class CheckoutScreen {
     confirmOrderButton.setOnAction(e -> {
       int orderId = -1;
       Customer customer = new Customer();
+      if (discountApplied) {
+        order.applyDiscount(discountFactor);
+      }
       try {
-        orderId = customer.placeOrder(discountApplied, discountFactor);
+        orderId = customer.placeOrder(order, discountApplied, discountFactor);
       } catch (SQLException err) {
         err.printStackTrace();
       }
