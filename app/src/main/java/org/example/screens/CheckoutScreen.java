@@ -238,7 +238,16 @@ public class CheckoutScreen {
         err.printStackTrace();
       }
       String subject = "Reciept for order: " + orderId;
-      String messageBody = Cart.getInstance().printCart(orderId);
+      String rawReceipt = Cart.getInstance().printCart(orderId);
+
+      double discountedTotal = order.calculatePrice();
+
+      String updatedReceipt = rawReceipt.replaceFirst(
+        "Total: .*?kr",
+        "Total: " + String.format("%.2f", discountedTotal) + "kr"
+      );
+
+      String messageBody = updatedReceipt;
       Cart.getInstance().convertMealsIntoSingles();
       try {
         Cart.getInstance().saveQuantityToDb(orderId);
