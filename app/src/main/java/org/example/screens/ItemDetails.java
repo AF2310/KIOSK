@@ -65,7 +65,7 @@ public class ItemDetails {
   public CustomScene create(Stage primaryStage, Scene prevScene, Single item, Cart cart)
       throws SQLException {
     try {
-      queries.setIngredientsForSingle(item, true);
+      item.setIngredients();
     } catch (SQLException e) {
       e.printStackTrace();
     }
