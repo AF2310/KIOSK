@@ -83,7 +83,7 @@ public class ColorPickersPane extends HBox {
       ConfirmOrderButton.setButtonBackgroundColor(selectedColor);
       CircleButtonWithSign.setPlusColor(selectedColor);
       CircleButtonWithSign.setMinusBorder(selectedColor);
-      ;
+      KeyboardButtonPrim.setButtonBackgroundColor(selectedColor);
 
       LabelManager.setTextColor(selectedColor);
     });
@@ -92,6 +92,7 @@ public class ColorPickersPane extends HBox {
       Color selectedColor = secClrPicker.getValue();
       ColorButtonWithImage.setButtonBackgroundColor(selectedColor);
       CircleButtonWithSign.setMinusBackground(selectedColor);
+      MidLabelSec.setTextColor(selectedColor);
       KeyboardButton.setButtonBackgroundColor(selectedColor);
     });
 
