@@ -2,6 +2,7 @@ package org.example.screens;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.example.boxes.CustomKeyboard;
 import org.example.buttons.LangBtn;
 import org.example.buttons.MidButton;
@@ -119,17 +121,18 @@ public class AdminLoginScreen {
 
           primaryStage.setScene(adminMenuScene);
         } else {
-          var currLang = LanguageSetting.getInstance();
-          if (currLang.equals("en")) {
-            errorLabel.setText("Invalid login details");
-          } else {
-            errorLabel.setText("Ogiltig inloggning");
-          }
-          // Shows error if a wrong username or password is entered
-          // errorLabel.setText("Invalid login details");
+          var lang = LanguageSetting.getInstance();
+          var errorMessage = lang.translate("Invalid login details");
+
+          errorLabel.setText(errorMessage);
+
           errorLabel.setVisible(true);
           passwordField.clear();
-
+          
+          // Hide the error label after 2 seconds
+          PauseTransition pause = new PauseTransition(Duration.seconds(2));
+          pause.setOnFinished(event -> errorLabel.setVisible(false));
+          pause.play();
         }
       } catch (SQLException e1) {
         e1.printStackTrace();
@@ -200,13 +203,13 @@ public class AdminLoginScreen {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.smartTranslate(mainPane);
+      lang.translateLabels(mainPane);
     });
 
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(mainPane);
-    lang.smartTranslate(mainPane);
+    lang.translateLabels(mainPane);
 
     // Create the admin login scene and go there
     Scene adminLoginScene = new Scene(mainPane, windowWidth, windowHeight);

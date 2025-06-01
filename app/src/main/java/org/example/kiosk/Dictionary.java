@@ -16,7 +16,6 @@ public class Dictionary {
    */
   public Dictionary() {
 
-    // Translations (these can be moved to a file later)
     // Welcome screen vocabulary
     addTranslation("Welcome to", "Välkommen till");
     addTranslation("Eat Here", "Ät här");
@@ -24,13 +23,33 @@ public class Dictionary {
     addTranslation("Driver found and connected", "Drivrutin hittad och ansluten");
     addTranslation("Terms of Service", "Användarvillkor");
 
+    addTranslation(
+        "1. Acceptance of Terms\n"
+            + "By using our services, you agree to these terms...\n\n"
+            + "2. Service Description\n"
+            + "We provide food ordering services...\n\n"
+            + "3. User Responsibilities\n"
+            + "You must provide accurate information...\n\n"
+            + "4. Limitation of Liability\n"
+            + "We are not responsible for...\n\n"
+            + "Last Updated: ",
+        "1. Godkännande av villkor\n"
+            + "Genom att använda våra tjänster godkänner du dessa villkor...\n\n"
+            + "2. Tjänstebeskrivning\n"
+            + "Vi tillhandahåller matbeställningstjänster...\n\n"
+            + "3. Användarens ansvar\n"
+            + "Du måste lämna korrekt information...\n\n"
+            + "4. Ansvarsbegränsning\n"
+            + "Vi ansvarar inte för...\n\n"
+            + "Senast uppdaterad: ");
+
     // Main menu vocabulary
     addTranslation("Burgers", "Burgare");
     addTranslation("Sides", "Tillbehör");
     addTranslation("Drinks", "Drycker");
     addTranslation("Desserts", "Desserter");
     addTranslation("Meals", "Kombomenyer");
-    addTranslation("Special\nOffers", "Special\nErbjudanden");
+    // addTranslation("Special\nOffers", "Special\nErbjudanden");
     addTranslation("Cancel", "Avbryt");
     addTranslation("Filter Items", "Filtrera artiklar");
     addTranslation("Filter", "Filter");
@@ -189,7 +208,8 @@ public class Dictionary {
     addTranslation("Timer:", "Tidtagare:");
     addTranslation("Current inactivity timer: ", "Nuvarande inaktivitetstimer: ");
     addTranslation(" seconds", " sekunder");
-    // addTranslation("New timer value (in seconds)", "Nytt timervärde (i sekunder)");
+    // addTranslation("New timer value (in seconds)", "Nytt timervärde (i
+    // sekunder)");
     addTranslation("Update Timer", "Uppdatera Timer");
     addTranslation("Please enter a value >= 5 seconds.", "Vänligen ange ett värde >= 5 sekunder.");
     addTranslation("Timer updated successfully!", "Timern har uppdaterats!");
@@ -266,43 +286,43 @@ public class Dictionary {
     }
   }
 
-  /**
-   * Attempts to translate a full sentence; if not found, translates word by word.
-   * Handles dynamic sentences like: "Current inactivity timer: 60 seconds"
-   * or "New timer value (in seconds)"
-   */
-  public String smartTranslate(String sentence) {
-    String fullTranslation = translate(sentence);
-    if (!fullTranslation.equals(sentence)) {
-      return fullTranslation;
-    }
+  // /**
+  //  * Attempts to translate a full sentence; if not found, translates word by word.
+  //  * Handles dynamic sentences like: "Current inactivity timer: 60 seconds"
+  //  * or "New timer value (in seconds)"
+  //  */
+  // public String smartTranslate(String sentence) {
+  //   String fullTranslation = translate(sentence);
+  //   if (!fullTranslation.equals(sentence)) {
+  //     return fullTranslation;
+  //   }
 
-    String[] words = sentence.split("\\s+");
-    StringBuilder result = new StringBuilder();
+  //   String[] words = sentence.split("\\s+");
+  //   StringBuilder result = new StringBuilder();
 
-    for (String word : words) {
-      // Detect word boundaries with punctuation (e.g., "Total:", "1.23", "kr.")
-      String prefix = "";
-      String suffix = "";
+  //   for (String word : words) {
+  //     // Detect word boundaries with punctuation (e.g., "Total:", "1.23", "kr.")
+  //     String prefix = "";
+  //     String suffix = "";
 
-      // Extract leading punctuation (e.g., quotes, parentheses)
-      while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(0))) {
-        prefix += word.charAt(0);
-        word = word.substring(1);
-      }
+  //     // Extract leading punctuation (e.g., quotes, parentheses)
+  //     while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(0))) {
+  //       prefix += word.charAt(0);
+  //       word = word.substring(1);
+  //     }
 
-      // Extract trailing punctuation
-      while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(word.length() - 1))) {
-        suffix = word.charAt(word.length() - 1) + suffix;
-        word = word.substring(0, word.length() - 1);
-      }
+  //     // Extract trailing punctuation
+  //     while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(word.length() - 1))) {
+  //       suffix = word.charAt(word.length() - 1) + suffix;
+  //       word = word.substring(0, word.length() - 1);
+  //     }
 
-      // Now 'word' should be clean — like "Total", "1.23", or "kr"
-      String translated = translate(word);
-      result.append(prefix).append(translated).append(suffix).append(" ");
-    }
+  //     // Now 'word' should be clean — like "Total", "1.23", or "kr"
+  //     String translated = translate(word);
+  //     result.append(prefix).append(translated).append(suffix).append(" ");
+  //   }
 
-    return result.toString().trim();
-  }
+  //   return result.toString().trim();
+  // }
 
 }
