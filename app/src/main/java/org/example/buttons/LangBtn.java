@@ -38,6 +38,7 @@ public class LangBtn extends RoundButton {
 
     instances.add(new WeakReference<>(this));
     updateImage(); // Set image based on current language
+
   }
 
   /**
@@ -98,42 +99,4 @@ public class LangBtn extends RoundButton {
 
     LangBtn.updateAllLanguageButtons();
   }
-
-  // /**
-  // * Updates the language of the provided UI components.
-  // * Toggles the language in the dictionary and translates the text of each
-  // * component.
-  // */
-  // public void updateLanguage(List<Labeled> components) {
-  // dictionary.toggleLanguage();
-  // for (Labeled component : components) {
-  // String currentText = component.getText();
-  // String translated = dictionary.translate(currentText);
-  // component.setText(translated);
-  // }
-  // this.isEnglish = !this.isEnglish;
-  // }
-
-  // /**
-  // * Updates the language of both labeled components and text input prompts.
-  // */
-  // public void updateLanguage(List<Labeled> labels, List<TextInputControl>
-  // inputs) {
-  // dictionary.toggleLanguage();
-
-  // // Update labels
-  // for (Labeled component : labels) {
-  // String currentText = component.getText();
-  // String translated = dictionary.translate(currentText);
-  // component.setText(translated);
-  // }
-
-  // // Update text field prompt texts
-  // for (TextInputControl input : inputs) {
-  // String prompt = input.getPromptText();
-  // String translated = dictionary.translate(prompt);
-  // input.setPromptText(translated);
-  // }
-  // this.isEnglish = !this.isEnglish;
-  // }
 }

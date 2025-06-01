@@ -2,23 +2,20 @@ package org.example.buttons;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.animation.ScaleTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 
 /**
  * Square button with image on top and label below.
  * Supports dynamic border/text color updates.
  */
-public class ColorSquareButtonWithImage extends Button {
+public class ColorSquareButtonWithImage extends AnimatedButton {
 
   private Label buttonLabel;
   private static String buttonColor = "rgb(0, 0, 0)";
@@ -48,9 +45,6 @@ public class ColorSquareButtonWithImage extends Button {
 
     applyStyle();
 
-    // Add default press/release animation
-    setOnMousePressed(e -> animateButtonPress(this, 0.95));
-    setOnMouseReleased(e -> animateButtonPress(this, 1.0));
   }
 
   private void applyStyle() {
@@ -128,10 +122,4 @@ public class ColorSquareButtonWithImage extends Button {
     }
   }
 
-  private void animateButtonPress(Button button, double scale) {
-    ScaleTransition st = new ScaleTransition(Duration.millis(100), button);
-    st.setToX(scale);
-    st.setToY(scale);
-    st.play();
-  }
 }

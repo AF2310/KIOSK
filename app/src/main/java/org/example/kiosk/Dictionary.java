@@ -395,6 +395,15 @@ public class Dictionary {
     addTranslation("Pick a Side for your Meal", "Välj ett tillbehör till din måltid");
     addTranslation("Pick a Drink for your Meal", "Välj en dryck till din måltid");
 
+    // Keyboard Keys
+    addTranslation("Close", "Stäng");
+    addTranslation("Space", "Mellanslag");
+    addTranslation("Shift", "Skift");
+
+    // Checkout screen vocabulary
+    addTranslation("Enter Promo Code:", "Ange kampanjkod:");
+    addTranslation("Apply", "Använd");
+
   }
 
   // Adds translations to both the English to Swedish and Swedish to English maps

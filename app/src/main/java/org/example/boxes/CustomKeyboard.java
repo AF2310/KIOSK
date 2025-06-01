@@ -25,6 +25,7 @@ import org.example.buttons.KeyboardButton;
 import org.example.buttons.KeyboardButtonPrim;
 import org.example.buttons.MidLabelSec;
 import org.example.kiosk.InactivityTimer;
+import org.example.kiosk.LanguageSetting;
 
 /**
  * A custom on-screen keyboard for our app.
@@ -121,15 +122,17 @@ public class CustomKeyboard {
   }
 
   private Button createKeyButton(String key) {
+    String translated = LanguageSetting.getInstance().smartTranslate(key);
     Button button;
+
     switch (key) {
       case "⌫":
       case "Close":
       case "Shift":
-        button = new KeyboardButtonPrim(key);
+        button = new KeyboardButtonPrim(translated);
         break;
       default:
-        button = new KeyboardButton(key);
+        button = new KeyboardButton(translated);
     }
     button.setFont(Font.font("Arial", 18));
     button.setMinSize(60, 40);

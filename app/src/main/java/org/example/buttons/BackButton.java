@@ -1,6 +1,5 @@
 package org.example.buttons;
 
-import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -8,7 +7,7 @@ import javafx.scene.image.ImageView;
 /**
  * A reusable black back button component with a back arrow icon.
  */
-public class BackButton extends Button {
+public class BackButton extends AnimatedButton {
 
   /**
    * Constructs a styled back button.

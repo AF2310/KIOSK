@@ -10,7 +10,7 @@ import javafx.util.Duration;
 /**
  * Represents a primary keyboard button.
  */
-public class KeyboardButtonPrim extends Button {
+public class KeyboardButtonPrim extends AnimatedButton {
   private static String buttonBackgroundColor = "rgb(1, 176, 51)";
   private static final List<KeyboardButtonPrim> instances = new ArrayList<>();
 

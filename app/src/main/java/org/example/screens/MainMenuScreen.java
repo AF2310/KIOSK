@@ -37,6 +37,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import org.example.buttons.AnimatedButton;
 import org.example.buttons.ArrowButton;
 import org.example.buttons.CartSquareButton;
 import org.example.buttons.ColorSquareButtonWithImage;
@@ -190,7 +192,7 @@ public class MainMenuScreen {
         gridSearchButton);
     gridSearchBox.setAlignment(Pos.CENTER);
 
-    Button showSearchBtn = new Button();
+    Button showSearchBtn = new AnimatedButton();
     showSearchBtn.setMinSize(80, 80);
     showSearchBtn.setMaxSize(80, 80);
 
@@ -230,7 +232,7 @@ public class MainMenuScreen {
     showSearchBtn.setOnMouseEntered(e -> {
       searchLabel.setEffect(searchShadow);
       searchShadow.setColor(Color.BLACK);
-      searchShadow.setRadius(3);
+      searchShadow.setRadius(2);
     });
     showSearchBtn.setOnMouseExited(e -> {
       searchLabel.setEffect(null);
@@ -375,8 +377,8 @@ public class MainMenuScreen {
 
       btn.setOnMouseEntered(e -> {
         btn.setEffect(shadow);
-        shadow.setColor(Color.color(0, 0, 0, 0.5));
-        shadow.setRadius(5);
+        shadow.setColor(Color.color(0, 0, 0, 0.2));
+        shadow.setRadius(2);
       });
       btn.setOnMouseExited(e -> {
         btn.setEffect(null);

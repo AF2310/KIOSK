@@ -3,7 +3,6 @@ package org.example.buttons;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -18,7 +17,7 @@ import org.example.orders.Order;
  * functionality
  * ("Confirm Order") as a label.
  */
-public class ConfirmOrderButton extends Button {
+public class ConfirmOrderButton extends AnimatedButton {
 
   private static final List<ConfirmOrderButton> instances = new ArrayList<>();
   private static String buttonBackgroundColor = "rgb(81, 173, 86)";

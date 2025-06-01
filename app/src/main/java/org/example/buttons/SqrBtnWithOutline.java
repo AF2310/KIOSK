@@ -2,7 +2,6 @@ package org.example.buttons;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,7 +11,7 @@ import javafx.scene.layout.VBox;
 /**
  * Square button with an image on top and a label below.
  */
-public class SqrBtnWithOutline extends Button {
+public class SqrBtnWithOutline extends AnimatedButton {
 
   /**
    * Constructor for vertically stacked button (image on top, label below).

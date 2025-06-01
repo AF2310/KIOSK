@@ -1,6 +1,5 @@
 package org.example.buttons;
 
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.example.orders.Cart;
@@ -8,7 +7,7 @@ import org.example.orders.Cart;
 /**
  * A reusable red cancel button component with a red X icon.
  */
-public class CancelButton extends Button {
+public class CancelButton extends AnimatedButton {
 
   /**
    * Constructs a red cancel button with icon and styling.
