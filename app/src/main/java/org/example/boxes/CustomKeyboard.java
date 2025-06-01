@@ -22,6 +22,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.example.buttons.KeyboardButton;
+import org.example.buttons.KeyboardButtonPrim;
+import org.example.buttons.MidLabelSec;
 import org.example.kiosk.InactivityTimer;
 
 /**
@@ -65,17 +67,21 @@ public class CustomKeyboard {
     keyboardLayout.setPadding(new Insets(20));
     keyboardLayout.setAlignment(Pos.CENTER);
     keyboardLayout.setStyle(
-        "-fx-background-color: white;"
-            + "-fx-border-color: black;"
+        "-fx-background-color: rgba(255, 255, 255, 0.7);"
+            + "-fx-border-color: rgba(255, 255, 255, 0.5);"
             + "-fx-border-width: 3px;"
             + "-fx-border-radius: 20;"
             + "-fx-background-radius: 20;");
+
+    // Add a label to indicate drag functionality
+    var dragLabel = new MidLabelSec("Drag me to move");
+    keyboardLayout.getChildren().add(dragLabel);
 
     List<String[]> keyRows = List.of(
         new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "⌫" },
         new String[] { "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "å" },
         new String[] { "a", "s", "d", "f", "g", "h", "j", "k", "l", "ö", "ä" },
-        new String[] { "Shift", "z", "x", "c", "v", "b", "n", "m", "Done" },
+        new String[] { "Shift", "z", "x", "c", "v", "b", "n", "m", "Close" },
         new String[] { "Space" });
 
     for (String[] row : keyRows) {
@@ -115,7 +121,16 @@ public class CustomKeyboard {
   }
 
   private Button createKeyButton(String key) {
-    var button = new KeyboardButton(key);
+    Button button;
+    switch (key) {
+      case "⌫":
+      case "Close":
+      case "Shift":
+        button = new KeyboardButtonPrim(key);
+        break;
+      default:
+        button = new KeyboardButton(key);
+    }
     button.setFont(Font.font("Arial", 18));
     button.setMinSize(60, 40);
 
@@ -129,7 +144,7 @@ public class CustomKeyboard {
         button.setMinWidth(80);
         break;
       case "Shift":
-      case "Done":
+      case "Close":
         button.setMinWidth(80);
         break;
       default:
@@ -175,7 +190,7 @@ public class CustomKeyboard {
         updateKeyLabels();
         break;
 
-      case "Done":
+      case "Close":
         keyboardStage.close();
 
         // Return focus to a safe UI element to re-enable clickability
