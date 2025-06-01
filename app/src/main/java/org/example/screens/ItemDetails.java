@@ -3,8 +3,6 @@ package org.example.screens;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
-// import java.util.HashSet;
-// import java.util.LinkedHashSet;
 import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -173,13 +171,12 @@ public class ItemDetails {
     // Item label
     var nameLabel = new TitleLabel(item.getName());
 
-    // Get the description of the item
+    // Set the item description label
     String descriptionText = item.getDescription();
 
     if (descriptionText == null || descriptionText.trim().isEmpty()) {
       try {
-        SqlQueries sqlQueries = new SqlQueries();
-        String fetchedDescription = sqlQueries.getDescriptionByName(item.getName());
+        String fetchedDescription = queries.getDescriptionByName(item.getName());
 
         if (fetchedDescription != null && !fetchedDescription.trim().isEmpty()) {
           descriptionText = fetchedDescription;
@@ -193,6 +190,9 @@ public class ItemDetails {
       }
     }
 
+    // Setting the description text to a maximum of 80 characters per line
+    descriptionText = setLinesOfTheLabel(descriptionText, 70);
+
     var descriptionLabel = new Label(descriptionText);
     descriptionLabel.setStyle(
         "-fx-font-size: 20px;"
@@ -200,9 +200,9 @@ public class ItemDetails {
     LabelManager.register(descriptionLabel);
 
     // Left side of the top part of the screen
-    VBox nameAndDescriptionBox = new VBox(20);
+    VBox nameAndDescriptionBox = new VBox(10);
     nameAndDescriptionBox.getChildren().addAll(nameLabel, descriptionLabel);
-    VBox leftSide = new VBox(100);
+    VBox leftSide = new VBox(20);
     leftSide.setAlignment(Pos.TOP_CENTER);
     leftSide.setPadding(new Insets(0, 0, 0, 100));
     leftSide.getChildren().addAll(nameAndDescriptionBox, ingredientListBox);
@@ -456,5 +456,26 @@ public class ItemDetails {
   public Meal loadMealByProductId(int productId) throws SQLException {
     SqlQueries pool = new SqlQueries();
     return pool.loadMealByProductId(productId);
+  }
+
+  private String setLinesOfTheLabel(String text, int maxLineLength) {
+    StringBuilder wrapped = new StringBuilder();
+    int lineLength = 0;
+
+    for (String word : text.split(" ")) {
+      // If adding this word exceeds line limit, start a new line
+      if (lineLength + word.length() > maxLineLength) {
+        wrapped.append("\n");
+        lineLength = 0;
+      } else if (lineLength > 0) {
+        wrapped.append(" ");
+        lineLength += 1; // account for space
+      }
+
+      wrapped.append(word);
+      lineLength += word.length();
+    }
+
+    return wrapped.toString();
   }
 }
