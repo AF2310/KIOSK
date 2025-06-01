@@ -23,6 +23,7 @@ public class Dictionary {
     addTranslation("Driver found and connected", "Drivrutin hittad och ansluten");
     addTranslation("Terms of Service", "Användarvillkor");
 
+    // Terms and conditions vocabulary
     addTranslation(
         "1. Acceptance of Terms\n"
             + "By using our services, you agree to these terms...\n\n"
@@ -64,6 +65,7 @@ public class Dictionary {
     addTranslation("Password", "Lösenord");
     addTranslation("Username", "Användarnamn");
     addTranslation("Invalid login details", "Ogiltig inloggning");
+    addTranslation("Design", "Designa");
 
     // Admin Main Menu vocabulary
     addTranslation("Welcome, Admin!", "Välkommen, Admin!");
@@ -73,12 +75,15 @@ public class Dictionary {
     addTranslation("See Sales Summary", "Försäljningsöversikt");
     addTranslation("Set Special Offers", "Sätt Specialerbjudanden");
 
-    // Admin Item Screen vocabulary
+    // Update Menu Items vocabulary
     addTranslation("Add Product to Menu", "Lägg till produkten");
     addTranslation("Change Prices", "Ändra priser");
     addTranslation("Remove Product from Menu", "Ta bort produkten");
+    addTranslation("Apply Global Discounts", "Tillämpa globala rabatter");
+    addTranslation("Add Ingredients to DB", "Lägg till ingredienser i DB:n");
 
-    addTranslation("Add A Product to the Menu", "Lägg till en Produkt i Menyn");
+    // Add Product to Menu vocabulary
+    addTranslation("Add a Product to the Menu", "Lägg till en Produkt i Menyn");
     addTranslation("Product Name:", "Produktnamn:");
     addTranslation("Product Description:", "Produktbeskrivning:");
     addTranslation("Product Price:", "Produktpris:");
@@ -87,6 +92,17 @@ public class Dictionary {
     addTranslation("Product Category:", "Produktkategori:");
     addTranslation("Ingredient List", "Ingredienslista");
     addTranslation("Confirm", "Bekräfta");
+    addTranslation("Select image", "Välj bild");
+    addTranslation("No image selected", "Ingen bild vald");
+    addTranslation("Success!", "Lyckat!");
+    addTranslation("Product Added Successfully!", "Produkten har lagts till!");
+    addTranslation("Creating producted failed, no ID obtained",
+        "Misslyckades med att skapa produkt, inget ID erhölls");
+    addTranslation("No ingredients selected!", "Inga ingredienser valda!");
+    addTranslation("Info", "Information");
+    addTranslation("All fields are required!", "Alla fält måste fyllas i!");
+    addTranslation("Database error", "Databasfel");
+    addTranslation("Failed to load categories", "Kunde inte ladda kategorier");
 
     // Item Details vocabulary
     addTranslation("Add To Cart", "Lägg till");
@@ -287,42 +303,44 @@ public class Dictionary {
   }
 
   // /**
-  //  * Attempts to translate a full sentence; if not found, translates word by word.
-  //  * Handles dynamic sentences like: "Current inactivity timer: 60 seconds"
-  //  * or "New timer value (in seconds)"
-  //  */
+  // * Attempts to translate a full sentence; if not found, translates word by
+  // word.
+  // * Handles dynamic sentences like: "Current inactivity timer: 60 seconds"
+  // * or "New timer value (in seconds)"
+  // */
   // public String smartTranslate(String sentence) {
-  //   String fullTranslation = translate(sentence);
-  //   if (!fullTranslation.equals(sentence)) {
-  //     return fullTranslation;
-  //   }
+  // String fullTranslation = translate(sentence);
+  // if (!fullTranslation.equals(sentence)) {
+  // return fullTranslation;
+  // }
 
-  //   String[] words = sentence.split("\\s+");
-  //   StringBuilder result = new StringBuilder();
+  // String[] words = sentence.split("\\s+");
+  // StringBuilder result = new StringBuilder();
 
-  //   for (String word : words) {
-  //     // Detect word boundaries with punctuation (e.g., "Total:", "1.23", "kr.")
-  //     String prefix = "";
-  //     String suffix = "";
+  // for (String word : words) {
+  // // Detect word boundaries with punctuation (e.g., "Total:", "1.23", "kr.")
+  // String prefix = "";
+  // String suffix = "";
 
-  //     // Extract leading punctuation (e.g., quotes, parentheses)
-  //     while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(0))) {
-  //       prefix += word.charAt(0);
-  //       word = word.substring(1);
-  //     }
+  // // Extract leading punctuation (e.g., quotes, parentheses)
+  // while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(0))) {
+  // prefix += word.charAt(0);
+  // word = word.substring(1);
+  // }
 
-  //     // Extract trailing punctuation
-  //     while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(word.length() - 1))) {
-  //       suffix = word.charAt(word.length() - 1) + suffix;
-  //       word = word.substring(0, word.length() - 1);
-  //     }
+  // // Extract trailing punctuation
+  // while (!word.isEmpty() &&
+  // !Character.isLetterOrDigit(word.charAt(word.length() - 1))) {
+  // suffix = word.charAt(word.length() - 1) + suffix;
+  // word = word.substring(0, word.length() - 1);
+  // }
 
-  //     // Now 'word' should be clean — like "Total", "1.23", or "kr"
-  //     String translated = translate(word);
-  //     result.append(prefix).append(translated).append(suffix).append(" ");
-  //   }
+  // // Now 'word' should be clean — like "Total", "1.23", or "kr"
+  // String translated = translate(word);
+  // result.append(prefix).append(translated).append(suffix).append(" ");
+  // }
 
-  //   return result.toString().trim();
+  // return result.toString().trim();
   // }
 
 }

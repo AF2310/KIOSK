@@ -619,13 +619,13 @@ public class MainMenuScreen {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.smartTranslate(mainPane);
+      lang.translateLabels(mainPane);
     });
 
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(mainPane);
-    lang.smartTranslate(mainPane);
+    lang.translateLabels(mainPane);
 
     // Create final scene result
     CustomScene scene = new CustomScene(mainPane, windowWidth, windowHeight);
@@ -917,7 +917,7 @@ public class MainMenuScreen {
       itemGrid.add(itemBox, i % maxItemsPerRow, i / maxItemsPerRow);
     }
 
-    LanguageSetting.getInstance().smartTranslate(itemGrid);
+    LanguageSetting.getInstance().translateLabels(itemGrid);
 
     updateCategoryButtonStyles();
   }

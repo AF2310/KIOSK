@@ -245,7 +245,7 @@ public class AddProductScene {
     });
 
     // The top part of the scene, the label name
-    var menuLabel = new Label("Add A Product to the Menu");
+    var menuLabel = new Label("Add a Product to the Menu");
     menuLabel.setStyle("-fx-font-size: 40; -fx-font-weight: bold;");
 
     HBox menuTitle = new HBox(menuLabel);
@@ -306,13 +306,13 @@ public class AddProductScene {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.smartTranslate(mainPane);
+      lang.translateLabels(mainPane);
     });
 
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(mainPane);
-    lang.smartTranslate(mainPane);
+    lang.translateLabels(mainPane);
 
     Scene addProductScene = new Scene(mainPane, 1920, 1080);
 
@@ -327,10 +327,14 @@ public class AddProductScene {
    * @param type    what type of alert it is
    */
   private void showAlert(String title, String message, Alert.AlertType type) {
+    LanguageSetting lang = LanguageSetting.getInstance();
+    String translatedTitle = lang.translate(title);
+    String translatedMessage = lang.translate(message);
+
     Alert alert = new Alert(type);
-    alert.setTitle(title);
+    alert.setTitle(translatedTitle);
     alert.setHeaderText(null);
-    alert.setContentText(message);
+    alert.setContentText(translatedMessage);
     alert.showAndWait();
   }
 

@@ -23,7 +23,7 @@ public class RoundRainbowBtn extends Button {
     // Create label with rainbow text
     rainbowLabel = new Label("Design");
     rainbowLabel.setStyle(
-        "-fx-font-size: 30px;"
+        "-fx-font-size: 24px;"
             + "-fx-font-weight: bold;"
             + "-fx-background-color: transparent;"
             + "-fx-text-fill: linear-gradient(to right, "
