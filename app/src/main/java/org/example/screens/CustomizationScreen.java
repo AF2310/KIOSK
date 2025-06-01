@@ -16,15 +16,20 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.example.buttons.ArrowButton;
 import org.example.buttons.BlackButtonWithImage;
+import org.example.buttons.CartSquareButton;
+import org.example.buttons.CircleButtonWithSign;
 import org.example.buttons.ColorBtnOutlineImage;
 import org.example.buttons.ColorButtonWithImage;
 import org.example.buttons.ColorPickersPane;
 import org.example.buttons.ColorSettingManager;
 import org.example.buttons.ColorSquareButtonWithImage;
+import org.example.buttons.ConfirmOrderButton;
 import org.example.buttons.KioskName;
 import org.example.buttons.LangBtn;
 import org.example.buttons.TitleLabel;
+import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;
 
 /**
@@ -117,19 +122,43 @@ public class CustomizationScreen {
       
       try {
         
+        // Writes default scheme to file
         ColorSettingManager.resetToDefaults();
         
+        // Fetches colors from file
         Color[] defaults = ColorSettingManager.loadColors();
         
         if (defaults != null) {
           
+          // Sets color picker defaults
           colorPickers.getPrimaryColorPicker().setValue(defaults[0]);
           colorPickers.getSecondaryColorPicker().setValue(defaults[1]);
           colorPickers.getBackgroundColorPicker().setValue(defaults[2]);
-          
+
+          // And sets the scheme to the running program
+          LabelManager.setTextColor(defaults[0]);
+          TitleLabel.setTextColor(defaults[0]);
+          BlackButtonWithImage.setButtonBackgroundColor(defaults[0]);
+          ColorSquareButtonWithImage.setButtonColor(defaults[0]);
+          CartSquareButton.setButtonColor(defaults[0]);
+          ColorBtnOutlineImage.setButtonColor(defaults[0]);
+          ArrowButton.setButtonColor(defaults[0]);
+          ConfirmOrderButton.setButtonBackgroundColor(defaults[0]);
+          CircleButtonWithSign.setPlusColor(defaults[0]);
+          CircleButtonWithSign.setMinusBorder(defaults[0]);;
+          ColorButtonWithImage.setButtonBackgroundColor(defaults[1]);
+          CircleButtonWithSign.setMinusBackground(defaults[1]);
+          BackgroundColorStore.setCurrentBackgroundColor(defaults[2]);
+
         }
+          
         
         System.out.println("Scheme reset");
+
+        // Rerenders this scene to apply new background color
+        Scene statsScene = new CustomizationScreen().showCustomizationScreen(
+                primaryStage, windowWidth, windowHeight, welcomeScrScene);
+        primaryStage.setScene(statsScene);
         
       } catch (IOException ex) {
         
