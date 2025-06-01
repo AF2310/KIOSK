@@ -76,7 +76,7 @@ public class OrderConfirmationScreen {
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(oconfirmStack);
-    lang.smartTranslate(oconfirmStack);
+    lang.translateLabels(oconfirmStack);
 
     // Create final scene result
     CustomScene scene = new CustomScene(oconfirmStack, windowWidth, windowHeight);

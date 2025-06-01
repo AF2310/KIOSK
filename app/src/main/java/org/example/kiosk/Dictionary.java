@@ -125,6 +125,17 @@ public class Dictionary {
     addTranslation("Database error", "Databasfel");
     addTranslation("Failed to load categories", "Kunde inte ladda kategorier");
 
+    // Add ingridents to the DB vocabulary
+    addTranslation("Add Ingredients to the Database", "Lägg till ingredienser i databasen");
+    addTranslation("Select Categories which will have this ingredient:",
+        "Välj kategorier som ska ha denna ingrediens:");
+    addTranslation("Ingredient Name:", "Ingrediensnamn:");
+    addTranslation("Add", "Lägg till");
+    addTranslation("Ingredient field cannot be empty", "Ingrediensfältet får inte vara tomt");
+    addTranslation("This ingredient is already in the database",
+        "Denna ingrediens finns redan i databasen");
+    addTranslation("Ingredient has been successfully added!", "Ingrediensen har lagts till!");
+
     // Item Details vocabulary
     addTranslation("Add To Cart", "Lägg till");
     addTranslation("Back", "Tillbaks");

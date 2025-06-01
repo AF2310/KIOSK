@@ -176,7 +176,7 @@ public class ItemDetails {
         row.setAlignment(Pos.CENTER_RIGHT);
         ingredientBox.getChildren().add(row);
       }
-      LanguageSetting.getInstance().smartTranslate(ingredientBox);
+      LanguageSetting.getInstance().translateLabels(ingredientBox);
     });
 
     // Putting the ingredient box and the scroll button together in a vboc
@@ -321,13 +321,13 @@ public class ItemDetails {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.smartTranslate(layout);
+      lang.translateLabels(layout);
     });
 
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(layout);
-    lang.smartTranslate(layout);
+    lang.translateLabels(layout);
 
     CustomScene scene = new CustomScene(layout, 1920, 1080);
 
@@ -420,7 +420,7 @@ public class ItemDetails {
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(layout);
-    lang.smartTranslate(layout);
+    lang.translateLabels(layout);
 
     CustomScene scene = new CustomScene(layout, 1920, 1080);
 

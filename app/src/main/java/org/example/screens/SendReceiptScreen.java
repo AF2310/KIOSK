@@ -142,7 +142,7 @@ public class SendReceiptScreen {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.smartTranslate(layout);
+      lang.translateLabels(layout);
     });
 
     // Put everything into a StackPane
@@ -151,7 +151,7 @@ public class SendReceiptScreen {
 
     // Register for translation
     LanguageSetting.getInstance().registerRoot(mainPane);
-    LanguageSetting.getInstance().smartTranslate(mainPane);
+    LanguageSetting.getInstance().translateLabels(mainPane);
 
     // Set focus of emailField when the scene is shown
     Platform.runLater(() -> promptLabel.requestFocus());

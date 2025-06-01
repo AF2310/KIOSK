@@ -208,13 +208,13 @@ public class SalesStatsScreen {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.smartTranslate(layout);
+      lang.translateLabels(layout);
     });
 
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(layout);
-    lang.smartTranslate(layout);
+    lang.translateLabels(layout);
 
     Scene scene = new Scene(layout, 1920, 1080);
 
