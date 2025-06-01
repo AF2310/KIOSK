@@ -93,13 +93,13 @@ public class ChangeTimerScreen {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.translateLabels(layout);
+      lang.smartLabelTranslate(layout);
     });
 
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(layout);
-    lang.translateLabels(layout);
+    lang.smartLabelTranslate(layout);
 
     var scene = new Scene(layout, 1920, 1080);
 
@@ -221,7 +221,7 @@ public class ChangeTimerScreen {
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(timer);
-    lang.translateLabels(timer);
+    lang.smartLabelTranslate(timer);
 
     return timer;
   }

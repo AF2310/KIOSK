@@ -163,6 +163,82 @@ public class Dictionary {
     addTranslation("King Burger Meal", "Kungaburgarmeny");
 
     // Item Descriptions
+    addTranslation(
+        "Juicy chicken with lettuce tomato and mayo in a soft bun",
+        "Saftig kyckling med sallad tomat och majonnäs i ett bröd");
+
+    addTranslation(
+        "Two beef patties with cheese pickles and house sauce",
+        "Två nötköttburgare med ost pickles och hemlagad sås");
+
+    addTranslation(
+        "Beef with lettuce tomato onions and ketchup mayo mix",
+        "Nötkött med sallad tomat lök och ketchup majonnäs");
+
+    addTranslation(
+        "Beef cheddar bacon and BBQ sauce just like at diners",
+        "Nötkött cheddar bacon och BBQ sås precis som på diner");
+
+    addTranslation(
+        "Grilled veggies with lettuce tomato onion and vegan mix",
+        "Grillade grönsaker med sallad tomat lök och vegansk sås");
+
+    addTranslation(
+        "Beef with beer flavor onions bacon and Swiss cheese",
+        "Nötkött med ölsmak lök bacon och schweizisk ost");
+
+    addTranslation(
+        "Triple beef double cheese lettuce tomato and King sauce",
+        "Trippel kött dubbel ost sallad tomat och King sås");
+
+    addTranslation(
+        "Premium beef with pepper jack avocado and chipotle mayo",
+        "Premiumkött med pepper jack avokado och chipotlemajonnäs");
+
+    addTranslation(
+        "Crispy onion rings crunchy outside and soft inside",
+        "Krispiga lökringar frasiga utanpå och mjuka inuti");
+
+    addTranslation(
+        "Classic fries salted and served hot and fresh",
+        "Klassiska pommes saltade och serverade varma");
+
+    addTranslation(
+        "Fries with chili and cheese spicy and satisfying",
+        "Pommes med chili och ost kryddiga och mättande");
+
+    addTranslation(
+        "Banana dessert with caramel and chopped nuts",
+        "Banandessert med karamell och hackade nötter");
+
+    addTranslation(
+        "Fruity orange soda with sweet sparkling taste",
+        "Fruktig apelsinläsk med söt och bubblig smak");
+
+    addTranslation(
+        "Lemon lime soda fresh bubbly and light",
+        "Citron lime läsk frisk bubblig och lätt");
+
+    addTranslation(
+        "Coca Cola taste with no sugar full flavor remains",
+        "Coca Cola smak utan socker full smak ändå");
+
+    addTranslation(
+        "Cola with bold taste always good with a meal",
+        "Cola med kraftig smak alltid bra till maten");
+
+    addTranslation(
+        "Blend of 23 flavors rich and smooth experience",
+        "Blandning av 23 smaker rik och len upplevelse");
+
+    addTranslation(
+        "Classic cola sweet and fizzy timeless refreshment",
+        "Klassisk cola söt och bubblig tidlös dryck");
+
+    addTranslation(
+        "Cold creamy ice cream ask for todays flavors",
+        "Kall krämig glass fråga om dagens smaker");
+
     addTranslation("This is a yummy chicken burger", "Det här är en god kycklingburgare");
     addTranslation("This is a yummy beef burger", "Det här är en god nötköttsburgare");
     addTranslation("This is a yummy beer burger", "Det här är en god ölburgare");
@@ -258,6 +334,13 @@ public class Dictionary {
     addTranslation("pending", "väntande");
     addTranslation("PAID", "Betald");
 
+    // Edit Product vocabulary
+    addTranslation("Product Editor:", "Produktredigerare:");
+    addTranslation("Search by name...", "Sök efter namn...");
+    addTranslation("Search by max price...", "Sök efter maxpris...");
+    addTranslation("Search Ingredients", "Sök ingredienser");
+    addTranslation("Preparation Time", "Tillagningstid");
+
     // Timer Editor
     addTranslation("Timer Editor:", "Timerredigerare");
     addTranslation("Timer:", "Tidtagare:");
@@ -288,7 +371,6 @@ public class Dictionary {
     addTranslation("Volume of Orders", "Volym av beställningar");
     addTranslation("Product Revenue Share", "Produktintäktsandel");
     addTranslation("Search", "Sök");
-    addTranslation("Price Editor:", "Prisredigerare:");
     addTranslation("Product ID", "Produkt-ID");
     addTranslation("Product Name", "Produktnamn");
     addTranslation("Description", "Beskrivning");
@@ -339,45 +421,45 @@ public class Dictionary {
     }
   }
 
-  // /**
-  // * Attempts to translate a full sentence; if not found, translates word by
-  // word.
-  // * Handles dynamic sentences like: "Current inactivity timer: 60 seconds"
-  // * or "New timer value (in seconds)"
-  // */
-  // public String smartTranslate(String sentence) {
-  // String fullTranslation = translate(sentence);
-  // if (!fullTranslation.equals(sentence)) {
-  // return fullTranslation;
-  // }
+  /**
+   * Attempts to translate a full sentence; if not found, translates word by
+   * word.
+   * Handles dynamic sentences like: "Current inactivity timer: 60 seconds"
+   * or "New timer value (in seconds)"
+   */
+  public String smartTranslate(String sentence) {
+    String fullTranslation = translate(sentence);
+    if (!fullTranslation.equals(sentence)) {
+      return fullTranslation;
+    }
 
-  // String[] words = sentence.split("\\s+");
-  // StringBuilder result = new StringBuilder();
+    String[] words = sentence.split("\\s+");
+    StringBuilder result = new StringBuilder();
 
-  // for (String word : words) {
-  // // Detect word boundaries with punctuation (e.g., "Total:", "1.23", "kr.")
-  // String prefix = "";
-  // String suffix = "";
+    for (String word : words) {
+      // Detect word boundaries with punctuation (e.g., "Total:", "1.23", "kr.")
+      String prefix = "";
+      String suffix = "";
 
-  // // Extract leading punctuation (e.g., quotes, parentheses)
-  // while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(0))) {
-  // prefix += word.charAt(0);
-  // word = word.substring(1);
-  // }
+      // Extract leading punctuation (e.g., quotes, parentheses)
+      while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(0))) {
+        prefix += word.charAt(0);
+        word = word.substring(1);
+      }
 
-  // // Extract trailing punctuation
-  // while (!word.isEmpty() &&
-  // !Character.isLetterOrDigit(word.charAt(word.length() - 1))) {
-  // suffix = word.charAt(word.length() - 1) + suffix;
-  // word = word.substring(0, word.length() - 1);
-  // }
+      // Extract trailing punctuation
+      while (!word.isEmpty()
+          && !Character.isLetterOrDigit(word.charAt(word.length() - 1))) {
+        suffix = word.charAt(word.length() - 1) + suffix;
+        word = word.substring(0, word.length() - 1);
+      }
 
-  // // Now 'word' should be clean — like "Total", "1.23", or "kr"
-  // String translated = translate(word);
-  // result.append(prefix).append(translated).append(suffix).append(" ");
-  // }
+      // Now 'word' should be clean — like "Total", "1.23", or "kr"
+      String translated = translate(word);
+      result.append(prefix).append(translated).append(suffix).append(" ");
+    }
 
-  // return result.toString().trim();
-  // }
+    return result.toString().trim();
+  }
 
 }

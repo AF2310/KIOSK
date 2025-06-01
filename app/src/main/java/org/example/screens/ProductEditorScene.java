@@ -74,7 +74,7 @@ public class ProductEditorScene {
   public Scene getProductEditorScene() {
 
     // Label for screen
-    Label historyLabel = new Label("Price Editor:");
+    Label historyLabel = new Label("Product Editor:");
     historyLabel.setStyle(
         "-fx-font-size: 45px;"
             + "-fx-font-weight: bold;");

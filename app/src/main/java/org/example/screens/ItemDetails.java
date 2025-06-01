@@ -168,9 +168,6 @@ public class ItemDetails {
     VBox ingredientListBox = new VBox(20, ingredientBox, scrollButton);
     ingredientListBox.setAlignment(Pos.CENTER);
 
-    // Item label
-    var nameLabel = new TitleLabel(item.getName());
-
     // Set the item description label
     String descriptionText = item.getDescription();
 
@@ -190,14 +187,19 @@ public class ItemDetails {
       }
     }
 
-    // Setting the description text to a maximum of 80 characters per line
-    descriptionText = setLinesOfTheLabel(descriptionText, 70);
+    var transaltedDescription = LanguageSetting.getInstance().translate(descriptionText);
 
-    var descriptionLabel = new Label(descriptionText);
+    // Setting the description text to a maximum of 80 characters per line
+    transaltedDescription = setLinesOfTheLabel(transaltedDescription, 70);
+
+    var descriptionLabel = new Label(transaltedDescription);
     descriptionLabel.setStyle(
         "-fx-font-size: 20px;"
             + "-fx-font-weight: normal;");
     LabelManager.register(descriptionLabel);
+
+    // Item label
+    var nameLabel = new TitleLabel(item.getName());
 
     // Left side of the top part of the screen
     VBox nameAndDescriptionBox = new VBox(10);

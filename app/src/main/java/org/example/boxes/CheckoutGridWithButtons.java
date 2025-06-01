@@ -205,4 +205,8 @@ public class CheckoutGridWithButtons extends HBox {
       rightArrowButton.setDisable(true);
     }
   }
+
+  public Label getPageCounterLabel() {
+    return pageCounterLabel;
+  }
 }
