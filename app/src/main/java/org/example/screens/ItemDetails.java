@@ -67,24 +67,11 @@ public class ItemDetails {
   public CustomScene create(Stage primaryStage, Scene prevScene, Single item, Cart cart)
       throws SQLException {
     try {
-      // TODO getter for needs ingredients in single class
       queries.setIngredientsForSingle(item, true);
     } catch (SQLException e) {
       e.printStackTrace();
     }
     List<Ingredient> ingredients = item.ingredients;
-    // Make a deep copy of ingredients to avoid reusing the original list
-    // System.out.println("Original ingredients: " + item.ingredients);
-    // List<Ingredient> ingredients = new ArrayList<>(new
-    // LinkedHashSet<>(item.ingredients));
-    // System.out.println("Ingredients after HashSet conversion: " + ingredients);
-    // Original list
-    // System.out.println("Before modification: " + item.ingredients);
-    // Create a new list with no duplicates, using LinkedHashSet to preserve order
-    // List<Ingredient> ingredients = new ArrayList<>(new
-    // LinkedHashSet<>(item.ingredients));
-    // // Check after modification
-    // System.out.println("After manual duplicate removal: " + ingredients);
 
     List<Integer> quantities = new ArrayList<>();
     /*
@@ -186,8 +173,27 @@ public class ItemDetails {
     // Item label
     var nameLabel = new TitleLabel(item.getName());
 
-    // TODO: Add description to the item once it has one. This is dummy text
-    var descriptionLabel = new Label("This is a yummy " + item.getName().toLowerCase());
+    // Get the description of the item
+    String descriptionText = item.getDescription();
+
+    if (descriptionText == null || descriptionText.trim().isEmpty()) {
+      try {
+        SqlQueries sqlQueries = new SqlQueries();
+        String fetchedDescription = sqlQueries.getDescriptionByName(item.getName());
+
+        if (fetchedDescription != null && !fetchedDescription.trim().isEmpty()) {
+          descriptionText = fetchedDescription;
+          item.setDescription(fetchedDescription);
+        } else {
+          descriptionText = "This is a yummy " + item.getName().toLowerCase();
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+        descriptionText = "This is a yummy " + item.getName().toLowerCase();
+      }
+    }
+
+    var descriptionLabel = new Label(descriptionText);
     descriptionLabel.setStyle(
         "-fx-font-size: 20px;"
             + "-fx-font-weight: normal;");
@@ -438,11 +444,14 @@ public class ItemDetails {
 
   /**
    * loads a meal object from the db using the given product id.
-   * This method queries the meal table and finds a meal associated with the specified product
+   * This method queries the meal table and finds a meal associated with the
+   * specified product
    *
-   * @param productId the product id of the product to find a corresponding meal for
+   * @param productId the product id of the product to find a corresponding meal
+   *                  for
    * @return either the meal if its found or null if no meal is linked
-   * @throws SQLException we get an exception if a db access error occurs or sql is invalid
+   * @throws SQLException we get an exception if a db access error occurs or sql
+   *                      is invalid
    */
   public Meal loadMealByProductId(int productId) throws SQLException {
     SqlQueries pool = new SqlQueries();
