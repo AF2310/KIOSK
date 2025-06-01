@@ -243,8 +243,8 @@ public class CheckoutScreen {
       double discountedTotal = order.calculatePrice();
 
       String updatedReceipt = rawReceipt.replaceFirst(
-        "Total: .*?kr",
-        "Total: " + String.format("%.2f", discountedTotal) + "kr"
+          "Total: .*?kr",
+          "Total: " + String.format("%.2f", discountedTotal) + "kr"
       );
 
       String messageBody = updatedReceipt;
@@ -333,7 +333,7 @@ public class CheckoutScreen {
         checkoutGrid,
         bottomPart);
 
-    LanguageSetting.getInstance().smartTranslate(layout);
+    LanguageSetting.getInstance().translateLabels(layout);
 
     // Translate button action
     langButton.addAction(event -> {
@@ -345,13 +345,13 @@ public class CheckoutScreen {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.smartTranslate(layout);
+      lang.translateLabels(layout);
     });
 
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(layout);
-    lang.smartTranslate(layout);
+    lang.translateLabels(layout);
 
     // Create final scene result
     CustomScene scene = new CustomScene(layout, windowWidth, windowHeight);

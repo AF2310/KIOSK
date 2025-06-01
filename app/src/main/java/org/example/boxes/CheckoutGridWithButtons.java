@@ -162,7 +162,7 @@ public class CheckoutGridWithButtons extends HBox {
       itemGrid.add(itemSlot, column, row);
     }
 
-    LanguageSetting.getInstance().smartTranslate(itemGrid);
+    LanguageSetting.getInstance().translateLabels(itemGrid);
 
     // Add empty slots for grid shape
     int totalItems = pageEndIndex - pageStartIndex;

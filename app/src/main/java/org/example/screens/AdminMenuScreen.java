@@ -98,7 +98,6 @@ public class AdminMenuScreen {
             primaryStage,
             adminMenuLayout.getScene());
       } catch (SQLException e1) {
-        // TODO Auto-generated catch block
         e1.printStackTrace();
       }
       primaryStage.setScene(searchBarScreen);
@@ -177,13 +176,13 @@ public class AdminMenuScreen {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.smartTranslate(layout);
+      lang.translateLabels(layout);
     });
 
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(layout);
-    lang.smartTranslate(layout);
+    lang.translateLabels(layout);
 
     Scene adminMenuScene = new Scene(layout, windowWidth, windowHeight);
 

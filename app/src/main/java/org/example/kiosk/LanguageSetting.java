@@ -72,85 +72,88 @@ public class LanguageSetting {
 
       // Update all registered UI roots
       for (Parent root : registeredRoots) {
-        smartTranslate(root);
+        // smartTranslate(root);
+        translateLabels(root);
       }
     }
   }
 
-  /**
-   * Updates the text of all translatable nodes within the given root container.
-   */
-  public void smartTranslate(Parent root) {
-    for (Node node : root.getChildrenUnmodifiable()) {
+  // /**
+  // * Updates the text of all translatable nodes within the given root container.
+  // */
+  // public void smartTranslate(Parent root) {
+  // for (Node node : root.getChildrenUnmodifiable()) {
 
-      if (node instanceof Label) {
-        Label label = (Label) node;
-        label.setText(dictionary.smartTranslate(label.getText()));
-      }
+  // if (node instanceof Label) {
+  // Label label = (Label) node;
+  // label.setText(dictionary.smartTranslate(label.getText()));
+  // }
 
-      if (node instanceof TextField) {
-        TextField textField = (TextField) node;
-        textField.setPromptText(dictionary.smartTranslate(textField.getPromptText()));
-      }
+  // if (node instanceof TextField) {
+  // TextField textField = (TextField) node;
+  // textField.setPromptText(dictionary.smartTranslate(textField.getPromptText()));
+  // }
 
-      if (node instanceof PasswordField) {
-        PasswordField passwordField = (PasswordField) node;
-        passwordField.setPromptText(dictionary.smartTranslate(passwordField.getPromptText()));
-      }
+  // if (node instanceof PasswordField) {
+  // PasswordField passwordField = (PasswordField) node;
+  // passwordField.setPromptText(dictionary.smartTranslate(passwordField.getPromptText()));
+  // }
 
-      if (node instanceof ListView<?>) {
-        ListView<?> listView = (ListView<?>) node;
+  // if (node instanceof ListView<?>) {
+  // ListView<?> listView = (ListView<?>) node;
 
-        if (listView.getItems().isEmpty() || listView.getItems().get(0) instanceof String) {
-          @SuppressWarnings("unchecked")
-          ListView<String> stringListView = (ListView<String>) listView;
+  // if (listView.getItems().isEmpty() || listView.getItems().get(0) instanceof
+  // String) {
+  // @SuppressWarnings("unchecked")
+  // ListView<String> stringListView = (ListView<String>) listView;
 
-          stringListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-            @Override
-            public ListCell<String> call(ListView<String> param) {
-              return new ListCell<String>() {
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                  super.updateItem(item, empty);
-                  if (!empty && item != null) {
-                    setText(dictionary.smartTranslate(item));
-                  }
-                }
-              };
-            }
-          });
-        }
-      }
+  // stringListView.setCellFactory(new Callback<ListView<String>,
+  // ListCell<String>>() {
+  // @Override
+  // public ListCell<String> call(ListView<String> param) {
+  // return new ListCell<String>() {
+  // @Override
+  // protected void updateItem(String item, boolean empty) {
+  // super.updateItem(item, empty);
+  // if (!empty && item != null) {
+  // setText(dictionary.smartTranslate(item));
+  // }
+  // }
+  // };
+  // }
+  // });
+  // }
+  // }
 
-      if (node instanceof Chart) {
-        Chart chart = (Chart) node;
+  // if (node instanceof Chart) {
+  // Chart chart = (Chart) node;
 
-        if (chart instanceof XYChart<?, ?>) {
-          XYChart<?, ?> xyChart = (XYChart<?, ?>) chart;
+  // if (chart instanceof XYChart<?, ?>) {
+  // XYChart<?, ?> xyChart = (XYChart<?, ?>) chart;
 
-          if (xyChart.getXAxis() != null) {
-            xyChart.getXAxis().setLabel(dictionary.smartTranslate(xyChart.getXAxis().getLabel()));
-          }
-          if (xyChart.getYAxis() != null) {
-            xyChart.getYAxis().setLabel(dictionary.smartTranslate(xyChart.getYAxis().getLabel()));
-          }
-        }
-      }
+  // if (xyChart.getXAxis() != null) {
+  // xyChart.getXAxis().setLabel(dictionary.smartTranslate(xyChart.getXAxis().getLabel()));
+  // }
+  // if (xyChart.getYAxis() != null) {
+  // xyChart.getYAxis().setLabel(dictionary.smartTranslate(xyChart.getYAxis().getLabel()));
+  // }
+  // }
+  // }
 
-      if (node instanceof Button) {
-        Node graphic = ((Button) node).getGraphic();
-        if (graphic instanceof Parent) {
-          smartTranslate((Parent) graphic);
-        }
-        Button button = (Button) node;
-        button.setText(dictionary.smartTranslate(button.getText()));
-      }
+  // if (node instanceof Button) {
+  // Node graphic = ((Button) node).getGraphic();
+  // if (graphic instanceof Parent) {
+  // smartTranslate((Parent) graphic);
+  // }
+  // Button button = (Button) node;
+  // button.setText(dictionary.smartTranslate(button.getText()));
+  // }
 
-      if (node instanceof Parent) {
-        smartTranslate((Parent) node);
-      }
-    }
-  }
+  // if (node instanceof Parent) {
+  // smartTranslate((Parent) node);
+  // }
+  // }
+  // }
 
   /**
    * Updates the text of all translatable nodes within the given root container

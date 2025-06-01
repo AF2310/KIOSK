@@ -346,13 +346,13 @@ public class MealCustomizationScreen {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.smartTranslate(layout);
+      lang.translateLabels(layout);
     });
 
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(layout);
-    lang.smartTranslate(layout);
+    lang.translateLabels(layout);
 
     CustomScene scene = new CustomScene(layout, 1920, 1080);
 

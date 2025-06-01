@@ -56,6 +56,7 @@ public class CustomizationScreen {
     promptInput.setStyle(
         "-fx-font-size: 25px;"
             + "-fx-font-weight: bold;");
+    LabelManager.register(promptInput);
 
     // Textfield for the name change
     TextField nameInput = new TextField();
@@ -253,13 +254,13 @@ public class CustomizationScreen {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.smartTranslate(mainBorderPane);
+      lang.translateLabels(mainBorderPane);
     });
 
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(mainBorderPane);
-    lang.smartTranslate(mainBorderPane);
+    lang.translateLabels(mainBorderPane);
 
     var customizationScene = new CustomScene(mainBorderPane, windowWidth, windowHeight);
 

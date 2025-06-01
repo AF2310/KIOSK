@@ -65,7 +65,7 @@ public class SalesStatsScreen {
     }
 
     Charts charts = new Charts();
-    
+
     // Button for Product vs Quantity ordered - BarChart
     MidButton productSalesBtn = new MidButton("Sold Products", "rgb(255, 255, 255)", 30);
     productSalesBtn.setOnAction(e -> {
@@ -73,6 +73,12 @@ public class SalesStatsScreen {
       // Clears out the right side VBox for the new chart
       topRight.getChildren().clear();
       BarChart<String, Number> chart = charts.createProductSales(wrapper.orders);
+
+      // Translate the chart before showing
+      LanguageSetting lang = LanguageSetting.getInstance();
+      lang.registerRoot(chart);
+      lang.translateLabels(chart);
+
       topRight.getChildren().add(chart);
 
     });
@@ -84,6 +90,12 @@ public class SalesStatsScreen {
       // Clears out the right side VBox for the new chart
       topRight.getChildren().clear();
       BarChart<String, Number> chart = charts.createOrdersPerWeekday(wrapper.orders);
+
+      // Translate the chart before showing
+      LanguageSetting lang = LanguageSetting.getInstance();
+      lang.registerRoot(chart);
+      lang.translateLabels(chart);
+
       topRight.getChildren().add(chart);
 
     });
@@ -95,6 +107,12 @@ public class SalesStatsScreen {
       // Clears out the right side VBox for the new chart
       topRight.getChildren().clear();
       LineChart<Number, Number> chart = charts.createOrdersByHour(wrapper.orders);
+
+      // Translate the chart before showing
+      LanguageSetting lang = LanguageSetting.getInstance();
+      lang.registerRoot(chart);
+      lang.translateLabels(chart);
+
       topRight.getChildren().add(chart);
 
     });
@@ -106,6 +124,12 @@ public class SalesStatsScreen {
       // Clears out the right side VBox for the new chart
       topRight.getChildren().clear();
       PieChart pieChart = charts.createProductRevenue(wrapper.orders);
+
+      // Translate the chart before showing
+      LanguageSetting lang = LanguageSetting.getInstance();
+      lang.registerRoot(pieChart);
+      lang.translateLabels(pieChart);
+
       topRight.getChildren().add(pieChart);
 
     });
@@ -117,6 +141,12 @@ public class SalesStatsScreen {
       // Clears out the right side VBox for the new chart
       topRight.getChildren().clear();
       BarChart<String, Number> barChart = charts.createMonthlyRevenue(wrapper.orders);
+
+      // Translate the chart before showing
+      LanguageSetting lang = LanguageSetting.getInstance();
+      lang.registerRoot(barChart);
+      lang.translateLabels(barChart);
+
       topRight.getChildren().add(barChart);
 
     });
@@ -178,13 +208,13 @@ public class SalesStatsScreen {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.smartTranslate(layout);
+      lang.translateLabels(layout);
     });
 
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(layout);
-    lang.smartTranslate(layout);
+    lang.translateLabels(layout);
 
     Scene scene = new Scene(layout, 1920, 1080);
 

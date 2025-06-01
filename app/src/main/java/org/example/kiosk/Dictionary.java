@@ -16,7 +16,6 @@ public class Dictionary {
    */
   public Dictionary() {
 
-    // Translations (these can be moved to a file later)
     // Welcome screen vocabulary
     addTranslation("Welcome to", "Välkommen till");
     addTranslation("Eat Here", "Ät här");
@@ -24,13 +23,34 @@ public class Dictionary {
     addTranslation("Driver found and connected", "Drivrutin hittad och ansluten");
     addTranslation("Terms of Service", "Användarvillkor");
 
+    // Terms and conditions vocabulary
+    addTranslation(
+        "1. Acceptance of Terms\n"
+            + "By using our services, you agree to these terms...\n\n"
+            + "2. Service Description\n"
+            + "We provide food ordering services...\n\n"
+            + "3. User Responsibilities\n"
+            + "You must provide accurate information...\n\n"
+            + "4. Limitation of Liability\n"
+            + "We are not responsible for...\n\n"
+            + "Last Updated: ",
+        "1. Godkännande av villkor\n"
+            + "Genom att använda våra tjänster godkänner du dessa villkor...\n\n"
+            + "2. Tjänstebeskrivning\n"
+            + "Vi tillhandahåller matbeställningstjänster...\n\n"
+            + "3. Användarens ansvar\n"
+            + "Du måste lämna korrekt information...\n\n"
+            + "4. Ansvarsbegränsning\n"
+            + "Vi ansvarar inte för...\n\n"
+            + "Senast uppdaterad: ");
+
     // Main menu vocabulary
     addTranslation("Burgers", "Burgare");
     addTranslation("Sides", "Tillbehör");
     addTranslation("Drinks", "Drycker");
     addTranslation("Desserts", "Desserter");
     addTranslation("Meals", "Kombomenyer");
-    addTranslation("Special\nOffers", "Special\nErbjudanden");
+    // addTranslation("Special\nOffers", "Special\nErbjudanden");
     addTranslation("Cancel", "Avbryt");
     addTranslation("Filter Items", "Filtrera artiklar");
     addTranslation("Filter", "Filter");
@@ -53,13 +73,38 @@ public class Dictionary {
     addTranslation("Change Timer Setting", "Ändra Timerinställningar");
     addTranslation("See Sales Summary", "Försäljningsöversikt");
     addTranslation("Set Special Offers", "Sätt Specialerbjudanden");
+    addTranslation("Design", "Designa");
 
-    // Admin Item Screen vocabulary
+    // Customization Screen Vocabulary
+    addTranslation("Change Kiosk Name here: ", "Byt Kiosknamn här: ");
+    addTranslation("Save name", "Spara namn");
+    addTranslation("Save Color Scheme", "Spara Färgschema");
+    addTranslation("Reset Color Scheme", "Återställ Färgschema");
+    addTranslation("Set & Test Design", "Ange & Testa Design");
+    addTranslation("Prime Color", "Primärfärg");
+    addTranslation("Secondary Color", "Sekundärfärg");
+    addTranslation("Background Color", "Bakgrundsfärg");
+    // Basic Colors
+    addTranslation("Red", "Röd");
+    addTranslation("Blue", "Blå");
+    addTranslation("Green", "Grön");
+    addTranslation("Yellow", "Gul");
+    addTranslation("Black", "Svart");
+    addTranslation("White", "Vit");
+    addTranslation("Orange", "Orange");
+    addTranslation("Purple", "Lila");
+    addTranslation("Gray", "Grå");
+    addTranslation("Brown", "Brun");
+
+    // Update Menu Items vocabulary
     addTranslation("Add Product to Menu", "Lägg till produkten");
     addTranslation("Change Prices", "Ändra priser");
     addTranslation("Remove Product from Menu", "Ta bort produkten");
+    addTranslation("Apply Global Discounts", "Tillämpa globala rabatter");
+    addTranslation("Add Ingredients to DB", "Lägg till ingredienser i DB:n");
 
-    addTranslation("Add A Product to the Menu", "Lägg till en Produkt i Menyn");
+    // Add Product to Menu vocabulary
+    addTranslation("Add a Product to the Menu", "Lägg till en Produkt i Menyn");
     addTranslation("Product Name:", "Produktnamn:");
     addTranslation("Product Description:", "Produktbeskrivning:");
     addTranslation("Product Price:", "Produktpris:");
@@ -68,6 +113,28 @@ public class Dictionary {
     addTranslation("Product Category:", "Produktkategori:");
     addTranslation("Ingredient List", "Ingredienslista");
     addTranslation("Confirm", "Bekräfta");
+    addTranslation("Select image", "Välj bild");
+    addTranslation("No image selected", "Ingen bild vald");
+    addTranslation("Success!", "Lyckat!");
+    addTranslation("Product Added Successfully!", "Produkten har lagts till!");
+    addTranslation("Creating producted failed, no ID obtained",
+        "Misslyckades med att skapa produkt, inget ID erhölls");
+    addTranslation("No ingredients selected!", "Inga ingredienser valda!");
+    addTranslation("Info", "Information");
+    addTranslation("All fields are required!", "Alla fält måste fyllas i!");
+    addTranslation("Database error", "Databasfel");
+    addTranslation("Failed to load categories", "Kunde inte ladda kategorier");
+
+    // Add ingridents to the DB vocabulary
+    addTranslation("Add Ingredients to the Database", "Lägg till ingredienser i databasen");
+    addTranslation("Select Categories which will have this ingredient:",
+        "Välj kategorier som ska ha denna ingrediens:");
+    addTranslation("Ingredient Name:", "Ingrediensnamn:");
+    addTranslation("Add", "Lägg till");
+    addTranslation("Ingredient field cannot be empty", "Ingrediensfältet får inte vara tomt");
+    addTranslation("This ingredient is already in the database",
+        "Denna ingrediens finns redan i databasen");
+    addTranslation("Ingredient has been successfully added!", "Ingrediensen har lagts till!");
 
     // Item Details vocabulary
     addTranslation("Add To Cart", "Lägg till");
@@ -164,15 +231,22 @@ public class Dictionary {
     addTranslation("Sales Statistics:", "Försäljningsstatistik:");
     addTranslation("Sold Products", "Sålda Produkter");
     addTranslation("Orders per Day", "Beställningar per dag");
+    addTranslation("Orders by Hour", "Beställningar per timme");
+    addTranslation("Revenue by Products", "Intäkter per produkt");
+    addTranslation("Revenue (last 12 Month)", "Intäkter (sen. 12 månaderna)");
+
     addTranslation("Product Sales", "Produktsförsäljning");
     addTranslation("Sales Data", "Försäljningsdata");
     addTranslation("Product", "Produkt");
     addTranslation("Quantity Sold", "Antal sålda");
-
     addTranslation("Orders per Weekday", "Beställningar per veckodag");
     addTranslation("Orders", "Beställningar");
     addTranslation("Number of Orders", "Antal beställningar");
     addTranslation("Weekday", "Veckodag");
+    addTranslation("Total Revenue of the last 12 Months", "Totalintäkter de senaste 12 månaderna");
+    addTranslation("Revenue in SEK", "Intäkter i SEK");
+    addTranslation("Month", "Månad");
+    addTranslation("Revenue", "Intäkter");
 
     // Order history vocabulary
     addTranslation("Order History:", "Beställningshistorik:");
@@ -189,7 +263,8 @@ public class Dictionary {
     addTranslation("Timer:", "Tidtagare:");
     addTranslation("Current inactivity timer: ", "Nuvarande inaktivitetstimer: ");
     addTranslation(" seconds", " sekunder");
-    // addTranslation("New timer value (in seconds)", "Nytt timervärde (i sekunder)");
+    // addTranslation("New timer value (in seconds)", "Nytt timervärde (i
+    // sekunder)");
     addTranslation("Update Timer", "Uppdatera Timer");
     addTranslation("Please enter a value >= 5 seconds.", "Vänligen ange ett värde >= 5 sekunder.");
     addTranslation("Timer updated successfully!", "Timern har uppdaterats!");
@@ -207,9 +282,7 @@ public class Dictionary {
 
     // Delete/Edit vocabulary
     addTranslation("Edit Product Data", "Redigera produktdata");
-    addTranslation("Orders by Hour", "Beställningar per timme");
-    addTranslation("Revenue by Products", "Intäkter per produkt");
-    addTranslation("Orders by Hour", "Beställningar per timme");
+
     addTranslation("Numbers of Orders", "Antal beställningar");
     addTranslation("Hour of Day", "Timme på dagen");
     addTranslation("Volume of Orders", "Volym av beställningar");
@@ -266,43 +339,45 @@ public class Dictionary {
     }
   }
 
-  /**
-   * Attempts to translate a full sentence; if not found, translates word by word.
-   * Handles dynamic sentences like: "Current inactivity timer: 60 seconds"
-   * or "New timer value (in seconds)"
-   */
-  public String smartTranslate(String sentence) {
-    String fullTranslation = translate(sentence);
-    if (!fullTranslation.equals(sentence)) {
-      return fullTranslation;
-    }
+  // /**
+  // * Attempts to translate a full sentence; if not found, translates word by
+  // word.
+  // * Handles dynamic sentences like: "Current inactivity timer: 60 seconds"
+  // * or "New timer value (in seconds)"
+  // */
+  // public String smartTranslate(String sentence) {
+  // String fullTranslation = translate(sentence);
+  // if (!fullTranslation.equals(sentence)) {
+  // return fullTranslation;
+  // }
 
-    String[] words = sentence.split("\\s+");
-    StringBuilder result = new StringBuilder();
+  // String[] words = sentence.split("\\s+");
+  // StringBuilder result = new StringBuilder();
 
-    for (String word : words) {
-      // Detect word boundaries with punctuation (e.g., "Total:", "1.23", "kr.")
-      String prefix = "";
-      String suffix = "";
+  // for (String word : words) {
+  // // Detect word boundaries with punctuation (e.g., "Total:", "1.23", "kr.")
+  // String prefix = "";
+  // String suffix = "";
 
-      // Extract leading punctuation (e.g., quotes, parentheses)
-      while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(0))) {
-        prefix += word.charAt(0);
-        word = word.substring(1);
-      }
+  // // Extract leading punctuation (e.g., quotes, parentheses)
+  // while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(0))) {
+  // prefix += word.charAt(0);
+  // word = word.substring(1);
+  // }
 
-      // Extract trailing punctuation
-      while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(word.length() - 1))) {
-        suffix = word.charAt(word.length() - 1) + suffix;
-        word = word.substring(0, word.length() - 1);
-      }
+  // // Extract trailing punctuation
+  // while (!word.isEmpty() &&
+  // !Character.isLetterOrDigit(word.charAt(word.length() - 1))) {
+  // suffix = word.charAt(word.length() - 1) + suffix;
+  // word = word.substring(0, word.length() - 1);
+  // }
 
-      // Now 'word' should be clean — like "Total", "1.23", or "kr"
-      String translated = translate(word);
-      result.append(prefix).append(translated).append(suffix).append(" ");
-    }
+  // // Now 'word' should be clean — like "Total", "1.23", or "kr"
+  // String translated = translate(word);
+  // result.append(prefix).append(translated).append(suffix).append(" ");
+  // }
 
-    return result.toString().trim();
-  }
+  // return result.toString().trim();
+  // }
 
 }
