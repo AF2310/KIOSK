@@ -25,6 +25,7 @@ import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.KioskName;
 import org.example.buttons.LangBtn;
 import org.example.buttons.TitleLabel;
+import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;
 
 /**
@@ -51,6 +52,7 @@ public class CustomizationScreen {
     promptInput.setStyle(
         "-fx-font-size: 25px;"
             + "-fx-font-weight: bold;");
+    LabelManager.register(promptInput);
 
     // Textfield for the name change
     TextField nameInput = new TextField();
@@ -224,13 +226,13 @@ public class CustomizationScreen {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.smartTranslate(mainBorderPane);
+      lang.translateLabels(mainBorderPane);
     });
 
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(mainBorderPane);
-    lang.smartTranslate(mainBorderPane);
+    lang.translateLabels(mainBorderPane);
 
     var customizationScene = new CustomScene(mainBorderPane, windowWidth, windowHeight);
 

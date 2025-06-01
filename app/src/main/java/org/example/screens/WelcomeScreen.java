@@ -147,11 +147,6 @@ public class WelcomeScreen {
       lang.translateLabels(mainWindow);
     });
 
-    // Translate the whole layout before rendering
-    LanguageSetting lang = LanguageSetting.getInstance();
-    lang.registerRoot(mainWindow);
-    lang.translateLabels(mainWindow);
-
     // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
     StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
@@ -163,6 +158,11 @@ public class WelcomeScreen {
 
     mainWindow.getChildren().addAll(
         welcome, companyTitle, rowOfBurgers, rowOfButtons, mysql, termsButton);
+
+    // Translate the whole layout before rendering
+    LanguageSetting lang = LanguageSetting.getInstance();
+    lang.registerRoot(mainWindow);
+    lang.translateLabels(mainWindow);
 
     // Put everythng in a stackpane
     StackPane mainPane = new StackPane(mainWindow, langButton);

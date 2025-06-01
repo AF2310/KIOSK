@@ -65,7 +65,6 @@ public class Dictionary {
     addTranslation("Password", "Lösenord");
     addTranslation("Username", "Användarnamn");
     addTranslation("Invalid login details", "Ogiltig inloggning");
-    addTranslation("Design", "Designa");
 
     // Admin Main Menu vocabulary
     addTranslation("Welcome, Admin!", "Välkommen, Admin!");
@@ -74,6 +73,28 @@ public class Dictionary {
     addTranslation("Change Timer Setting", "Ändra Timerinställningar");
     addTranslation("See Sales Summary", "Försäljningsöversikt");
     addTranslation("Set Special Offers", "Sätt Specialerbjudanden");
+    addTranslation("Design", "Designa");
+
+    // Customization Screen Vocabulary
+    addTranslation("Change Kiosk Name here: ", "Byt Kiosknamn här: ");
+    addTranslation("Save name", "Spara namn");
+    addTranslation("Save Color Scheme", "Spara Färgschema");
+    addTranslation("Reset Color Scheme", "Återställ Färgschema");
+    addTranslation("Set & Test Design", "Ange & Testa Design");
+    addTranslation("Prime Color", "Primärfärg");
+    addTranslation("Secondary Color", "Sekundärfärg");
+    addTranslation("Background Color", "Bakgrundsfärg");
+    // Basic Colors
+    addTranslation("Red", "Röd");
+    addTranslation("Blue", "Blå");
+    addTranslation("Green", "Grön");
+    addTranslation("Yellow", "Gul");
+    addTranslation("Black", "Svart");
+    addTranslation("White", "Vit");
+    addTranslation("Orange", "Orange");
+    addTranslation("Purple", "Lila");
+    addTranslation("Gray", "Grå");
+    addTranslation("Brown", "Brun");
 
     // Update Menu Items vocabulary
     addTranslation("Add Product to Menu", "Lägg till produkten");
@@ -199,15 +220,22 @@ public class Dictionary {
     addTranslation("Sales Statistics:", "Försäljningsstatistik:");
     addTranslation("Sold Products", "Sålda Produkter");
     addTranslation("Orders per Day", "Beställningar per dag");
+    addTranslation("Orders by Hour", "Beställningar per timme");
+    addTranslation("Revenue by Products", "Intäkter per produkt");
+    addTranslation("Revenue (last 12 Month)", "Intäkter (sen. 12 månaderna)");
+
     addTranslation("Product Sales", "Produktsförsäljning");
     addTranslation("Sales Data", "Försäljningsdata");
     addTranslation("Product", "Produkt");
     addTranslation("Quantity Sold", "Antal sålda");
-
     addTranslation("Orders per Weekday", "Beställningar per veckodag");
     addTranslation("Orders", "Beställningar");
     addTranslation("Number of Orders", "Antal beställningar");
     addTranslation("Weekday", "Veckodag");
+    addTranslation("Total Revenue of the last 12 Months", "Totalintäkter de senaste 12 månaderna");
+    addTranslation("Revenue in SEK", "Intäkter i SEK");
+    addTranslation("Month", "Månad");
+    addTranslation("Revenue", "Intäkter");
 
     // Order history vocabulary
     addTranslation("Order History:", "Beställningshistorik:");
@@ -243,9 +271,7 @@ public class Dictionary {
 
     // Delete/Edit vocabulary
     addTranslation("Edit Product Data", "Redigera produktdata");
-    addTranslation("Orders by Hour", "Beställningar per timme");
-    addTranslation("Revenue by Products", "Intäkter per produkt");
-    addTranslation("Orders by Hour", "Beställningar per timme");
+
     addTranslation("Numbers of Orders", "Antal beställningar");
     addTranslation("Hour of Day", "Timme på dagen");
     addTranslation("Volume of Orders", "Volym av beställningar");
