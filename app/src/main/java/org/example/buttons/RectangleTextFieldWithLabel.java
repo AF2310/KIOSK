@@ -84,4 +84,8 @@ public class RectangleTextFieldWithLabel extends VBox {
     }
   }
 
+  public TextField getTextField() {
+    return textField;
+  }
+
 }

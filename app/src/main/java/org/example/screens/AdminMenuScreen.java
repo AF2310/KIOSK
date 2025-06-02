@@ -80,12 +80,10 @@ public class AdminMenuScreen {
       primaryStage.setScene(timerEditor);
     });
 
-    MidButton specialOffersBtn = new MidButton("Set Special Offers", "rgb(255, 255, 255)", 30);
     MidButton updateMenuBtn = new MidButton("Update Menu Items", "rgb(255, 255, 255)", 30);
 
     centerGrid.add(updateMenuBtn, 0, 0);
     centerGrid.add(changeTimerBtn, 0, 1);
-    centerGrid.add(specialOffersBtn, 0, 2);
     centerGrid.add(orderHistoryBtn, 1, 0);
     centerGrid.add(salesSummaryBtn, 1, 1);
 
@@ -103,7 +101,7 @@ public class AdminMenuScreen {
       primaryStage.setScene(searchBarScreen);
     });
 
-    centerGrid.add(searchBarBtn, 1, 2);
+    centerGrid.add(searchBarBtn, 0, 2);
 
     // Adding the language button which already has the functionality of
     // changing the logo of the language

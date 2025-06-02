@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.example.boxes.CheckoutGridWithButtons;
+import org.example.boxes.CustomKeyboard;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.ConfirmOrderButton;
@@ -225,6 +227,10 @@ public class CheckoutScreen {
       confirmOrderButton.setDisable(Cart.getInstance().isEmpty());
     });
 
+    // Custom keyboard for username and password fields
+    CustomKeyboard keyboard = new CustomKeyboard(primaryStage,
+        promoField.getTextField());
+
     // User confirms order
     confirmOrderButton.setOnAction(e -> {
       int orderId = -1;
@@ -237,16 +243,7 @@ public class CheckoutScreen {
       } catch (SQLException err) {
         err.printStackTrace();
       }
-      String subject = "Reciept for order: " + orderId;
-      String rawReceipt = Cart.getInstance().printCart(orderId);
 
-      double discountedTotal = order.calculatePrice();
-
-      String updatedReceipt = rawReceipt.replaceFirst(
-          "Total: .*?kr",
-          "Total: " + String.format("%.2f", discountedTotal) + "kr");
-
-      String messageBody = updatedReceipt;
       Cart.getInstance().convertMealsIntoSingles();
       try {
         Cart.getInstance().saveQuantityToDb(orderId);
@@ -254,9 +251,20 @@ public class CheckoutScreen {
         e1.printStackTrace();
       }
 
+      // Close the keyboard when switching scenes
+      keyboard.close();
+
       // // Create order confirmation screen
       // OrderConfirmationScreen ordConfirmation = new OrderConfirmationScreen();
       var recieptScreen = new SendReceiptScreen();
+
+      String rawReceipt = Cart.getInstance().printCart(orderId);
+      double discountedTotal = order.calculatePrice();
+      String updatedReceipt = rawReceipt.replaceFirst(
+          "Total: .*?kr",
+          "Total: " + String.format("%.2f", discountedTotal) + "kr");
+      String messageBody = updatedReceipt;
+      String subject = "Reciept for order: " + orderId;
 
       Scene recieptScene = recieptScreen.createSendReceiptScreen(
           this.primaryStage,
@@ -283,6 +291,19 @@ public class CheckoutScreen {
       InactivityTimer.getInstance().stopTimer();
       System.out.println("Order canceled!");
       primaryStage.setScene(welcomeScrScene);
+
+      // Close the keyboard when switching scenes
+      keyboard.close();
+    });
+
+    // Keyboard functionality for username and password fields
+    promoField.getTextField().setOnMouseClicked(e -> {
+      keyboard.setTargetInput(promoField.getTextField());
+      keyboard.show();
+      Platform.runLater(() -> {
+        promoField.getTextField().requestFocus();
+        promoField.getTextField().positionCaret(promoField.getTextField().getText().length());
+      });
     });
 
     // Bottom part - adding all elements together

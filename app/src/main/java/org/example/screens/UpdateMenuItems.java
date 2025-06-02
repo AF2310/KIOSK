@@ -161,9 +161,9 @@ public class UpdateMenuItems {
     gridPane.add(addProductButton, 0, 0);
     gridPane.add(editProductButton, 0, 1);
     gridPane.add(removeProductButton, 0, 2);
-    gridPane.add(globalDiscountButton, 0, 3);
-    gridPane.add(addIngredientsButton, 0, 4);
-    gridPane.add(addMealButton, 0, 5);
+    gridPane.add(globalDiscountButton, 1, 0);
+    gridPane.add(addIngredientsButton, 1, 1);
+    gridPane.add(addMealButton, 1, 2);
 
     // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
