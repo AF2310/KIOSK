@@ -26,8 +26,11 @@ import org.example.buttons.ColorPickersPane;
 import org.example.buttons.ColorSettingManager;
 import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.ConfirmOrderButton;
+import org.example.buttons.KeyboardButton;
+import org.example.buttons.KeyboardButtonPrim;
 import org.example.buttons.KioskName;
 import org.example.buttons.LangBtn;
+import org.example.buttons.MidLabelSec;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.LabelManager;
 import org.example.kiosk.LanguageSetting;
@@ -91,46 +94,45 @@ public class CustomizationScreen {
         TitleLabel.getTextColor(),
         ColorButtonWithImage.getButtonColor(),
         BackgroundColorStore.getCurrentBackgroundColor());
-    
+
     // Button to save selected color scheme
     Button saveColorsBtn = new Button();
     saveColorsBtn.setText("Save Color Scheme");
     saveColorsBtn.setOnAction(e -> {
-          
+
       try {
-        
+
         // Gets current colors and saves to file
         ColorSettingManager.saveColors(
             colorPickers.getPrimaryColorPicker().getValue(),
             colorPickers.getSecondaryColorPicker().getValue(),
-            colorPickers.getBackgroundColorPicker().getValue()
-        );
-          
+            colorPickers.getBackgroundColorPicker().getValue());
+
         System.out.println("Scheme saved");
 
       } catch (IOException ex) {
 
         ex.printStackTrace();
-          
+
       }
-    
+
     });
-    
+
     // Button to reset saved color scheme to our baseline scheme
     Button resetColorsBtn = new Button();
     resetColorsBtn.setText("Reset Color Scheme");
     resetColorsBtn.setOnAction(e -> {
-      
+
       try {
-        
+
         // Writes default scheme to file
         ColorSettingManager.resetToDefaults();
-        
+
         // Fetches colors from file
         Color[] defaults = ColorSettingManager.loadColors();
-        
+
         if (defaults != null) {
-          
+
           // Sets color picker defaults
           colorPickers.getPrimaryColorPicker().setValue(defaults[0]);
           colorPickers.getSecondaryColorPicker().setValue(defaults[1]);
@@ -146,35 +148,39 @@ public class CustomizationScreen {
           ArrowButton.setButtonColor(defaults[0]);
           ConfirmOrderButton.setButtonBackgroundColor(defaults[0]);
           CircleButtonWithSign.setPlusColor(defaults[0]);
-          CircleButtonWithSign.setMinusBorder(defaults[0]);;
+          CircleButtonWithSign.setMinusBorder(defaults[0]);
+          ;
           ColorButtonWithImage.setButtonBackgroundColor(defaults[1]);
           CircleButtonWithSign.setMinusBackground(defaults[1]);
           BackgroundColorStore.setCurrentBackgroundColor(defaults[2]);
 
+          KeyboardButtonPrim.setButtonBackgroundColor(defaults[1]);
+          KeyboardButton.setButtonBackgroundColor(defaults[0]);
+          MidLabelSec.setTextColor(defaults[1]);
+
         }
-          
-        
+
         System.out.println("Scheme reset");
 
         // Rerenders this scene to apply new background color
         Scene statsScene = new CustomizationScreen().showCustomizationScreen(
-                primaryStage, windowWidth, windowHeight, welcomeScrScene);
+            primaryStage, windowWidth, windowHeight, welcomeScrScene);
         primaryStage.setScene(statsScene);
-        
+
       } catch (IOException ex) {
-        
+
         ex.printStackTrace();
-        
+
       }
-      
+
     });
-    
+
     // Wraps the management buttons
     HBox colorManagement = new HBox();
     colorManagement.setSpacing(50);
     colorManagement.setAlignment(Pos.CENTER);
     colorManagement.getChildren().addAll(resetColorsBtn, saveColorsBtn);
-    
+
     // Making the title on top of the admin menu screen
     Label adminMenuText = new TitleLabel("Set & Test Design");
 

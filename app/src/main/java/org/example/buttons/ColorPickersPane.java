@@ -85,7 +85,6 @@ public class ColorPickersPane extends HBox {
       CircleButtonWithSign.setMinusBorder(selectedColor);
       KeyboardButtonPrim.setButtonBackgroundColor(selectedColor);
       MidLabelSec.setTextColor(selectedColor);
-
       LabelManager.setTextColor(selectedColor);
     });
 

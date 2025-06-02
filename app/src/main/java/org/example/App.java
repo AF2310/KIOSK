@@ -61,7 +61,7 @@ public class App extends Application {
       ConfirmOrderButton.setButtonBackgroundColor(savedColors[0]);
       CircleButtonWithSign.setPlusColor(savedColors[0]);
       CircleButtonWithSign.setMinusBorder(savedColors[0]);
-      ;
+
       ColorButtonWithImage.setButtonBackgroundColor(savedColors[1]);
       CircleButtonWithSign.setMinusBackground(savedColors[1]);
       BackgroundColorStore.setCurrentBackgroundColor(savedColors[2]);
