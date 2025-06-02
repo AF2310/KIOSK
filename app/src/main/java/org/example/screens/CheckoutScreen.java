@@ -22,10 +22,8 @@ import org.example.boxes.CheckoutGridWithButtons;
 import org.example.buttons.BackBtnWithTxt;
 import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.ConfirmOrderButton;
-import org.example.buttons.EatHereButton;
 import org.example.buttons.LangBtn;
 import org.example.buttons.RectangleTextFieldWithLabel;
-import org.example.buttons.TakeAwayButton;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.InactivityTimer;
 import org.example.kiosk.LanguageSetting;
@@ -44,7 +42,7 @@ import org.example.users.Customer;
 public class CheckoutScreen {
 
   private Stage primaryStage;
-  private Boolean discountApplied = false; //TODO Temporary quickfix; remove later!!
+  private Boolean discountApplied = false;
   private int discountFactor;
   private Order order = new Order();
 
@@ -82,14 +80,22 @@ public class CheckoutScreen {
     HBox.setHgrow(topLeftSpacer, Priority.ALWAYS);
 
     HBox modeIndicatorBox = new HBox();
-    modeIndicatorBox.setAlignment(Pos.TOP_RIGHT);
+    modeIndicatorBox.setAlignment(Pos.CENTER_RIGHT);
 
     if ("takeaway".equalsIgnoreCase(mode)) {
-      TakeAwayButton takeawayButton = new TakeAwayButton();
-      modeIndicatorBox.getChildren().add(takeawayButton);
+      Image takeawayImg = new Image("/takeaway.png");
+      ImageView takeawayView = new ImageView(takeawayImg);
+      takeawayView.setFitHeight(100);
+      takeawayView.setPreserveRatio(true);
+      takeawayView.setOpacity(0.5);
+      modeIndicatorBox.getChildren().add(takeawayView);
     } else {
-      EatHereButton eatHereButton = new EatHereButton();
-      modeIndicatorBox.getChildren().add(eatHereButton);
+      Image eatHereImg = new Image("/eatHere_bl.png");
+      ImageView eatHereView = new ImageView(eatHereImg);
+      eatHereView.setFitHeight(100);
+      eatHereView.setPreserveRatio(true);
+      eatHereView.setOpacity(0.5);
+      modeIndicatorBox.getChildren().add(eatHereView);
     }
 
     // Top of layout - creating elements
@@ -108,7 +114,8 @@ public class CheckoutScreen {
             + "-fx-font-size: 13;"
             + "-fx-background-radius: 10;");
     promoCodeLabel.setMinHeight(40);
-    promoCodeLabel.setPrefHeight(40);;
+    promoCodeLabel.setPrefHeight(40);
+    ;
     // Initially hidden
     promoCodeLabel.setOpacity(0);
     promoCodeLabel.setManaged(true);
@@ -118,7 +125,7 @@ public class CheckoutScreen {
         "rgb(255, 255, 255)");
 
     var applyPromoCode = new ColorSquareButtonWithImage("Apply",
-        "green_tick.png");
+        "yes_bl.png");
 
     promoField.setPadding(new Insets(0, 0, 30, 0));
 
@@ -126,13 +133,6 @@ public class CheckoutScreen {
     applyPromoCode.setPrefHeight(50);
     HBox topRightPromoBox = new HBox(20);
     topRightPromoBox.getChildren().addAll(promoField, applyPromoCode);
-
-    
-    // applyPromoCode.setOnMousePressed(e -> 
-    //     animateButtonPress(applyPromoCode, 0.95));
-    // applyPromoCode.setOnMouseReleased(e ->
-    //     animateButtonPress(applyPromoCode, 1.0));
-
 
     applyPromoCode.setOnAction(e -> {
       try (Connection connection = DatabaseManager.getConnection()) {
@@ -199,7 +199,7 @@ public class CheckoutScreen {
         button.updatePriceLabel();
       }
     });
-    
+
     VBox topRightBox = new VBox(topRightPromoBox, promoCodeLabel);
 
     HBox topBox = new HBox();
@@ -229,13 +229,24 @@ public class CheckoutScreen {
     confirmOrderButton.setOnAction(e -> {
       int orderId = -1;
       Customer customer = new Customer();
+      if (discountApplied) {
+        order.applyDiscount(discountFactor);
+      }
       try {
-        orderId = customer.placeOrder(discountApplied, discountFactor);
+        orderId = customer.placeOrder(order, discountApplied, discountFactor);
       } catch (SQLException err) {
         err.printStackTrace();
       }
       String subject = "Reciept for order: " + orderId;
-      String messageBody = Cart.getInstance().printCart(orderId);
+      String rawReceipt = Cart.getInstance().printCart(orderId);
+
+      double discountedTotal = order.calculatePrice();
+
+      String updatedReceipt = rawReceipt.replaceFirst(
+          "Total: .*?kr",
+          "Total: " + String.format("%.2f", discountedTotal) + "kr");
+
+      String messageBody = updatedReceipt;
       Cart.getInstance().convertMealsIntoSingles();
       try {
         Cart.getInstance().saveQuantityToDb(orderId);
@@ -254,8 +265,7 @@ public class CheckoutScreen {
           welcomeScrScene,
           orderId,
           subject,
-          messageBody
-      );
+          messageBody);
       this.primaryStage.setScene(recieptScene);
     });
 
@@ -321,7 +331,7 @@ public class CheckoutScreen {
         checkoutGrid,
         bottomPart);
 
-    LanguageSetting.getInstance().smartTranslate(layout);
+    LanguageSetting.getInstance().translateLabels(layout);
 
     // Translate button action
     langButton.addAction(event -> {
@@ -333,13 +343,13 @@ public class CheckoutScreen {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.smartTranslate(layout);
+      lang.smartLabelTranslate(layout);
     });
 
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(layout);
-    lang.smartTranslate(layout);
+    lang.smartLabelTranslate(layout);
 
     // Create final scene result
     CustomScene scene = new CustomScene(layout, windowWidth, windowHeight);
@@ -354,10 +364,4 @@ public class CheckoutScreen {
     return scene;
   }
 
-  // private void animateButtonPress(Button button, double scale) {
-  //   ScaleTransition st = new ScaleTransition(Duration.millis(100), button);
-  //   st.setToX(scale);
-  //   st.setToY(scale);
-  //   st.play();
-  // }
 }

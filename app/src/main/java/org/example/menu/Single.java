@@ -227,12 +227,16 @@ public class Single extends Product {
    * Method to set the ingredients to them in the database.
    */
   public void setIngredients() throws SQLException {
-    try {
-      SqlQueries pool = new SqlQueries();
-      pool.setIngredientsForSingle(this, needsIngredients);
+    System.out.println("setting ingredients");
+    if (needsIngredients) {
+      try {
+        SqlQueries pool = new SqlQueries();
+        pool.setIngredientsForSingle(this, needsIngredients);
+        needsIngredients = false;
 
-    } catch (SQLException e) {
-      e.printStackTrace();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
     }
   }
 

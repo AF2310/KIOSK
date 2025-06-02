@@ -6,14 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /**
  * Round, reusable button.
  */
-public class RoundButton extends Button {
+public class RoundButton extends AnimatedButton {
 
   // List to hold images to cycle through
   protected List<String> imagePaths = new ArrayList<>();

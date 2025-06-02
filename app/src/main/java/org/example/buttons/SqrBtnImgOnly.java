@@ -1,6 +1,5 @@
 package org.example.buttons;
 
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -8,7 +7,7 @@ import javafx.scene.image.ImageView;
  * A square button with an image only, designed for use in the application.
  * This button has a fixed size and a transparent background.
  */
-public class SqrBtnImgOnly extends Button {
+public class SqrBtnImgOnly extends AnimatedButton {
 
   /**
    * Constructs a square button with an image only.

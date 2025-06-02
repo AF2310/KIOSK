@@ -15,7 +15,7 @@ public class ColorTextField extends TextField {
       + "-fx-background-radius: 10;";
 
   private double defaultMaxWidth = 620;
-  private double defaultPrefHeight = 140;
+  private double defaultPrefHeight = 100;
 
   /**
    * Constructor to create a styled text field with prompt text.
@@ -23,7 +23,7 @@ public class ColorTextField extends TextField {
    * @param promptText the placeholder text to show when the field is empty
    */
   public ColorTextField(String promptText) {
-    super(); // Call TextField constructor
+    super();
 
     setPromptText(promptText);
     setMaxWidth(defaultMaxWidth);

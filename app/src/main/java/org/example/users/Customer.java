@@ -14,10 +14,14 @@ public class Customer implements User {
    *
    * @throws SQLException SQL Database errors
    */
-  public int placeOrder(boolean discountApplied, int discountFactor) throws SQLException {
+  public int placeOrder(Order order, boolean discountApplied, int discountFactor) throws SQLException {
     try {
+
+      if (discountApplied) {
+        order.applyDiscount(discountFactor); // ✅ Apply the discount to the existing order
+      }
       SqlQueries pool = new SqlQueries();
-      return pool.placeOrder(discountApplied, discountFactor);
+      return pool.placeOrder(order);
 
     } catch (SQLException e) {
       e.printStackTrace();

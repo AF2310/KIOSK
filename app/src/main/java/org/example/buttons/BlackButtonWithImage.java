@@ -18,7 +18,7 @@ import javafx.util.Duration;
  * A custom JavaFX button that displays text and an image,
  * with a shared background color applied to all instances.
  */
-public class BlackButtonWithImage extends Button {
+public class BlackButtonWithImage extends AnimatedButton {
 
   private Label buttonLabel;
   private static String buttonBackgroundColor = "rgb(0, 0, 0)";

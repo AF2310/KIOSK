@@ -2,7 +2,6 @@ package org.example.buttons;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -15,7 +14,7 @@ import javafx.scene.paint.Color;
  * if order is larger than max items per checkout page
  * item detail screen to browse between ingredient list of an item
  */
-public class ArrowButton extends Button {
+public class ArrowButton extends AnimatedButton {
 
   private static String buttonColor = "black"; // default color
   private static final List<ArrowButton> instances = new ArrayList<>();

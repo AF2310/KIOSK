@@ -2,14 +2,13 @@ package org.example.buttons;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
 /**
  * This is the medium-sized button with centered text and no image.
  */
-public class MidButton extends Button {
+public class MidButton extends AnimatedButton {
 
   /**
    * Class constructor.

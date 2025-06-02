@@ -87,7 +87,6 @@ public class WelcomeScreen {
     // Set the button action
     burgerButton.setOnAction(e -> {
       System.out.println("Right burger clicked!");
-      // You can handle the click action here, such as navigating to another scene
     });
 
     // Add the button to the HBox
@@ -122,7 +121,10 @@ public class WelcomeScreen {
     Button termsButton = new Button("Terms of Service");
     termsButton.setStyle(
         "-fx-text-fill: blue; -fx-underline: true; -fx-background-color: transparent;");
-    termsButton.setOnAction(e -> showTermsDialog(primaryStage));
+    termsButton.setOnAction(e -> {
+      showTermsDialog(primaryStage);
+
+    });
 
     // Add centre image
     Image burger2 = new Image(getClass().getResourceAsStream("/burger2.png"));
@@ -145,11 +147,6 @@ public class WelcomeScreen {
       lang.translateLabels(mainWindow);
     });
 
-    // Translate the whole layout before rendering
-    LanguageSetting lang = LanguageSetting.getInstance();
-    lang.registerRoot(mainWindow);
-    lang.translateLabels(mainWindow);
-
     // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
     StackPane.setMargin(langButton, new Insets(0, 0, 30, 30));
@@ -161,6 +158,11 @@ public class WelcomeScreen {
 
     mainWindow.getChildren().addAll(
         welcome, companyTitle, rowOfBurgers, rowOfButtons, mysql, termsButton);
+
+    // Translate the whole layout before rendering
+    LanguageSetting lang = LanguageSetting.getInstance();
+    lang.registerRoot(mainWindow);
+    lang.translateLabels(mainWindow);
 
     // Put everythng in a stackpane
     StackPane mainPane = new StackPane(mainWindow, langButton);
@@ -235,7 +237,7 @@ public class WelcomeScreen {
     Scene adminMenuScene = adminLoginScreen.createAdminLoginScreen(primaryStage,
         windowWidth, windowHeight, scene);
 
-    // Temporary Button to get to the admin menu
+    // Button to get to the admin menu
     burgerButton.setOnAction(e -> {
       primaryStage.setScene(adminMenuScene);
     });
@@ -247,7 +249,8 @@ public class WelcomeScreen {
     Stage dialog = new Stage();
     dialog.initOwner(ownerStage);
     dialog.setTitle("Terms of Service");
-    Label termsContent = new Label(
+
+    var termsText = new String(
         "1. Acceptance of Terms\n"
             + "By using our services, you agree to these terms...\n\n"
             + "2. Service Description\n"
@@ -257,6 +260,13 @@ public class WelcomeScreen {
             + "4. Limitation of Liability\n"
             + "We are not responsible for...\n\n"
             + "Last Updated: ");
+
+    // Translate the whole layout before rendering
+    LanguageSetting lang = LanguageSetting.getInstance();
+    var translatedTerms = lang.translate(termsText);
+
+    Label termsContent = new Label(translatedTerms);
+
     termsContent.setWrapText(true);
     termsContent.setStyle("-fx-font-size: 14; -fx-padding: 10;");
 
@@ -266,6 +276,10 @@ public class WelcomeScreen {
 
     VBox dialogLayout = new VBox(scrollPane);
     dialogLayout.setPadding(new Insets(10));
+
+    // Keep it translatable when click the button
+    lang.registerRoot(dialogLayout);
+    lang.translateLabels(dialogLayout);
 
     Scene dialogScene = new Scene(dialogLayout, 500, 300);
     dialog.setScene(dialogScene);

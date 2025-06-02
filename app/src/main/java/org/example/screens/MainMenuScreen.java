@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
@@ -37,6 +38,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.example.buttons.AnimatedButton;
 import org.example.buttons.ArrowButton;
 import org.example.buttons.CartSquareButton;
 import org.example.buttons.ColorSquareButtonWithImage;
@@ -77,6 +79,8 @@ public class MainMenuScreen {
   private String mode;
   private Connection conn;
   private boolean filtersActive = false;
+  // private ListView<String> suggestionList;
+  // private TextField gridSearchField;
 
   /**
    * Creates the main menu scene.
@@ -98,6 +102,9 @@ public class MainMenuScreen {
 
     this.primaryStage = primaryStage;
     this.mode = mode;
+
+    // gridSearchField = new TextField();
+    // suggestionList = new ListView<>();
 
     ImageView modeIcon = new ImageView();
     Label modeLabel = new Label();
@@ -144,6 +151,10 @@ public class MainMenuScreen {
     priceFilterField.setStyle("-fx-font-size: 14px; -fx-pref-width: 100px;");
 
     ComboBox<String> gridCategoryBox = new ComboBox<>();
+    ListView<String> suggestionList = new ListView<>();
+    suggestionList.setPrefHeight(100);
+    suggestionList.setVisible(false);
+
     gridCategoryBox.getItems().addAll(
         "-- Any Category --", "Burgers", "Sides", "Drinks", "Desserts", "Meals", "Special Offers");
     gridCategoryBox.setPromptText("Select Category...");
@@ -190,7 +201,7 @@ public class MainMenuScreen {
         gridSearchButton);
     gridSearchBox.setAlignment(Pos.CENTER);
 
-    Button showSearchBtn = new Button();
+    Button showSearchBtn = new AnimatedButton();
     showSearchBtn.setMinSize(80, 80);
     showSearchBtn.setMaxSize(80, 80);
 
@@ -230,7 +241,7 @@ public class MainMenuScreen {
     showSearchBtn.setOnMouseEntered(e -> {
       searchLabel.setEffect(searchShadow);
       searchShadow.setColor(Color.BLACK);
-      searchShadow.setRadius(3);
+      searchShadow.setRadius(2);
     });
     showSearchBtn.setOnMouseExited(e -> {
       searchLabel.setEffect(null);
@@ -345,6 +356,40 @@ public class MainMenuScreen {
       }
     });
 
+    suggestionList.setOnMouseClicked(e -> {
+      String selected = suggestionList.getSelectionModel().getSelectedItem();
+
+      if (selected != null) {
+        gridSearchField.setText(selected);
+        suggestionList.setVisible(false);
+        currentSearchName = selected;
+        try {
+          updateGrid();
+        } catch (SQLException e1) {
+          e1.printStackTrace();
+        }
+
+      }
+
+    });
+
+    gridSearchField.textProperty().addListener((obs, oldText, newText) -> {
+      currentSearchName = newText.trim();
+      try {
+        updateGrid();
+      } catch (SQLException e1) {
+        e1.printStackTrace();
+      }
+
+    });
+
+    gridSearchField.focusedProperty().addListener((obs, oldVal, newVal) -> {
+      if (newVal == false) {
+        suggestionList.setVisible(false);
+      }
+
+    });
+
     gridSearchBox.setOpacity(0);
     gridSearchBox.setTranslateY(10);
     gridSearchBox.setSpacing(15);
@@ -375,8 +420,8 @@ public class MainMenuScreen {
 
       btn.setOnMouseEntered(e -> {
         btn.setEffect(shadow);
-        shadow.setColor(Color.color(0, 0, 0, 0.5));
-        shadow.setRadius(5);
+        shadow.setColor(Color.color(0, 0, 0, 0.2));
+        shadow.setRadius(2);
       });
       btn.setOnMouseExited(e -> {
         btn.setEffect(null);
@@ -619,13 +664,13 @@ public class MainMenuScreen {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.smartTranslate(mainPane);
+      lang.translateLabels(mainPane);
     });
 
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(mainPane);
-    lang.smartTranslate(mainPane);
+    lang.translateLabels(mainPane);
 
     // Create final scene result
     CustomScene scene = new CustomScene(mainPane, windowWidth, windowHeight);
@@ -814,7 +859,7 @@ public class MainMenuScreen {
       }
     };
 
-    if (!searchTerm.isEmpty()) {
+    if (!currentSearchName.isEmpty() && !filtersActive) {
       filteredProducts.sort(nameComparator);
     }
     Comparator<Product> priceComparator = Comparator.comparingDouble(Product::getPrice);
@@ -917,7 +962,7 @@ public class MainMenuScreen {
       itemGrid.add(itemBox, i % maxItemsPerRow, i / maxItemsPerRow);
     }
 
-    LanguageSetting.getInstance().smartTranslate(itemGrid);
+    LanguageSetting.getInstance().translateLabels(itemGrid);
 
     updateCategoryButtonStyles();
   }

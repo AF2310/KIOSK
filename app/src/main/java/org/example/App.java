@@ -13,6 +13,9 @@ import org.example.buttons.ColorButtonWithImage;
 import org.example.buttons.ColorSettingManager;
 import org.example.buttons.ColorSquareButtonWithImage;
 import org.example.buttons.ConfirmOrderButton;
+import org.example.buttons.KeyboardButton;
+import org.example.buttons.KeyboardButtonPrim;
+import org.example.buttons.MidLabelSec;
 import org.example.buttons.TitleLabel;
 import org.example.kiosk.InactivityTimer;
 import org.example.kiosk.LabelManager;
@@ -33,21 +36,21 @@ public class App extends Application {
 
     // Instantiates List to load color scheme
     Color[] savedColors = null;
-    
+
     try {
-      
+
       // Loads colors
       savedColors = ColorSettingManager.loadColors();
-      
+
     } catch (IOException e) {
-      
+
       e.printStackTrace();
-      
+
     }
-    
+
     // Sets loaded color scheme
     if (savedColors != null) {
-      
+
       LabelManager.setTextColor(savedColors[0]);
       TitleLabel.setTextColor(savedColors[0]);
       BlackButtonWithImage.setButtonBackgroundColor(savedColors[0]);
@@ -57,11 +60,15 @@ public class App extends Application {
       ArrowButton.setButtonColor(savedColors[0]);
       ConfirmOrderButton.setButtonBackgroundColor(savedColors[0]);
       CircleButtonWithSign.setPlusColor(savedColors[0]);
-      CircleButtonWithSign.setMinusBorder(savedColors[0]);;
+      CircleButtonWithSign.setMinusBorder(savedColors[0]);
+
       ColorButtonWithImage.setButtonBackgroundColor(savedColors[1]);
       CircleButtonWithSign.setMinusBackground(savedColors[1]);
       BackgroundColorStore.setCurrentBackgroundColor(savedColors[2]);
-      
+
+      KeyboardButtonPrim.setButtonBackgroundColor(savedColors[1]);
+      KeyboardButton.setButtonBackgroundColor(savedColors[0]);
+      MidLabelSec.setTextColor(savedColors[1]);
     }
 
     // Create the WelcomeScreen object and get the scene
@@ -69,9 +76,8 @@ public class App extends Application {
     CustomScene welcomeScene = welcomeScreen.createWelcomeScreen(
         primaryStage,
         windowWidth,
-        windowHeight
-      );
-    
+        windowHeight);
+
     // Get welcome scene to stop timer every time on this scene and for later use
     InactivityTimer.getInstance().setWelcomeScene(welcomeScene);
 

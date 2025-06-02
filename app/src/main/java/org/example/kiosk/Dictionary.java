@@ -16,7 +16,6 @@ public class Dictionary {
    */
   public Dictionary() {
 
-    // Translations (these can be moved to a file later)
     // Welcome screen vocabulary
     addTranslation("Welcome to", "Välkommen till");
     addTranslation("Eat Here", "Ät här");
@@ -24,13 +23,34 @@ public class Dictionary {
     addTranslation("Driver found and connected", "Drivrutin hittad och ansluten");
     addTranslation("Terms of Service", "Användarvillkor");
 
+    // Terms and conditions vocabulary
+    addTranslation(
+        "1. Acceptance of Terms\n"
+            + "By using our services, you agree to these terms...\n\n"
+            + "2. Service Description\n"
+            + "We provide food ordering services...\n\n"
+            + "3. User Responsibilities\n"
+            + "You must provide accurate information...\n\n"
+            + "4. Limitation of Liability\n"
+            + "We are not responsible for...\n\n"
+            + "Last Updated: ",
+        "1. Godkännande av villkor\n"
+            + "Genom att använda våra tjänster godkänner du dessa villkor...\n\n"
+            + "2. Tjänstebeskrivning\n"
+            + "Vi tillhandahåller matbeställningstjänster...\n\n"
+            + "3. Användarens ansvar\n"
+            + "Du måste lämna korrekt information...\n\n"
+            + "4. Ansvarsbegränsning\n"
+            + "Vi ansvarar inte för...\n\n"
+            + "Senast uppdaterad: ");
+
     // Main menu vocabulary
     addTranslation("Burgers", "Burgare");
     addTranslation("Sides", "Tillbehör");
     addTranslation("Drinks", "Drycker");
     addTranslation("Desserts", "Desserter");
     addTranslation("Meals", "Kombomenyer");
-    addTranslation("Special\nOffers", "Special\nErbjudanden");
+    // addTranslation("Special\nOffers", "Special\nErbjudanden");
     addTranslation("Cancel", "Avbryt");
     addTranslation("Filter Items", "Filtrera artiklar");
     addTranslation("Filter", "Filter");
@@ -53,13 +73,38 @@ public class Dictionary {
     addTranslation("Change Timer Setting", "Ändra Timerinställningar");
     addTranslation("See Sales Summary", "Försäljningsöversikt");
     addTranslation("Set Special Offers", "Sätt Specialerbjudanden");
+    addTranslation("Design", "Designa");
 
-    // Admin Item Screen vocabulary
+    // Customization Screen Vocabulary
+    addTranslation("Change Kiosk Name here: ", "Byt Kiosknamn här: ");
+    addTranslation("Save name", "Spara namn");
+    addTranslation("Save Color Scheme", "Spara Färgschema");
+    addTranslation("Reset Color Scheme", "Återställ Färgschema");
+    addTranslation("Set & Test Design", "Ange & Testa Design");
+    addTranslation("Prime Color", "Primärfärg");
+    addTranslation("Secondary Color", "Sekundärfärg");
+    addTranslation("Background Color", "Bakgrundsfärg");
+    // Basic Colors
+    addTranslation("Red", "Röd");
+    addTranslation("Blue", "Blå");
+    addTranslation("Green", "Grön");
+    addTranslation("Yellow", "Gul");
+    addTranslation("Black", "Svart");
+    addTranslation("White", "Vit");
+    addTranslation("Orange", "Orange");
+    addTranslation("Purple", "Lila");
+    addTranslation("Gray", "Grå");
+    addTranslation("Brown", "Brun");
+
+    // Update Menu Items vocabulary
     addTranslation("Add Product to Menu", "Lägg till produkten");
     addTranslation("Change Prices", "Ändra priser");
     addTranslation("Remove Product from Menu", "Ta bort produkten");
+    addTranslation("Apply Global Discounts", "Tillämpa globala rabatter");
+    addTranslation("Add Ingredients to DB", "Lägg till ingredienser i DB:n");
 
-    addTranslation("Add A Product to the Menu", "Lägg till en Produkt i Menyn");
+    // Add Product to Menu vocabulary
+    addTranslation("Add a Product to the Menu", "Lägg till en Produkt i Menyn");
     addTranslation("Product Name:", "Produktnamn:");
     addTranslation("Product Description:", "Produktbeskrivning:");
     addTranslation("Product Price:", "Produktpris:");
@@ -68,6 +113,28 @@ public class Dictionary {
     addTranslation("Product Category:", "Produktkategori:");
     addTranslation("Ingredient List", "Ingredienslista");
     addTranslation("Confirm", "Bekräfta");
+    addTranslation("Select image", "Välj bild");
+    addTranslation("No image selected", "Ingen bild vald");
+    addTranslation("Success!", "Lyckat!");
+    addTranslation("Product Added Successfully!", "Produkten har lagts till!");
+    addTranslation("Creating producted failed, no ID obtained",
+        "Misslyckades med att skapa produkt, inget ID erhölls");
+    addTranslation("No ingredients selected!", "Inga ingredienser valda!");
+    addTranslation("Info", "Information");
+    addTranslation("All fields are required!", "Alla fält måste fyllas i!");
+    addTranslation("Database error", "Databasfel");
+    addTranslation("Failed to load categories", "Kunde inte ladda kategorier");
+
+    // Add ingridents to the DB vocabulary
+    addTranslation("Add Ingredients to the Database", "Lägg till ingredienser i databasen");
+    addTranslation("Select Categories which will have this ingredient:",
+        "Välj kategorier som ska ha denna ingrediens:");
+    addTranslation("Ingredient Name:", "Ingrediensnamn:");
+    addTranslation("Add", "Lägg till");
+    addTranslation("Ingredient field cannot be empty", "Ingrediensfältet får inte vara tomt");
+    addTranslation("This ingredient is already in the database",
+        "Denna ingrediens finns redan i databasen");
+    addTranslation("Ingredient has been successfully added!", "Ingrediensen har lagts till!");
 
     // Item Details vocabulary
     addTranslation("Add To Cart", "Lägg till");
@@ -96,6 +163,82 @@ public class Dictionary {
     addTranslation("King Burger Meal", "Kungaburgarmeny");
 
     // Item Descriptions
+    addTranslation(
+        "Juicy chicken with lettuce tomato and mayo in a soft bun",
+        "Saftig kyckling med sallad tomat och majonnäs i ett bröd");
+
+    addTranslation(
+        "Two beef patties with cheese pickles and house sauce",
+        "Två nötköttburgare med ost pickles och hemlagad sås");
+
+    addTranslation(
+        "Beef with lettuce tomato onions and ketchup mayo mix",
+        "Nötkött med sallad tomat lök och ketchup majonnäs");
+
+    addTranslation(
+        "Beef cheddar bacon and BBQ sauce just like at diners",
+        "Nötkött cheddar bacon och BBQ sås precis som på diner");
+
+    addTranslation(
+        "Grilled veggies with lettuce tomato onion and vegan mix",
+        "Grillade grönsaker med sallad tomat lök och vegansk sås");
+
+    addTranslation(
+        "Beef with beer flavor onions bacon and Swiss cheese",
+        "Nötkött med ölsmak lök bacon och schweizisk ost");
+
+    addTranslation(
+        "Triple beef double cheese lettuce tomato and King sauce",
+        "Trippel kött dubbel ost sallad tomat och King sås");
+
+    addTranslation(
+        "Premium beef with pepper jack avocado and chipotle mayo",
+        "Premiumkött med pepper jack avokado och chipotlemajonnäs");
+
+    addTranslation(
+        "Crispy onion rings crunchy outside and soft inside",
+        "Krispiga lökringar frasiga utanpå och mjuka inuti");
+
+    addTranslation(
+        "Classic fries salted and served hot and fresh",
+        "Klassiska pommes saltade och serverade varma");
+
+    addTranslation(
+        "Fries with chili and cheese spicy and satisfying",
+        "Pommes med chili och ost kryddiga och mättande");
+
+    addTranslation(
+        "Banana dessert with caramel and chopped nuts",
+        "Banandessert med karamell och hackade nötter");
+
+    addTranslation(
+        "Fruity orange soda with sweet sparkling taste",
+        "Fruktig apelsinläsk med söt och bubblig smak");
+
+    addTranslation(
+        "Lemon lime soda fresh bubbly and light",
+        "Citron lime läsk frisk bubblig och lätt");
+
+    addTranslation(
+        "Coca Cola taste with no sugar full flavor remains",
+        "Coca Cola smak utan socker full smak ändå");
+
+    addTranslation(
+        "Cola with bold taste always good with a meal",
+        "Cola med kraftig smak alltid bra till maten");
+
+    addTranslation(
+        "Blend of 23 flavors rich and smooth experience",
+        "Blandning av 23 smaker rik och len upplevelse");
+
+    addTranslation(
+        "Classic cola sweet and fizzy timeless refreshment",
+        "Klassisk cola söt och bubblig tidlös dryck");
+
+    addTranslation(
+        "Cold creamy ice cream ask for todays flavors",
+        "Kall krämig glass fråga om dagens smaker");
+
     addTranslation("This is a yummy chicken burger", "Det här är en god kycklingburgare");
     addTranslation("This is a yummy beef burger", "Det här är en god nötköttsburgare");
     addTranslation("This is a yummy beer burger", "Det här är en god ölburgare");
@@ -164,15 +307,22 @@ public class Dictionary {
     addTranslation("Sales Statistics:", "Försäljningsstatistik:");
     addTranslation("Sold Products", "Sålda Produkter");
     addTranslation("Orders per Day", "Beställningar per dag");
+    addTranslation("Orders by Hour", "Beställningar per timme");
+    addTranslation("Revenue by Products", "Intäkter per produkt");
+    addTranslation("Revenue (last 12 Month)", "Intäkter (sen. 12 månaderna)");
+
     addTranslation("Product Sales", "Produktsförsäljning");
     addTranslation("Sales Data", "Försäljningsdata");
     addTranslation("Product", "Produkt");
     addTranslation("Quantity Sold", "Antal sålda");
-
     addTranslation("Orders per Weekday", "Beställningar per veckodag");
     addTranslation("Orders", "Beställningar");
     addTranslation("Number of Orders", "Antal beställningar");
     addTranslation("Weekday", "Veckodag");
+    addTranslation("Total Revenue of the last 12 Months", "Totalintäkter de senaste 12 månaderna");
+    addTranslation("Revenue in SEK", "Intäkter i SEK");
+    addTranslation("Month", "Månad");
+    addTranslation("Revenue", "Intäkter");
 
     // Order history vocabulary
     addTranslation("Order History:", "Beställningshistorik:");
@@ -184,12 +334,20 @@ public class Dictionary {
     addTranslation("pending", "väntande");
     addTranslation("PAID", "Betald");
 
+    // Edit Product vocabulary
+    addTranslation("Product Editor:", "Produktredigerare:");
+    addTranslation("Search by name...", "Sök efter namn...");
+    addTranslation("Search by max price...", "Sök efter maxpris...");
+    addTranslation("Search Ingredients", "Sök ingredienser");
+    addTranslation("Preparation Time", "Tillagningstid");
+
     // Timer Editor
     addTranslation("Timer Editor:", "Timerredigerare");
     addTranslation("Timer:", "Tidtagare:");
     addTranslation("Current inactivity timer: ", "Nuvarande inaktivitetstimer: ");
     addTranslation(" seconds", " sekunder");
-    // addTranslation("New timer value (in seconds)", "Nytt timervärde (i sekunder)");
+    // addTranslation("New timer value (in seconds)", "Nytt timervärde (i
+    // sekunder)");
     addTranslation("Update Timer", "Uppdatera Timer");
     addTranslation("Please enter a value >= 5 seconds.", "Vänligen ange ett värde >= 5 sekunder.");
     addTranslation("Timer updated successfully!", "Timern har uppdaterats!");
@@ -207,15 +365,12 @@ public class Dictionary {
 
     // Delete/Edit vocabulary
     addTranslation("Edit Product Data", "Redigera produktdata");
-    addTranslation("Orders by Hour", "Beställningar per timme");
-    addTranslation("Revenue by Products", "Intäkter per produkt");
-    addTranslation("Orders by Hour", "Beställningar per timme");
+
     addTranslation("Numbers of Orders", "Antal beställningar");
     addTranslation("Hour of Day", "Timme på dagen");
     addTranslation("Volume of Orders", "Volym av beställningar");
     addTranslation("Product Revenue Share", "Produktintäktsandel");
     addTranslation("Search", "Sök");
-    addTranslation("Price Editor:", "Prisredigerare:");
     addTranslation("Product ID", "Produkt-ID");
     addTranslation("Product Name", "Produktnamn");
     addTranslation("Description", "Beskrivning");
@@ -239,6 +394,15 @@ public class Dictionary {
     // Meal Screen vocabulary
     addTranslation("Pick a Side for your Meal", "Välj ett tillbehör till din måltid");
     addTranslation("Pick a Drink for your Meal", "Välj en dryck till din måltid");
+
+    // Keyboard Keys
+    addTranslation("Close", "Stäng");
+    addTranslation("Space", "Mellanslag");
+    addTranslation("Shift", "Skift");
+
+    // Checkout screen vocabulary
+    addTranslation("Enter Promo Code:", "Ange kampanjkod:");
+    addTranslation("Apply", "Använd");
 
   }
 
@@ -267,7 +431,8 @@ public class Dictionary {
   }
 
   /**
-   * Attempts to translate a full sentence; if not found, translates word by word.
+   * Attempts to translate a full sentence; if not found, translates word by
+   * word.
    * Handles dynamic sentences like: "Current inactivity timer: 60 seconds"
    * or "New timer value (in seconds)"
    */
@@ -292,7 +457,8 @@ public class Dictionary {
       }
 
       // Extract trailing punctuation
-      while (!word.isEmpty() && !Character.isLetterOrDigit(word.charAt(word.length() - 1))) {
+      while (!word.isEmpty()
+          && !Character.isLetterOrDigit(word.charAt(word.length() - 1))) {
         suffix = word.charAt(word.length() - 1) + suffix;
         word = word.substring(0, word.length() - 1);
       }

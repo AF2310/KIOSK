@@ -477,7 +477,7 @@ public class SqlQueries {
           + "FROM productingredients pi "
           + "JOIN ingredient i ON pi.ingredient_id = i.ingredient_id "
           + "WHERE product_id = ?";
-  
+
       try (Connection conn = DatabaseManager.getConnection();
           PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -939,14 +939,10 @@ public class SqlQueries {
    * @return newly generated order id from the database (auto increment)
    * @throws SQLException sql errors
    */
-  public int placeOrder(boolean discountApplied, int discountFactor) throws SQLException {
+  public int placeOrder(Order order) throws SQLException {
     // Calculate total order price
-    Order order = new Order();
-    double price = order.calculatePrice();
 
-    if (discountApplied) {
-      price = price * (1 - discountFactor);
-    }
+    double price = order.calculatePrice();
 
     // SQL Query as string statement
     String s = "INSERT INTO `order` "
@@ -957,8 +953,8 @@ public class SqlQueries {
     try (Connection conn = DatabaseManager.getConnection();
         PreparedStatement ps = conn.prepareStatement(s);) {
       // Insert price variable
-      ps.setObject(1, price);
-
+      ps.setDouble(1, price);
+      System.out.println("Saving order with discounted total: " + price);
       // Execute query
       ps.executeUpdate();
 
@@ -1148,26 +1144,26 @@ public class SqlQueries {
       }
       ps.close();
       rs.close();
-  
+
       String sql2 = "SELECT name, price, image_url FROM product WHERE product_id = ?";
-  
+
       PreparedStatement stmt = conn.prepareStatement(sql2);
       stmt.setInt(1, productId);
       ResultSet rs2 = stmt.executeQuery();
-  
+
       while (rs2.next()) {
         meal.setMainDb(new Single(
-              meal.getId(),
-              rs2.getString("name"),
-              rs2.getFloat("price"),
-              Type.valueOf("MEAL"),
-              rs2.getString("image_url")));
+            meal.getId(),
+            rs2.getString("name"),
+            rs2.getFloat("price"),
+            Type.valueOf("MEAL"),
+            rs2.getString("image_url")));
       }
       rs2.close();
       stmt.close();
       meal.getMain().setIngredients();
     }
-    
+
     System.out.println(meal.getMain());
   }
 
@@ -1182,7 +1178,7 @@ public class SqlQueries {
   public List<Meal> getMealsUnder(double priceLimit) throws SQLException {
     List<Meal> list = new ArrayList<>();
     String sql = "SELECT id, name, total_price FROM meals WHERE total_price < ?";
-    
+
     try (Connection conn = DatabaseManager.getConnection();
         PreparedStatement ps = conn.prepareStatement(sql);) {
 
@@ -1198,7 +1194,7 @@ public class SqlQueries {
       return list;
     }
   }
-  
+
   /**
    * Retrieves a list of meals from the database.
    * The meals are filerted by the input meal type.
@@ -1220,17 +1216,17 @@ public class SqlQueries {
 
       // Bind type to SQL query
       ps.setString(1, type);
-  
+
       // Execute query to retrieve wanted Meals
       ResultSet rs = ps.executeQuery();
-  
+
       // Iterate over result set and construct Meal objects from each row
       while (rs.next()) {
         Meal m = new Meal(rs.getString("name"));
         m.setId(rs.getInt("id"));
         list.add(m);
       }
-  
+
       // Close result set and statement and return build list
       ps.close();
       rs.close();
@@ -1252,16 +1248,16 @@ public class SqlQueries {
         Statement stmt = conn.createStatement();) {
 
       ResultSet rs = stmt.executeQuery(sql);
-  
+
       while (rs.next()) {
         Meal meal = new Meal(rs.getString("name"));
         meal.setId(rs.getInt("id"));
         list.add(meal);
       }
-  
+
       rs.close();
       stmt.close();
-  
+
       return list;
     }
   }
@@ -1290,5 +1286,29 @@ public class SqlQueries {
       }
     }
     return meals;
+  }
+
+  /**
+   * Retrieves the description of a product by its name.
+   *
+   * @param name the name of the product
+   * @return the product's description or null if not found
+   * @throws SQLException if a database access error occurs
+   */
+  public String getDescriptionByName(String name) throws SQLException {
+    String sql = "SELECT description FROM product WHERE name = ?";
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+      stmt.setString(1, name);
+
+      try (ResultSet rs = stmt.executeQuery()) {
+        if (rs.next()) {
+          return rs.getString("description");
+        }
+      }
+    }
+    return null; // Not found
   }
 }

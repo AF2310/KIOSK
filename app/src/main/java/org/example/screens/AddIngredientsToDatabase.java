@@ -73,10 +73,6 @@ public class AddIngredientsToDatabase {
     errorLabel.setOpacity(0);
     errorLabel.setManaged(true);
 
-    // Input fields
-    RectangleTextFieldWithLabel nameField = new RectangleTextFieldWithLabel(
-        "Ingredient Name:", "rgb(255, 255, 255)");
-
     VBox categoryBox = new VBox(5);
     categoryBox.setPrefHeight(500);
     categoryBox.setPrefWidth(250);
@@ -90,6 +86,10 @@ public class AddIngredientsToDatabase {
         + "-fx-text-alignment: center;"
         + "-fx-text-fill: rgb(0, 0, 0);");
 
+    // Input fields
+    RectangleTextFieldWithLabel nameField = new RectangleTextFieldWithLabel(
+        "Ingredient Name:", "rgb(255, 255, 255)");
+  
     // Buttons
     SqrBtnWithOutline confirmButton = new SqrBtnWithOutline(
         "Add", "green_tick.png", "rgb(81, 173, 86)");
@@ -132,13 +132,13 @@ public class AddIngredientsToDatabase {
       LanguageSetting lang = LanguageSetting.getInstance();
       String newLang = lang.getSelectedLanguage().equals("en") ? "sv" : "en";
       lang.changeLanguage(newLang);
-      lang.smartTranslate(mainLayout);
+      lang.translateLabels(mainLayout);
     });
 
     // Initial translation
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(mainLayout);
-    lang.smartTranslate(mainLayout);
+    lang.translateLabels(mainLayout);
 
     return new Scene(mainLayout, 1920, 1080);
   }

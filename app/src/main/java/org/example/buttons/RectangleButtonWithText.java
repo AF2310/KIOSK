@@ -1,13 +1,12 @@
 package org.example.buttons;
 
-import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
  * This is the rectangular button mostly used for + and - symbols.
  */
-public class RectangleButtonWithText extends Button {
+public class RectangleButtonWithText extends AnimatedButton {
 
   /**
    * Constructor that creates either a + or a - button with its own settings.

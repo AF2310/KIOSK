@@ -3,8 +3,6 @@ package org.example.screens;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
-// import java.util.HashSet;
-// import java.util.LinkedHashSet;
 import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -67,24 +65,11 @@ public class ItemDetails {
   public CustomScene create(Stage primaryStage, Scene prevScene, Single item, Cart cart)
       throws SQLException {
     try {
-      // TODO getter for needs ingredients in single class
-      queries.setIngredientsForSingle(item, true);
+      item.setIngredients();
     } catch (SQLException e) {
       e.printStackTrace();
     }
     List<Ingredient> ingredients = item.ingredients;
-    // Make a deep copy of ingredients to avoid reusing the original list
-    // System.out.println("Original ingredients: " + item.ingredients);
-    // List<Ingredient> ingredients = new ArrayList<>(new
-    // LinkedHashSet<>(item.ingredients));
-    // System.out.println("Ingredients after HashSet conversion: " + ingredients);
-    // Original list
-    // System.out.println("Before modification: " + item.ingredients);
-    // Create a new list with no duplicates, using LinkedHashSet to preserve order
-    // List<Ingredient> ingredients = new ArrayList<>(new
-    // LinkedHashSet<>(item.ingredients));
-    // // Check after modification
-    // System.out.println("After manual duplicate removal: " + ingredients);
 
     List<Integer> quantities = new ArrayList<>();
     /*
@@ -176,27 +161,50 @@ public class ItemDetails {
         row.setAlignment(Pos.CENTER_RIGHT);
         ingredientBox.getChildren().add(row);
       }
-      LanguageSetting.getInstance().smartTranslate(ingredientBox);
+      LanguageSetting.getInstance().translateLabels(ingredientBox);
     });
 
     // Putting the ingredient box and the scroll button together in a vboc
     VBox ingredientListBox = new VBox(20, ingredientBox, scrollButton);
     ingredientListBox.setAlignment(Pos.CENTER);
 
-    // Item label
-    var nameLabel = new TitleLabel(item.getName());
+    // Set the item description label
+    String descriptionText = item.getDescription();
 
-    // TODO: Add description to the item once it has one. This is dummy text
-    var descriptionLabel = new Label("This is a yummy " + item.getName().toLowerCase());
+    if (descriptionText == null || descriptionText.trim().isEmpty()) {
+      try {
+        String fetchedDescription = queries.getDescriptionByName(item.getName());
+
+        if (fetchedDescription != null && !fetchedDescription.trim().isEmpty()) {
+          descriptionText = fetchedDescription;
+          item.setDescription(fetchedDescription);
+        } else {
+          descriptionText = "This is a yummy " + item.getName().toLowerCase();
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+        descriptionText = "This is a yummy " + item.getName().toLowerCase();
+      }
+    }
+
+    var transaltedDescription = LanguageSetting.getInstance().translate(descriptionText);
+
+    // Setting the description text to a maximum of 80 characters per line
+    transaltedDescription = setLinesOfTheLabel(transaltedDescription, 70);
+
+    var descriptionLabel = new Label(transaltedDescription);
     descriptionLabel.setStyle(
         "-fx-font-size: 20px;"
             + "-fx-font-weight: normal;");
     LabelManager.register(descriptionLabel);
 
+    // Item label
+    var nameLabel = new TitleLabel(item.getName());
+
     // Left side of the top part of the screen
-    VBox nameAndDescriptionBox = new VBox(20);
+    VBox nameAndDescriptionBox = new VBox(10);
     nameAndDescriptionBox.getChildren().addAll(nameLabel, descriptionLabel);
-    VBox leftSide = new VBox(100);
+    VBox leftSide = new VBox(20);
     leftSide.setAlignment(Pos.TOP_CENTER);
     leftSide.setPadding(new Insets(0, 0, 0, 100));
     leftSide.getChildren().addAll(nameAndDescriptionBox, ingredientListBox);
@@ -321,13 +329,13 @@ public class ItemDetails {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.smartTranslate(layout);
+      lang.translateLabels(layout);
     });
 
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(layout);
-    lang.smartTranslate(layout);
+    lang.translateLabels(layout);
 
     CustomScene scene = new CustomScene(layout, 1920, 1080);
 
@@ -420,7 +428,7 @@ public class ItemDetails {
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(layout);
-    lang.smartTranslate(layout);
+    lang.translateLabels(layout);
 
     CustomScene scene = new CustomScene(layout, 1920, 1080);
 
@@ -438,14 +446,38 @@ public class ItemDetails {
 
   /**
    * loads a meal object from the db using the given product id.
-   * This method queries the meal table and finds a meal associated with the specified product
+   * This method queries the meal table and finds a meal associated with the
+   * specified product
    *
-   * @param productId the product id of the product to find a corresponding meal for
+   * @param productId the product id of the product to find a corresponding meal
+   *                  for
    * @return either the meal if its found or null if no meal is linked
-   * @throws SQLException we get an exception if a db access error occurs or sql is invalid
+   * @throws SQLException we get an exception if a db access error occurs or sql
+   *                      is invalid
    */
   public Meal loadMealByProductId(int productId) throws SQLException {
     SqlQueries pool = new SqlQueries();
     return pool.loadMealByProductId(productId);
+  }
+
+  private String setLinesOfTheLabel(String text, int maxLineLength) {
+    StringBuilder wrapped = new StringBuilder();
+    int lineLength = 0;
+
+    for (String word : text.split(" ")) {
+      // If adding this word exceeds line limit, start a new line
+      if (lineLength + word.length() > maxLineLength) {
+        wrapped.append("\n");
+        lineLength = 0;
+      } else if (lineLength > 0) {
+        wrapped.append(" ");
+        lineLength += 1; // account for space
+      }
+
+      wrapped.append(word);
+      lineLength += word.length();
+    }
+
+    return wrapped.toString();
   }
 }

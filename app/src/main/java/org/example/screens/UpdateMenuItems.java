@@ -163,6 +163,7 @@ public class UpdateMenuItems {
     gridPane.add(removeProductButton, 0, 2);
     gridPane.add(globalDiscountButton, 0, 3);
     gridPane.add(addIngredientsButton, 0, 4);
+    gridPane.add(addMealButton, 0, 5);
 
     // Position the language button in the bottom-left corner
     StackPane.setAlignment(langButton, Pos.BOTTOM_LEFT);
@@ -184,13 +185,13 @@ public class UpdateMenuItems {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.smartTranslate(layout);
+      lang.translateLabels(layout);
     });
 
     // Translate the whole layout before rendering
     LanguageSetting lang = LanguageSetting.getInstance();
     lang.registerRoot(layout);
-    lang.smartTranslate(layout);
+    lang.translateLabels(layout);
 
     // put everything into a stackpane
     StackPane layoutWithLangButton = new StackPane(layout, langButton);

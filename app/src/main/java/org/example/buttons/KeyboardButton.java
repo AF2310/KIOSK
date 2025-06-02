@@ -23,12 +23,9 @@ public class KeyboardButton extends Button {
    */
   public KeyboardButton(String text) {
     super(text);
-    setPrefSize(60, 40); // default size, can be overridden
+    setPrefSize(60, 40);
     applyStyle();
     instances.add(this);
-
-    // setOnMousePressed(e -> setStyle(getPressedStyle()));
-    // setOnMouseReleased(e -> applyStyle());
 
     // Add default press/release animation
     setOnMousePressed(e -> animateButtonPress(this, 0.95));
@@ -44,15 +41,6 @@ public class KeyboardButton extends Button {
             + "-fx-font-family: 'Arial';"
             + "-fx-text-fill: white;");
   }
-
-  // private String getPressedStyle() {
-  //   return "-fx-background-color: darkgray;"
-  //       + "-fx-border-radius: 5;"
-  //       + "-fx-background-radius: 5;"
-  //       + "-fx-font-size: 18;"
-  //       + "-fx-font-family: 'Arial';"
-  //       + "-fx-text-fill: white;";
-  // }
 
   public static void setButtonBackgroundColor(Color color) {
     buttonBackgroundColor = toRgbString(color);

@@ -72,7 +72,8 @@ public class LanguageSetting {
 
       // Update all registered UI roots
       for (Parent root : registeredRoots) {
-        smartTranslate(root);
+        // smartTranslate(root);
+        translateLabels(root);
       }
     }
   }
@@ -80,7 +81,7 @@ public class LanguageSetting {
   /**
    * Updates the text of all translatable nodes within the given root container.
    */
-  public void smartTranslate(Parent root) {
+  public void smartLabelTranslate(Parent root) {
     for (Node node : root.getChildrenUnmodifiable()) {
 
       if (node instanceof Label) {
@@ -140,14 +141,14 @@ public class LanguageSetting {
       if (node instanceof Button) {
         Node graphic = ((Button) node).getGraphic();
         if (graphic instanceof Parent) {
-          smartTranslate((Parent) graphic);
+          smartLabelTranslate((Parent) graphic);
         }
         Button button = (Button) node;
         button.setText(dictionary.smartTranslate(button.getText()));
       }
 
       if (node instanceof Parent) {
-        smartTranslate((Parent) node);
+        smartLabelTranslate((Parent) node);
       }
     }
   }
@@ -240,5 +241,9 @@ public class LanguageSetting {
    */
   public String translate(String text) {
     return dictionary.translate(text);
+  }
+
+  public String smartTranslate(String text) {
+    return dictionary.smartTranslate(text);
   }
 }

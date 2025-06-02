@@ -2,14 +2,13 @@ package org.example.buttons;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 
 /**
  * Round button with rainbow border and rainbow "Design" label in the center.
  */
-public class RoundRainbowBtn extends Button {
+public class RoundRainbowBtn extends AnimatedButton {
 
   private Label rainbowLabel;
 
@@ -23,7 +22,7 @@ public class RoundRainbowBtn extends Button {
     // Create label with rainbow text
     rainbowLabel = new Label("Design");
     rainbowLabel.setStyle(
-        "-fx-font-size: 30px;"
+        "-fx-font-size: 24px;"
             + "-fx-font-weight: bold;"
             + "-fx-background-color: transparent;"
             + "-fx-text-fill: linear-gradient(to right, "

@@ -2,7 +2,6 @@ package org.example.buttons;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -12,7 +11,7 @@ import javafx.scene.paint.Color;
  * This button has a fixed size and a transparent background.
  * Supports dynamic tint color updates via a color picker.
  */
-public class CartSquareButton extends Button {
+public class CartSquareButton extends AnimatedButton {
 
   private static final List<CartSquareButton> instances = new ArrayList<>();
   private static String buttonColor = "rgb(0, 0, 0)";

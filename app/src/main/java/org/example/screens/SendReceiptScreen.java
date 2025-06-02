@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.example.EmailSender;
@@ -51,8 +52,7 @@ public class SendReceiptScreen {
     var sendButton = new BlackButtonWithImage("Send", "/mail_wh.png");
     var noThanksButton = new ColorSquareButtonWithImage(
         "No Thanks",
-        "/cancel.png"
-    );
+        "/cancel.png");
 
     HBox buttonBox = new HBox(20, sendButton, noThanksButton);
     buttonBox.setAlignment(Pos.CENTER);
@@ -142,7 +142,7 @@ public class SendReceiptScreen {
         newLang = "en";
       }
       lang.changeLanguage(newLang);
-      lang.smartTranslate(layout);
+      lang.translateLabels(layout);
     });
 
     // Put everything into a StackPane
@@ -151,12 +151,24 @@ public class SendReceiptScreen {
 
     // Register for translation
     LanguageSetting.getInstance().registerRoot(mainPane);
-    LanguageSetting.getInstance().smartTranslate(mainPane);
+    LanguageSetting.getInstance().translateLabels(mainPane);
 
     // Set focus of emailField when the scene is shown
     Platform.runLater(() -> promptLabel.requestFocus());
 
-    return new CustomScene(mainPane, windowWidth, windowHeight);
+    var scene = new CustomScene(mainPane, windowWidth, windowHeight);
+
+    // Reads and applies the customized background color
+    Color bgColor = BackgroundColorStore.getCurrentBackgroundColor();
+
+    if (bgColor != null) {
+
+      scene.setBackgroundColor(bgColor);
+
+    }
+
+    return scene;
+
   }
 
   private void goToOrderConfirmation(

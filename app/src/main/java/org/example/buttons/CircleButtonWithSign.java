@@ -2,14 +2,13 @@ package org.example.buttons;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
  * This is the circle button mostly used for + and - symbols.
  */
-public class CircleButtonWithSign extends Button {
+public class CircleButtonWithSign extends AnimatedButton {
 
   // for button color customization
   private static final List<CircleButtonWithSign> instances = new ArrayList<>();
