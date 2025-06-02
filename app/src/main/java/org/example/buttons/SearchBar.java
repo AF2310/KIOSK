@@ -2,6 +2,7 @@ package org.example.buttons;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javafx.geometry.Insets;
@@ -24,7 +25,6 @@ import org.example.menu.Single;
  * in a list view and interacts with a database connection to fetch data.
  */
 public class SearchBar extends VBox {
-
   private final TextField nameField;
   private final TextField priceField;
   private final CheckBox ingredientCheckbox;
@@ -34,6 +34,7 @@ public class SearchBar extends VBox {
   private java.util.function.Consumer<Product> resultSelectHandler;
   private java.util.function.Consumer<List<Product>> resultsListHandler;
   private List<Single> filteredSingles = new ArrayList<>();
+  private final List<Single> allSingles = new ArrayList<>();
 
   /**
    * Constructs a SearchBar instance with the specified database connection.
@@ -83,6 +84,20 @@ public class SearchBar extends VBox {
 
     resultList = new ListView<>();
     resultList.setPrefHeight(100);
+
+    try {
+      Menu menu = new Menu();
+      allSingles.clear();
+      allSingles.addAll(menu.getMains());
+      allSingles.addAll(menu.getSides());
+      allSingles.addAll(menu.getDrinks());
+      allSingles.addAll(menu.getDesserts());
+      allSingles.addAll(menu.getExtras());
+
+    } catch (SQLException e) {
+      resultList.getItems().add("Error loading items for suggestions.");
+      e.printStackTrace();
+    }
     resultList.setStyle(
         "-fx-font-size: 12px;"
             + "-fx-padding: 2px;"
@@ -91,8 +106,84 @@ public class SearchBar extends VBox {
     HBox inputFields = new HBox(
         10, nameField, priceField, ingredientCheckbox, categoryCombo, searchButton);
     this.getChildren().addAll(inputFields, new Label("Search Results:"), resultList);
+    nameField.textProperty().addListener((obs, oldText, newText) -> {
+      resultList.getItems().clear();
+      if (newText == null || newText.isBlank()) {
+        return;
+      }
+      String query = newText.toLowerCase();
+      String priceText = priceField.getText().trim();
+      Float priceLimit = Float.MAX_VALUE;
+      boolean hasPrice = !priceText.isEmpty();
+
+      if (hasPrice) {
+        try {
+          priceLimit = Float.parseFloat(priceText);
+        } catch (NumberFormatException ex) {
+          resultList.getItems().add("Invalid price input.");
+          return;
+        }
+      }
+
+      List<Single> filtered = new ArrayList<>();
+      List<String> suggestions = new ArrayList<>();
+
+      for (Single s : allSingles) {
+        String itemName = s.getName().toLowerCase();
+        double itemPrice = s.getPrice();
+
+        boolean nameMatches = itemName.contains(query);
+        boolean priceMatches = itemPrice <= priceLimit;
+
+        if (nameMatches && priceMatches) {
+          filtered.add(s);
+        }
+
+        if (itemName.toLowerCase().startsWith(query) && !suggestions.contains(itemName)) {
+          suggestions.add(itemName);
+        }
+        if (suggestions.size() == 10) {
+          break;
+        }
+
+      }
+
+      Collections.sort(suggestions);
+
+      if (!suggestions.isEmpty()) {
+        resultList.getItems().add("-- Suggestions --");
+
+        for (String suggestion : suggestions) {
+          Label suggestionLabel = new Label(suggestion + " (Suggested Search term)");
+          suggestionLabel.setStyle("-fx-text-fill: gray; -fx-font-style: italic;");
+          resultList.getItems().add(suggestionLabel.getText());
+
+        }
+
+      }
+
+      if (!filtered.isEmpty()) {
+        resultList.getItems().add("-- Filtered Results --");
+        for (Single s : filtered) {
+          resultList.getItems().add("Single: " + s.getName() + " - " + s.getPrice() + " SEK");
+        }
+      }
+
+      if (resultsListHandler != null) {
+        List<Product> products = new ArrayList<>(filtered);
+        resultsListHandler.accept(products);
+      }
+
+    });
     searchButton.setOnAction(e -> {
       resultList.getItems().clear();
+      for (int i = 0; i < resultList.getItems().size(); i++) {
+        String item = resultList.getItems().get(i);
+        if (item.startsWith("-- Suggestions") || item.contains("Suggested Search term")) {
+          resultList.getItems().remove(i);
+          i--;
+        }
+      }
       String name = nameField.getText().trim();
       String priceText = priceField.getText().trim();
       boolean isIngredientSearch = ingredientCheckbox.isSelected();
@@ -103,32 +194,23 @@ public class SearchBar extends VBox {
           Ingredient ingredientDummy = new Ingredient(0, "");
           boolean hasName = !name.isEmpty();
           boolean hasPrice = !priceText.isEmpty();
-          List<Ingredient> ingredients;
 
+          List<Ingredient> ingredients;
           if (!hasName && !hasPrice) {
             // resultList.getItems().add("Please enter name or price.");
             ingredients = ingredientDummy.getAllIngredients();
-
           } else if (hasName && hasPrice) {
-            double price = Double.parseDouble(priceText);
+            float price = Float.parseFloat(priceText);
             ingredients = ingredientDummy.searchIngredientByNameAndPrice(name, price);
-          
           } else if (!name.isEmpty()) {
             ingredients = ingredientDummy.searchIngredientsByName(name);
-            /*
-             * for (Ingredient ing : ingredients) {
-             * resultList.getItems().add("Ingredient: " + ing.getName());
-             * }
-             */
 
           } else {
-            double price = Double.parseDouble(priceText);
+            float price = Float.parseFloat(priceText);
             ingredients = ingredientDummy.searchIngredientsByPrice(price);
           }
-
           if (ingredients.isEmpty()) {
             resultList.getItems().add("No ingredients found.");
-
           } else {
             for (Ingredient ing : ingredients) {
               resultList.getItems().add("Ingredient: " + ing.getName());
@@ -136,61 +218,15 @@ public class SearchBar extends VBox {
           }
           return;
         }
-        /*
-         * boolean hasName = !name.isEmpty();
-         * boolean hasPrice = !priceText.isEmpty();
-         * boolean hasCategory = selectedCategory != null &&
-         * !selectedCategory.equals("-- Any --");
-         * 
-         * Float priceLimit = null;
-         * if (hasPrice) {
-         * try {
-         * priceLimit = Float.parseFloat(priceText);
-         * } catch (NumberFormatException ex) {
-         * resultList.getItems().add("Invalid price input.");
-         * return;
-         * }
-         * }
-         * Single dummy = new Single(0, "", 0.0, null, "");
-         * List<Single> singles;
-         * if (hasCategory && hasName && hasPrice) {
-         * singles = dummy.searchByAllFilters(conn, normalizeCategory(selectedCategory),
-         * name, priceLimit);
-         * } else if (hasCategory && hasName) {
-         * singles = dummy.searchByCategoryAndName(conn,
-         * normalizeCategory(selectedCategory), name);
-         * } else if (hasCategory && hasPrice) {
-         * singles = dummy.searchByCategoryAndPrice(conn,
-         * normalizeCategory(selectedCategory), priceLimit);
-         * } else if (hasName && hasPrice) {
-         * singles = dummy.searchByNameAndPrice(conn, name, priceLimit);
-         * } else if (hasCategory) {
-         * singles = dummy.searchByCategory(conn, normalizeCategory(selectedCategory));
-         * } else if (hasName) {
-         * singles = dummy.searchByName(conn, name);
-         * } else if (hasPrice) {
-         * singles = dummy.getSinglesUnder(priceLimit, conn);
-         * } else {
-         * //resultList.getItems().add("Please enter name, price or category.");
-         * singles = dummy.getAllSingles(conn);
-         * }
-         * 
-         * if (singles.isEmpty()) {
-         * resultList.getItems().add("No items found.");
-         * } else {
-         * for (Single s : singles) {
-         * resultList.getItems().add("Single: " + s.getName() + " - $" + s.getPrice());
-         * }
-         * }
-         */
+
         // boolean hasName = !name.isEmpty();
         boolean hasPrice = !priceText.isEmpty();
         // boolean hasCategory = selectedCategory != null &&
         // !selectedCategory.equals("-- Any --");
-        Double priceLimit = Double.MAX_VALUE;
+        Float priceLimit = Float.MAX_VALUE;
         if (hasPrice) {
           try {
-            priceLimit = Double.parseDouble(priceText);
+            priceLimit = Float.parseFloat(priceText);
           } catch (NumberFormatException ex) {
             resultList.getItems().add("Invalid price input.");
             return;
@@ -198,7 +234,7 @@ public class SearchBar extends VBox {
         }
 
         Menu menu = new Menu();
-        List<Single> allSingles = new ArrayList<>();
+        allSingles.clear();
         if (selectedCategory.equals("MAIN") || selectedCategory.equals("BURGERS")) {
           allSingles.addAll(menu.getMains());
         } else if (selectedCategory.equals("SIDES")) {
@@ -216,33 +252,11 @@ public class SearchBar extends VBox {
           allSingles.addAll(menu.getDrinks());
           allSingles.addAll(menu.getDesserts());
           allSingles.addAll(menu.getExtras());
+
         }
 
         List<Single> filtered = new ArrayList<>();
-        /*
-         * for (Single single : allSingles) {
-         * boolean matchesName = true;
-         * boolean matchesPrice = true;
-         * boolean matchesCategory = true;
-         * if (hasName) {
-         * String lowerCaseName = single.getName().toLowerCase();
-         * matchesName = lowerCaseName.contains(name.toLowerCase());
-         * }
-         * 
-         * if (hasPrice) {
-         * matchesPrice = single.getPrice() <= priceLimit;
-         * }
-         * 
-         * if (hasCategory) {
-         * matchesCategory =
-         * single.getType().name().equalsIgnoreCase(normalizedCategory);
-         * }
-         * 
-         * if (matchesName && matchesPrice && matchesCategory) {
-         * filtered.add(single);
-         * }
-         * }
-         */
+
         for (Single single : allSingles) {
           String singleName = single.getName().toLowerCase();
           double singlePrice = single.getPrice();
@@ -311,6 +325,7 @@ public class SearchBar extends VBox {
         if (filtered.isEmpty()) {
           resultList.getItems().add("No items found.");
         } else {
+
           for (Single s : filtered) {
             resultList.getItems().add("Single: " + s.getName() + " - " + s.getPrice() + " SEK");
           }
@@ -333,6 +348,13 @@ public class SearchBar extends VBox {
     resultList.setOnMouseClicked(e -> {
       String selectedText = resultList.getSelectionModel().getSelectedItem();
       if (selectedText == null || resultSelectHandler == null) {
+        return;
+      }
+      if (selectedText.startsWith("--") || selectedText.contains("Suggested Search term")) {
+        String actualText = selectedText.replace(" (Suggested Search term)", "").trim();
+
+        nameField.setText(actualText);
+        searchButton.fire();
         return;
       }
       try {
@@ -402,28 +424,5 @@ public class SearchBar extends VBox {
   public void setOnResultsListHandler(java.util.function.Consumer<List<Product>> handler) {
     this.resultsListHandler = handler;
   }
-
-  // private String normalizeCategory(String categoryName) {
-  // if (categoryName == null) {
-  // return "EXTRA";
-  // }
-
-  // switch (categoryName.trim().toLowerCase()) {
-  // case "main":
-  // case "burgers":
-  // return "BURGERS";
-  // case "sides":
-  // return "SIDES";
-  // case "drinks":
-  // return "DRINKS"; // <-- FIXED HERE
-  // case "desserts":
-  // return "DESSERTS";
-  // case "extras":
-  // case "special offers":
-  // return "EXTRA";
-  // default:
-  // return "EXTRA";
-  // }
-  // }
 
 }

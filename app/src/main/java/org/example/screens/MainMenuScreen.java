@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
@@ -78,6 +79,8 @@ public class MainMenuScreen {
   private String mode;
   private Connection conn;
   private boolean filtersActive = false;
+  // private ListView<String> suggestionList;
+  // private TextField gridSearchField;
 
   /**
    * Creates the main menu scene.
@@ -99,6 +102,9 @@ public class MainMenuScreen {
 
     this.primaryStage = primaryStage;
     this.mode = mode;
+
+    // gridSearchField = new TextField();
+    // suggestionList = new ListView<>();
 
     ImageView modeIcon = new ImageView();
     Label modeLabel = new Label();
@@ -145,6 +151,10 @@ public class MainMenuScreen {
     priceFilterField.setStyle("-fx-font-size: 14px; -fx-pref-width: 100px;");
 
     ComboBox<String> gridCategoryBox = new ComboBox<>();
+    ListView<String> suggestionList = new ListView<>();
+    suggestionList.setPrefHeight(100);
+    suggestionList.setVisible(false);
+
     gridCategoryBox.getItems().addAll(
         "-- Any Category --", "Burgers", "Sides", "Drinks", "Desserts", "Meals", "Special Offers");
     gridCategoryBox.setPromptText("Select Category...");
@@ -344,6 +354,40 @@ public class MainMenuScreen {
       } else {
         gridSearchButton.setStyle(normalStyle);
       }
+    });
+
+    suggestionList.setOnMouseClicked(e -> {
+      String selected = suggestionList.getSelectionModel().getSelectedItem();
+
+      if (selected != null) {
+        gridSearchField.setText(selected);
+        suggestionList.setVisible(false);
+        currentSearchName = selected;
+        try {
+          updateGrid();
+        } catch (SQLException e1) {
+          e1.printStackTrace();
+        }
+
+      }
+
+    });
+
+    gridSearchField.textProperty().addListener((obs, oldText, newText) -> {
+      currentSearchName = newText.trim();
+      try {
+        updateGrid();
+      } catch (SQLException e1) {
+        e1.printStackTrace();
+      }
+
+    });
+
+    gridSearchField.focusedProperty().addListener((obs, oldVal, newVal) -> {
+      if (newVal == false) {
+        suggestionList.setVisible(false);
+      }
+
     });
 
     gridSearchBox.setOpacity(0);
@@ -815,7 +859,7 @@ public class MainMenuScreen {
       }
     };
 
-    if (!searchTerm.isEmpty()) {
+    if (!currentSearchName.isEmpty() && !filtersActive) {
       filteredProducts.sort(nameComparator);
     }
     Comparator<Product> priceComparator = Comparator.comparingDouble(Product::getPrice);
