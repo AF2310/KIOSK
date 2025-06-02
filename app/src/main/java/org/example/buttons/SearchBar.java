@@ -425,4 +425,13 @@ public class SearchBar extends VBox {
     this.resultsListHandler = handler;
   }
 
+  // Getter for nameField
+  public TextField getNameField() {
+    return nameField;
+  }
+
+  // Getter for priceField
+  public TextField getPriceField() {
+    return priceField;
+  }
 }

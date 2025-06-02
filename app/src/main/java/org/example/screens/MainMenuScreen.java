@@ -13,6 +13,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -38,6 +39,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.example.boxes.CustomKeyboard;
 import org.example.buttons.AnimatedButton;
 import org.example.buttons.ArrowButton;
 import org.example.buttons.CartSquareButton;
@@ -62,6 +64,8 @@ import org.example.sql.SqlQueries;
 public class MainMenuScreen {
 
   private Stage primaryStage;
+  // Custom keyboard for username and password fields
+  CustomKeyboard keyboard;
 
   // SEARCH BAR STUFF START
   private String currentSearchName = "";
@@ -373,6 +377,29 @@ public class MainMenuScreen {
 
     });
 
+    // Custom keyboard for username and password fields
+    keyboard = new CustomKeyboard(primaryStage, gridSearchField);
+
+    // Keyboard functionality
+    gridSearchField.setOnMouseClicked(e -> {
+      keyboard.setTargetInput(gridSearchField);
+      keyboard.show();
+      Platform.runLater(() -> {
+        gridSearchField.requestFocus();
+        gridSearchField.positionCaret(gridSearchField.getText().length());
+      });
+    });
+
+    // Keyboard functionality
+    priceFilterField.setOnMouseClicked(e -> {
+      keyboard.setTargetInput(priceFilterField);
+      keyboard.show();
+      Platform.runLater(() -> {
+        priceFilterField.requestFocus();
+        priceFilterField.positionCaret(priceFilterField.getText().length());
+      });
+    });
+
     gridSearchField.textProperty().addListener((obs, oldText, newText) -> {
       currentSearchName = newText.trim();
       try {
@@ -618,6 +645,9 @@ public class MainMenuScreen {
       Cart.getInstance().clearCart();
       System.out.println("Order canceled!");
 
+      // Close the keyboard when switching scenes
+      keyboard.close();
+
       primaryStage.setScene(welcomeScrScene);
       InactivityTimer.getInstance().setPrimaryStage(primaryStage);
       InactivityTimer.getInstance().stopTimer();
@@ -640,6 +670,10 @@ public class MainMenuScreen {
           this.mode,
           cart,
           conn);
+
+      // Close the keyboard when switching scenes
+      keyboard.close();
+
       this.primaryStage.setScene(checkoutScene);
     });
 
@@ -932,6 +966,8 @@ public class MainMenuScreen {
         ItemDetails detailScreen = new ItemDetails();
 
         imageSlot.setOnMouseClicked(e -> {
+          // Close the keyboard when switching scenes
+          keyboard.close();
           try {
             if (item instanceof Meal meal) {
               MealCustomizationScreen mealScreen = new MealCustomizationScreen();

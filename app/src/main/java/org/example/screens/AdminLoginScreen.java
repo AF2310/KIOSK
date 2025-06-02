@@ -179,7 +179,7 @@ public class AdminLoginScreen {
       keyboard.show();
       Platform.runLater(() -> {
         usernameField.requestFocus();
-        usernameField.positionCaret(usernameField.getText().length()); // or .getCaretPosition()
+        usernameField.positionCaret(usernameField.getText().length());
       });
     });
 
