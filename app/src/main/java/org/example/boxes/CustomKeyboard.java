@@ -250,14 +250,11 @@ public class CustomKeyboard {
     if (!keyboardStage.isShowing()) {
       keyboardStage.show();
 
-      // Position after rendering to get correct dimensions
-      Platform.runLater(() -> {
-        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        double x = (screenBounds.getWidth() - keyboardStage.getWidth()) / 2;
-        double y = screenBounds.getHeight() - keyboardStage.getHeight() - 140;
-        keyboardStage.setX(x);
-        keyboardStage.setY(y);
-      });
+      Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+      double x = (screenBounds.getWidth() - keyboardStage.getWidth()) / 2;
+      double y = screenBounds.getHeight() - keyboardStage.getHeight() - 140;
+      keyboardStage.setX(x);
+      keyboardStage.setY(y);
     }
   }
 
