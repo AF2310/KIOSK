@@ -37,7 +37,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import org.example.buttons.AnimatedButton;
 import org.example.buttons.ArrowButton;
 import org.example.buttons.CartSquareButton;
