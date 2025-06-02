@@ -112,6 +112,7 @@ public class AdminLoginScreen {
         if (checkLogin) {
           errorLabel.setVisible(false);
           passwordField.clear();
+          usernameField.clear();
           AdminMenuScreen adminMenuScreen = new AdminMenuScreen();
           Scene adminMenuScene = adminMenuScreen.createAdminMenuScreen(primaryStage,
               windowWidth, windowHeight, welcomeScrScene, connection);
@@ -128,7 +129,7 @@ public class AdminLoginScreen {
 
           errorLabel.setVisible(true);
           passwordField.clear();
-          
+
           // Hide the error label after 2 seconds
           PauseTransition pause = new PauseTransition(Duration.seconds(2));
           pause.setOnFinished(event -> errorLabel.setVisible(false));
@@ -156,6 +157,9 @@ public class AdminLoginScreen {
 
       // Close the keyboard when going back to the welcome screen
       keyboard.close();
+
+      passwordField.clear();
+      usernameField.clear();
     });
 
     adminMenuLayout.getChildren().addAll(
@@ -217,6 +221,9 @@ public class AdminLoginScreen {
     // Puts focus on the admin menu label so that the username field isn't by
     // default focused
     adminMenuTitle.requestFocus();
+
+    usernameField.clear();
+    passwordField.clear();
 
     return adminLoginScene;
   }
