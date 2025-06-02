@@ -16,6 +16,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.example.animations.AnimationHelper;
 import org.example.buttons.BlackButtonWithImage;
 import org.example.buttons.ColorBtnOutlineImage;
 import org.example.buttons.KioskName;
@@ -241,6 +242,24 @@ public class WelcomeScreen {
     burgerButton.setOnAction(e -> {
       primaryStage.setScene(adminMenuScene);
     });
+
+    // Fade in welcome text
+    AnimationHelper.fadeIn(welcome, 0.5, 0.0);
+
+    // Company title
+    AnimationHelper.slideInFromTop(companyTitle, 20, 0.5, 0.3);
+    AnimationHelper.pulse(companyTitle, 1.02, 0.4, 0.8);
+
+    // Center burger
+    AnimationHelper.fadeAndSlideIn(burgerView2, 20, 0.5, 0.9);
+
+    // Left and right burgers
+    AnimationHelper.fadeAndSlideIn(burgerView1, -15, 0.4, 1.0);
+    AnimationHelper.fadeAndSlideIn(burgerView3, 15, 0.4, 1.1);
+
+    // Buttons
+    AnimationHelper.pulse(eatHereBtn, 1.02, 0.4, 1.4);
+    AnimationHelper.pulse(takeAwayBtn, 1.02, 0.4, 1.6);
 
     return scene;
   }

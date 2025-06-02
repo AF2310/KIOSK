@@ -81,9 +81,9 @@ public class Dictionary {
     addTranslation("Save Color Scheme", "Spara Färgschema");
     addTranslation("Reset Color Scheme", "Återställ Färgschema");
     addTranslation("Set & Test Design", "Ange & Testa Design");
-    addTranslation("Prime Color", "Primärfärg");
-    addTranslation("Secondary Color", "Sekundärfärg");
-    addTranslation("Background Color", "Bakgrundsfärg");
+    addTranslation("Prime color", "Primärfärg");
+    addTranslation("Secondary color", "Sekundärfärg");
+    addTranslation("Background color", "Bakgrundsfärg");
     // Basic Colors
     addTranslation("Red", "Röd");
     addTranslation("Blue", "Blå");

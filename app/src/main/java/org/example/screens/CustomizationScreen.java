@@ -2,6 +2,7 @@ package org.example.screens;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,6 +17,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.example.boxes.CustomKeyboard;
 import org.example.buttons.ArrowButton;
 import org.example.buttons.BlackButtonWithImage;
 import org.example.buttons.CartSquareButton;
@@ -175,6 +177,19 @@ public class CustomizationScreen {
 
     });
 
+    // Custom keyboard for textfields
+    CustomKeyboard keyboard = new CustomKeyboard(primaryStage, nameInput);
+
+    // Keyboard functionality for username and password fields
+    nameInput.setOnMouseClicked(e -> {
+      keyboard.setTargetInput(nameInput);
+      keyboard.show();
+      Platform.runLater(() -> {
+        nameInput.requestFocus();
+        nameInput.positionCaret(nameInput.getText().length());
+      });
+    });
+
     // Wraps the management buttons
     HBox colorManagement = new HBox();
     colorManagement.setSpacing(50);
@@ -223,6 +238,9 @@ public class CustomizationScreen {
     // go back to the main screen if clicked
     // reinstantiates welcome screen, so the color change takes effect
     cancelBtn.setOnAction(e -> {
+
+      // Close the keyboard when going back to the welcome screen
+      keyboard.close();
 
       try {
 
