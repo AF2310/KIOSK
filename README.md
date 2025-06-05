@@ -1,3 +1,24 @@
+Clarke App specifications
+
+To access the admin menu, on the welcome screen click on the right burger, and in the appeared admin login screen input the credentials. The credentials to access the admin menu are login: admin, password: 1,2,3,4,5. Alternatively login: 1, password: 1.
+
+The customer can have different variations of the same item or combo meal. If any ingredient of the item or item of the meal is altered, it will be added as a new position in the cart, so that people can order as many variations of any position in the menu without any constraints of the updated ingredients overwriting previously made choices.
+
+To remove an item from the cart, the customer needs to set its quantity to 0. It will still stay in the cart with the quantity 0. This is done so that the customer can change their mind and get the item back in case it was zeroed by accident. To make the item completely disappear, the customer can leave the cart by pressing the back button. Next time the customer opens the cart, all the zeroed items will be removed.
+
+The cancel button in the cart will take the customer to the welcome screen and remove all the items from the cart.
+
+The customization feature that lets the admin change colors was designed only for the customer’s side of the app. The admin menu always has the default white theme. This is done to visually separate the customer’s menu from the admin’s, as well as to save available hours and client’s money for other implementations.
+
+When creating a new item in the admin menu, you can add multiple ingredients by holding the Control key (or Command key on Mac) while selecting them.
+
+The app has a custom keyboard so that it works across platforms. However, it is designed for the customer’s convenience, is light, and has a limited number of keys. To access special symbols or capital letters, press shift on this keyboard. The admin will still need to use a physical keyboard connected to the system to use most of the keyboard-related features. The exception is the login screen and the customization screen where the keyboard is still present.
+
+Below you can find our full app development process fully documented. It includes design documentation, UML and database diagrams, and each sprint’s agenda. The the following documentation is in chronological order, with the latest updates at the bottom.
+
+Thank you for reviewing our app.
+
+
 Documentation:
 
 Our Group (Clarke) consists of:
